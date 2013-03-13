@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SinLab</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <div id="user_nav">
+    <% if usuario_signed_in? %>
+	  Logado como <%= current_usuario.email %>. Esse não é você?
+	  <%= link_to "sair", destroy_usuario_session_path, :method => :delete %>
+    <% else %>
+	  <%= link_to "cadastrar", new_usuario_registration_path %> ou <%= link_to "entrar", new_usuario_session_path %>
+    <% end %>
+  </div>
+  <%= yield %>
+  <ul>
+	  <%= link_to "Home", root_url %>
+  </ul>
+</body>
+</html>

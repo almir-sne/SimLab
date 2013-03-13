@@ -1,0 +1,35 @@
+<%= form_for(@banco_de_hora) do |f| %>
+  <% if @banco_de_hora.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@banco_de_hora.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
+
+      <ul>
+      <% @banco_de_hora.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :usuario_id, :value => current_usuario.id %>
+
+  <div class="field">
+    <%= f.label :data %><br />
+    <%= f.date_select :data %>
+  </div>
+  <div class="field">
+    <%= f.label :horas %><br />
+    <%= f.text_field :horas %>
+  </div>
+  <div class="field">
+    <%= f.label :projeto_id %><br />
+    <%= f.select :projeto_id, options_for_select(acha_projetos) %>
+  </div>
+  <div class="field">
+    <%= f.label :observacao %><br />
+    <%= f.text_area :observacao %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
