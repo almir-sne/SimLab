@@ -1,4 +1,5 @@
 class BancoDeHorasController < ApplicationController
+  before_filter :authenticate_usuario!, :except => [:show, :index]
   # GET /banco_de_horas
   # GET /banco_de_horas.json
   def index
