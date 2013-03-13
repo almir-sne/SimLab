@@ -1,4 +1,6 @@
 SinLab::Application.routes.draw do
+#  get "home/index"
+
   resources :banco_de_horas
 
 
