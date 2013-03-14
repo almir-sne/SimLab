@@ -24,6 +24,7 @@ gem 'jquery-rails'
 
 gem 'devise'
 gem 'thin'
+gem 'squeel'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -37,4 +38,4 @@ gem 'thin'
 # gem 'capistrano'
 
 # To use debugger
-# gem 'debugger'
+ gem 'debugger'
