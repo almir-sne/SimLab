@@ -8,6 +8,8 @@ SinLab::Application.routes.draw do
 
   resources :projetos
 
+  resources :resumo
+
 
   root :to => "home#index"
   # The priority is based upon order of creation:
