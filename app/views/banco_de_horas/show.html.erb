@@ -17,12 +17,12 @@
 
 <p>
   <b>Projeto:</b>
-  <%= @banco_de_hora.projeto_id %>
+  <%= Projeto.find(@banco_de_hora.projeto_id).name %>
 </p>
 
 <p>
   <b>Usuario:</b>
-  <%= @banco_de_hora.usuario_id %>
+  <%= Usuario.find(@banco_de_hora.usuario_id).nome %>
 </p>
 
 
