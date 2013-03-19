@@ -1,16 +1,19 @@
 class ResumoController < ApplicationController
-  before_filter :authenticate_usuario!, :except => [:show, :index]
 
-  def index
-    @horas = Resumo.horas_no_mes current_usuario
-  end
-  
-  def show
+  def show # tenho q arrumar as rotas....
   	tipo_de_consulta = params[:id]
-  	@horas_feitas
-  	if tipo_de_consulta == "hora_dia_p_pessoa"
-  		render :template =>"resumo/asd"
-  	end
+
+    case tipo_de_consulta
+
+  	when "horas_por_dia_por_pessoa"
+  		@horas = Resumo.horas_no_dia_de current_usuario
+  		render :template =>"resumo/horas_por_dia_por_pessoa"
+
+  	when "horas_por_mes_por_pessoa"
+  	  @horas = Resumo.horas_no_mes_de current_usuario
+  	  render :template =>"resumo/horas_por_mes_por_pessoa"
+    end
+
   end
 
 end
