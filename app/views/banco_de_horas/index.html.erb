@@ -17,8 +17,8 @@
     <td><%= banco_de_hora.data %></td>
     <td><%= banco_de_hora.horas %></td>
     <td><%= banco_de_hora.observacao %></td>
-    <td><%= banco_de_hora.projeto_id %></td>
-    <td><%= banco_de_hora.usuario_id %></td>
+    <td><%= Projeto.find(banco_de_hora.projeto_id).name %></td>
+    <td><%= Usuario.find(banco_de_hora.usuario_id).nome %></td>
     <td><%= link_to 'Show', banco_de_hora %></td>
     <td><%= link_to 'Edit', edit_banco_de_hora_path(banco_de_hora) %></td>
     <td><%= link_to 'Destroy', banco_de_hora, method: :delete, data: { confirm: 'Are you sure?' } %></td>
