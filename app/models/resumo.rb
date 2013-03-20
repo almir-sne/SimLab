@@ -28,11 +28,20 @@ class Resumo
       hoje = Date.today + i.day
       hora_dia[hoje] = user.banco_de_horas.where{data == hoje}.
         map{|bh| bh.horas}.
-          inject{|sum,x| sum + x } #deixar ou não deixar o [0]? array vazio ou nil?
+          inject{|sum,x| sum + x }
     end
 
     hora_dia
   end
 
+# devolve hash com chave o nome do projeto e contendo um vetor com horas nesse projeto e valor
+# investido no projeto
+# exemplo: {labarq => [50000, 10523,57], Atlas => [1500000, 2001523.57]}
+  def horas_e_investimento_nos_projetos
+    projetos = Projeto.all
+    projetos.each do |projeto|
+      a = BancoDeHora.find_all_by_projeto_id(projeto.id).map{|bh| bh.horas}.inject{|sum,x| sum + x }
+    end
+  end
 
 end
