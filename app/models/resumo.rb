@@ -37,11 +37,25 @@ class Resumo
 # devolve hash com chave o nome do projeto e contendo um vetor com horas nesse projeto e valor
 # investido no projeto
 # exemplo: {labarq => [50000, 10523,57], Atlas => [1500000, 2001523.57]}
-  def horas_e_investimento_nos_projetos
+  def self.horas_e_investimento_nos_projetos
+  	horas = Array.new
+    
     projetos = Projeto.all
+    usuarios = Usuario.all
+    investimento_projeto = Hash.new
+    
     projetos.each do |projeto|
-      a = BancoDeHora.find_all_by_projeto_id(projeto.id).map{|bh| bh.horas}.inject{|sum,x| sum + x }
+      valor_por_projeto = 0
+      horas_por_projeto = 0
+      
+      usuarios.each do |usuario|
+        horas_por_usuario = BancoDeHora.find_all_by_projeto_id_and_usuario_id(projeto.id, usuario.id).map{|bh| bh.horas}.inject{|sum,x| sum + x }
+        horas_por_projeto += horas_por_usuario
+        valor_por_projeto += usuario.valor_da_hora * horas_por_usuario
+      end
+      investimento_projeto[projeto.name] = [horas_por_projeto, valor_por_projeto]
     end
+    investimento_projeto    
   end
 
 end
