@@ -25,6 +25,16 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'thin'
 gem 'squeel'
+
+group :test, :development do
+  gem 'rspec-rails', '~> 2.0'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'capybara'
+  gem 'guard-rspec'
+    gem 'rb-inotify', '~> 0.9'
+  gem 'launchy'
+end
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
