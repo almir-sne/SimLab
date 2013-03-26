@@ -39,23 +39,22 @@ class Resumo
 # exemplo: {labarq => [50000, 10523,57], Atlas => [1500000, 2001523.57]}
   def self.horas_e_investimento_nos_projetos
   	horas = Array.new
-    
+    investimento_projeto = Hash.new
     projetos = Projeto.all
     usuarios = Usuario.all
-    investimento_projeto = Hash.new
-    
+
     projetos.each do |projeto|
       valor_por_projeto = 0
       horas_por_projeto = 0
-      
+
       usuarios.each do |usuario|
-        horas_por_usuario = BancoDeHora.find_all_by_projeto_id_and_usuario_id(projeto.id, usuario.id).map{|bh| bh.horas}.inject{|sum,x| sum + x }
+        horas_por_usuario = BancoDeHora.find_all_by_projeto_id_and_usuario_id(projeto.id, usuario.id).map{|bh| bh.horas}.inject{|sum,x| sum + x }.to_i
         horas_por_projeto += horas_por_usuario
         valor_por_projeto += usuario.valor_da_hora * horas_por_usuario
       end
       investimento_projeto[projeto.name] = [horas_por_projeto, valor_por_projeto]
     end
-    investimento_projeto    
+    investimento_projeto
   end
 
 end
