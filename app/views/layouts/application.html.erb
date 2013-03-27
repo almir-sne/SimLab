@@ -9,7 +9,7 @@
 <body>
   <div id="user_nav">
     <% if usuario_signed_in? %>
-	  Logado como <%= current_usuario.email %>. Esse não é você?
+	  <%=t 'string.logged_in', :email => current_usuario.email %>
 	  <%= link_to "sair", destroy_usuario_session_path, :method => :delete %>
     <% else %>
 	  <%= link_to "cadastrar", new_usuario_registration_path %> ou <%= link_to "entrar", new_usuario_session_path %>
