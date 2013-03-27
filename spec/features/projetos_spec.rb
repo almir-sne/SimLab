@@ -4,8 +4,8 @@ describe "Projetos" do
   it "nao consegue criar novo projeto" do
     visit new_projeto_path
     fill_in "Name",  :with => "teste_cria_novo_projeto"
-    click_button "Create Projeto"
     #save_and_open_page # debug
+    click_button "Criar Projeto"
     page.should have_content("prohibited this projeto from being saved")
   end
 
