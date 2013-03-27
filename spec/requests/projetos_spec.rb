@@ -2,12 +2,12 @@ require 'spec_helper'
 include Capybara::DSL # Adding this line solved the error
 # add it to  test js  ", :js => true"
 describe "Projetos" do
-  it "cria novo projeto" do
+  it "nao consegue criar novo projeto" do
     visit new_projeto_path
     fill_in "Name",  :with => "teste_cria_novo_projeto"
     click_button "Create Projeto"
-    page.should have_content("Projeto was successfully created.")
-    page.should have_content("teste_cria_novo_projeto")
+    #save_and_open_page # debug
+    page.should have_content("prohibited this projeto from being saved")
   end
 
   it "verifica criacao" do

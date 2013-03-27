@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :data_de_inicio %><br />
-    <%= f.datetime_select :data_de_inicio %>
+    <%= f.date_select :data_de_inicio, :order =>[:day, :month, :year]%>
   </div>
   <div class="field">
     <%= f.label :descricao %><br />

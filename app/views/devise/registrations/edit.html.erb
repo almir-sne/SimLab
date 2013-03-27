@@ -23,12 +23,12 @@
 
   <div class="field">
     <%= f.label :entrada_usp %><br />
-    <%= f.date_select :entrada_usp %>
+    <%= f.date_select :entrada_usp, :order =>[:day, :month, :year] %>
   </div>
 
   <div class="field">
     <%= f.label "saida prevista usp"%><br />
-    <%= f.date_select :saida_usp %>
+    <%= f.date_select :saida_usp, :order =>[:day, :month, :year] %>
   </div>
 
   <div class="field">
@@ -42,12 +42,12 @@
   </div>
 
   <div class="field">
-    <%= f.label :conta %><br />
+    <%= f.label :conta %><i> (somente numeros)</i><br />
     <%= f.number_field :conta %>
   </div>
 
   <div class="field">
-    <%= f.label :agencia %><br />
+    <%= f.label :agencia %><i> (somente numeros)</i><br />
     <%= f.number_field :agencia %>
   </div>
 
