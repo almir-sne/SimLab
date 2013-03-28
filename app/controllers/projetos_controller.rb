@@ -44,7 +44,7 @@ class ProjetosController < ApplicationController
 
     respond_to do |format|
       if @projeto.save
-        format.html { redirect_to @projeto, notice: I18n.t(".sucess")}
+        format.html { redirect_to @projeto, notice: I18n.t("projetos.create.sucess")}
         format.json { render json: @projeto, status: :created, location: @projeto }
       else
         format.html { render action: "new" }
@@ -60,7 +60,7 @@ class ProjetosController < ApplicationController
 
     respond_to do |format|
       if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to @projeto, notice: 'Projeto was successfully updated.' }
+        format.html { redirect_to @projeto, notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

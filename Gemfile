@@ -35,6 +35,7 @@ group :test, :development do
 		gem 'rb-fsevent', '~> 0.9', :require => false if RUBY_PLATFORM =~ /darwin/i
 		gem 'growl'
   gem 'launchy'
+	gem 'database_cleaner'
 end
 
 # To use ActiveModel has_secure_password

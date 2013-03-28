@@ -230,6 +230,13 @@ pt-BR:
   messages:
     logged_in: "Logado como %{email}. Esse não é você?"
   projetos:
-    new:
+    create:
       sucess: "Projeto criado com sucesso."
+    update:
+      sucess: "Projeto atualizado com sucesso."
+  banco_de_horas:
+    create:
+      sucess: "Banco de horas criado com sucesso."
+    update:
+      sucess: "Banco de horas atualizado com sucesso."
       

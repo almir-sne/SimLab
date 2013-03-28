@@ -45,7 +45,7 @@ class BancoDeHorasController < ApplicationController
 
     respond_to do |format|
       if @banco_de_hora.save
-        format.html { redirect_to @banco_de_hora, notice: 'Banco de horas criado com sucesso.' }
+        format.html { redirect_to @banco_de_hora, notice: I18n.t("banco_de_horas.create.sucess") }
         format.json { render json: @banco_de_hora, status: :created, location: @banco_de_hora }
       else
         format.html { render action: "new" }
@@ -61,7 +61,7 @@ class BancoDeHorasController < ApplicationController
 
     respond_to do |format|
       if @banco_de_hora.update_attributes(params[:banco_de_hora])
-        format.html { redirect_to @banco_de_hora, notice: 'Banco de horas foi ediatado com sucesso.' }
+        format.html { redirect_to @banco_de_hora, notice: I18n.t("banco_de_horas.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

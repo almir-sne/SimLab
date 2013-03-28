@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature "Usuário" do
-  scenario 'faz seu cadastro' do
+  include Helpers
+  scenario 'deve poder se cadastrar no site' do
     visit new_usuario_registration_path
     fill_in "Email", :with => @visitante[:email]
     fill_in "Nome", :with => @visitante[:nome]
@@ -11,12 +12,24 @@ feature "Usuário" do
     page.should have_content I18n.t("messages.logged_in", :email => @visitante[:email])
   end
   
-  scenario 'Faz login' do
-    visit new_usuario_session_path
-    user = FactoryGirl.create(:usuario)
-    fill_in 'Email', :with => user.email
-    fill_in 'Password', :with => user.password
-    click_button I18n.t("devise.sessions.new.submit")
+  scenario 'deve poder fazer login' do
+    usuario_faz_login
+    page.should have_content I18n.t("messages.logged_in", :email => @visitante[:email])
+  end
+  
+  scenario 'deve poder editar suas informações' do
+    usuario_faz_login
+    visit edit_usuario_registration_path
+    fill_in "Nome", :with => "Teste"
+    fill_in "Current password", :with => "12345678"
+    click_button I18n.t("devise.registrations.edit.update")
+    page.should have_content I18n.t("devise.registrations.updated")
+  end
+  
+  scenario 'deve poder fazer logout' do
+    usuario_faz_login
+    click_link "sair"
+    page.should have_content I18n.t('devise.sessions.signed_out')
   end
   
   before(:all) do

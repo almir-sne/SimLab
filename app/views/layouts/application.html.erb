@@ -15,6 +15,11 @@
 	  <%= link_to "cadastrar", new_usuario_registration_path %> ou <%= link_to "entrar", new_usuario_session_path %>
     <% end %>
   </div>
+	<div class="messages">
+		<% flash.each do |name, msg| %>
+		  <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+		<% end %>
+	<div/>
   <%= yield %>
 
 <%= link_to "Home", root_url %>
