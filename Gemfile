@@ -31,7 +31,9 @@ group :test, :development do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'guard-rspec'
-    gem 'rb-inotify', '~> 0.9'
+    #gem 'rb-inotify', '~> 0.9'
+		gem 'rb-fsevent', '~> 0.9', :require => false if RUBY_PLATFORM =~ /darwin/i
+		gem 'growl'
   gem 'launchy'
 end
 
