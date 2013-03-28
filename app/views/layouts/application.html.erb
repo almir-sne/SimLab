@@ -1,29 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!-- TWITTER BOOTSTRAP CSS -->
+  <head>
+    <!-- TWITTER BOOTSTRAP CSS -->
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
 
     <!-- TWITTER BOOTSTRAP JS -->
     <script src="js/bootstrap.min.js"></script>
 
-  <title>SinLab</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-  <div id="user_nav">
-    <% if usuario_signed_in? %>
-	  <%=t 'string.logged_in', :email => current_usuario.email %>
-	  <%= link_to "sair", destroy_usuario_session_path, :method => :delete %>
-    <% else %>
-	  <%= link_to "cadastrar", new_usuario_registration_path %> ou <%= link_to "entrar", new_usuario_session_path %>
-    <% end %>
-  </div>
-  <%= yield %>
+    <title>SinLab</title>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div id="user_nav">
+      <% if usuario_signed_in? %>
+        <%=t 'string.logged_in', :email => current_usuario.email %>
+        <%= link_to "sair", destroy_usuario_session_path, :method => :delete %>
+      <% else %>
+        <%= link_to "cadastrar", new_usuario_registration_path %> ou <%= link_to "entrar", new_usuario_session_path %>
+      <% end %>
+    </div>
 
-<%= link_to "Home", root_url %>
+    <div class="row-fluid">
+    <div class="span3">
+      <ul class="top-nav">
 
-</body>
+        <li> <%= link_to 'Resumo', banco_de_horas_url %> </li>
+        <li><%= link_to 'Meu Banco de Horas', banco_de_horas_url %></li>
+        <li>
+          <div class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Cadastros</a>
+            <ul class="dropdown-menu" role="menu"  aria-labelledby="dLabel">
+              <li><a href="http://localhost:3000/projetos/">Listar</a></li>
+              <li><a href="http://localhost:3000/projetos/new">Criar novo projeto</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+      </div>
+    <%= yield %>
+
+    <%= link_to "Home", root_url %>
+
+  </body>
 </html>

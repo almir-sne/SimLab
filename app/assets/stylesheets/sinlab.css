@@ -1,0 +1,22 @@
+.top-nav {
+    list-style:none;
+}
+
+.top-nav li {
+    font-size: 14px;
+    font-family: Arial,Helvetica,sans-serif;
+    padding: 5px;
+}
+.top-nav li:hover {
+    background-color: rgb(33, 147, 189);
+}
+
+.top-nav a {
+    color: black;
+}
+
+
+.top-nav a:hover {
+    background-color: rgb(33, 147, 189);
+    color: white;
+}
