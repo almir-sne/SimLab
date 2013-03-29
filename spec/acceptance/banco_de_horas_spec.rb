@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature "Banco de horas" do
+feature BancoDeHora do
   include Helpers
   
   scenario "deveria poder ser criado" do
@@ -18,6 +18,12 @@ feature "Banco de horas" do
   scenario "deveria der visualizvel" do 
     visit banco_de_hora_path(@banco)
     page.should have_content("Horas:")
+  end
+  
+  scenario "não deveria ser acessivel sem login" do
+    click_link "Sair"
+    visit banco_de_hora_path(@banco)
+    page.should have_content(I18n.t("devise.failure.unauthenticated"))
   end
   
   before do

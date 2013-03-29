@@ -8,7 +8,13 @@ SinLab::Application.routes.draw do
 
   resources :projetos
 
-  resources :resumo
+  resources :user, :only => :index
+
+  resources :resumo do
+    collection do
+      get :horas_por_mes_por_pessoa
+    end
+  end
 
 
   root :to => "home#index"

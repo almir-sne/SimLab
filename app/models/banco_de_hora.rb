@@ -7,4 +7,7 @@ class BancoDeHora < ActiveRecord::Base
   validates_presence_of :projeto_id
   validates_presence_of :usuario_id
   
+  delegate :nome, :to => :project, :prefix => true
+  delegate :nome, :to => :user, :prefix => true
+  
 end

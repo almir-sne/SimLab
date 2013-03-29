@@ -9,12 +9,12 @@ feature "Usuário" do
     fill_in "usuario_password", :with => @visitante[:password]
     fill_in "usuario_password_confirmation", :with => @visitante[:password]
     click_button  I18n.t("devise.registrations.new.submit")
-    page.should have_content I18n.t("messages.logged_in", :email => @visitante[:email])
+    page.should have_content I18n.t("devise.registrations.signed_up")
   end
   
   scenario 'deve poder fazer login' do
     usuario_faz_login
-    page.should have_content I18n.t("messages.logged_in", :email => @visitante[:email])
+    page.should have_content I18n.t("devise.sessions.signed_in")
   end
   
   scenario 'deve poder editar suas informações' do
@@ -28,8 +28,8 @@ feature "Usuário" do
   
   scenario 'deve poder fazer logout' do
     usuario_faz_login
-    click_link "sair"
-    page.should have_content I18n.t('devise.sessions.signed_out')
+    click_link "Sair"
+    page.should have_content "Remember me"
   end
   
   before(:all) do

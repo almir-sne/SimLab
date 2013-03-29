@@ -1,7 +1,9 @@
 require 'spec_helper'
 
-feature "Projetos" do
-  scenario "deveriapoder ser criado" do
+feature Projeto do
+  
+  include Helpers
+  scenario "deveria poder ser criado" do
     visit new_projeto_path
     fill_in "Name",  :with => "teste_cria_novo_projeto"
     click_button I18n.t("helpers.submit.create", :model => I18n.t("activerecord.models.project"))
@@ -16,7 +18,17 @@ feature "Projetos" do
     page.should have_content(I18n.t("projetos.update.sucess"))
   end
   
+  scenario "não deveria ser acessivel sem login" do
+    click_link "Sair"
+    visit projeto_path(@project)
+    page.should have_content(I18n.t("devise.failure.unauthenticated"))
+  end
+  
   before(:all) do
     @project = FactoryGirl.create(:projeto)
+  end
+  
+  before(:each) do
+    usuario_faz_login
   end
 end
