@@ -3,7 +3,6 @@ class ProjetosController < ApplicationController
   # GET /projetos.json
   def index
     @projetos = Projeto.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projetos }
@@ -24,6 +23,7 @@ class ProjetosController < ApplicationController
   # GET /projetos/new
   # GET /projetos/new.json
   def new
+    authorize! :create, Projeto
     @projeto = Projeto.new
 
     respond_to do |format|
