@@ -1,20 +1,25 @@
-<h1>Resumo</h1>
+<div class="blue-text">
+  &lt; <%= @year %> &gt;
+</div>
 
-<table>
-  <tr>
-    <th>Mes</th>
-    <th>Horas feitas</th>
-    <th>horas pretendidas</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="blue-line">  </div>
 
-<% @horas.each do |mes| %>
+<table style="width: 100%">
   <tr>
-    <td><%= Date::MONTHNAMES[mes[0]] %></td>
-    <td><%= mes[1][0] %></td>
-    <td><%= mes[1][1] %></td>
+    <% @horas.each do |mes| %>
+      <td class="month-table">
+        <%= Date::MONTHNAMES[mes[0]] %>
+        <br/> <br/>
+  <%#= mes[1][0] %>
+  <%#= mes[1][1] %>
+        <b>
+          100/100
+        </b>
+      </td>
+      <% if mes[0] == 6 %>
+      </tr>
+      <tr>
+      <% end %>
+    <% end %>
   </tr>
-<% end %>
 </table>

@@ -1,0 +1,30 @@
+<div class="blue-text" style="margin-left: 30px">
+  Usuários
+</div>
+
+<div class="blue-line">  </div>
+
+<table class="list-table">
+
+  <% @users.each do |user| %>
+    <tr>
+      <td>
+        <%=  user.nome %>
+      </td>
+
+      <td>
+        Usuário
+      </td>
+
+      <td>
+        <%= user.horario_mensal %>
+      </td>
+
+      <td>
+        <%=  user.email %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "Adicionar", new_usuario_registration_url, :class => "btn default-button", :style => "margin: 15px;"%>

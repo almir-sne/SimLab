@@ -17,6 +17,10 @@
     background-color: white;
 }
 
+.top-nav a:hover {
+    background-color: rgb(33, 147, 189) !important;
+}
+
 .top-user {
     font-size: 14px;
     font-family: Arial,Helvetica,sans-serif;
@@ -30,6 +34,8 @@
 
 .top-table {
     border: rgb(33, 147, 189) 1px solid;
+    float: right;
+    margin-right: 15px;
 }
 
 .top-table .saldo {
@@ -46,4 +52,54 @@
     border-bottom: rgb(33, 147, 189) 1px solid;
     padding: 10px 30px;
     text-align: center;
+}
+
+.month-table {
+    margin: 5px !important;
+    background: rgb(33, 147, 189);
+    height: 200px;
+    font-size: 25px;
+    font-family: Arial,Helvetica,sans-serif;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    border: 15px white solid;
+    width: 15%;
+}
+
+.blue-line {
+    width: 98%;
+    background-color: rgb(33, 147, 189);
+    height: 2px;
+    margin-left: 15px;
+}
+
+.blue-text {
+    font-size: 35px;
+    font-family: Arial,Helvetica,sans-serif;
+    color: rgb(33, 147, 189);
+    padding: 25px 0px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.list-table {
+    width: 98%;
+    margin-left: 15px;
+}
+
+.list-table td{
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 20px;
+    padding: 10px 15px;
+    border-bottom: 2px solid rgb(180, 180, 180);
+}
+
+.default-button {
+    background: none;
+    border-radius: 0;
+    background-color: rgb(180, 180, 180);
+    color: black !important;
+    text-shadow: none;
+    font-size: 17px;
 }
