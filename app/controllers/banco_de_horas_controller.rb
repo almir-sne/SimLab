@@ -4,7 +4,8 @@ class BancoDeHorasController < ApplicationController
   # GET /banco_de_horas.json
   def index
     @banco_de_horas = BancoDeHora.all
-
+    @year = Date.today.year
+    @month = Date.today.month
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @banco_de_horas }

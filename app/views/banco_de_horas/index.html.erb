@@ -1,31 +1,26 @@
-<h1>Listing banco_de_horas</h1>
+<div class="row-fluid" style="margin-left: 15px">
+  <div class="span2 blue-text">
+    &lt; <%= @year %> &gt;
+  </div>
 
-<table>
-  <tr>
-    <th>Data</th>
-    <th>Horas</th>
-    <th>Observacao</th>
-    <th>Projeto</th>
-    <th>Usuario</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  <div class="span2 blue-text">
+    &lt; <%= Date::MONTHNAMES[@month] %> &gt;
+  </div>
+</div>
+<div class="blue-line">  </div>
 
-<% @banco_de_horas.each do |banco_de_hora| %>
-  <tr>
-    <td><%= banco_de_hora.data %></td>
-    <td><%= banco_de_hora.horas %></td>
-    <td><%= banco_de_hora.observacao %></td>
-    <td><%= Projeto.find(banco_de_hora.projeto_id).name %></td>
-    <td><%= Usuario.find(banco_de_hora.usuario_id).nome %></td>
-    <td><%= link_to 'Show', banco_de_hora %></td>
-    <td><%= link_to 'Edit', edit_banco_de_hora_path(banco_de_hora) %></td>
-    <td><%= link_to 'Destroy', banco_de_hora, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
+<table class="list-table">
+  <% @banco_de_horas.each do |banco_de_hora| %>
+    <tr>
+      <td style="border:none"><%= banco_de_hora.data %></td>
+      <td style="border:none"><%= Projeto.find(banco_de_hora.projeto_id).name %></td>
+      <td style="width: 70%; border: none">
+        <div class="blue-background" style="width: <%= (banco_de_hora.horas * 10).to_s + "%" %> "> <%= banco_de_hora.horas %>h </div>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Banco de hora', new_banco_de_hora_path %>
+<%= link_to "Adicionar", new_banco_de_hora_path, :class => "btn default-button", :style => "margin: 15px;"%>

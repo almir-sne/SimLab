@@ -103,3 +103,9 @@
     text-shadow: none;
     font-size: 17px;
 }
+
+.blue-background {
+    background-color: rgb(168, 212, 229);
+    text-align: center;
+    padding: 10px 10px;
+}
