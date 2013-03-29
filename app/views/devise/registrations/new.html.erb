@@ -19,6 +19,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :role %><br />
+    <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
+  </div>
+
+  <div class="field">
     <%= f.label :entrada_usp %><br />
     <%= f.date_select :entrada_usp %>
   </div>
