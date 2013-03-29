@@ -27,7 +27,8 @@ gem 'thin'
 gem 'squeel'
 
 group :test, :development do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails'
+	gem 'shoulda-matchers', :require => false
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'guard-rspec'
@@ -36,6 +37,7 @@ group :test, :development do
 		gem 'growl'
   gem 'launchy'
 	gem 'database_cleaner'
+	gem 'simplecov', :require => false
 end
 
 # To use ActiveModel has_secure_password
