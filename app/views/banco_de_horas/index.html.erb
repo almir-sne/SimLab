@@ -15,7 +15,9 @@
       <td style="border:none"><%= banco_de_hora.data %></td>
       <td style="border:none"><%= Projeto.find(banco_de_hora.projeto_id).name %></td>
       <td style="width: 70%; border: none">
-        <div class="blue-background" style="width: <%= (banco_de_hora.horas * 10).to_s + "%" %> "> <%= banco_de_hora.horas %>h </div>
+        <div class="blue-background" style="width: <%= (banco_de_hora.horas * 10).to_s + "%" %> ">
+          <%= banco_de_hora.horas %>h
+        </div>
       </td>
     </tr>
   <% end %>
@@ -23,4 +25,7 @@
 
 <br />
 
-<%= link_to "Adicionar", new_banco_de_hora_path, :class => "btn default-button", :style => "margin: 15px;"%>
+<%= link_to "Adicionar", "#myModal", :class => "btn default-button",
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
+
+<%= render :partial => "modal" %>

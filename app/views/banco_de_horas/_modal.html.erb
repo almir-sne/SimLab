@@ -1,4 +1,5 @@
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="width: 50%; margin-left: -25%">
 
   <div class="modal-body">
     <%= form_for(@banco_de_hora) do |f| %>
@@ -25,15 +26,15 @@
             </div>
             <div class="field">
               <%= f.label :entrada %>
-              <%= f.text_field :entrada %>
+              <%= text_field_tag :entrada %>
             </div>
             <div class="field">
               <%= f.label :saida %>
-              <%= f.text_field :saida %>
+              <%= text_field_tag :saida %>
             </div>
             <div class="field">
               <%= f.label :intervalo %>
-              <%= f.text_field :intervalo %>
+              <%= text_field_tag :intervalo %>
             </div>
           </div>
           <div class="span4">
@@ -49,6 +50,8 @@
               <%= f.label :observações %>
               <%= f.text_area :observacao, :style => "height: 100px" %>
             </div>
+
+            <%= link_to "Incluir Atividade", "\#", :class => "btn default-button"%>
           </div>
           <div class="span4">
             Atividades
@@ -57,14 +60,11 @@
           </div>
         </div>
       </div>
-      <div class="actions">
-        <%= f.submit %>
+      <div class="actions" style="float: right; margin-right: 20px;">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+        <%= f.submit "Ok", :class => "btn default-button"%>
       </div>
     <% end %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
   </div>
 </div>
 

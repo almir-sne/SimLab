@@ -6,6 +6,7 @@ class BancoDeHorasController < ApplicationController
     @banco_de_horas = BancoDeHora.all
     @year = Date.today.year
     @month = Date.today.month
+    @banco_de_hora = BancoDeHora.new
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @banco_de_horas }
@@ -81,5 +82,9 @@ class BancoDeHorasController < ApplicationController
       format.html { redirect_to banco_de_horas_url }
       format.json { head :no_content }
     end
+  end
+
+  def modal
+    @banco_de_hora = BancoDeHora.new
   end
 end

@@ -1,14 +1,25 @@
 SinLab::Application.routes.draw do
-#  get "home/index"
+  #  get "home/index"
 
-  resources :banco_de_horas
-
+  resources :banco_de_horas do
+    collection do
+      get :modal
+    end
+  end
 
   devise_for :usuarios
 
-  resources :projetos
+  resources :projetos do
+    collection do
+      get :modal
+    end
+  end
 
-  resources :user, :only => :index
+  resources :user, :only => :index do
+    collection do
+      get :modal
+    end
+  end
 
   resources :resumo do
     collection do

@@ -3,7 +3,7 @@ class ProjetosController < ApplicationController
   # GET /projetos.json
   def index
     @projetos = Projeto.all
-
+    @projeto = Projeto.new
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projetos }
@@ -79,5 +79,9 @@ class ProjetosController < ApplicationController
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
     end
+  end
+
+  def modal
+    @projeto = Projeto.new
   end
 end
