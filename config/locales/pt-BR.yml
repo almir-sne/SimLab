@@ -217,11 +217,8 @@ pt-BR:
         password_confirmation: "Confirmar Senha"
         current_password: "Senha Atual"
         remember_me: "Lembre-se de mim"
-      item:
-        description: "Descrição"
-        lost_date: "Data"
-        reward: "Recompensa"
-        title: Título
+      projeto:
+        descricao: "Descrição"
   string:
       
   unauthorized:

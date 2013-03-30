@@ -5,7 +5,9 @@ feature Projeto do
   include Helpers
   scenario "deveria poder ser criado" do
     visit new_projeto_path
-    fill_in "Name",  :with => "teste_cria_novo_projeto"
+    fill_in "Nome",  :with => "teste_cria_novo_projeto"
+    fill_in "Descrição", :with => "Novo projeto"
+    fill_in "Valor", :with => "10"
     click_button I18n.t("helpers.submit.create", :model => I18n.t("activerecord.models.project"))
     page.should have_content(I18n.t("projetos.create.sucess", :model => "Projeto"))
     page.should have_content("teste_cria_novo_projeto")
@@ -13,7 +15,7 @@ feature Projeto do
   
   scenario "deveria poder ser editado" do
     visit edit_projeto_path(@project)
-    fill_in "Name", :with => "Teste"
+    fill_in "Nome", :with => "Teste"
     click_button I18n.t("helpers.submit.update", :model => I18n.t("activerecord.models.project"))
     page.should have_content(I18n.t("projetos.update.sucess"))
   end
@@ -24,7 +26,7 @@ feature Projeto do
     page.should have_content(I18n.t("devise.failure.unauthenticated"))
   end
   
-  before(:all) do
+  before(:each) do
     @project = FactoryGirl.create(:projeto)
   end
   

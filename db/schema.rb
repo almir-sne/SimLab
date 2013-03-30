@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312202420) do
+ActiveRecord::Schema.define(:version => 20130330141236) do
 
   create_table "banco_de_horas", :force => true do |t|
     t.date     "data"
@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(:version => 20130312202420) do
   end
 
   create_table "projetos", :force => true do |t|
-    t.string   "name"
-    t.datetime "data_de_inicio"
+    t.string   "nome"
+    t.date     "data_de_inicio"
     t.text     "descricao"
     t.float    "valor"
     t.integer  "horas_totais"

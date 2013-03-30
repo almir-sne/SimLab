@@ -23,7 +23,7 @@
   </div>
   <div class="field">
     <%= f.label :projeto_id %><br />
-    <%= f.select :projeto_id, options_for_select(acha_projetos) %>
+    <%= f.select :projeto_id, options_from_collection_for_select(@projetos, :id, :nome) %>
   </div>
   <div class="field">
     <%= f.label :observacao %><br />

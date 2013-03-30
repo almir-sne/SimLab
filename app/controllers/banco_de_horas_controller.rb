@@ -25,6 +25,7 @@ class BancoDeHorasController < ApplicationController
   # GET /banco_de_horas/new
   # GET /banco_de_horas/new.json
   def new
+    @projetos = Projeto.all
     @banco_de_hora = BancoDeHora.new
 
     respond_to do |format|
@@ -35,6 +36,7 @@ class BancoDeHorasController < ApplicationController
 
   # GET /banco_de_horas/1/edit
   def edit
+    @projetos = Projeto.all
     @banco_de_hora = BancoDeHora.find(params[:id])
   end
 

@@ -26,9 +26,9 @@ feature BancoDeHora do
     page.should have_content(I18n.t("devise.failure.unauthenticated"))
   end
   
-  before do
+  before(:each) do
     usuario = usuario_faz_login
-    @project = FactoryGirl.create(:projeto)
     @banco = FactoryGirl.create(:banco_de_hora, :usuario_id => usuario.id)
+    @project = @banco.projeto
   end
 end
