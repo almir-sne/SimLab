@@ -14,10 +14,12 @@ class Usuario < ActiveRecord::Base
                     :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
 
   validates :nome, :presence => true
-#  validates
-#  validates
-#  validates
-#  validates
 
   has_many :banco_de_horas
+  has_many :mes
+  has_many :dias
+  has_many :atividades
+  
+  
+
 end
