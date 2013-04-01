@@ -19,6 +19,7 @@
       <div class="container-fluid">
         <div class="row-fluid">
           <div class="span4">
+
             <div class="field">
               <%= f.label :dia %>
               <%= f.number_field :data %>
@@ -40,13 +41,13 @@
             <div class="field">
               <%= f.label :horas_gastas %>
               <%= f.text_field :horas %>
-            </div>
+            </div> 
             <div class="field">
               <%= f.label :projeto_id %>
-              <%= f.select :projeto_id, options_for_select(acha_projetos) %>
+              <%= f.select :projeto_id, options_from_collection_for_select(@projetos, :id, :nome) %>
             </div>
             <div class="field">
-              <%= f.label :observações %>
+              <%= f.label :observacao %>
               <%= f.text_area :observacao, :style => "height: 100px" %>
             </div>
           </div>
@@ -61,6 +62,7 @@
         <%= f.submit %>
       </div>
     <% end %>
+
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

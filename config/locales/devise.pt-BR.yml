@@ -15,7 +15,7 @@ pt-BR:
       unauthenticated: 'Você precisa registrar-se ou fazer login para continuar.'
       unconfirmed: 'Você deve confirmar sua conta antes de continuar.'
       locked: 'Sua conta está bloqueada.'
-      invalid: 'E-mail e senha inválidos'
+      invalid: 'E-mail e (ou) senha inválidos'
       invalid_token: 'Token de autenticação inválido.'
       timeout: 'A sua sessão expirou, por favor faça login novamente para continuar.'
       inactive: 'A sua conta não foi ativada ainda.'

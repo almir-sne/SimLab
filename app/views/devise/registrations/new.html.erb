@@ -39,12 +39,12 @@
   </div>
 
   <div class="field">
-    <%= f.label :conta %><br />
+    <%= f.label :conta %><i> (somente numeros)</i><br />
     <%= f.number_field :conta %>
   </div>
 
   <div class="field">
-    <%= f.label :agencia %><br />
+    <%= f.label :agencia  %><i> (somente numeros)</i><br />
     <%= f.number_field :agencia %>
   </div>
 
@@ -58,7 +58,7 @@
   <div><%= f.label :password_confirmation %><br />
   <%= f.password_field :password_confirmation %></div>
 
-  <div><%= f.submit "Sign up" %></div>
+  <div><%= f.submit t(".submit") %></div>
 <% end %>
 
 <%= render "devise/shared/links" %>

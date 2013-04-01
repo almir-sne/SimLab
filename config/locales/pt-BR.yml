@@ -207,9 +207,7 @@ pt-BR:
       <<: *errors
     models:
       user: "Usuário"
-      item: "Item"
-      message: "Mensagem"
-      reply: "Resposta"
+      project: "Projeto"
     attributes:
       user:
         avatar: "Foto"
@@ -219,16 +217,25 @@ pt-BR:
         password_confirmation: "Confirmar Senha"
         current_password: "Senha Atual"
         remember_me: "Lembre-se de mim"
-      item:
-        description: "Descrição"
-        lost_date: "Data"
-        reward: "Recompensa"
-        title: Título
+      projeto:
+        descricao: "Descrição"
+      banco_de_horas:
+        observacao: "Observações"
   string:
-    logged_in: "Logado como %{email}. Esse não é você?"
-    
+      
   unauthorized:
     manage:
       all: "Você não está autorizado a acessar esse recurso"
-
-        
+  messages:
+    logged_in: "Logado como %{email}. Esse não é você?"
+  projetos:
+    create:
+      sucess: "Projeto criado com sucesso."
+    update:
+      sucess: "Projeto atualizado com sucesso."
+  banco_de_horas:
+    create:
+      sucess: "Banco de horas criado com sucesso."
+    update:
+      sucess: "Banco de horas atualizado com sucesso."
+      

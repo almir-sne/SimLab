@@ -13,7 +13,7 @@
   <% @banco_de_horas.each do |banco_de_hora| %>
     <tr>
       <td style="border:none"><%= banco_de_hora.data %></td>
-      <td style="border:none"><%= Projeto.find(banco_de_hora.projeto_id).name %></td>
+      <td style="border:none"><%= banco_de_hora.projeto_nome %></td>
       <td style="width: 70%; border: none">
         <div class="blue-background" style="width: <%= (banco_de_hora.horas * 10).to_s + "%" %> ">
           <%= banco_de_hora.horas %>h
