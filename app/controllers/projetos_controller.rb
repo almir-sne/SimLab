@@ -1,6 +1,6 @@
 class ProjetosController < ApplicationController
   before_filter :authenticate_usuario!
-  
+
   # GET /projetos
   # GET /projetos.json
   def index
@@ -26,12 +26,15 @@ class ProjetosController < ApplicationController
   # GET /projetos/new
   # GET /projetos/new.json
   def new
+    authorize! :create, Projeto
     @projeto = Projeto.new
 
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @projeto }
+       
     end
+   
   end
 
   # GET /projetos/1/edit
@@ -48,6 +51,8 @@ class ProjetosController < ApplicationController
       if @projeto.save
         format.html { redirect_to @projeto, notice: I18n.t("projetos.create.sucess")}
         format.json { render json: @projeto, status: :created, location: @projeto }
+        redirect_to projetos_path
+        return
       else
         format.html { render action: "new" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
@@ -64,6 +69,8 @@ class ProjetosController < ApplicationController
       if @projeto.update_attributes(params[:projeto])
         format.html { redirect_to @projeto, notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
+        redirect_to projetos_path
+        return
       else
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }

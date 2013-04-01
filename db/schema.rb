@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20130330141236) do
     t.integer  "agencia"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.string   "role"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true

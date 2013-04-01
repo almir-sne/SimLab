@@ -20,6 +20,11 @@
     <%= f.label :valor_da_hora %><br />
     <%= f.number_field :valor_da_hora %>
   </div>
+  
+  <div class="field">
+    <%= f.label :role %><br />
+    <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
+  </div>
 
   <div class="field">
     <%= f.label :entrada_usp %><br />

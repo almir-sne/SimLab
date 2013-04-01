@@ -28,7 +28,7 @@ pt-BR:
     sessions:
       new:
         title: Login
-        submit: Login
+        submit: Entrar
       link: Login com {provider}
     unlocks:
       new:

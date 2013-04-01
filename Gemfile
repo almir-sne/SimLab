@@ -25,6 +25,7 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'thin'
 gem 'squeel'
+gem 'cancan'
 
 group :test, :development do
   gem 'rspec-rails'
