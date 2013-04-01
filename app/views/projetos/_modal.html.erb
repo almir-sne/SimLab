@@ -1,0 +1,41 @@
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="width: 25%; margin-left: -12.5%; height: 400px">
+
+  <div class="modal-body">
+    <%= form_for(@projeto) do |f| %>
+      <% if @projeto.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@projeto.errors.count, "error") %> prohibited this projeto from being saved:</h2>
+
+          <ul>
+            <% @projeto.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :nome %>
+        <%= f.text_field :nome %>
+      </div>
+
+      <div class="field">
+        <%= f.label :data_de_inicio %>
+        <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
+      </div>
+
+        <div class="field">
+          <%= f.label :descricao %>
+          <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
+        </div>
+
+      <div class="actions">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
+        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+

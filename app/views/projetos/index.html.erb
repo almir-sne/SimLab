@@ -1,31 +1,21 @@
-<h1>Listing projetos</h1>
+<div class="blue-text" style="margin-left: 30px">
+  Projetos
+</div>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Data de inicio</th>
-    <th>Descricao</th>
-    <th>Valor</th>
-    <th>Horas totais</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="blue-line">  </div>
+
+<table class="list-table">
 
 <% @projetos.each do |projeto| %>
   <tr>
     <td><%= projeto.name %></td>
     <td><%= projeto.data_de_inicio %></td>
-    <td><%= projeto.descricao %></td>
-    <td><%= projeto.valor %></td>
     <td><%= projeto.horas_totais %></td>
-    <td><%= link_to 'Show', projeto %></td>
-    <td><%= link_to 'Edit', edit_projeto_path(projeto) %></td>
-    <td><%= link_to 'Destroy', projeto, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
 
-<br />
+<%= link_to "Adicionar", "#myModal", :class => "btn default-button",
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
 
-<%= link_to 'New Projeto', new_projeto_path %>
+<%= render :partial => "modal" %>
