@@ -1,6 +1,6 @@
 class ProjetosController < ApplicationController
   before_filter :authenticate_usuario!
-  
+
   # GET /projetos
   # GET /projetos.json
   def index
@@ -26,6 +26,7 @@ class ProjetosController < ApplicationController
   # GET /projetos/new
   # GET /projetos/new.json
   def new
+    authorize! :create, Projeto
     @projeto = Projeto.new
 
     respond_to do |format|

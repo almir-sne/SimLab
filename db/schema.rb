@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330141236) do
+ActiveRecord::Schema.define(:version => 20130328234934) do
 
   create_table "banco_de_horas", :force => true do |t|
     t.date     "data"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20130330141236) do
     t.integer  "agencia"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.string   "role"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
