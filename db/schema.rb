@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328234934) do
+ActiveRecord::Schema.define(:version => 20130330141236) do
 
   create_table "banco_de_horas", :force => true do |t|
     t.date     "data"
