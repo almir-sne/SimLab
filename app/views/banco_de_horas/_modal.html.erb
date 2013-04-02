@@ -1,8 +1,8 @@
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true" style="width: 50%; margin-left: -25%">
 
   <div class="modal-body">
-    <%= form_for(@banco_de_hora) do |f| %>
+    <%= form_for(@banco_de_hora, :validate => true, :remote => true, :html => {"data-type" => :json}) do |f| %>
       <% if @banco_de_hora.errors.any? %>
         <div id="error_explanation">
           <h2><%= pluralize(@banco_de_hora.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
