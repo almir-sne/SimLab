@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature Projeto do
+feature "Um novo projeto" do
   
   include Helpers
   scenario "deveria poder ser criado" do
@@ -12,7 +12,9 @@ feature Projeto do
     page.should have_content(I18n.t("projetos.create.sucess", :model => "Projeto"))
     page.should have_content("teste_cria_novo_projeto")
   end
-  
+end
+
+feature "projeto existente" do
   scenario "deveria poder ser editado" do
     visit edit_projeto_path(@project)
     fill_in "Nome", :with => "Teste"

@@ -1,23 +1,12 @@
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true" style="width: 25%; ">
 
   <div class="modal-body">
-    <%= form_for(@projeto) do |f| %>
-      <% if @projeto.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@projeto.errors.count, "error") %> prohibited this projeto from being saved:</h2>
-
-          <ul>
-            <% @projeto.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+    <%= form_for(@projeto, :validate => true, :remote => true, :html => {"data-type" => :json}) do |f| %>
 
       <div class="field">
         <%= f.label :nome %>
-        <%= f.text_field :nome %>
+        <%= f.text_field :nome%>
       </div>
 
       <div class="field">
