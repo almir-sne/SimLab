@@ -2,8 +2,7 @@
      aria-hidden="true" style="width: 50%; margin-left: -25%; height: 600px">
 
   <div class="modal-body" style="max-height: 95%">
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-      <%= devise_error_messages! %>
+    <%= form_for(@user, :url => usuario_index_path) do |f| %>
 
       <div class="field span6">
         <%= f.label :nome %>
@@ -79,4 +78,3 @@
 
   </div>
 </div>
-
