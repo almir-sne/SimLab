@@ -25,6 +25,9 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'thin'
 gem 'squeel'
+gem 'cancan'
+gem 'client_side_validations', :git => 'https://github.com/bcardarella/client_side_validations.git', :branch => '3-2-stable'
+
 
 group :test, :development do
   gem 'rspec-rails'

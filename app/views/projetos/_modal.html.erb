@@ -1,23 +1,12 @@
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 25%; margin-left: -12.5%; height: 400px">
+<div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="width: 25%; ">
 
   <div class="modal-body">
-    <%= form_for(@projeto) do |f| %>
-      <% if @projeto.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@projeto.errors.count, "error") %> prohibited this projeto from being saved:</h2>
-
-          <ul>
-            <% @projeto.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+    <%= form_for(@projeto, :validate => true, :remote => true, :html => {"data-type" => :json}) do |f| %>
 
       <div class="field">
         <%= f.label :nome %>
-        <%= f.text_field :nome %>
+        <%= f.text_field :nome%>
       </div>
 
       <div class="field">
@@ -30,6 +19,15 @@
           <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
         </div>
 
+        <div class="field">
+    <%= f.label :valor %><br />
+    <%= f.text_field :valor %>
+  </div>
+  <div class="field">
+    <%= f.label :horas_totais %><br />
+    <%= f.number_field :horas_totais %>
+  </div>
+    
       <div class="actions">
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
         <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
