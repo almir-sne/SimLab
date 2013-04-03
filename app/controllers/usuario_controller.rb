@@ -26,6 +26,7 @@ class UsuarioController < ApplicationController
 
   def update
     @user = Usuario.find(params[:id])
+    puts "Passssssssssssssssssssssssssssssssssooouuuuuuuuuuuuuuuuuuuuuuuuu pelo UPDATE"
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."
       redirect_to usuario_index_path

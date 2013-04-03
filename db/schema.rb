@@ -33,9 +33,6 @@ ActiveRecord::Schema.define(:version => 20130402190925) do
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.datetime "entrada"
-    t.datetime "saida"
-    t.float    "intervalo"
   end
 
   create_table "dia", :force => true do |t|
