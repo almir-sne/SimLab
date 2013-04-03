@@ -2,7 +2,7 @@
      aria-hidden="true" style="width: 50%; margin-left: -25%; height: 560px">
 
   <div class="modal-body" style="max-height: 95%">
-    <%= form_for(@user, :url => usuario_index_path) do |f| %>
+    <%= form_for(@user, :url => usuario_index_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
       <div class="container-fluid">
 

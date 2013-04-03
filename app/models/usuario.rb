@@ -14,7 +14,12 @@ class Usuario < ActiveRecord::Base
   validates :email, :length => {:minimum => 3, :maximum => 254},
                     :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
 
-  validates :nome, :presence => true
+  validates :nome, :presence => true,
+                   :uniqueness => true
+
+  validates :password, :presence => true
+
+  validates :password_confirmation, :presence => true
 
   has_many :banco_de_horas
   has_many :mes
