@@ -9,7 +9,7 @@
   <% @users.each do |user| %>
     <tr>
       <td>
-        <%= link_to user.nome, "#myModal" ,"data-toggle" => "modal", :role => "button" %>
+        <%= link_to user.nome, edit_usuario_path(user) %>
       </td>
 
       <td>

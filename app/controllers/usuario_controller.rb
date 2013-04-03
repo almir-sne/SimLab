@@ -26,12 +26,11 @@ class UsuarioController < ApplicationController
 
   def update
     @user = Usuario.find(params[:id])
-    params[:usuario].delete(:password) if params[:usuario][:password].blank?
-    params[:usuario].delete(:password_confirmation) if params[:usuario][:password].blank? and params[:usuario][:password_confirmation].blank?
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."
-      redirect_to root_path
+      redirect_to usuario_index_path
     else
+      Rails.logger.info(@user.errors.messages.inspect)
       render :action => 'edit'
     end
   end
