@@ -24,7 +24,7 @@ feature BancoDeHora do
     click_link "Sair"
 #    save_and_open_page
     visit banco_de_hora_path(@banco)
-    page.should have_conten("Você não está autorizado a acessar esse recurso")
+    page.should have_content(I18n.t("devise.failure.unauthenticated"))
   end
 
   before(:each) do

@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- TWITTER BOOTSTRAP CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
-
-    <!-- TWITTER BOOTSTRAP JS -->
-    <script src="js/bootstrap.min.js"></script>
-
     <title>SinLab</title>
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
@@ -32,7 +26,7 @@
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">Cadastros</a>
               <ul class="top-nav dropdown-menu" role="menu"  aria-labelledby="dLabel">
                 <li> <%=  link_to "Projetos", projetos_url%> </li>
-                <li> <%=  link_to "Usuários", user_index_url%></li>
+                <li> <%=  link_to "Usuários", usuario_index_url%></li>
               </ul>
 
             </li>

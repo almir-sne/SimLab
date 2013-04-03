@@ -1,0 +1,68 @@
+<%= form_for(@usuario) do |f| %>
+  <% if @usuario.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@usuario.errors.count, "error") %> prohibited this usuario from being saved:</h2>
+
+      <ul>
+      <% @usuario.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div><%= f.label :email %><br />
+  <%= f.email_field :email, :autofocus => true %></div>
+
+  <div class="field">
+    <%= f.label :nome %><br />
+    <%= f.text_field :nome %>
+  </div>
+
+  <div class="field">
+    <%= f.label :horario_mensal %><br />
+    <%= f.number_field :horario_mensal %>
+  </div>
+
+  <div class="field">
+    <%= f.label :valor_da_hora %><br />
+    <%= f.number_field :valor_da_hora %>
+  </div>
+
+  <div class="field">
+    <%= f.label :role %><br />
+    <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :entrada_usp %><br />
+    <%= f.date_select :entrada_usp, :order =>[:day, :month, :year] %>
+  </div>
+
+  <div class="field">
+    <%= f.label "saida prevista usp"%><br />
+    <%= f.date_select :saida_usp, :order =>[:day, :month, :year] %>
+  </div>
+
+  <div class="field">
+    <%= f.label :cpf %><br />
+    <%= f.text_field :cpf %>
+  </div>
+
+  <div class="field">
+    <%= f.label :banco %><br />
+    <%= f.text_field :banco %>
+  </div>
+
+  <div class="field">
+    <%= f.label :conta %><i> (somente numeros)</i><br />
+    <%= f.number_field :conta %>
+  </div>
+
+  <div class="field">
+    <%= f.label :agencia %><i> (somente numeros)</i><br />
+    <%= f.number_field :agencia %>
+  </div>
+
+  <div><%= f.submit t(".update") %></div>
+<% end %>

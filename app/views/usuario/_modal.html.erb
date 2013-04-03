@@ -1,18 +1,23 @@
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 50%; margin-left: -25%; height: 600px">
+     aria-hidden="true" style="width: 50%; margin-left: -25%; height: 560px">
 
   <div class="modal-body" style="max-height: 95%">
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-      <%= devise_error_messages! %>
+    <%= form_for(@user, :url => usuario_index_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
-      <div class="field span6">
+      <div class="container-fluid">
+
+        <div class="row-fluid">
+        <div class="span6">
         <%= f.label :nome %>
         <%= f.text_field :nome, :style => "width: 100%"%>
+        </div>
+        <div class="span5 offset1">
+         <%= f.label :email %>
+        <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
+        </div>
+      </div>
       </div>
 
-      <div class="field span6"><%= f.label :email %>
-        <%= f.email_field :email, :autofocus => true, :style => "width: 100%" %>
-      </div>
 
       <div class="container-fluid">
 
@@ -20,11 +25,11 @@
           <div class="span7">
             <div class="field">
               <%= f.label :horario_mensal %>
-              <%= f.number_field :horario_mensal %>
+              <%= f.number_field :horario_mensal, :style => "width: 65%" %>
             </div>
             <div class="field">
               <%= f.label :valor_da_hora %>
-              <%= f.number_field :valor_da_hora %>
+              <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
             </div>
 
             <div class="field">
@@ -38,33 +43,33 @@
             </div>
 
             <div><%= f.label :password %>
-              <%= f.password_field :password %>
+              <%= f.password_field :password , :style => "width: 65%"%>
             </div>
           </div>
           <div class="span5">
 
             <div class="field">
               <%= f.label :cpf %>
-              <%= f.text_field :cpf %>
+              <%= f.text_field :cpf , :style => "width: 85%"%>
             </div>
 
             <div class="field">
               <%= f.label :banco %>
-              <%= f.text_field :banco %>
+              <%= f.text_field :banco , :style => "width: 85%"%>
             </div>
 
             <div class="field">
               <%= f.label :conta %>
-              <%= f.number_field :conta %>
+              <%= f.number_field :conta , :style => "width: 85%"%>
             </div>
 
             <div class="field">
               <%= f.label :agencia %>
-              <%= f.number_field :agencia %>
+              <%= f.number_field :agencia , :style => "width: 85%"%>
             </div>
 
             <div><%= f.label :password_confirmation %>
-              <%= f.password_field :password_confirmation %>
+              <%= f.password_field :password_confirmation , :style => "width: 85%"%>
             </div>
           </div>
         </div>
@@ -72,11 +77,10 @@
 
       <br/>
       <div class="actions">
-        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
-        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;margin-left: 21px;">Cancelar</button>
+        <%= f.submit "Salvar", :style => "float: right;margin-right: 50px;", :class => "btn default-button"%>
       </div>
     <% end %>
 
   </div>
 </div>
-
