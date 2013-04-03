@@ -64,5 +64,5 @@
     <%= f.number_field :agencia %>
   </div>
 
-  <div><%= f.submit t(".update") %></div>
+  <div><%= f.submit I18n.t("helpers.submit.update", :model => I18n.t("activerecord.models.user")) %></div>
 <% end %>

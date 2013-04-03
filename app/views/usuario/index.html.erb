@@ -9,7 +9,7 @@
   <% @users.each do |user| %>
     <tr>
       <td>
-        <%=  user.nome %>
+        <%= link_to user.nome, edit_usuario_path(user) %>
       </td>
 
       <td>

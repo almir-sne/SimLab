@@ -17,15 +17,9 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
                    :uniqueness => true
 
-  validates :password, :presence => true
-
-  validates :password_confirmation, :presence => true
-
   has_many :banco_de_horas
   has_many :mes
   has_many :dias
   has_many :atividades
-  
-  
 
 end

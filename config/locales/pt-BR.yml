@@ -222,7 +222,7 @@ pt-BR:
       banco_de_horas:
         observacao: "Observações"
   string:
-      
+
   unauthorized:
     manage:
       all: "Você não está autorizado a acessar esse recurso"
@@ -238,4 +238,6 @@ pt-BR:
       sucess: "Banco de horas criado com sucesso."
     update:
       sucess: "Banco de horas atualizado com sucesso."
-      
+  usuario:
+    delete:
+      sucess: "Usuario apagado com sucesso."
