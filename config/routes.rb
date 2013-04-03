@@ -8,11 +8,11 @@ SinLab::Application.routes.draw do
   end
 
   devise_for :usuarios
-  devise_scope :usuario do
+  devise_scope :usuarios do
     get '/login' => 'devise/sessions#new'
     get '/logout' => 'devise/sessions#destroy'
   end
-  resources :usuario, :controller => "usuario"
+  resources :usuarios, :controller => "usuarios"
 
   resources :projetos do
     collection do

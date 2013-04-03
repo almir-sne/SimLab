@@ -1,4 +1,4 @@
-class UsuarioController < ApplicationController
+class UsuariosController < ApplicationController
   load_and_authorize_resource :class => "Usuario"
 
   def index
@@ -14,10 +14,10 @@ class UsuarioController < ApplicationController
     @user = Usuario.new(params[:usuario])
     if @user.save
       flash[:notice] = "Successfully! created Usuario."
+			format.json { head :no_content }
     else
-      raise "error"
+      format.json { render json: @user.errors, status: :unprocessable_entity }
     end
-     redirect_to usuario_index_path
   end
 
   def edit

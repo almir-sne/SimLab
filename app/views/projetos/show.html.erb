@@ -1,28 +1,30 @@
-<p>
-  <b>Name:</b>
-  <%= @projeto.nome %>
-</p>
 
-<p>
-  <b>Data de inicio:</b>
+<div class="blue-text" style="margin-left: 30px">
+  Projetos
+</div>
+<div class="blue-line">  </div>
+
+<div class="field">
+        <b>Name:</b>
+        <%= @projeto.nome  %>
+      </div>
+<div class="field">
+       <b>Data de inicio:</b>
   <%= @projeto.data_de_inicio %>
-</p>
-
-<p>
-  <b>Descricao:</b>
+      </div>
+<div class="field">
+        <b>Descricao:</b>
   <%= @projeto.descricao %>
-</p>
-
-<p>
-  <b>Valor:</b>
+      </div>
+<div class="field">
+       <b>Valor:</b>
   <%= @projeto.valor.to_s + " reais" %>
-</p>
-
-<p>
-  <b>Horas totais:</b>
+      </div>
+<div class="field">
+       <b>Horas totais:</b>
   <%= @projeto.horas_totais %>
-</p>
-
+      </div>
+     
 
 <%= link_to 'Edit', edit_projeto_path(@projeto) %> |
 <%= link_to 'Back', projetos_path %>

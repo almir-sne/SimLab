@@ -15,7 +15,7 @@
       <td style="border:none"><%= banco_de_hora.data %></td>
       <td style="border:none"><%= banco_de_hora.projeto_nome %></td>
       <td style="width: 70%; border: none">
-        <div class="blue-background" style="width: <%= (banco_de_hora.horas * 10).to_s + "%" %> ">
+        <div class="blue-background" style="width: <%= (banco_de_hora.bar_width)%>">
           <%= banco_de_hora.horas %>h
         </div>
       </td>
