@@ -15,7 +15,7 @@ class UsuarioController < ApplicationController
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
-      raise @user.errors.inspect# FIXME
+      raise @user.errors.messages.inspect# FIXME
     end
      redirect_to usuario_index_path
   end
