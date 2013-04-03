@@ -1,29 +1,22 @@
-<%= form_for(@projeto) do |f| %>
-  <% if @projeto.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@projeto.errors.count, "error") %> prohibited this projeto from being saved:</h2>
+    <%= form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
-      <ul>
-      <% @projeto.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<div class="div_edit">
+      <div class="field">
+        <%= f.label :nome %>
+        <%= f.text_field :nome%>
+      </div>
 
-  <div class="field">
-    <%= f.label :nome %><br />
-    <%= f.text_field :nome %>
-  </div>
-  <div class="field">
-    <%= f.label :data_de_inicio %><br />
-    <%= f.date_select :data_de_inicio, :order =>[:day, :month, :year]%>
-  </div>
-  <div class="field">
-    <%= f.label :descricao %><br />
-    <%= f.text_area :descricao %>
-  </div>
-  <div class="field">
+      <div class="field">
+        <%= f.label :data_de_inicio %>
+        <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
+      </div>
+
+        <div class="field">
+          <%= f.label :descricao %>
+          <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
+        </div>
+
+        <div class="field">
     <%= f.label :valor %><br />
     <%= f.text_field :valor %>
   </div>
@@ -31,7 +24,11 @@
     <%= f.label :horas_totais %><br />
     <%= f.number_field :horas_totais %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+  <br />
+      <div class="actions">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
+        <%= f.submit "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
+      </div>
+  <br />
+    <% end %>
+</div>
