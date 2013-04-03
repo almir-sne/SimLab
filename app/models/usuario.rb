@@ -18,4 +18,8 @@ class Usuario < ActiveRecord::Base
                    :uniqueness => true
 
   has_many :banco_de_horas
+  has_many :mes
+  has_many :dias
+  has_many :atividades
+
 end

@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330141236) do
+ActiveRecord::Schema.define(:version => 20130402190925) do
+
+  create_table "atividades", :force => true do |t|
+    t.integer  "projeto_id"
+    t.float    "horas"
+    t.integer  "user_id"
+    t.text     "observacao"
+    t.integer  "mes_id"
+    t.integer  "dia_id"
+    t.boolean  "aprovacao"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "banco_de_horas", :force => true do |t|
     t.date     "data"
@@ -21,6 +33,31 @@ ActiveRecord::Schema.define(:version => 20130330141236) do
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.datetime "entrada"
+    t.datetime "saida"
+    t.float    "intervalo"
+  end
+
+  create_table "dia", :force => true do |t|
+    t.integer  "numero"
+    t.datetime "entrada"
+    t.datetime "saida"
+    t.float    "intervalo"
+    t.integer  "usuario_id"
+    t.integer  "mes_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "mes", :force => true do |t|
+    t.integer  "numero"
+    t.integer  "ano"
+    t.integer  "user_id"
+    t.float    "valor_hora"
+    t.integer  "horas_contratadas"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "horas_trabalhadas", :default => 0
   end
 
   create_table "projetos", :force => true do |t|

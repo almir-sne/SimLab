@@ -2,53 +2,55 @@
      aria-hidden="true" style="width: 50%; margin-left: -25%">
 
   <div class="modal-body">
-    <%= form_for(@banco_de_hora, :validate => true, :remote => true, :html => {"data-type" => :json}) do |f| %>
-      <% if @banco_de_hora.errors.any? %>
+    <%= form_for(@dia, :url => banco_de_horas_path) do |f| %>
+      <% if @dia.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(@banco_de_hora.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
+          <h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
 
           <ul>
-            <% @banco_de_hora.errors.full_messages.each do |msg| %>
+            <% @dia.errors.full_messages.each do |msg| %>
               <li><%= msg %></li>
             <% end %>
           </ul>
         </div>
       <% end %>
 
-      <%= f.hidden_field :usuario_id, :value => current_usuario.id %>
+      <%= hidden_field_tag :user_id, @user.id %>
+      <%= hidden_field_tag :ano, @year %>
+      <%= hidden_field_tag :mes, @month.id %>
 
       <div class="container-fluid">
         <div class="row-fluid">
           <div class="span4">
             <div class="field">
               <%= f.label :dia %>
-              <%= f.number_field :data %>
+              <%= text_field_tag :numero, Date.today.day %>
             </div>
             <div class="field">
               <%= f.label :entrada %>
-              <%= text_field_tag :entrada %>
+              <%= text_field_tag :entrada, nil, {:placeholder => "00:00"} %>
             </div>
             <div class="field">
               <%= f.label :saida %>
-              <%= text_field_tag :saida %>
+              <%= text_field_tag :saida, nil, {:placeholder => "00:00"} %>
             </div>
             <div class="field">
               <%= f.label :intervalo %>
-              <%= text_field_tag :intervalo %>
+              <%= text_field_tag :intervalo, nil, {:placeholder => "00:00"} %>
             </div>
           </div>
           <div class="span4">
             <div class="field">
               <%= f.label :horas_gastas %>
-              <%= f.text_field :horas %>
+              <%= text_field_tag :horas %>
             </div>
             <div class="field">
               <%= f.label :projeto_id %>
-              <%= f.select :projeto_id, options_for_select(acha_projetos) %>
+              <%= select_tag :projeto_id, options_for_select(acha_projetos) %>
             </div>
             <div class="field">
               <%= f.label :observações %>
-              <%= f.text_area :observacao, :style => "height: 100px" %>
+              <%= text_area_tag :observacao %>
             </div>
 
             <%= link_to "Incluir Atividade", "\#", :class => "btn default-button"%>

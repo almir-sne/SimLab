@@ -11,4 +11,6 @@ class Projeto < ActiveRecord::Base
                              :uniqueness => true
 
   has_many :banco_de_horas
+
+  has_many :atividades
 end
