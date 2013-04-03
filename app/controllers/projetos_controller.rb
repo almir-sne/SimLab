@@ -55,6 +55,8 @@ class ProjetosController < ApplicationController
         format.html { render action: "new" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
+      redirect_to projetos_path
+    return
     end
   end
 
@@ -71,6 +73,8 @@ class ProjetosController < ApplicationController
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
+      redirect_to projetos_path
+    return
     end
   end
 
