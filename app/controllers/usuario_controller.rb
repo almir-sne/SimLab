@@ -13,9 +13,9 @@ class UsuarioController < ApplicationController
   def create
     @user = Usuario.new(params[:usuario])
     if @user.save
-      flash[:notice] = "Successfully! created Usuario."
+      flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
-      raise "error"
+      raise @user.errors.inspect# FIXME
     end
      redirect_to usuario_index_path
   end
@@ -39,7 +39,7 @@ class UsuarioController < ApplicationController
   def destroy
     @user = Usuario.find(params[:id])
     if @user.destroy
-      flash[:notice] = "Successfully deleted Usuario."
+      flash[:notice] = I18n.t("usuario.delete.sucess")
     end
   end
 

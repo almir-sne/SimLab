@@ -34,6 +34,7 @@ pt-BR:
       confirmed: 'Sua conta foi confirmada com sucesso. Você está logado.'
     registrations:
       signed_up: 'Bem-vindo! Você se registrou com sucesso.'
+      signed_up_another: 'Registro de novo usuário feito com sucesso'
       signed_up_but_unconfirmed: 'Uma mensagem com um link de confirmação foi enviado para o seu e-mail. Por favor, abra o link para ativar sua conta.'
       signed_up_but_inactive: 'Você se cadastrou com sucesso. Porém, sua conta ainda não está ativada.'
       signed_up_but_locked: 'Você se cadastrou com sucesso. Porém, sua conta está bloqueada.'
