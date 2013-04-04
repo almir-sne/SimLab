@@ -83,13 +83,13 @@
     <div>Aguardando confirmação de: <%= resource.unconfirmed_email %></div>
   <% end %>
 
-  <div><%= f.label :password %> <i>(Deixe em branco caso não queira mudar a senha)</i><br />
+  <div><%= f.label "Nova senha" %> <i>(Deixe em branco caso não queira mudar a senha)</i><br />
   <%= f.password_field :password, :autocomplete => "off" %></div>
-
-  <div><%= f.label :password_confirmation %><br />
+  <br />
+  <div><%= f.label "Confirmação da nova senha" %>
   <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.label :current_password %> <br />
+  <br />
+  <div><%= f.label "Senha atual" %> 
   <%= f.password_field :current_password %></div>
   <br />
   <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
