@@ -33,7 +33,9 @@ SinLab::Application.routes.draw do
     end
   end
 
-
+   authenticated :usuario do
+    root :to => 'banco_de_horas#show_mes'
+  end
   root :to => "home#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.
