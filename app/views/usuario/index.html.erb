@@ -6,14 +6,16 @@
 
 <table class="list-table">
 
-  <% @users.each do |user| %>
-    <tr>
+  
+  <tr>
+<th>Usuário</th>
+<th>Horas mensais</th>
+<th>Email</th>
+</tr>
+<% @users.each do |user| %>
+  <tr>
       <td>
         <%= link_to user.nome, edit_usuario_path(user) %>
-      </td>
-
-      <td>
-        Usuário
       </td>
 
       <td>

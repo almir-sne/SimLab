@@ -5,7 +5,11 @@
 <div class="blue-line">  </div>
 
 <table class="list-table">
-
+  <tr>
+<th>Nome do projeto</th>
+<th>Data de início</th>
+<th>Horas totais</th>
+</tr>
 <% @projetos.each do |projeto| %>
   <tr>
     <td><%=link_to projeto.nome, edit_projeto_path(projeto) %></td>
