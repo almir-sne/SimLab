@@ -1,11 +1,17 @@
 <div class="row-fluid" style="margin-left: 15px">
   <div class="span2 blue-text">
-    &lt; <%= @year %> &gt;
+    <%= link_to "<", banco_de_horas_path(:year => @year.to_i - 1, :month => @month.numero) %>
+    <%= link_to @year, show_mes_banco_de_horas_path(:year => @year) %>
+    <%= link_to ">", banco_de_horas_path(:year => @year.to_i + 1, :month => @month.numero) %>
   </div>
 
   <div class="span3 blue-text">
-    &lt; <%= t("date.month_names")[@month.numero] %> &gt;
+    <%= link_to "<", banco_de_horas_path(:year => @year.to_i, :month => @month.numero - 1) %>
+    <%= t("date.month_names")[@month.numero] %>
+    <%= link_to ">", banco_de_horas_path(:year => @year.to_i, :month => @month.numero + 1) %>
   </div>
+
+
 </div>
 <div class="blue-line">  </div>
 
