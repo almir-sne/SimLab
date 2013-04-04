@@ -4,6 +4,7 @@ SinLab::Application.routes.draw do
   resources :banco_de_horas do
     collection do
       get :modal
+      get :show_mes
     end
   end
 

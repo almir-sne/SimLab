@@ -1,0 +1,26 @@
+<div class="blue-text">
+  <%= link_to "<", show_mes_banco_de_horas_url(:year => @year.to_i - 1) %>
+  <%= @year %>
+  <%= link_to ">", show_mes_banco_de_horas_url(:year => @year.to_i + 1) %>
+</div>
+
+<div class="blue-line">  </div>
+
+<table style="width: 100%">
+  <tr>
+    <% (1..12).each do |mes| %>
+      <td class="month-table">
+        <%= link_to  t("date.month_names")[mes], banco_de_horas_url(:year => @year, :user => @user.id, :month => mes) %>
+        <br/> <br/>
+        <b>
+          <%= (@meses[mes].blank?)? 0: @meses[mes].horas_trabalhadas  %> /
+          <%= (@meses[mes].blank?)? @user.horario_mensal: @meses[mes].horas_contratadas %>
+        </b>
+      </td>
+      <% if mes == 6 %>
+      </tr>
+      <tr>
+      <% end %>
+    <% end %>
+  </tr>
+</table>

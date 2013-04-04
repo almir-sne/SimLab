@@ -1,68 +1,88 @@
-<%= form_for(@usuario) do |f| %>
-  <% if @usuario.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@usuario.errors.count, "error") %> prohibited this usuario from being saved:</h2>
 
-      <ul>
-      <% @usuario.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<div class="blue-text" style="margin-left: 30px">
+ Edição de Usuários
+</div>
+<div class="blue-line">  </div>
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
 
-  <div class="field">
-    <%= f.label :nome %><br />
-    <%= f.text_field :nome %>
-  </div>
+<%= form_for(@user, :url => usuario_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
+      <div class="div_edit">
+      <div class="container-fluid">
 
-  <div class="field">
-    <%= f.label :horario_mensal %><br />
-    <%= f.number_field :horario_mensal %>
-  </div>
+        <div class="row-fluid">
+        <div class="span6">
+        <%= f.label :nome %>
+        <%= f.text_field :nome, :style => "width: 100%"%>
+        </div>
+        <div class="span5 offset1">
+         <%= f.label :email %>
+        <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
+        </div>
+      </div>
+      </div>
 
-  <div class="field">
-    <%= f.label :valor_da_hora %><br />
-    <%= f.number_field :valor_da_hora %>
-  </div>
 
-  <div class="field">
-    <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
-  </div>
+      <div class="container-fluid">
 
-  <div class="field">
-    <%= f.label :entrada_usp %><br />
-    <%= f.date_select :entrada_usp, :order =>[:day, :month, :year] %>
-  </div>
+        <div class="row-fluid">
+          <div class="span7">
+            <div class="field">
+              <%= f.label :horario_mensal %>
+              <%= f.number_field :horario_mensal, :style => "width: 65%" %>
+            </div>
+            <div class="field">
+              <%= f.label :valor_da_hora %>
+              <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
+            </div>
 
-  <div class="field">
-    <%= f.label "saida prevista usp"%><br />
-    <%= f.date_select :saida_usp, :order =>[:day, :month, :year] %>
-  </div>
+            <div class="field">
+              <%= f.label :entrada_usp %>
+              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
+            </div>
 
-  <div class="field">
-    <%= f.label :cpf %><br />
-    <%= f.text_field :cpf %>
-  </div>
+            <div class="field">
+              <%= f.label "saida prevista usp"%>
+              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
+            </div>
 
-  <div class="field">
-    <%= f.label :banco %><br />
-    <%= f.text_field :banco %>
-  </div>
+            <div><%= f.label :password %>
+              <%= f.password_field :password , :style => "width: 65%"%>
+            </div>
+          </div>
+          <div class="span5">
 
-  <div class="field">
-    <%= f.label :conta %><i> (somente numeros)</i><br />
-    <%= f.number_field :conta %>
-  </div>
+            <div class="field">
+              <%= f.label :cpf %>
+              <%= f.text_field :cpf , :style => "width: 85%"%>
+            </div>
 
-  <div class="field">
-    <%= f.label :agencia %><i> (somente numeros)</i><br />
-    <%= f.number_field :agencia %>
-  </div>
+            <div class="field">
+              <%= f.label :banco %>
+              <%= f.text_field :banco , :style => "width: 85%"%>
+            </div>
 
-  <div><%= f.submit t(".update") %></div>
-<% end %>
+            <div class="field">
+              <%= f.label :conta %>
+              <%= f.number_field :conta , :style => "width: 85%"%>
+            </div>
+
+            <div class="field">
+              <%= f.label :agencia %>
+              <%= f.number_field :agencia , :style => "width: 85%"%>
+            </div>
+
+            <div><%= f.label :password_confirmation %>
+              <%= f.password_field :password_confirmation , :style => "width: 85%"%>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br/>
+      <div class="actions">
+        <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
+        <%= f.submit "Salvar", :style => "float: left;margin-left: 10px;", :class => "btn default-button"%>
+      </div>
+      </div>
+<br />
+    <% end %>

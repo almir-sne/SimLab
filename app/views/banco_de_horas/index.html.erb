@@ -3,21 +3,23 @@
     &lt; <%= @year %> &gt;
   </div>
 
-  <div class="span2 blue-text">
-    &lt; <%= Date::MONTHNAMES[@month] %> &gt;
+  <div class="span3 blue-text">
+    &lt; <%= t("date.month_names")[@month.numero] %> &gt;
   </div>
 </div>
 <div class="blue-line">  </div>
 
 <table class="list-table">
-  <% @banco_de_horas.each do |banco_de_hora| %>
+  <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none"><%= banco_de_hora.data %></td>
-      <td style="border:none"><%= banco_de_hora.projeto_nome %></td>
+      <td style="border:none"><%= dia.numero %></td>
+      <td style="border:none"><%= dia.entrada.strftime("%H:%M") %></td>
+      <td style="border:none"><%= dia.saida.strftime("%H:%M") %></td>
+      <td style="border:none"><%= dia.formata_intervalo %></td>
       <td style="width: 70%; border: none">
-        <div class="blue-background" style="width: <%= (banco_de_hora.bar_width)%>">
-          <%= banco_de_hora.horas %>h
-        </div>
+      <div class="blue-background" style="width: <%= (banco_de_hora.bar_width)%>">
+        <%= dia.formata_horas %>h
+      </div>
       </td>
     </tr>
   <% end %>

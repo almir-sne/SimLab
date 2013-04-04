@@ -34,10 +34,12 @@ pt-BR:
       confirmed: 'Sua conta foi confirmada com sucesso. Você está logado.'
     registrations:
       signed_up: 'Bem-vindo! Você se registrou com sucesso.'
+      signed_up_another: 'Registro de novo usuário feito com sucesso'
       signed_up_but_unconfirmed: 'Uma mensagem com um link de confirmação foi enviado para o seu e-mail. Por favor, abra o link para ativar sua conta.'
       signed_up_but_inactive: 'Você se cadastrou com sucesso. Porém, sua conta ainda não está ativada.'
       signed_up_but_locked: 'Você se cadastrou com sucesso. Porém, sua conta está bloqueada.'
       updated: 'Você atualizou sua conta com sucesso.'
+      updated_another: 'Você atualizou %{user.nome} conta com sucesso.'
       update_needs_confirmation: 'Você atualizou sua conta com sucesso, mas nós precisamos verificar seu endereço de e-mail. Por favor, verifique seus e-mails e clique no link de confirmação para finalizar a criação da sua conta.'
       destroyed: 'Até mais! Sua conta foi cancelada com sucesso. Esperamos vê-lo novamente em breve.'
     unlocks:

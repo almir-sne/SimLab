@@ -3,7 +3,7 @@
 
   <div class="modal-body">
 
-    <%= form_for(@projeto, :validate => true, :remote => true, :html => {"data-type" => :json}) do |f| %>
+    <%= form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
       <div class="field">
         <%= f.label :nome %>
@@ -15,23 +15,23 @@
         <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
       </div>
 
-        <div class="field">
-          <%= f.label :descricao %>
-          <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
-        </div>
+      <div class="field">
+        <%= f.label :descricao %>
+        <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
+      </div>
 
-        <div class="field">
-    <%= f.label :valor %><br />
-    <%= f.text_field :valor %>
-  </div>
-  <div class="field">
-    <%= f.label :horas_totais %><br />
-    <%= f.number_field :horas_totais %>
-  </div>
-    
+      <div class="field">
+        <%= f.label :valor %><br />
+        <%= f.text_field :valor %>
+      </div>
+      <div class="field">
+        <%= f.label :horas_totais %><br />
+        <%= f.number_field :horas_totais %>
+      </div>
+
       <div class="actions">
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
-        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
+        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button", "data-dismiss" => "modal"%>
       </div>
     <% end %>
 
