@@ -1,16 +1,20 @@
-<h2>Change your password</h2>
+<div class="blue-text" style="margin-left: 30px">
+ Altere sua senha
+</div>
+<div class="blue-line">  </div>
+ <div class="div_edit">
 
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :reset_password_token %>
 
-  <div><%= f.label :password, "New password" %><br />
+  <div><%= f.label :password, "Nova senha" %>
   <%= f.password_field :password, :autofocus => true %></div>
-
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
+<br />
+  <div><%= f.label :password_confirmation, "Confirme a nova senha" %>
   <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Change my password" %></div>
+<br />
+  <div><%= f.submit "Mude a minha senha",:class => "btn default-button" %></div>
 <% end %>
+ </div>
 
-<%= render "devise/shared/links" %>
