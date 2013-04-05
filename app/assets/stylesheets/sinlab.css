@@ -128,8 +128,8 @@
 
 .panel-scrollable {
     border: 1px solid rgb(180, 180, 180);
-    max-height: 250px;
-    height: 250px;
+    max-height: 350px;
+   border: transparent;
     overflow: hidden;
     overflow-y: auto;
 }
