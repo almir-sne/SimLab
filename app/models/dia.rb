@@ -3,6 +3,8 @@ class Dia < ActiveRecord::Base
 
   belongs_to :usuario
   belongs_to :mes
+	has_many :atividades
+	accepts_nested_attributes_for :atividades
 
   validates :numero, :uniqueness => {:scope => :mes_id}
 
@@ -20,5 +22,10 @@ class Dia < ActiveRecord::Base
     hora = (intervalo / 3600).to_i
     minuto = (( intervalo % 3600) / 60).to_i
     hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
-  end
+  end 
+
+	def bar_width
+		width = horas.nil? ? "0" : horas.to_s
+		width + "%"
+	end
 end

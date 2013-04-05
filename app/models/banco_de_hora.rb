@@ -10,10 +10,3 @@ class BancoDeHora < ActiveRecord::Base
   delegate :nome, :to => :projeto, :prefix => true
   delegate :nome, :to => :usuario, :prefix => true
 end
-
-public 
-
-def bar_width
-	width = horas.nil? ? "0" : horas.to_s
-	width + "%"
-end

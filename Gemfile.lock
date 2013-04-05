@@ -117,6 +117,7 @@ GEM
     mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.7.2)
+    nested_form (0.3.1)
     nokogiri (1.5.9)
     orm_adapter (0.4.0)
     polyamorous (0.5.0)
@@ -234,6 +235,7 @@ DEPENDENCIES
   guard-rspec
   jquery-rails
   launchy
+  nested_form
   rails (= 3.2.13)
   rspec-rails
   sass-rails (~> 3.2.3)
