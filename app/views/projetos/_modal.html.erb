@@ -3,7 +3,7 @@
 
   <div class="modal-body">
 
-    <%= form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
+    <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
 
       <div class="field">
@@ -32,7 +32,7 @@
 
       <div class="actions">
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
-        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button", "data-dismiss" => "modal"%>
+        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
       </div>
     <% end %>
 
