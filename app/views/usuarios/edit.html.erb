@@ -45,9 +45,10 @@
               <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
             </div>
 
-            <div><%= f.label :password %>
-              <%= f.password_field :password , :style => "width: 65%"%>
-            </div>
+           <div class="field">
+              <%= f.label :role %>
+              <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
+           </div>
           </div>
           <div class="span5">
 
@@ -71,9 +72,7 @@
               <%= f.number_field :agencia , :style => "width: 85%"%>
             </div>
 
-            <div><%= f.label :password_confirmation %>
-              <%= f.password_field :password_confirmation , :style => "width: 85%"%>
-            </div>
+            
           </div>
         </div>
       </div>

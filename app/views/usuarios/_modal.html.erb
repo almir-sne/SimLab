@@ -45,6 +45,10 @@
             <div><%= f.label :password %>
               <%= f.password_field :password , :style => "width: 65%"%>
             </div>
+            <div class="field">
+              <%= f.label :role %>
+              <%= f.select :role, options_for_select(["admin", "coordenador", "desenvolvedor"]) %>
+           </div>
           </div>
           <div class="span5">
 
@@ -71,15 +75,17 @@
             <div><%= f.label :password_confirmation %>
               <%= f.password_field :password_confirmation , :style => "width: 85%"%>
             </div>
+            <br />
+            <div class="actions" style="margin-top: 7px">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;margin-left: 21px;">Cancelar</button>
+        <%= f.submit "Salvar", :style => "float: right;margin-right: 50px;", :class => "btn default-button"%>
+      </div>
           </div>
         </div>
       </div>
 
-      <br/>
-      <div class="actions">
-        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;margin-left: 21px;">Cancelar</button>
-        <%= f.submit "Salvar", :style => "float: right;margin-right: 50px;", :class => "btn default-button"%>
-      </div>
+      
+     
     <% end %>
 
   </div>

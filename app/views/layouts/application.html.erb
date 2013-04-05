@@ -36,9 +36,9 @@
         <div class="span4"></div>
 
         <div class="span2 top-user" >
-          Bem vindo <%= link_to  current_usuario.nome + "!", edit_usuario_registration_url, :style => "color: rgb(33, 147, 189); font-weight: bold" %>
+          Bem vindo <a style="color: rgb(33, 147, 189); font-weight: bold"><%= current_usuario.nome + '!'%> </a>
           <br/>
-          <%= link_to "Alterar senha", edit_usuario_password_url %>
+          <%= link_to "Alterar senha", edit_usuario_registration_path %>
           <br/>
           <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
         </div>
