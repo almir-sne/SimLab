@@ -2,7 +2,7 @@
      aria-hidden="true" style="width: 50%; margin-left: -25%">
 
   <div class="modal-body">
-    <%= form_for(@dia, :url => banco_de_horas_path) do |f| %>
+    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
       <% if @dia.errors.any? %>
         <div id="error_explanation">
           <h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
@@ -39,26 +39,24 @@
               <%= text_field_tag :intervalo, nil, {:placeholder => "00:00"} %>
             </div>
           </div>
-          <div class="span4">
-            <div class="field">
-              <%= f.label :horas_gastas %>
-              <%= text_field_tag :horas %>
-            </div>
-            <div class="field">
-              <%= f.label :projeto_id %>
-              <%= select_tag :projeto_id, options_for_select(acha_projetos) %>
-            </div>
-            <div class="field">
-              <%= f.label :observações %>
-              <%= text_area_tag :observacao %>
-            </div>
 
-            <%= link_to "Incluir Atividade", "\#", :class => "btn default-button"%>
-          </div>
+          <%= f.link_to_add "Incluir Atividade", :atividades%>
           <div class="span4">
-            Atividades
-            <div class="panel-scrollable">
-            </div>
+						<%= f.fields_for :atividades do |atividade_form| %>
+          		<div class="field">
+            		<%= atividade_form.label :horas %>
+            		<%= atividade_form.text_field :horas %>
+          		</div>
+							<div class="field">
+            		<%= atividade_form.label :projeto_id %>
+            		<%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %>
+          		</div>
+							<div class="field">
+            		<%= atividade_form.label :observacao %>
+            		<%= atividade_form.text_area :observacao, :rows => 3 %>
+          		</div>
+							<%= atividade_form.link_to_remove "Remover Atividade" %>
+						<% end %>
           </div>
         </div>
       </div>

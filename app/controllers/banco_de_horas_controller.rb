@@ -17,7 +17,7 @@ class BancoDeHorasController < ApplicationController
     end
     @dias = @month.dias
     @dia = Dia.new
-    
+    @dia.atividades.build
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @banco_de_horas }

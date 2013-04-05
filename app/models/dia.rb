@@ -4,7 +4,10 @@ class Dia < ActiveRecord::Base
   belongs_to :usuario
   belongs_to :mes
 	has_many :atividades
+
 	accepts_nested_attributes_for :atividades
+	
+	attr_accessible :atividades_attributes
 
   validates :numero, :uniqueness => {:scope => :mes_id}
 
