@@ -1,7 +1,7 @@
 <div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 25%; ">
+     aria-hidden="true" style="width: 25%;height: 550px; ">
 
-  <div class="modal-body">
+  <div class="modal-body" style="max-height: 550px !important;">
 
     <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
@@ -22,11 +22,11 @@
       </div>
 
       <div class="field">
-        <%= f.label :valor %><br />
+        <%= f.label :valor %>
         <%= f.text_field :valor %>
       </div>
       <div class="field">
-        <%= f.label :horas_totais %><br />
+        <%= f.label :horas_totais %>
         <%= f.number_field :horas_totais %>
       </div>
 
