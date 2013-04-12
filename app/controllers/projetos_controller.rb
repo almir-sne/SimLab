@@ -1,5 +1,4 @@
 class ProjetosController < ApplicationController
-  before_filter :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
@@ -15,6 +14,7 @@ class ProjetosController < ApplicationController
   # GET /projetos/1
   # GET /projetos/1.json
   def show
+    authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
 
     respond_to do |format|
@@ -32,19 +32,21 @@ class ProjetosController < ApplicationController
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @projeto }
-       
+
     end
-   
+
   end
 
   # GET /projetos/1/edit
   def edit
+    authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
   end
 
   # POST /projetos
   # POST /projetos.json
   def create
+    authorize! :create, Projeto
     @projeto = Projeto.new(params[:projeto])
 
     respond_to do |format|
@@ -63,6 +65,7 @@ class ProjetosController < ApplicationController
   # PUT /projetos/1
   # PUT /projetos/1.json
   def update
+    authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
 
     respond_to do |format|
@@ -81,6 +84,7 @@ class ProjetosController < ApplicationController
   # DELETE /projetos/1
   # DELETE /projetos/1.json
   def destroy
+    authorize! :destroy, Projeto
     @projeto = Projeto.find(params[:id])
     @projeto.destroy
 
@@ -90,7 +94,4 @@ class ProjetosController < ApplicationController
     end
   end
 
-  def modal
-    @projeto = Projeto.new
-  end
 end

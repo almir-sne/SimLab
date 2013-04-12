@@ -239,5 +239,7 @@ pt-BR:
     update:
       sucess: "Banco de horas atualizado com sucesso."
   usuario:
+    create:
+      failure: "Não foi possível saver o registro."
     delete:
       sucess: "Usuario apagado com sucesso."

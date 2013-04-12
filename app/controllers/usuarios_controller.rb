@@ -1,35 +1,38 @@
 class UsuariosController < ApplicationController
-  load_and_authorize_resource :class => "Usuario"
 
   def index
     @users = Usuario.all
     @user ||= Usuario.new
   end
 
-  def new
-    @user = Usuario.new
+  def custom_create
+    authorize! :create, Usuario
+    create
   end
 
   def create
+    authorize! :create, Usuario
     @user = Usuario.new(params[:usuario])
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
-			format.json { head :no_content }
     else
-      format.json { render json: @user.errors, status: :unprocessable_entity }
+      flash[:notice] = I18n.t("usuario.create.failure")
     end
+    redirect_to usuarios_path
   end
 
   def edit
+    authorize! :update, Usuario
     @user = Usuario.find(params[:id])
   end
 
   def update
+    authorize! :update, Usuario
     @user = Usuario.find(params[:id])
     puts "Passssssssssssssssssssssssssssssssssooouuuuuuuuuuuuuuuuuuuuuuuuu pelo UPDATE"
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."
-      redirect_to usuario_index_path
+      redirect_to usuarios_path
     else
       Rails.logger.info(@user.errors.messages.inspect)
       render :action => 'edit'
@@ -37,6 +40,7 @@ class UsuariosController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, Usuario
     @user = Usuario.find(params[:id])
     if @user.destroy
       flash[:notice] = I18n.t("usuario.delete.sucess")

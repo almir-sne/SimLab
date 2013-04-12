@@ -22,19 +22,19 @@ feature Projeto do
 		  click_button I18n.t("helpers.submit.update", :model => I18n.t("activerecord.models.project"))
 		  page.should have_content(I18n.t("projetos.update.sucess"))
 		end
-		
+
 		scenario "não deveria ser acessivel sem login" do
 		  click_link "Sair"
 		  visit projeto_path(@project)
 		  page.should have_content(I18n.t("devise.failure.unauthenticated"))
 		end
-		
+
 		before(:each) do
 		  @project = FactoryGirl.create(:projeto)
 		end
 	end
-	
+
 	before(:each) do
-	  usuario_faz_login
+	  desenvolvedor_faz_login
 	end
 end

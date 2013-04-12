@@ -26,7 +26,7 @@
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">Cadastros</a>
               <ul class="top-nav dropdown-menu" role="menu"  aria-labelledby="dLabel">
                 <li> <%=  link_to "Projetos", projetos_url%> </li>
-                <li> <%=  link_to "Usuários", usuario_index_url%></li>
+                <li> <%=  link_to "Usuários", usuarios_url%></li>
               </ul>
 
             </li>
@@ -83,13 +83,13 @@
     <div>Aguardando confirmação de: <%= resource.unconfirmed_email %></div>
   <% end %>
 
-  <div><%= f.label "Nova senha" %> <i>(Deixe em branco caso não queira mudar a senha)</i><br />
+  <div><%= f.label "Nova senha" %> <br />
   <%= f.password_field :password, :autocomplete => "off" %></div>
   <br />
   <div><%= f.label "Confirmação da nova senha" %>
   <%= f.password_field :password_confirmation %></div>
   <br />
-  <div><%= f.label "Senha atual" %> 
+  <div><%= f.label "Senha atual" %>
   <%= f.password_field :current_password %></div>
   <br />
   <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
@@ -97,6 +97,3 @@
   <br />
 <% end %>
    </div>
-
-
-

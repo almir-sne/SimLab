@@ -28,7 +28,7 @@ feature BancoDeHora do
   end
 
   before(:each) do
-    usuario = usuario_faz_login
+    usuario = desenvolvedor_faz_login
     @banco = FactoryGirl.create(:banco_de_hora, :usuario_id => usuario.id)
     @project = @banco.projeto
   end

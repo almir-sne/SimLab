@@ -3,7 +3,6 @@ SinLab::Application.routes.draw do
 
   resources :banco_de_horas do
     collection do
-      get :modal
       get :show_mes
     end
   end
@@ -13,19 +12,13 @@ SinLab::Application.routes.draw do
     get '/login' => 'devise/sessions#new'
     get '/logout' => 'devise/sessions#destroy'
   end
-  resources :usuarios, :controller => "usuarios"
-
-  resources :projetos do
+  resources :usuarios, :controller => "usuarios" do
     collection do
-      get :modal
+      post :custom_create
     end
   end
 
-  resources :usuario, :only => :index do
-    collection do
-      get :modal
-    end
-  end
+  resources :projetos
 
   resources :resumo do
     collection do

@@ -1,5 +1,5 @@
 class BancoDeHorasController < ApplicationController
-  load_and_authorize_resource
+  before_filter :authenticate_usuario!
   # GET /banco_de_horas
   # GET /banco_de_horas.json
   def index

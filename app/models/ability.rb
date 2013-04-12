@@ -8,7 +8,6 @@ class Ability
       can :manage, :all
     elsif user.role == "desenvolvedor"
       can :read,    Usuario
-      can :update,  Usuario
 
       can :read,    BancoDeHora
       can :create,  BancoDeHora
