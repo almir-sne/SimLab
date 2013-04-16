@@ -29,7 +29,6 @@ class UsuariosController < ApplicationController
   def update
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    puts "Passssssssssssssssssssssssssssssssssooouuuuuuuuuuuuuuuuuuuuuuuuu pelo UPDATE"
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."
       redirect_to usuarios_path
