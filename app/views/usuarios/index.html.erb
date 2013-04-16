@@ -9,7 +9,7 @@
 
   <tr>
 <th>Usuário</th>
-<th>Horas mensais</th>
+<th>Atividade</th>
 <th>Email</th>
 </tr>
 <% @users.each do |user| %>
@@ -19,7 +19,7 @@
       </td>
 
       <td>
-        <%= user.horario_mensal %>
+        <%= user.role %>
       </td>
 
       <td>
