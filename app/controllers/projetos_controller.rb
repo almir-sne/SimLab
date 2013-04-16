@@ -1,4 +1,5 @@
 class ProjetosController < ApplicationController
+before_filter :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
@@ -57,6 +58,7 @@ class ProjetosController < ApplicationController
         format.html { render action: "new" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
+      flash[:notice] = I18n.t("projetos.create.sucess", :model => "Projeto")
       redirect_to projetos_path
     return
     end
@@ -76,6 +78,7 @@ class ProjetosController < ApplicationController
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
+     flash[:notice] = I18n.t("projetos.update.sucess")
       redirect_to projetos_path
     return
     end

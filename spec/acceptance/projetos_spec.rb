@@ -5,36 +5,55 @@ feature Projeto do
 
 	describe "novo" do
 		scenario "deveria poder ser criado" do
-		  visit new_projeto_path
-		  fill_in "Nome",  :with => "teste_cria_novo_projeto"
-		  fill_in "Descrição", :with => "Novo projeto"
-		  fill_in "Valor", :with => "10"
-		  click_button I18n.t("helpers.submit.create", :model => I18n.t("activerecord.models.project"))
+      admin_faz_login
+		  visit projetos_path
+		  fill_in "Nome",  :with => @projeto_novo[:nome]
+		  fill_in "Descrição", :with => @projeto_novo[:descricao]
+		  fill_in "Valor", :with => @projeto_novo[:valor]
+		  click_button "Salvar"
 		  page.should have_content(I18n.t("projetos.create.sucess", :model => "Projeto"))
-		  page.should have_content("teste_cria_novo_projeto")
+		  page.should have_content(@projeto_novo[:nome])
+		end
+
+		scenario "nao poderia ser criado por desenvolvedor" do
+		  desenvolvedor_faz_login
+		  visit projetos_path
+		  fill_in "Nome",  :with => @projeto_novo[:nome]
+		  fill_in "Descrição", :with => @projeto_novo[:descricao]
+		  fill_in "Valor", :with => @projeto_novo[:valor]
+		  click_button "Salvar"
+		  page.should have_content(I18n.t("unauthorized.manage.all") )
 		end
 	end
 
-	describe "projeto existente" do
+	describe "existente" do
 		scenario "deveria poder ser editado" do
-		  visit edit_projeto_path(@project)
+		  projeto = FactoryGirl.create(:projeto)
+		  admin_faz_login
+		  visit projetos_path
+		  click_link projeto.nome
 		  fill_in "Nome", :with => "Teste"
-		  click_button I18n.t("helpers.submit.update", :model => I18n.t("activerecord.models.project"))
+#      save_and_open_page
+ 		  click_button "Salvar"
 		  page.should have_content(I18n.t("projetos.update.sucess"))
 		end
 
+		scenario "nao poderia ser editado por desenvolvedor" do
+		  projeto = FactoryGirl.create(:projeto)
+		  desenvolvedor_faz_login
+		  visit projetos_path
+		  click_link projeto.nome
+ 		  page.should have_content(I18n.t("unauthorized.manage.all") )
+		end
+
 		scenario "não deveria ser acessivel sem login" do
-		  click_link "Sair"
-		  visit projeto_path(@project)
+		  visit projetos_path
 		  page.should have_content(I18n.t("devise.failure.unauthenticated"))
 		end
 
-		before(:each) do
-		  @project = FactoryGirl.create(:projeto)
-		end
 	end
 
 	before(:each) do
-	  desenvolvedor_faz_login
+	  @projeto_novo = FactoryGirl.attributes_for(:projeto)
 	end
 end
