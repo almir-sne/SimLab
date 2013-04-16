@@ -12,7 +12,7 @@
 </tr>
 <% @projetos.each do |projeto| %>
   <tr>
-    <td><%= link_to projeto.nome, projeto_path(projeto) %></td>
+    <td><%= link_to projeto.nome, edit_projeto_path(projeto) %></td>
     <td><%= projeto.data_de_inicio %></td>
     <td><%= projeto.horas_totais %></td>
   </tr>
@@ -23,4 +23,3 @@
   :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
 
 <%= render :partial => "modal"%>
-
