@@ -28,15 +28,15 @@
             </div>
             <div class="field">
               <%= f.label :entrada %>
-              <%= text_field_tag :entrada, nil, {:placeholder => "00:00"} %>
+              <%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0)}, :style => 'width: 100px;' %>
             </div>
             <div class="field">
               <%= f.label :saida %>
-              <%= text_field_tag :saida, nil, {:placeholder => "00:00"} %>
+              <%= time_select :saida, nil, {:default => Time.new(2000,1,1,0,0,0)}, :style => 'width: 100px;' %>
             </div>
             <div class="field">
               <%= f.label :intervalo %>
-              <%= text_field_tag :intervalo, nil, {:placeholder => "00:00"} %>
+              <%= time_select :intervalo, nil, {:default => Time.new(2000,1,1,0,0,0)} , :style => 'width: 100px;'%>
             </div>
           </div>
 
@@ -45,7 +45,7 @@
 						<%= f.fields_for :atividades do |atividade_form| %>
           		<div class="field">
             		<%= atividade_form.label :horas %>
-            		<%= atividade_form.text_field :horas %>
+                <%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0)} , :style => 'width: 100px;'%>
           		</div>
 							<div class="field">
             		<%= atividade_form.label :projeto_id %>
@@ -55,10 +55,10 @@
             		<%= atividade_form.label :observacao %>
             		<%= atividade_form.text_area :observacao, :rows => 3 %>
           		</div>
-            
+
 							<%= atividade_form.link_to_remove "Remover Atividade", :class=>"btn default-button"%>
 						<% end %>
-            
+
             <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button", :style =>"margin-top: 10px"%>
           </div>
         </div>
@@ -71,4 +71,3 @@
     <% end %>
   </div>
 </div>
-

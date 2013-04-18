@@ -3,25 +3,20 @@ class BancoDeHorasController < ApplicationController
   # GET /banco_de_horas
   # GET /banco_de_horas.json
   def index
-    @year = params[:year]
-    @year ||= Date.today.year
-    @user = Usuario.find params[:user] unless params[:user].blank?
-    @user ||= current_user
-    @month_num = params[:month]
-    @month_num ||= Date.today.month
-    @month = Mes.find_by_ano_and_numero_and_user_id @year, @month_num, @user.id
-    if @month.nil?
-      @month = Mes.new :ano => @year, :numero => @month_num, :horas_contratadas => @user.horario_mensal,
-        :user_id => @user.id, :valor_hora => @user.valor_da_hora
+    @year =      params[:year].nil?  ? Date.today.year  : params[:year]
+    @user =      params[:user].nil?  ? current_user     : Usuario.find(params[:user])
+    @month_num = params[:month].nil? ? Date.today.month : params[:month]
+
+    @month = Mes.find_or_initialize_by_ano_and_numero_and_user_id @year, @month_num, @user.id
+    if @month.horas_contratadas.nil?
+      @month.horas_contratadas = @user.horario_mensal
+      @month.valor_hora = @user.valor_da_hora
       @month.save
     end
+
     @dias = @month.dias
     @dia = Dia.new
     @dia.atividades.build
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @banco_de_horas }
-    end
   end
 
   # GET /banco_de_horas/1
@@ -56,6 +51,7 @@ class BancoDeHorasController < ApplicationController
   # POST /banco_de_horas
   # POST /banco_de_horas.json
   def create
+#  raise params.inspect
     @dia = Dia.new(params[:dia])
     @dia.numero = params[:numero]
     e = params[:entrada].split(":")
@@ -70,6 +66,7 @@ class BancoDeHorasController < ApplicationController
     @dia.intervalo = intervalo
     @dia.mes = month
     @dia.usuario_id = params[:user_id]
+
     if @dia.save
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
@@ -111,8 +108,7 @@ class BancoDeHorasController < ApplicationController
   end
 
   def show_mes
-    @year = params[:year]
-    @year ||= Date.today.year
+    @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = current_user
     query = Mes.find_all_by_ano_and_user_id @year, @user.id
     @meses = {}
