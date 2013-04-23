@@ -32,15 +32,7 @@ class BancoDeHorasController < ApplicationController
 
   # GET /banco_de_horas/new
   # GET /banco_de_horas/new.json
-  def new
-    @projetos = Projeto.all
-    @banco_de_hora = BancoDeHora.new
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @banco_de_hora }
-    end
-  end
 
   # GET /banco_de_horas/1/edit
   def edit
@@ -51,28 +43,29 @@ class BancoDeHorasController < ApplicationController
   # POST /banco_de_horas
   # POST /banco_de_horas.json
   def create
-#  raise params.inspect
-    @dia = Dia.new(params[:dia])
-    @dia.numero = params[:numero]
-    e = params[:entrada].split(":")
-    s = params[:saida].split(":")
-    i = params[:intervalo].split(":")
-    month = Mes.find params[:mes]
-    entrada = DateTime.new(params[:ano].to_i, month.numero, @dia.numero, e[0].to_i + 2, e[1].to_i)
-    saida = DateTime.new(params[:ano].to_i, month.numero, @dia.numero, s[0].to_i + 2, s[1].to_i)
-    intervalo = i[0].to_f * 3600 + i[1].to_f * 60
-    @dia.entrada = entrada
-    @dia.saida = saida
-    @dia.intervalo = intervalo
-    @dia.mes = month
-    @dia.usuario_id = params[:user_id]
+    @dia = Dia.new(
+      :numero => params[:dia][:numero],
+      :entrada => convert_date(params[:dia], "entrada"),
+      :saida => convert_date(params[:dia], "saida"),
+      :intervalo => (params[:dia]["intervalo(4i)"].to_i * 3600 +  params[:dia]["intervalo(5i)"].to_i * 60),
+      :mes_id => params[:mes]
+
+      )
+    #falta atividade
+
+    params[:dia][:atividades_attributes].each do |atividade_attr|
+      raise params[:dia][:atividades_attributes].first.inspect
+      atividade = Atividade.new(
+        :horas => atividade_attr
+      )
+    end
 
     if @dia.save
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
       flash[:error] = "Erro na criação do registro"
     end
-    redirect_to banco_de_horas_path(:month => month.numero, :year => params[:ano], :user => params[:user_id])
+    redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
   end
 
   # PUT /banco_de_horas/1
@@ -113,5 +106,17 @@ class BancoDeHorasController < ApplicationController
     query = Mes.find_all_by_ano_and_user_id @year, @user.id
     @meses = {}
     query.map {|e| @meses[e.numero] = e }
+  end
+
+  private
+
+  def convert_date(hash, date_symbol_or_string)
+    attribute = date_symbol_or_string.to_s
+    return DateTime.new(
+      hash[attribute + '(1i)'].to_i,
+      hash[attribute + '(2i)'].to_i,
+      hash[attribute + '(3i)'].to_i,
+      hash[attribute + '(4i)'].to_i,
+      hash[attribute + '(5i)'].to_i)
   end
 end

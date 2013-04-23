@@ -24,19 +24,19 @@
           <div class="span4">
             <div class="field">
               <%= f.label :dia %>
-              <%= text_field_tag :numero, Date.today.day %>
+              <%= f.text_field :numero, :value => Date.today.day %>
             </div>
             <div class="field">
               <%= f.label :entrada %>
-              <%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0)}, :style => 'width: 100px;' %>
+              <%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %>
             </div>
             <div class="field">
               <%= f.label :saida %>
-              <%= time_select :saida, nil, {:default => Time.new(2000,1,1,0,0,0)}, :style => 'width: 100px;' %>
+              <%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %>
             </div>
             <div class="field">
               <%= f.label :intervalo %>
-              <%= time_select :intervalo, nil, {:default => Time.new(2000,1,1,0,0,0)} , :style => 'width: 100px;'%>
+              <%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%>
             </div>
           </div>
 
@@ -45,7 +45,7 @@
 						<%= f.fields_for :atividades do |atividade_form| %>
           		<div class="field">
             		<%= atividade_form.label :horas %>
-                <%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0)} , :style => 'width: 100px;'%>
+                <%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%>
           		</div>
 							<div class="field">
             		<%= atividade_form.label :projeto_id %>
