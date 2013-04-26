@@ -48,19 +48,25 @@ class BancoDeHorasController < ApplicationController
       :entrada => convert_date(params[:dia], "entrada"),
       :saida => convert_date(params[:dia], "saida"),
       :intervalo => (params[:dia]["intervalo(4i)"].to_i * 3600 +  params[:dia]["intervalo(5i)"].to_i * 60),
-      :mes_id => params[:mes]
+      :mes_id => params[:mes],
+      :usuario_id => params[:user_id]
+    )
+    dia_sucess = @dia.save
 
-      )
-    #falta atividade
-
-    params[:dia][:atividades_attributes].each do |atividade_attr|
-      raise params[:dia][:atividades_attributes].first.inspect
+    atividades_failure = false
+    params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
       atividade = Atividade.new(
-        :horas => atividade_attr
+        :horas => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
+        :observacao => atividade_attr["observacao"],
+        :projeto_id => atividade_attr["projeto_id"],
+        :dia_id => @dia.id,
+        :mes_id => params[:mes],
+        :user_id => params[:user_id]
       )
+      atividades_failure = ! atividade.save
     end
 
-    if @dia.save
+    if dia_sucess and !atividades_failure
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
       flash[:error] = "Erro na criação do registro"

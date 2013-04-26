@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20130402190925) do
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "approved"
   end
 
   create_table "dia", :force => true do |t|

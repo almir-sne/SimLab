@@ -16,19 +16,21 @@
 <div class="blue-line">  </div>
 
 <table class="list-table">
-    <tr>
-<th>Dia</th>
-<th>Hora de entrada</th>
-<th>Hora de saída</th>
-<th>Intervalo</th>
-<th style="padding-left: 25px;">Horas trabalhadas</th>
-</tr>
+  <tr>
+    <th>Dia</th>
+    <th>Hora de entrada</th>
+    <th>Hora de saída</th>
+    <th>Intervalo</th>
+    <th>Atividades</th>
+    <th style="padding-left: 25px;">Horas trabalhadas</th>
+  </tr>
   <% @dias.each do |dia| %>
     <tr>
       <td style="border:none"><%= dia.numero %></td>
       <td style="border:none"><%= dia.entrada.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
+      <td style="border:none"> <%= link_to "ver", atividades_minhas_path(:dia_id => dia.id) %> </td>
       <td style="width: 70%; border: none">
       <div class="blue-background" style="width: <%= (dia.bar_width)%>">
         <%= dia.formata_horas %>h

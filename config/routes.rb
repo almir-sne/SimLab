@@ -7,6 +7,8 @@ SinLab::Application.routes.draw do
     end
   end
 
+  get "/atividades/minhas" => "atividades#minhas"
+
   devise_for :usuarios
   devise_scope :usuarios do
     get '/login' => 'devise/sessions#new'
