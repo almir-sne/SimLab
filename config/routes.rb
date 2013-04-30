@@ -3,8 +3,9 @@ SinLab::Application.routes.draw do
 
   resources :banco_de_horas do
     collection do
-      get :show_mes
-      get :validar
+      get  :show_mes
+      get  :validar
+      post :mandar_validacao
     end
   end
 
@@ -21,8 +22,6 @@ SinLab::Application.routes.draw do
     end
   end
 
- # resources :dia
-  resources :atividades
 
   resources :projetos
 

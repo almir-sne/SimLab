@@ -1,0 +1,33 @@
+<div class="blue-text" style="margin-left: 30px">
+  Validação de Atividades
+</div>
+<div class="blue-line">  </div>
+<div class="div_edit">
+  <tr>
+    <td> Usuário   </td>
+    <td> Projeto   </td>
+    <td> Detalhes  </td>
+    <td> horas     </td>
+    <td> aprovado? </td>
+    <td> repovado? </td>
+  </tr>
+
+  <%= form_for("atividades[]", :url =>  mandar_validacao_banco_de_horas_path) do |f| %>
+    <% @atividades.each do |atividade| %>
+      <%= fields_for atividade do |at| %>
+        <tr>
+        <div class="field">
+          <td><%= Usuario.find(atividade.user_id).nome %></td>
+        </div>
+          <td><%= atividade.projeto.nome                %></td>
+          <td><%= atividade.observacao                  %></td>
+          <td><%= atividade.horas                       %></td>
+          <td><%= at.check_box :aprovacao               %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  <div class="actions">
+    <%= f.submit "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
+  </div>
+</div>
+<% end %>

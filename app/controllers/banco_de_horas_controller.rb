@@ -115,7 +115,9 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
-    @atividades = Atividade.where{aprovacao == nil}
+    @tarefas = Tarefas.new
+    @tarefas.atividades = Atividade.where{aprovacao == nil}.all
+    @atividades = Atividade.where{aprovacao == nil}.all
   end
 
   def mandar_validacao
