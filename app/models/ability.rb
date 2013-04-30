@@ -17,6 +17,9 @@ class Ability
       can :update,  BancoDeHora do |bh|
         bh.try(:usuario_id) == user.id
       end
+      can :update,  Dia do |dia|
+        dia.try(:usuario_id) == user.id
+      end
     end
 
 

@@ -114,6 +114,14 @@ class BancoDeHorasController < ApplicationController
     query.map {|e| @meses[e.numero] = e }
   end
 
+  def validar
+    @atividades = Atividade.where{aprovacao == nil}
+  end
+
+  def mandar_validacao
+    raise params.inspect
+  end
+
   private
 
   def convert_date(hash, date_symbol_or_string)
