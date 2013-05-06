@@ -115,13 +115,29 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
-    @tarefas = Tarefas.new
-    @tarefas.atividades = Atividade.where{aprovacao == nil}.all
-    @atividades = Atividade.where{aprovacao == nil}.all
+     authorize! :update, :validations
+    @atividades = Atividade.where{aprovacao != true}.all
   end
 
   def mandar_validacao
-    raise params.inspect
+    authorize! :update, :validations
+
+    aprovados = params[:aprovacao][:aprovado].try(:keys)
+    reprovados = params[:aprovacao][:reprovado].try(:keys)
+
+    aprovados ||= []
+    reprovados ||= []
+
+    for i in aprovados
+      Atividade.find(i).update_attribute :aprovacao, true
+    end
+
+    for i in reprovados
+      Atividade.find(i).update_attribute :aprovacao, false
+    end
+
+    flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
+    redirect_to validar_banco_de_horas_path
   end
 
   private

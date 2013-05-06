@@ -238,6 +238,9 @@ pt-BR:
       sucess: "Banco de horas criado com sucesso."
     update:
       sucess: "Banco de horas atualizado com sucesso."
+    validation:
+      sucess: "Atividades validadas com sucesso."
+      failure: "Erro ao validar atividades."
   usuario:
     create:
       failure: "Não foi possível saver o registro."

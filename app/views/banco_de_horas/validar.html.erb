@@ -2,32 +2,34 @@
   Validação de Atividades
 </div>
 <div class="blue-line">  </div>
-<div class="div_edit">
+
+<%= form_tag(mandar_validacao_banco_de_horas_path) do %>
+
+  <table class="list-table">
+
   <tr>
-    <td> Usuário   </td>
-    <td> Projeto   </td>
-    <td> Detalhes  </td>
-    <td> horas     </td>
-    <td> aprovado? </td>
-    <td> repovado? </td>
+    <th> Usuário   </th>
+    <th> Projeto   </th>
+    <th> Detalhes  </th>
+    <th> horas     </th>
+    <th> aprovado? </th>
+    <th> repovado? </th>
   </tr>
 
-  <%= form_for("atividades[]", :url =>  mandar_validacao_banco_de_horas_path) do |f| %>
     <% @atividades.each do |atividade| %>
-      <%= fields_for atividade do |at| %>
-        <tr>
-        <div class="field">
-          <td><%= Usuario.find(atividade.user_id).nome %></td>
-        </div>
-          <td><%= atividade.projeto.nome                %></td>
-          <td><%= atividade.observacao                  %></td>
-          <td><%= atividade.horas                       %></td>
-          <td><%= at.check_box :aprovacao               %></td>
+        <tr <%= "class=red-background" unless atividade.aprovacao %> >
+          <td><%= Usuario.find(atividade.user_id).nome     %></td>
+          <td><%= atividade.projeto.nome                   %></td>
+          <td><%= atividade.observacao                     %></td>
+          <td><%= atividade.horas                          %></td>
+          <td><%= check_box_tag "aprovacao[aprovado[#{atividade.id}]]", true  %></td>
+          <td><%= check_box_tag "aprovacao[reprovado[#{atividade.id}]]", false %></td>
         </tr>
-      <% end %>
     <% end %>
+
+  </table>
+
   <div class="actions">
-    <%= f.submit "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
+    <%= submit_tag "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
   </div>
-</div>
 <% end %>

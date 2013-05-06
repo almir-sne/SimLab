@@ -126,6 +126,11 @@
     padding: 10px 10px;
 }
 
+.red-background {
+    background-color: rgb(255, 64, 64);
+    padding: 10px 10px;
+}
+
 .panel-scrollable {
     border: 1px solid rgb(180, 180, 180);
     max-height: 350px;
