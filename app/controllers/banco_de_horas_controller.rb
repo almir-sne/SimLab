@@ -116,7 +116,7 @@ class BancoDeHorasController < ApplicationController
 
   def validar
      authorize! :update, :validations
-    @atividades = Atividade.where{aprovacao != true}.all
+    @atividades =  Atividade.where(:aprovacao => [false, nil]).all
   end
 
   def mandar_validacao

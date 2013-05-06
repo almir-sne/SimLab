@@ -17,7 +17,7 @@
   </tr>
 
     <% @atividades.each do |atividade| %>
-        <tr <%= "class=red-background" unless atividade.aprovacao %> >
+        <tr <%= "class=red-background" if atividade.aprovacao == false %> >
           <td><%= Usuario.find(atividade.user_id).nome     %></td>
           <td><%= atividade.projeto.nome                   %></td>
           <td><%= atividade.observacao                     %></td>
