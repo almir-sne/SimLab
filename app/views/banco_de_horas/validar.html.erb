@@ -8,21 +8,21 @@
   <table class="list-table">
 
   <tr>
-    <th> Usuário   </th>
-    <th> Projeto   </th>
-    <th> Detalhes  </th>
-    <th> horas     </th>
-    <th> aprovado? </th>
-    <th> repovado? </th>
+    <th> Usuário    </th>
+    <th> Projeto    </th>
+    <th> Detalhes   </th>
+    <th> horas      </th>
+    <th> aprovado?  </th>
+    <th> reprovado? </th>
   </tr>
 
     <% @atividades.each do |atividade| %>
-        <tr <%= "class=red-background" if atividade.aprovacao == false %> >
-          <td><%= Usuario.find(atividade.user_id).nome     %></td>
-          <td><%= atividade.projeto.nome                   %></td>
-          <td><%= atividade.observacao                     %></td>
-          <td><%= atividade.horas                          %></td>
-          <td><%= check_box_tag "aprovacao[aprovado[#{atividade.id}]]", true  %></td>
+        <tr <%= "class=red-background" if atividade.aprovacao == false          %> >
+          <td><%= Usuario.find(atividade.user_id).nome                         %></td>
+          <td><%= atividade.projeto.nome                                       %></td>
+          <td><%= atividade.observacao                                         %></td>
+          <td><%= atividade.horas                                              %></td>
+          <td><%= check_box_tag "aprovacao[aprovado[#{atividade.id}]]", true   %></td>
           <td><%= check_box_tag "aprovacao[reprovado[#{atividade.id}]]", false %></td>
         </tr>
     <% end %>

@@ -1,6 +1,7 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :horas, :observacao, :mes_id, :projeto_id, :user_id, :aprovacao
   attr_accessible :aprovado, :reprovado
+  attr_accessible :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao, :data_admissao_fau, :data_demissao_fau
 
 	belongs_to :mes
 	belongs_to :dia

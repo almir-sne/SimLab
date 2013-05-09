@@ -4,8 +4,16 @@ feature BancoDeHora do
   include Helpers
 
   scenario "deveria poder ser criado" do
-    visit new_banco_de_hora_path
-    click_button I18n.t("helpers.submit.create", :model => "Banco de hora")
+    visit show_mes_banco_de_horas_path
+    click_link I18n.t("date.month_names")[5]
+    fill_in "Dia", :with => 1
+    fill_in "Entrada", :with => DateTime.new(2000, 1, 1, 0,0,0,"0")
+    fill_in "Saida", :with => DateTime.new(2000, 1, 1, 5,0,0,"0")
+    fill_in "Horas", :with => DateTime.new(2000, 1, 1, 5,0,0,"0")
+    fill_in "Projeto", :with => "Atlas"
+    fill_in "Observacao", :with => "depois de um longo dia de trabalho fizemos muitas coisas!"
+    click_link "Adicionar"
+    save_and_open_page
     page.should have_content(I18n.t("banco_de_horas.create.sucess"))
   end
 

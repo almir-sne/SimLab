@@ -28,6 +28,7 @@ gem 'squeel'
 gem 'cancan'
 gem 'client_side_validations', :git => 'https://github.com/bcardarella/client_side_validations.git', :branch => '3-2-stable'
 gem "nested_form"
+gem "mysql2"
 
 group :test, :development do
   gem 'rspec-rails'
