@@ -1,73 +1,96 @@
-<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 50%; margin-left: -25%">
+<!-- <div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 50%; margin-left: -25%"> -->
+<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
+	<div class="modal-body">
+		<%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
+		<% if @dia.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
 
-  <div class="modal-body">
-    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
-      <% if @dia.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
+			<ul>
+				<% @dia.errors.full_messages.each do |msg| %>
+				<li>
+					<%= msg %>
+				</li>
+				<% end %>
+			</ul>
+		</div>
+		<% end %>
 
-          <ul>
-            <% @dia.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+		<%= hidden_field_tag :user_id, @user.id %>
+		<%= hidden_field_tag :ano, @year %>
+		<%= hidden_field_tag :mes, @month.id %>
 
-      <%= hidden_field_tag :user_id, @user.id %>
-      <%= hidden_field_tag :ano, @year %>
-      <%= hidden_field_tag :mes, @month.id %>
+		<!-- <div class="container-fluid">
+		<div class="row-fluid">
+		<div class="span4"> -->
+		<div>
+			<div>
+				<div>
+					<%= f.label :dia %>
+					<%= f.text_field :numero, :value => Date.today.day %>
+					<table width="100%">
+						<tr>
+							<td><%= f.label :entrada %></td>
+							<td><%= f.label :saida %></td>
+							<td><%= f.label :intervalo %></td>
+						</tr>
+						<tr>
+							<td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %></td>
+							<td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %></td>
+							<td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%></td>
+						</tr>
+					</table>
+				</div>
 
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span4">
-            <div class="field">
-              <%= f.label :dia %>
-              <%= f.text_field :numero, :value => Date.today.day %>
-            </div>
-            <div class="field">
-              <%= f.label :entrada %>
-              <%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %>
-            </div>
-            <div class="field">
-              <%= f.label :saida %>
-              <%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %>
-            </div>
-            <div class="field">
-              <%= f.label :intervalo %>
-              <%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%>
-            </div>
-          </div>
-
-          <div class="panel-scrollable span6"
-          <div class="span4">
+				<!-- <div class="panel-scrollable span6"> -->
+					<!-- <div class="span4"> -->
+						<div style="width: 80%">
+						<h3>Atividades</h3>
 						<%= f.fields_for :atividades do |atividade_form| %>
-          		<div class="field">
-            		<%= atividade_form.label :horas %>
-                <%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%>
-          		</div>
-							<div class="field">
-            		<%= atividade_form.label :projeto_id %>
-            		<%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %>
-          		</div>
-							<div class="field">
-            		<%= atividade_form.label :observacao %>
-            		<%= atividade_form.text_area :observacao, :rows => 3 %>
-          		</div>
-
-							<%= atividade_form.link_to_remove "Remover Atividade", :class=>"btn default-button"%>
+							<div>
+								<table>
+									<tr>
+										<td><%= atividade_form.label :projeto_id %></td>
+										<td><%= atividade_form.label :horas %></td>
+									</tr>
+									<tr>
+										<td><%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %></td>
+										<td><%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%></td>
+									</tr>								
+								</table>
+							</div>
+							<div>
+								<%= atividade_form.label :observacao %>
+								<%= atividade_form.text_area :observacao, :rows => 3 %>
+							</div>
+		
+							<div>
+								<%= atividade_form.link_to_remove "Remover Atividade", :class=>"btn default-button"%>
+							</div>
 						<% end %>
-
-            <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button", :style =>"margin-top: 10px"%>
-          </div>
-        </div>
-        </div>
-      </div>
-      <div class="actions" style="float: right; margin-right: 20px;">
-        <button class="btn default-button" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-        <%= f.submit "Ok", :class => "btn default-button"%>
-      </div>
-    <% end %>
-  </div>
+						<table width="100%">
+							<tr>
+								<td>
+									<div class="actions" style="float: right; margin-right: 20px;">
+										<%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button", :style =>"float:right; margin-top: 10px"%>
+									</div>									
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="actions" style="float: left; margin-right: 20px;">
+										<button class="btn default-button" data-dismiss="modal" aria-hidden="true">
+											Cancelar
+										</button>
+										<%= f.submit "Ok", :class => "btn default-button"%>
+									</div>									
+								</td>
+							</tr>
+						</table>
+					</div>
+				<!-- </div> -->
+			</div>
+		</div>		
+<% end %>
+</div>
 </div>

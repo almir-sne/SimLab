@@ -69,7 +69,8 @@ class BancoDeHorasController < ApplicationController
     if dia_sucess and !atividades_failure
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
-      flash[:error] = "Erro na criação do registro"
+      flash[:error] = I18n.t("banco_de_horas.create.failure")
+      # flash[:error] = "Erro na criação do registro"   
     end
     redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
   end
