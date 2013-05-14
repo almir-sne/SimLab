@@ -15,6 +15,7 @@ class BancoDeHorasController < ApplicationController
     end
 
     @dias = @month.dias
+    @dias.sort_by! { |d| d.numero  }
     @dia = Dia.new
     @dia.atividades.build
   end
