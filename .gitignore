@@ -48,4 +48,4 @@ nbproject
 /specifications
 .DS_Store
 /*.tmproj
-rails_best_practices_output.html
+config/secrets.yml

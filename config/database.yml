@@ -8,7 +8,7 @@ development:
   encoding: utf8
   database: simlab
   username: simlab
-  password: "Clhafe03"
+  password: <%= ENV['db_password'] %>
 #  socket: /tmp/mysql.sock
 #  pool: 5
 #  timeout: 5000
@@ -28,7 +28,7 @@ production:
   encoding: utf8
   database: simlab
   username: simlab
-  password: "Clhafe03"
+  password: <%= ENV["db_password"] %>
   reconnect: false
 #  adapter: sqlite3
 #  database: db/production.sqlite3
