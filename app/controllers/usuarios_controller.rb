@@ -30,6 +30,7 @@ before_filter :authenticate_usuario!
   def update
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
+
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."
       redirect_to usuarios_path
