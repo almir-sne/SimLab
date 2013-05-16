@@ -35,6 +35,11 @@
               <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
             </div>
 
+            <div class="field" >
+              <%= f.label :funcao, "função" %>
+              <%= f.text_field :funcao, :style => "width: 85%"%>
+            </div>
+
             <div class="field">
               <%= f.label :entrada_usp %>
               <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
@@ -74,12 +79,12 @@
 
             <div class="field"style = "float:left; width:45px">
               <%= f.label :ddd , "DDD"%>
-              <%= f.number_field :ddd , :style => "width: 61%"%>
+              <%= f.number_field :ddd, :value => @user.cel[0..1], :style => "width: 61%"%>
             </div>
 
             <div class="field" >
               <%= f.label :tel_numero, "telefone" %>
-              <%= f.number_field :tel_numero , :style => "width: 16%, inline-block"%>
+              <%= f.number_field :tel_numero, :value => @user.cel[2..(@user.cel.length)], :style => "width: 16%, inline-block"%>
             </div>
 
 
