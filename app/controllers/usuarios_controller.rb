@@ -30,6 +30,9 @@ before_filter :authenticate_usuario!
   def update
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
+    @user.phone params[:usuario][:ddd], params[:usuario][:tel_numero]
+    params[:usuario].except! :ddd, :tel_numero
+
 
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Successfully updated Usuario."

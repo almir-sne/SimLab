@@ -16,7 +16,8 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
                    :uniqueness => true
 
-  validates :tel_numero, :length => {:minimum => 7, :maximum => 10}
+  validates :cel, :length => {:minimum => 7, :maximum => 15}
+  validates :tel_numero, :length => {:minimum => 7, :maximum => 15}
 
   has_many :banco_de_horas
   has_many :mes
@@ -25,8 +26,10 @@ class Usuario < ActiveRecord::Base
 
 
 
-  def ddd=
-    raise "passou!"
+  def phone(ddd, numero)
+    self.ddd = ddd
+    self.tel_numero = numero
+    self.cel = ddd + numero
   end
 
 
