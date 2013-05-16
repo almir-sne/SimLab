@@ -8,7 +8,7 @@ class Usuario < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome, :horario_mensal
   attr_accessible :valor_da_hora, :entrada_usp, :saida_usp, :cpf, :banco, :conta, :agencia
-  attr_accessible :role, :address, :cel, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
+  attr_accessible :role, :address_id, :cel, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
   attr_accessible :data_admissao_fau, :data_demissao_fau
 
   attr_accessor :ddd, :tel_numero

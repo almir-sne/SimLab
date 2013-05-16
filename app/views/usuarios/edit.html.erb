@@ -26,13 +26,25 @@
 
         <div class="row-fluid">
           <div class="span7">
+
             <div class="field">
               <%= f.label :horario_mensal %>
               <%= f.number_field :horario_mensal, :style => "width: 65%" %>
             </div>
+
             <div class="field">
               <%= f.label :valor_da_hora %>
               <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
+            </div>
+
+            <div class="field">
+              <%= f.label :valor_da_bolsa_fau, "Valor da bolsa FAU" %>
+              <%= f.number_field :valor_da_bolsa_fau, :style => "width: 65%" %>
+            </div>
+
+            <div class="field">
+              <%= f.label :horas_da_bolsa_fau, "Horas da bolsa da FAU" %>
+              <%= f.number_field :horas_da_bolsa_fau , :style => "width: 65%"%>
             </div>
 
             <div class="field" >
@@ -75,6 +87,16 @@
             <div class="field">
               <%= f.label :agencia %>
               <%= f.number_field :agencia , :style => "width: 85%"%>
+            </div>
+
+            <div class="field">
+              <%= f.label :data_admissao_fau, "Data de admissão na FAU"%>
+              <%= f.date_select :data_admissao_fau, {}, :style => "width: 100px" %>
+            </div>
+
+            <div class="field">
+              <%= f.label :data_demissao_fau, "Data de Demissão da FAU" %>
+              <%= f.date_select :data_demissao_fau, {}, :style => "width: 100px" %>
             </div>
 
             <div class="field"style = "float:left; width:45px">
