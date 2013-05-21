@@ -31,7 +31,7 @@
       <td style="border:none"><%= dia.entrada.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
-      <td style="border:none"><%= link_to "ver", atividades_minhas_path(:dia_id => dia.id) %> </td>
+      <td style="border:none"><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id, :user_id => @user) %> </td>
       <td style="width: 70%; border: none">
       <div class="blue-background" style="width: <%= (dia.bar_width)%>">
         <%= dia.formata_horas %>h

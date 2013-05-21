@@ -8,10 +8,11 @@
     <th>Observação</th>
     <th>aprovado</th>
     <th style="padding-left: 25px;">Horas</th>
+    <th>Excluir</th>
   </tr>
   <% @atividades.each do |atividade| %>
     <tr>
-      <td style="border:none"><%= atividade.data %></td>
+      <td style="border:none"><%= link_to atividade.data, edit_atividade_path(atividade, :dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %></td>
       <td style="border:none"><%= atividade.projeto.nome %></td>
       <td style="border:none"><%= atividade.observacao %></td>
       <td style="border:none">
@@ -25,11 +26,15 @@
       </td>
       <td style="width: 70%; border: none">
         <div class="blue-background" style="width: <%= (atividade.bar_width)%>">
-          <%= atividade.horas / 3600 %>h
+          <%= atividade.horas.to_i / 3600  %> h
         </div>
+      </td>
+      <td>
+      	<%= link_to 'X', atividade, :method => :delete, :confirm => "Deseja excluir o registro?" %>
       </td>
     </tr>
   <% end %>
 </table>
+<div><%= link_to "Adicionar", new_atividade_path(:dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %></td>
 
 <br />

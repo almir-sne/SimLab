@@ -21,7 +21,7 @@
           <td><%= Usuario.find(atividade.user_id).nome                         %></td>
           <td><%= atividade.projeto.nome                                       %></td>
           <td><%= atividade.observacao                                         %></td>
-          <td><%= atividade.horas                                              %></td>
+          <td><%= atividade.formato_horas                                              %></td>
           <td><%= check_box_tag "aprovacao[aprovado[#{atividade.id}]]", true   %></td>
           <td><%= check_box_tag "aprovacao[reprovado[#{atividade.id}]]", false %></td>
         </tr>
