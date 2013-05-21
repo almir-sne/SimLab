@@ -1,4 +1,10 @@
 class Usuario < ActiveRecord::Base
+  has_one :address, :dependent => :destroy
+
+  accepts_nested_attributes_for :address,
+                                :reject_if => lambda { |a| a[:content].blank? },
+                                :allow_destroy => true
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable

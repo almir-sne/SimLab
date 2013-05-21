@@ -25,6 +25,7 @@ before_filter :authenticate_usuario!
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
+    address = @user.build_address
   end
 
   def update

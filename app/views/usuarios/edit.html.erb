@@ -114,6 +114,18 @@
         </div>
       </div>
 
+    <div class="blue-line">  </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+
+      <%= f.fields_for :addresses do |builder| %>
+        <%= render "/addresses/form", :f => builder %>
+      <% end %>
+
+      </div>
+    </div>
+
+
       <br/>
       <div class="actions">
         <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
