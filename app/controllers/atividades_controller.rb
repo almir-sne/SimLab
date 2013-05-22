@@ -71,6 +71,7 @@ class AtividadesController < ApplicationController
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
           :aprovacao => nil,
+          :mensagem => nil,
           :dia_id => params[:dia_id],
           :mes_id => params[:mes_id],
           :user_id => params[:user_id]

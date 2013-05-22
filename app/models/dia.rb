@@ -32,14 +32,11 @@ class Dia < ActiveRecord::Base
 		width + "%"
 	end
 	
-	def horas_atividades
+	def horas_atividades_formato
 	  total_horas_atividade = 0
 	  total_minutos_atividade = 0
 	  
-	  # atividades = Atividade.where("dia_id" => self.id)
-	  atividades = self.atividades
-	  
-	  atividades.each do |atividade|
+	  self.atividades.each do |atividade|
 	    
 	    if atividade.aprovacao
 	      total_horas_atividade = total_horas_atividade + (atividade.horas.nil? ? 0 : (atividade.horas/3600)).to_i
@@ -48,4 +45,16 @@ class Dia < ActiveRecord::Base
 	  end
 	  total_horas_atividade.to_s.rjust(2, '0') + ":" + total_minutos_atividade.to_s.rjust(2, '0')
 	end
+	
+	def horas_atividades
+    retorno = 0    
+    self.atividades.each do |atividade|
+      
+      if atividade.aprovacao
+        retorno = retorno + (atividade.horas.nil? ? 0 : atividade.horas.to_i)
+      end      
+    end
+    retorno/3600
+  end
+	
 end

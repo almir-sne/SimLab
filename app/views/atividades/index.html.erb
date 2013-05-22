@@ -5,36 +5,39 @@
   <tr>
     <th>Data</th>
     <th>Projeto</th>
-    <th>Observação</th>
+    <th>Horas</th>
     <th>aprovado</th>
-    <th style="padding-left: 25px;">Horas</th>
+    <th>Observação</th>
     <th>Excluir</th>
   </tr>
   <% @atividades.each do |atividade| %>
-    <tr>
-      <td style="border:none"><%= link_to atividade.data, edit_atividade_path(atividade, :dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %></td>
+    <tr <%= "class=red-background" if atividade.aprovacao == false %>>
+      <td style="border:none"><%= atividade.data%></td>
       <td style="border:none"><%= atividade.projeto.nome %></td>
-      <td style="border:none"><%= atividade.observacao %></td>
-      <td style="border:none">
+      <td style="width: 15%; border: none">
+      	<%= link_to edit_atividade_path(atividade, :dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) do%>
+        	<div class="blue-background" style="width: <%= (atividade.bar_width)%>">
+        		<%=(atividade.formato_horas) %> h 
+        	</div>
+        <% end%>
+      </td>
+      <td width="20%" style="border:none">
         <% if atividade.aprovacao.nil? %>
           <%= "não vista" %>
         <% elsif atividade.aprovacao %>
           <%= "Sim!" %>
         <% else %>
-          <%= "Não" %>
+          <%= atividade.mensagem%>
         <% end %>
       </td>
-      <td style="width: 70%; border: none">
-        <div class="blue-background" style="width: <%= (atividade.bar_width)%>">
-          <%= atividade.horas.to_i / 3600  %> h
-        </div>
-      </td>
-      <td>
-      	<%= link_to 'X', atividade, :method => :delete, :confirm => "Deseja excluir o registro?" %>
+      <td width="40%" style="border:none"><%= atividade.observacao %></td>
+      <td >
+      	<%= link_to atividade, :method => :delete, :confirm => "Deseja excluir o registro?" do%>
+      		X
+      	<% end %>
       </td>
     </tr>
   <% end %>
 </table>
-<div><%= link_to "Adicionar", new_atividade_path(:dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %></td>
-
 <br />
+<%= link_to "Adicionar", new_atividade_path(:dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %>

@@ -37,9 +37,14 @@
         <%= dia.formata_horas %>h
       </div>
       </td>
-      <td style="border:none"><%= dia.horas_atividades + " h" %></td>
+      <td style="border:none" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
     </tr>
   <% end %>
+  <tr style="border-top:thin solid; border-color:black">
+    <td colspan=5>Total</td>
+    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
+    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
+  </tr>
 </table>
 
 <br />

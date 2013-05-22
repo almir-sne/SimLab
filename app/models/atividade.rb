@@ -1,5 +1,5 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :horas, :observacao, :mes_id, :projeto_id, :user_id, :aprovacao
+  attr_accessible :dia_id, :horas, :observacao, :mes_id, :projeto_id, :user_id, :aprovacao, :mensagem
   attr_accessible :aprovado, :reprovado
   attr_accessible :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao, :data_admissao_fau, :data_demissao_fau
 
@@ -20,7 +20,7 @@ class Atividade < ActiveRecord::Base
 	def formato_horas
 	  aux_h = 0
 	  aux_m = 0
-	  retorno = "00:00"
+	  retorno = "0:0"
 	  if !horas.nil?
 	    aux_h = (horas / 3600).to_i
 	    
