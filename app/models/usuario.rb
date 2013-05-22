@@ -22,8 +22,8 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
                    :uniqueness => true
 
-  validates :cel, :length => {:minimum => 7, :maximum => 15}
-  validates :tel_numero, :length => {:minimum => 7, :maximum => 15}
+  validates :cel, :length => {:maximum => 15}
+  validates :tel_numero, :length => { :maximum => 15}
 
   has_many :banco_de_horas
   has_many :mes

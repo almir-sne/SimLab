@@ -17,6 +17,7 @@ before_filter :authenticate_usuario!
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
+    Rails.logger.info(@user.errors.messages.inspect)
       flash[:notice] = I18n.t("usuario.create.failure")
     end
     redirect_to usuarios_path

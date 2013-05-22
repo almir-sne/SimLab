@@ -1,36 +1,47 @@
 <h2>Endereço</h2>
-<div class="span7">
+<div class="row-fluid">
+  <div class="span7">
 
-  <div class="field">
-    <%= f.label :state %>
-    <%= f.text_field :state %>
+    <div class="field", style = "float:left; width: 64%">
+      <%= f.label :city, "Cidade" %>
+      <%= f.text_field :city, :style => "width: 97%" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :state, "Estado" %>
+      <%= f.text_field :state, :style => "width: 10%" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :bairro %>
+      <%= f.text_field :bairro, :style => "width: 75%" %>
+    </div>
+
+      <div class="field">
+        <%= f.label :cep %>
+        <%= f.text_field :cep, :style => "width: 75%" %>
+      </div>
+
+
   </div>
-  <div class="field">
-    <%= f.label :city %>
-    <%= f.text_field :city %>
-  </div>
-  <div class="field">
-    <%= f.label :bairro %>
-    <%= f.text_field :bairro %>
-  </div>
-</div>
+
   <div class="span5">
-    <div class="field">
-      <%= f.label :street %>
-      <%= f.text_field :street %>
-    </div>
-    <div class="field">
-      <%= f.label :number %>
-      <%= f.number_field :number %>
-    </div>
-    <div class="field">
-      <%= f.label :cep %>
-      <%= f.text_field :cep %>
-    </div>
-    <div class="field">
-      <%= f.label :complemento %>
-      <%= f.text_field :complemento %>
+
+      <div class="field", style = "float:left; width:70%">
+        <%= f.label :street, "Rua" %>
+        <%= f.text_field :street, :style => "width: 95%" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :number, "Número" %>
+        <%= f.number_field :number , :style => "width: 15%"%>
+      </div>
+
+      <div class="field">
+        <%= f.label :complemento %>
+        <%= f.text_field :complemento, :style => "width: 85%" %>
+      </div>
+
     </div>
   </div>
-
 </div>
