@@ -17,7 +17,7 @@ before_filter :authenticate_usuario!
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
-    Rails.logger.info(@user.errors.messages.inspect)
+      Rails.logger.info(@user.errors.messages.inspect)
       flash[:notice] = I18n.t("usuario.create.failure")
     end
     redirect_to usuarios_path
@@ -26,7 +26,7 @@ before_filter :authenticate_usuario!
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    address = @user.build_address
+    address = @user.address.nil? ? @user.create_address : @user.address
   end
 
   def update
@@ -37,10 +37,10 @@ before_filter :authenticate_usuario!
 
 
     if @user.update_attributes(params[:usuario])
+      Rails.logger.info(@user.errors.messages.inspect)
       flash[:notice] = "Successfully updated Usuario."
       redirect_to usuarios_path
     else
-      Rails.logger.info(@user.errors.messages.inspect)
       render :action => 'edit'
     end
   end

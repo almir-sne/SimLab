@@ -1,9 +1,4 @@
 class Usuario < ActiveRecord::Base
-  has_one :address, :dependent => :destroy
-
-  accepts_nested_attributes_for :address,
-                                :reject_if => lambda { |a| a[:content].blank? },
-                                :allow_destroy => true
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -16,8 +11,14 @@ class Usuario < ActiveRecord::Base
   attr_accessible :valor_da_hora, :entrada_usp, :saida_usp, :cpf, :banco, :conta, :agencia
   attr_accessible :role, :address_id, :cel, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
   attr_accessible :data_admissao_fau, :data_demissao_fau
+  attr_accessible :address_attributes
 
   attr_accessor :ddd, :tel_numero
+
+  has_one :address, :dependent => :destroy
+
+  accepts_nested_attributes_for :address,
+                                :allow_destroy => true
 
   validates :nome, :presence => true,
                    :uniqueness => true
