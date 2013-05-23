@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130522191322) do
+ActiveRecord::Schema.define(:version => 20130523194009) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -36,17 +36,18 @@ ActiveRecord::Schema.define(:version => 20130522191322) do
     t.boolean  "aprovacao"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.text     "mensagem"
   end
 
   create_table "banco_de_horas", :force => true do |t|
-    t.date     "data"
-    t.float    "horas"
-    t.text     "observacao"
     t.integer  "projeto_id"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "approved"
+    t.text     "observacao"
+    t.float    "horas"
+    t.date     "data"
   end
 
   create_table "dia", :force => true do |t|
@@ -115,5 +116,12 @@ ActiveRecord::Schema.define(:version => 20130522191322) do
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
   add_index "usuarios", ["reset_password_token"], :name => "index_usuarios_on_reset_password_token", :unique => true
+
+  create_table "workons", :force => true do |t|
+    t.integer  "projeto_id"
+    t.integer  "usuario_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end

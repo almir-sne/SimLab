@@ -1,7 +1,5 @@
 class BancoDeHorasController < ApplicationController
   before_filter :authenticate_usuario!
-  # GET /banco_de_horas
-  # GET /banco_de_horas.json
   def index
     @year =      params[:year].nil?  ? Date.today.year  : params[:year]
     @user =      params[:user].nil?  ? current_user     : Usuario.find(params[:user])
@@ -20,29 +18,6 @@ class BancoDeHorasController < ApplicationController
     @dia.atividades.build
   end
 
-  # GET /banco_de_horas/1
-  # GET /banco_de_horas/1.json
-  def show
-    @banco_de_hora = BancoDeHora.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @banco_de_hora }
-    end
-  end
-
-  # GET /banco_de_horas/new
-  # GET /banco_de_horas/new.json
-
-
-  # GET /banco_de_horas/1/edit
-  def edit
-    @projetos = Projeto.all
-    @banco_de_hora = BancoDeHora.find(params[:id])
-  end
-
-  # POST /banco_de_horas
-  # POST /banco_de_horas.json
   def create
     @dia = Dia.new(
       :numero => params[:dia][:numero],
@@ -71,41 +46,8 @@ class BancoDeHorasController < ApplicationController
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
-      # flash[:error] = "Erro na criação do registro"   
     end
     redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
-  end
-
-  # PUT /banco_de_horas/1
-  # PUT /banco_de_horas/1.json
-  def update
-    @banco_de_hora = BancoDeHora.find(params[:id])
-
-    respond_to do |format|
-      if @banco_de_hora.update_attributes(params[:banco_de_hora])
-        format.html { redirect_to @banco_de_hora, notice: I18n.t("banco_de_horas.update.sucess") }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @banco_de_hora.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /banco_de_horas/1
-  # DELETE /banco_de_horas/1.json
-  def destroy
-    @banco_de_hora = BancoDeHora.find(params[:id])
-    @banco_de_hora.destroy
-
-    respond_to do |format|
-      format.html { redirect_to banco_de_horas_url }
-      format.json { head :no_content }
-    end
-  end
-
-  def modal
-    @dia = Dia.new
   end
 
   def show_mes

@@ -13,4 +13,9 @@ class Projeto < ActiveRecord::Base
   has_many :banco_de_horas
 
   has_many :atividades
+  has_many :usuarios,  :through => :workon
+  has_many :workon
+
+  accepts_nested_attributes_for :workon, :allow_destroy => true
+
 end
