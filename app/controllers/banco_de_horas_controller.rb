@@ -15,6 +15,7 @@ class BancoDeHorasController < ApplicationController
     end
 
     @dias = @month.dias
+    @dias.sort_by! { |d| d.numero  }
     @dia = Dia.new
     @dia.atividades.build
   end
@@ -123,18 +124,18 @@ class BancoDeHorasController < ApplicationController
   def mandar_validacao
     authorize! :update, :validations
 
-    aprovados = params[:aprovacao][:aprovado].try(:keys)
-    reprovados = params[:aprovacao][:reprovado].try(:keys)
+    atividades = params[:atividades].try(:keys)
 
-    aprovados ||= []
-    reprovados ||= []
+    atividades ||= []
 
-    for i in aprovados
-      Atividade.find(i).update_attribute :aprovacao, true
-    end
-
-    for i in reprovados
-      Atividade.find(i).update_attribute :aprovacao, false
+    for i in atividades
+      ativ = params[:atividades][i.to_str]
+      mensagem = nil
+      if ativ["aprovacao"] == "false"
+        aprovacao = false
+        mensagem = ativ["mensagem"]
+      end
+      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => ativ["aprovacao"], :mensagem => mensagem)
     end
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")

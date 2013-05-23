@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130516234402) do
+ActiveRecord::Schema.define(:version => 20130522191322) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -99,8 +99,8 @@ ActiveRecord::Schema.define(:version => 20130516234402) do
     t.date     "saida_usp"
     t.string   "cpf"
     t.string   "banco"
-    t.integer  "conta"
-    t.integer  "agencia"
+    t.string   "conta"
+    t.string   "agencia"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.string   "role"

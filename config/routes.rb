@@ -11,8 +11,8 @@ SinLab::Application.routes.draw do
       post :mandar_validacao
     end
   end
-
-  get "/atividades/minhas" => "atividades#minhas"
+  
+  resources :atividades
 
   devise_for :usuarios
   devise_scope :usuarios do

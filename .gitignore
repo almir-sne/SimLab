@@ -48,4 +48,5 @@ nbproject
 /specifications
 .DS_Store
 /*.tmproj
-config/secrets.yml
+/config/secrets.yml
+Gemfile.lock
