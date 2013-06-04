@@ -1,5 +1,5 @@
 class Projeto < ActiveRecord::Base
-  attr_accessible :data_de_inicio, :descricao, :horas_totais, :nome, :valor
+  attr_accessible :data_de_inicio, :descricao, :horas_totais, :nome, :valor, :workon_attributes
 
   validates :valor,          :numericality =>true
 
@@ -15,7 +15,6 @@ class Projeto < ActiveRecord::Base
   has_many :atividades
   has_many :usuarios,  :through => :workon
   has_many :workon
-
   accepts_nested_attributes_for :workon, :allow_destroy => true
 
 end

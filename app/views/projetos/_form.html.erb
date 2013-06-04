@@ -1,31 +1,44 @@
-<%= form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
+<%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
-    <div class="field">
-      <%= f.label :nome %>
-      <%= f.text_field :nome%>
+    <div class="row-fluid">
+      <div class="span7">
+        <div class="field">
+          <%= f.label :nome %>
+          <%= f.text_field :nome%>
+        </div>
+
+        <div class="field">
+          <%= f.label :data_de_inicio %>
+          <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
+        </div>
+
+        <div class="field">
+          <%= f.label :descricao %>
+          <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
+        </div>
+
+        <div class="field">
+          <%= f.label :valor %><br />
+          <%= f.text_field :valor %>
+        </div>
+
+        <div class="field">
+          <%= f.label :horas_totais %><br />
+          <%= f.number_field :horas_totais %>
+        </div>
+      </div>
+      <div class="span5">
+        <h2>Colaboradores<h2/>
+        <%= f.fields_for :workon do |worker| %>
+          <%= worker.select :usuario_id, options_for_select(acha_usuarios) %>
+          <%= worker.link_to_remove "Remover" %>
+        <% end %>
+        <p><%= f.link_to_add "Adicionar pessoa", :workon %></p>
+      </div>
+
     </div>
 
-    <div class="field">
-      <%= f.label :data_de_inicio %>
-      <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :descricao %>
-      <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
-    </div>
-
-    <div class="field">
-      <%= f.label :valor %><br />
-      <%= f.text_field :valor %>
-    </div>
-
-    <div class="field">
-      <%= f.label :horas_totais %><br />
-      <%= f.number_field :horas_totais %>
-    </div>
-    <br />
 
     <div class="actions">
       <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">
