@@ -8,13 +8,12 @@ class Ability
       can :manage, :all
     elsif user.role == "desenvolvedor"
       can :read,    Usuario
-
-      can :read,    BancoDeHora
-      can :create,  BancoDeHora
-      can :destroy, BancoDeHora do |bh|
+      can :read,    Dia
+      can :create,  Dia
+      can :destroy, Dia do |bh|
         bh.try(:usuario_id) == user.id
       end
-      can :update,  BancoDeHora do |bh|
+      can :update,  Atividade do |bh|
         bh.try(:usuario_id) == user.id
       end
       can :update,  Dia do |dia|
