@@ -9,9 +9,10 @@ SinLab::Application.routes.draw do
       get  :show_mes
       get  :validar
       post :mandar_validacao
+      get  :delete_dia
     end
   end
-  
+
   resources :atividades
 
   devise_for :usuarios
@@ -24,7 +25,6 @@ SinLab::Application.routes.draw do
       post :custom_create
     end
   end
-
 
   resources :projetos
 

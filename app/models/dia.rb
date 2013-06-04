@@ -3,7 +3,7 @@ class Dia < ActiveRecord::Base
 
   belongs_to :usuario
   belongs_to :mes
-	has_many :atividades
+	has_many :atividades, :dependent => :destroy
 
 	accepts_nested_attributes_for :atividades
 
@@ -31,30 +31,30 @@ class Dia < ActiveRecord::Base
 		width = horas.nil? ? "0" : (horas * 10).to_s
 		width + "%"
 	end
-	
+
 	def horas_atividades_formato
 	  total_horas_atividade = 0
 	  total_minutos_atividade = 0
-	  
+
 	  self.atividades.each do |atividade|
-	    
+
 	    if atividade.aprovacao
 	      total_horas_atividade = total_horas_atividade + (atividade.horas.nil? ? 0 : (atividade.horas/3600)).to_i
         total_minutos_atividade = total_minutos_atividade + (atividade.horas.nil? ? 0 : ((atividade.horas % 3600) / 60)).to_i
-	    end	     
+	    end
 	  end
 	  total_horas_atividade.to_s.rjust(2, '0') + ":" + total_minutos_atividade.to_s.rjust(2, '0')
 	end
-	
+
 	def horas_atividades
-    retorno = 0    
+    retorno = 0
     self.atividades.each do |atividade|
-      
+
       if atividade.aprovacao
         retorno = retorno + (atividade.horas.nil? ? 0 : atividade.horas.to_i)
-      end      
+      end
     end
     retorno/3600
   end
-	
+
 end

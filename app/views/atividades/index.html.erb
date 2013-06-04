@@ -17,7 +17,7 @@
       <td style="width: 15%; border: none">
       	<%= link_to edit_atividade_path(atividade, :dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) do%>
         	<div class="blue-background" style="width: <%= (atividade.bar_width)%>">
-        		<%=(atividade.formato_horas) %> h 
+            <%=(atividade.formato_horas) %> h
         	</div>
         <% end%>
       </td>

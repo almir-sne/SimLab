@@ -84,6 +84,12 @@ class BancoDeHorasController < ApplicationController
     redirect_to validar_banco_de_horas_path
   end
 
+  def delete_dia
+    dia = Dia.find params[:dia_id]
+    dia.destroy
+    redirect_to :back
+  end
+
   private
 
   def convert_date(hash, date_symbol_or_string)
