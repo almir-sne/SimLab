@@ -24,6 +24,7 @@
     <th>Atividades</th>
     <th style="padding-left: 25px;">Horas trabalhadas</th>
     <th>Horas em Atividades (Aprovadas)</th>
+    <th>Excluir</th>
   </tr>
   <% @dias.each do |dia| %>
     <tr>
@@ -38,12 +39,16 @@
       </div>
       </td>
       <td style="border:none" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
+      <td >
+        <%= link_to "X", delete_dia_banco_de_horas_path(:dia_id => dia.id) , :confirm => "Deseja excluir o registro?"%>
+      </td>
     </tr>
   <% end %>
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=5>Total</td>
     <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
     <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
+
   </tr>
 </table>
 

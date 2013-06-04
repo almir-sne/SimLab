@@ -71,7 +71,7 @@ class BancoDeHorasController < ApplicationController
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
-      # flash[:error] = "Erro na criação do registro"   
+      # flash[:error] = "Erro na criação do registro"
     end
     redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
   end
@@ -140,6 +140,12 @@ class BancoDeHorasController < ApplicationController
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
     redirect_to validar_banco_de_horas_path
+  end
+
+  def delete_dia
+    dia = Dia.find params[:dia_id]
+    dia.destroy
+    redirect_to :back
   end
 
   private
