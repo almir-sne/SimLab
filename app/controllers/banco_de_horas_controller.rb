@@ -52,7 +52,7 @@ class BancoDeHorasController < ApplicationController
 
   def show_mes
     @year = params[:year].nil? ? Date.today.year : params[:year]
-    @user = current_user
+    @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
     query = Mes.find_all_by_ano_and_user_id @year, @user.id
     @meses = {}
     query.map {|e| @meses[e.numero] = e }

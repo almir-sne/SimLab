@@ -12,5 +12,3 @@ $ ()->
 		$(this).find('input:visible:first').focus().end().find('form').enableClientSideValidations()
 	$("form.new_banco_de_hora").on "ajax:success", (event, data, status, xhr) ->
     $('#new-banco-modal').modal('hide')
-
-

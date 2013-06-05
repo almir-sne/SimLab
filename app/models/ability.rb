@@ -6,6 +6,7 @@ class Ability
 
     if (user.role == "admin")||(user.role == "coordenador")
       can :manage, :all
+      can :see, :banco_de_horas
     elsif user.role == "desenvolvedor"
       can :read,    Usuario
       can :read,    Dia
