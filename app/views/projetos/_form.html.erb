@@ -30,8 +30,9 @@
       </div>
       <div class="span5">
         <h2>Colaboradores<h2/>
+        <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
         <%= f.fields_for :workon do |worker| %>
-          <%= worker.select :usuario_id, options_for_select(acha_usuarios) %>
+          <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.pop)) %>
           <%= worker.link_to_remove "Remover" %>
         <% end %>
         <p><%= f.link_to_add "Adicionar pessoa", :workon %></p>

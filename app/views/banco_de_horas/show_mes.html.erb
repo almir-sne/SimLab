@@ -6,7 +6,6 @@
 
 <% if can? :see, :banco_de_horas %>
   <%= select_tag(:menu_select, options_for_select(acha_usuarios), :prompt => "escolha um usuario") %>
-  <% link_to "joão", show_mes_banco_de_horas_url(:user_id => 2) %>
 <%end%>
 
 <div class="blue-line">  </div>
