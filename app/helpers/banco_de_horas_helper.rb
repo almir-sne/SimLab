@@ -1,7 +1,6 @@
 module BancoDeHorasHelper
 
   def acha_projetos()
-  raise "asd"
     nomes_de_projetos = Projeto.all.map{ |p| p.nome }
     ids_de_projetos   = Projeto.all.map{ |p| p.id   }
 
