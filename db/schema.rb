@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130523194009) do
+ActiveRecord::Schema.define(:version => 20130610174243) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20130523194009) do
   create_table "atividades", :force => true do |t|
     t.integer  "projeto_id"
     t.float    "horas"
-    t.integer  "user_id"
+    t.integer  "usuario_id"
     t.text     "observacao"
     t.integer  "mes_id"
     t.integer  "dia_id"
@@ -37,17 +37,6 @@ ActiveRecord::Schema.define(:version => 20130523194009) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.text     "mensagem"
-  end
-
-  create_table "banco_de_horas", :force => true do |t|
-    t.integer  "projeto_id"
-    t.integer  "usuario_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.integer  "approved"
-    t.text     "observacao"
-    t.float    "horas"
-    t.date     "data"
   end
 
   create_table "dia", :force => true do |t|

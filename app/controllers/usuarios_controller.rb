@@ -2,7 +2,7 @@ class UsuariosController < ApplicationController
 before_filter :authenticate_usuario!
 
   def index
-    @users = Usuario.all
+    @users = Usuario.all.sort{ |a,b| a.nome.downcase <=> b.nome.downcase }
     @user ||= Usuario.new
   end
 

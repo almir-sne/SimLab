@@ -37,7 +37,7 @@ class BancoDeHorasController < ApplicationController
         :projeto_id => atividade_attr["projeto_id"],
         :dia_id => @dia.id,
         :mes_id => params[:mes],
-        :user_id => params[:user_id]
+        :usuario_id => params[:user_id]
       )
       atividades_failure = ! atividade.save
     end
@@ -59,8 +59,11 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
+    @ano = params[:ano].nil? ? Date.today.year : params[:ano]
+    @mes_numero = params[:mes].nil? ? Date.today.month : params[:mes]
+    meses_id = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).map{|month| month.id }
     authorize! :update, :validations
-    @atividades =  Atividade.where(:aprovacao => [false, nil]).all
+    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id).all.sort{ |a,b| a.data <=> b.data }
   end
 
   def mandar_validacao

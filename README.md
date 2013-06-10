@@ -5,7 +5,7 @@ Projeto em rails que organiza as horas de trabalho
 
 ======
 
-Copyright (C) 2013  authors in git hub
+Copyleft 2013  authors in git hub
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

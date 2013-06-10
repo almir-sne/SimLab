@@ -12,7 +12,7 @@ module BancoDeHorasHelper
       a << ids_de_projetos[i]
       b << a
     end
-    b
+    b.sort
   end
 
 end

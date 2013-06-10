@@ -5,42 +5,42 @@ class AtividadesController < ApplicationController
     @dia_id = params[:dia_id]
     @mes_id = params[:mes_id]
     @user_id = params[:user_id]
-    
-    @atividades = Atividade.find_all_by_dia_id_and_user_id(@dia_id, current_usuario)
+
+    @atividades = Atividade.find_all_by_dia_id_and_usuario_id(@dia_id, current_usuario)
     @atividades.sort! {|a| a.dia.numero}
-  end  
-  
+  end
+
   def edit
     @dia_id = params[:dia_id]
     @mes_id = params[:mes_id]
     @user_id = params[:user_id]
-    
+
     @atividade = Atividade.find(params[:id])
-    
+
     respond_to do |format|
-      format.html 
+      format.html
       format.json {render :json => @atividade}
     end
-    
+
   end
   def new
     @dia_id = params[:dia_id]
     @mes_id = params[:mes_id]
     @user_id = params[:user_id]
-    
-    @atividade = Atividade.new 
+
+    @atividade = Atividade.new
     respond_to do |format|
-      format.html 
+      format.html
       format.json {render :json => @atividade}
     end
   end
-  
+
   def destroy
     atividade = Atividade.find(params[:id])
     atividade.destroy()
     redirect_to :back
   end
-  
+
   def create
     atividade_attr = params[:atividade]
     @atividade = Atividade.new(
@@ -51,8 +51,8 @@ class AtividadesController < ApplicationController
       :dia_id => params[:dia_id],
       :mes_id => params[:mes_id],
       :user_id => params[:user_id]
-    )     
-    
+    )
+
     respond_to do |format|
       if @atividade.save
         format.html  { redirect_to action: "index", :dia_id => params[:dia_id], :mes_id=> params[:mes_id], :user_id=> params[:user_id] }
@@ -60,7 +60,7 @@ class AtividadesController < ApplicationController
         format.html  { redirect_to action: "new", :dia_id => params[:dia_id], :mes_id=> params[:mes_id], :user_id=> params[:user_id] }
       end
     end
-    
+
   end
   def update
     atividade_attr = params[:atividade]
@@ -80,6 +80,6 @@ class AtividadesController < ApplicationController
       else
         format.html  { redirect_to action: "edit", :dia_id => params[:dia_id], :mes_id=> params[:mes_id], :user_id=> params[:user_id] }
       end
-    end    
+    end
   end
 end
