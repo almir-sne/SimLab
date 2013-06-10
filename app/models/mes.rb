@@ -8,9 +8,9 @@ class Mes < ActiveRecord::Base
 
   def horas_trabalhadas
     unless user_id.nil?
-      tarefas = Atividade.find_all_by_mes_id_and_usuario_id(id, user_id)
-      horas = tarefas.map{|tarefa| tarefa.horas}
-      total = horas.inject{|sum,x| sum + x }.nil? ? 0 : horas.inject{|sum,x| sum + x }/3600
+      dias = Dia.find_all_by_mes_id_and_usuario_id(id, user_id)
+      horas = dias.map{|dia| dia.horas}
+      total = horas.inject{|sum,x| sum + x }.nil? ? 0 : horas.inject{|sum,x| sum + x }
     else
       0
     end

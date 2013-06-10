@@ -50,7 +50,7 @@ class AtividadesController < ApplicationController
       :aprovacao => nil,
       :dia_id => params[:dia_id],
       :mes_id => params[:mes_id],
-      :user_id => params[:user_id]
+      :usuario_id => params[:user_id]
     )
 
     respond_to do |format|

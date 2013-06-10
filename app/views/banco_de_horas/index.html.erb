@@ -28,7 +28,7 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none"><%= dia.numero %></td>
+      <td style="border:none"><%= dia.numero.to_s + "," + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
       <td style="border:none"><%= dia.entrada.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
@@ -58,3 +58,4 @@
   :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
 
 <%= render :partial => "modal" %>
+<%= link_to 'Back', :back %>
