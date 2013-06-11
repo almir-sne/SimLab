@@ -2,11 +2,11 @@ class AtividadesController < ApplicationController
   before_filter :authenticate_usuario!
 
   def index
-    @dia_id = params[:dia_id]
     @mes_id = params[:mes_id]
     @user_id = params[:user_id]
 
-    @atividades = Atividade.find_all_by_dia_id_and_usuario_id(@dia_id, current_usuario)
+    @dia = Dia.find params[:dia_id]
+    @atividades = Atividade.find_all_by_dia_id_and_usuario_id(params[:dia_id], current_usuario)
     @atividades.sort! {|a| a.dia.numero}
   end
 

@@ -28,7 +28,7 @@ class Dia < ActiveRecord::Base
   end
 
 	def bar_width
-		width = horas.nil? ? "0" : (horas * 10).to_s
+		width = horas.nil? ? "0" : (horas * 8).to_s
 		width + "%"
 	end
 
