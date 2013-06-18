@@ -28,7 +28,7 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none"><%= dia.numero.to_s + "," + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
+      <td style="border:none"><%= dia.numero.to_s + "-" + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
       <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
