@@ -3,7 +3,7 @@ require 'spec_helper'
 feature "Usuário" do
   include Helpers
   describe "admin" do
-    scenario 'admin deve poder cadastrar pessoas no site' do
+    scenario 'deve poder cadastrar pessoas no site' do
       admin_faz_login
       visit usuarios_path
       fill_in "Nome", :with => @visitante[:nome]

@@ -5,7 +5,7 @@ class AtividadesController < ApplicationController
     @mes_id = params[:mes_id]
     @user_id = params[:user_id]
 
-    @dia = Dia.find params[:dia_id]
+    @dia_id = params[:dia_id]
     @atividades = Atividade.find_all_by_dia_id_and_usuario_id(params[:dia_id], current_usuario)
     @atividades.sort! {|a| a.dia.numero}
   end

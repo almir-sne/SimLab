@@ -3,13 +3,16 @@ class Dia < ActiveRecord::Base
 
   belongs_to :usuario
   belongs_to :mes
-	has_many :atividades, :dependent => :destroy
+  has_many :atividades, :dependent => :destroy
 
-	accepts_nested_attributes_for :atividades
+  accepts_nested_attributes_for :atividades
 
-	attr_accessible :atividades_attributes
+  attr_accessible :atividades_attributes
 
   validates :numero, :uniqueness => {:scope => :mes_id}
+  validates :mes_id, :presence => true
+  validates :usuario_id, :presence => true
+  validate :validar_horas
 
   def horas
     ((saida - entrada) - intervalo) / 3600
@@ -27,26 +30,26 @@ class Dia < ActiveRecord::Base
     hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
   end
 
-	def bar_width
-		width = horas.nil? ? "0" : (horas * 8).to_s
-		width + "%"
-	end
+  def bar_width
+    width = horas.nil? ? "0" : (horas * 8).to_s
+    width + "%"
+  end
 
-	def horas_atividades_formato
-	  total_horas_atividade = 0
-	  total_minutos_atividade = 0
+  def horas_atividades_formato
+    total_horas_atividade = 0
+    total_minutos_atividade = 0
 
-	  self.atividades.each do |atividade|
+    self.atividades.each do |atividade|
 
-	    if atividade.aprovacao
-	      total_horas_atividade = total_horas_atividade + (atividade.horas.nil? ? 0 : (atividade.horas/3600)).to_i
+      if atividade.aprovacao
+        total_horas_atividade = total_horas_atividade + (atividade.horas.nil? ? 0 : (atividade.horas/3600)).to_i
         total_minutos_atividade = total_minutos_atividade + (atividade.horas.nil? ? 0 : ((atividade.horas % 3600) / 60)).to_i
-	    end
-	  end
-	  total_horas_atividade.to_s.rjust(2, '0') + ":" + total_minutos_atividade.to_s.rjust(2, '0')
-	end
+      end
+    end
+    total_horas_atividade.to_s.rjust(2, '0') + ":" + total_minutos_atividade.to_s.rjust(2, '0')
+  end
 
-	def horas_atividades
+  def horas_atividades
     retorno = 0
     self.atividades.each do |atividade|
 
@@ -56,5 +59,12 @@ class Dia < ActiveRecord::Base
     end
     retorno/3600
   end
+
+  private
+    def validar_horas
+      if( saida - entrada - intervalo) <= 0
+        errors.add(:atividade, "Day has unvalid time")
+      end
+    end
 
 end

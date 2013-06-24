@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature Projeto do
+feature "Projetos" do
 	include Helpers
 
 	describe "novo" do

@@ -5,7 +5,7 @@ class BancoDeHorasController < ApplicationController
     @user =      params[:user].nil?  ? current_user     : Usuario.find(params[:user])
     @month_num = params[:month].nil? ? Date.today.month : params[:month]
 
-    @month = Mes.find_or_initialize_by_ano_and_numero_and_user_id @year, @month_num, @user.id
+    @month = Mes.find_or_initialize_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
     if @month.horas_contratadas.nil?
       @month.horas_contratadas = @user.horario_mensal
       @month.valor_hora = @user.valor_da_hora
@@ -28,6 +28,7 @@ class BancoDeHorasController < ApplicationController
       :usuario_id => params[:user_id]
     )
     dia_sucess = @dia.save
+    Rails.logger.info(@dia.errors.messages.inspect).inspect
 
     atividades_failure = false
     params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
@@ -53,7 +54,7 @@ class BancoDeHorasController < ApplicationController
   def show_mes
     @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
-    query = Mes.find_all_by_ano_and_user_id @year, @user.id
+    query = Mes.find_all_by_ano_and_usuario_id @year, @user.id
     @meses = {}
     query.map {|e| @meses[e.numero] = e }
   end

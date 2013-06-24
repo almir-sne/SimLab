@@ -246,3 +246,6 @@ pt-BR:
       failure: "Não foi possível saver o registro."
     delete:
       sucess: "Usuario apagado com sucesso."
+  atividades:
+    create:
+      sucess: "Atividade(s) criada(s) com sucesso!"

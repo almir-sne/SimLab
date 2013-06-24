@@ -31,14 +31,15 @@ gem "nested_form"
 gem "mysql2"
 
 group :test, :development do
+  gem 'selenium-webdriver'
   gem 'rspec-rails'
 	gem 'shoulda-matchers', :require => false
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'guard-rspec'
     #gem 'rb-inotify', '~> 0.9'
-		gem 'rb-fsevent', '~> 0.9', :require => false if RUBY_PLATFORM =~ /darwin/i
-		gem 'growl'
+	  gem 'rb-fsevent', '~> 0.9', :require => false if RUBY_PLATFORM =~ /darwin/i
+	  gem 'growl'
   gem 'launchy'
 	gem 'database_cleaner'
 	gem 'simplecov', :require => false
