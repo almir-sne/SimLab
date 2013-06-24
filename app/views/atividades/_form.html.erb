@@ -1,31 +1,31 @@
 <%= form_for(@atividade, :validate => true, :html => {"data-type" => :json}) do |f| %>
   <div class="div_edit">
-  	
+
     <div class="notice"><%= flash[:notice]%></div>
-  	
-  	<input type="hidden" name="dia_id" value="<%= @dia_id%>" />
-  	<input type="hidden" name="mes_id" value="<%= @mes_id%>" />
-  	<input type="hidden" name="user_id" value="<%= @user_id%>" />
-    
+
+    <input type="hidden" name="dia_id" value="<%= @dia_id%>" />
+    <input type="hidden" name="mes_id" value="<%= @mes_id%>" />
+    <input type="hidden" name="user_id" value="<%= @user_id%>" />
+
     <div style="float: none">
-		<div>
-			<table>
-				<tr>
-					<td><%= f.label :projeto_id %></td>
-					<td><%= f.label :horas %></td>
-				</tr>
-				<tr>
-					<td><%= f.select :projeto_id, options_for_select(acha_projetos) %></td>
-					<td><%= f.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;' %></td>
-				</tr>								
-			</table>
-			<%= f.label :observacao %>
-			<%= f.text_area :observacao, :rows => 3 %>
-		</div>
-	</div>
+    <div>
+      <table>
+        <tr>
+          <td><%= f.label :projeto_id %></td>
+          <td><%= f.label :horas %></td>
+        </tr>
+        <tr>
+          <td><%= f.select :projeto_id, options_for_select(acha_projetos) %></td>
+          <td><%= f.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;' %></td>
+        </tr>
+      </table>
+      <%= f.label :observacao %>
+      <%= f.text_area :observacao, :rows => 3 %>
+    </div>
+  </div>
     <br />
     <div class="actions">
-    	<%= f.submit %>
-  	</div>
+      <%= f.submit %>
+    </div>
   </div>
 <% end %>
