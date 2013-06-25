@@ -1,4 +1,3 @@
-
 <div class="blue-line">  </div>
 
 
@@ -42,5 +41,7 @@
   <% end %>
 </table>
 <br />
-<%= link_to "Adicionar", new_atividade_path(:dia_id => @dia_id, :mes_id => @mes_id, :user_id => @user_id) %>
-<%= link_to 'Back', :back %>
+<%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
+<%= render :partial => "modal" %>
+<%= link_to 'Back', banco_de_horas_path(:month => @month, :user => @user_id, :year => @year)%>

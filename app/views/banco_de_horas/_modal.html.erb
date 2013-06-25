@@ -62,6 +62,14 @@ function pega_horas_atividade()
 
   return(atividadeH *60 + parseInt(atividadeM));
 }
+
+function recalculaHoras()
+{
+  var max_horas = pega_horas_dia();
+  document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
+  document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
+
+}
 </script>
 
 <div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
@@ -94,9 +102,9 @@ function pega_horas_atividade()
             </tr>
             <tr>
               <td><%= f.text_field :numero, :value => Date.today.day %></td>
-               <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %></td>
-              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;' %></td>
-               <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;'%></td>
+               <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;', :onchange => "recalculaHoras()" %></td>
+              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;', :onchange => "recalculaHoras()" %></td>
+               <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;', :onchange => "recalculaHoras()"%></td>
             </tr>
           </table>
         </div>
@@ -108,7 +116,7 @@ function pega_horas_atividade()
               <table width = "100%">
                 <tr>
                   <td><%= atividade_form.label :projeto_id %></td>
-                  <td><%= atividade_form.label :horas %></td>
+                  <td id="horas"><%= atividade_form.label :horas %></td>
                   <td><%= atividade_form.label :observacao, "Observação" %></td>
                 </tr>
                 <tr>

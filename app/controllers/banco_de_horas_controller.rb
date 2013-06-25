@@ -64,7 +64,7 @@ class BancoDeHorasController < ApplicationController
     @mes_numero = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).map{|month| month.id }
     authorize! :update, :validations
-    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id).all.sort{ |a,b| a.data <=> b.data }
+    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id).all.sort{ |a,b| b.data <=> a.data }
   end
 
   def mandar_validacao
