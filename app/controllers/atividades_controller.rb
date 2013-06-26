@@ -78,13 +78,10 @@ class AtividadesController < ApplicationController
           :projeto_id => atividade_attr["projeto_id"],
           :aprovacao => nil,
           :mensagem => nil,
-          :dia_id => params[:dia_id],
-          :mes_id => params[:mes_id],
-          :user_id => params[:user_id]
         )
-        format.html  { redirect_to action: "index", :dia_id => params[:dia_id], :mes_id=> params[:mes_id], :user_id=> params[:user_id] }
+        format.html  { redirect_to :back }
       else
-        format.html  { redirect_to action: "edit", :dia_id => params[:dia_id], :mes_id=> params[:mes_id], :user_id=> params[:user_id] }
+        format.html  { redirect_to :back }
       end
     end
   end
