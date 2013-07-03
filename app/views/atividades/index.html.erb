@@ -24,9 +24,9 @@
       </td>
       <td width="20%" style="border:none">
         <% if atividade.aprovacao.nil? %>
-          <%= "Não vista T-T" %>
+          <%= "Não vista, ainda..." %>
         <% elsif atividade.aprovacao %>
-          <%= "Sim! Fuck Yeah!" %>
+          <%= "Sim!" %>
         <% else %>
           <%= atividade.mensagem%>
         <% end %>
