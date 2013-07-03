@@ -60,30 +60,27 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
-    raise "asd"
-    usuario_id = params[:usuario_id].nil? ? Usuario.all.map{|usuario| usuario.id } : params[:usuario_id]
+    usuario_id = (params[:usuario_id].nil? || params[:usuario_id] == "TODOS") ? Usuario.all.map{|usuario| usuario.id } : params[:usuario_id]
     @ano = params[:ano].nil? ? Date.today.year : params[:ano]
     @mes_numero = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).map{|month| month.id }
     authorize! :update, :validations
     @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id, :usuario_id => usuario_id).all
+
+    soma =  @atividades.map{|atividade| atividade.horas}.inject{|sum, x| sum + x}
+    @total_horas = soma.nil? ? 0:  (soma/3600).round(2)
+
   end
 
   def mandar_validacao
     authorize! :update, :validations
 
     atividades = params[:atividades].try(:keys)
-
     atividades ||= []
 
     for i in atividades
       ativ = params[:atividades][i.to_str]
-      mensagem = nil
-      if ativ["aprovacao"] == "false"
-        aprovacao = false
-        mensagem = ativ["mensagem"]
-      end
-      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => ativ["aprovacao"], :mensagem => mensagem)
+      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => ativ["aprovacao"], :mensagem => ativ["mensagem"])
     end
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")

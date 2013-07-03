@@ -30,5 +30,6 @@
 </table>
 
 <script>
-$('#menu_select').bind('change', function() { window.location.pathname = "banco_de_horas/show_mes?user_id=" + $(this).val() });
+var url = "show_mes?user_id="
+$('#menu_select').bind('change', function() { location.href = url + $(this).val() });
 </script>
