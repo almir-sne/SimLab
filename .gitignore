@@ -50,3 +50,4 @@ nbproject
 /*.tmproj
 /config/secrets.yml
 Gemfile.lock
+tmp.sql

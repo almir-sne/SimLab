@@ -28,9 +28,9 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none"><%= dia.numero.to_s + "-" + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
-      <td style="border:none"><%= dia.entrada.strftime("%H:%M") %></td>
-      <td style="border:none"><%= dia.saida.strftime("%H:%M") %></td>
+      <td style="border:none"><%= dia.numero %></td>
+      <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
+      <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
       <td style="border:none"><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id, :user_id => @user, :month => @month.numero, :year => @year.to_i
       ) %> </td>

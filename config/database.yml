@@ -6,8 +6,8 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: simlab
-  username: simlab
+  database: sinlab
+  username: sinlab
   password: <%= ENV['db_password'] %>
 #  socket: /tmp/mysql.sock
 #  pool: 5
@@ -27,8 +27,8 @@ production:
 
   adapter: mysql2
   encoding: utf8
-  database: simlab
-  username: simlab
+  database: sinlab
+  username: sinlab
   password: <%= ENV["db_password"] %>
   reconnect: false
 #  adapter: sqlite3
