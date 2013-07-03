@@ -16,6 +16,12 @@
   </div>
 </div>
 
+<%= select_tag(:menu_select, options_for_select(acha_usuarios.sort), :prompt => "escolha um usuario") %>
+<script>
+$('#menu_select').bind('change', function() { window.location.pathname = "banco_de_horas/validar?mes=<%= @mes_numero%>&ano=<%=@ano%>&usuario_id=" + $(this).val() });
+</script>
+
+
 <div class="blue-line">  </div>
 
 <%= form_tag(mandar_validacao_banco_de_horas_path) do %>
@@ -40,7 +46,7 @@
           <td><%= atividade.observacao                                                       %></td>
           <td><%= atividade.formato_horas                                                    %></td>
           <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true               %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", false              %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", false, (atividade.aprovacao == false)  %></td>
           <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
         </tr>
     <% end %>

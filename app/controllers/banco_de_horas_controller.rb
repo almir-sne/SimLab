@@ -60,11 +60,13 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
+    raise "asd"
+    usuario_id = params[:usuario_id].nil? ? Usuario.all.map{|usuario| usuario.id } : params[:usuario_id]
     @ano = params[:ano].nil? ? Date.today.year : params[:ano]
     @mes_numero = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).map{|month| month.id }
     authorize! :update, :validations
-    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id).all.sort{ |a,b| b.data <=> a.data }
+    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id, :usuario_id => usuario_id).all
   end
 
   def mandar_validacao
@@ -85,7 +87,7 @@ class BancoDeHorasController < ApplicationController
     end
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
-    redirect_to validar_banco_de_horas_path
+    redirect_to :back
   end
 
   def delete_dia

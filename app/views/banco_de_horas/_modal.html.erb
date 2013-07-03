@@ -65,7 +65,7 @@ function pega_horas_atividade()
 
 function recalculaHoras()
 {
-  var max_horas = pega_horas_dia();
+ var max_horas = pega_horas_dia();
   document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
   document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
 
@@ -99,12 +99,12 @@ function recalculaHoras()
               <td><%= f.label :entrada %></td>
               <td><%= f.label :saida %></td>
               <td><%= f.label :intervalo %></td>
-            </tr>
+           </tr>
             <tr>
-              <td><%= f.text_field :numero, :value => Date.today.day %></td>
-               <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;', :onchange => "recalculaHoras()" %></td>
-              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 100px;', :onchange => "recalculaHoras()" %></td>
-               <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 100px;', :onchange => "recalculaHoras()"%></td>
+		<td width=50%><%= f.text_field :numero, :value => Date.today.day, :style => 'width: 45%'%></td>
+               <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 45%;', :onchange => "recalculaHoras()" %></td>
+              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 45%;', :onchange => "recalculaHoras()" %></td>
+               <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 45%;', :onchange => "recalculaHoras()"%></td>
             </tr>
           </table>
         </div>
