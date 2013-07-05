@@ -80,7 +80,12 @@ class BancoDeHorasController < ApplicationController
 
     for i in atividades
       ativ = params[:atividades][i.to_str]
-      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => ativ["aprovacao"], :mensagem => ativ["mensagem"])
+      if ativ["reprovacao"]
+        veredito = false
+      elsif ativ["aprovacao"]
+        veredito = true
+      end
+      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => veredito, :mensagem => ativ["mensagem"])
     end
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")

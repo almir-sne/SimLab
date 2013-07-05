@@ -5,7 +5,7 @@
 </div>
 
 <% if can? :see, :banco_de_horas %>
-  <%= select_tag(:menu_select, options_for_select(acha_usuarios), :prompt => "escolha um usuario") %>
+  <%= select_tag(:menu_select, options_for_select(acha_usuarios.sort), :prompt => "escolha um usuario") %>
 <%end%>
 
 <div class="blue-line">  </div>

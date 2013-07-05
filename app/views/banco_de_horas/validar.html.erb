@@ -1,3 +1,14 @@
+<script>
+
+function asdf(id, id_2)
+{
+  document.getElementById(id).checked
+  if(document.getElementById(id).checked == true)
+    if(document.getElementById(id_2).checked == true)
+      document.getElementById(id_2).checked = false;
+}
+</script>
+
 <div class="blue-text" style="margin-left: 30px">
   Validação de Atividades
 </div>
@@ -49,8 +60,8 @@
           <td><%= atividade.projeto.nome                                                     %></td>
           <td><%= atividade.observacao                                                       %></td>
           <td><%= atividade.formato_horas                                                    %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true               %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", false, (atividade.aprovacao == false)  %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "asdf(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "asdf(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
           <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
         </tr>
     <% end %>
@@ -64,4 +75,5 @@
 
 <script>
 $('#menu_select').bind('change', function() { window.location.pathname = "banco_de_horas/validar?mes=<%= @mes_numero%>&ano=<%=@ano%>&usuario_id=" + $(this).val() });
+
 </script>
