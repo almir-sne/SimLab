@@ -74,6 +74,6 @@ function asdf(id, id_2)
 <% end %>
 
 <script>
-$('#menu_select').bind('change', function() { window.location.pathname = "banco_de_horas/validar?mes=<%= @mes_numero%>&ano=<%=@ano%>&usuario_id=" + $(this).val() });
+$('#menu_select').bind('change', function() { location.href = "/banco_de_horas/validar?mes=<%= @mes_numero%>&ano=<%=@ano%>&usuario_id=" + $(this).val() });
 
 </script>
