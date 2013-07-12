@@ -5,7 +5,7 @@
 </div>
 
 <% if can? :see, :banco_de_horas %>
-  <%= select_tag(:menu_select, options_for_select(acha_usuarios), :prompt => "escolha um usuario") %>
+  <%= select_tag(:menu_select, options_for_select(acha_usuarios.sort), :prompt => "escolha um usuario") %>
 <%end%>
 
 <div class="blue-line">  </div>
@@ -30,5 +30,6 @@
 </table>
 
 <script>
-$('#menu_select').bind('change', function() { window.location.pathname = "banco_de_horas/show_mes?user_id=" + $(this).val() });
+var url = "/banco_de_horas/show_mes?user_id="
+$('#menu_select').bind('change', function() { location.href = url + $(this).val() });
 </script>

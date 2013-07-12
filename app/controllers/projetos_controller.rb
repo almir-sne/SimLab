@@ -4,7 +4,7 @@ before_filter :authenticate_usuario!
   # GET /projetos
   # GET /projetos.json
   def index
-    @projetos = Projeto.all
+    @projetos = Projeto.all.sort{|a,b| a.nome <=> b.nome}
     @projeto = Projeto.new
     respond_to do |format|
       format.html # index.html.erb
