@@ -1,6 +1,6 @@
 <script>
 
-function asdf(id, id_2)
+function correctCheck(id, id_2)
 {
   document.getElementById(id).checked
   if(document.getElementById(id).checked == true)
@@ -60,8 +60,8 @@ function asdf(id, id_2)
           <td><%= atividade.projeto.nome                                                     %></td>
           <td><%= atividade.observacao                                                       %></td>
           <td><%= atividade.formato_horas                                                    %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "asdf(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "asdf(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
           <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
         </tr>
     <% end %>

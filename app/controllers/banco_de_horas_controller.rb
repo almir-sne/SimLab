@@ -108,6 +108,8 @@ class BancoDeHorasController < ApplicationController
         veredito = false
       elsif ativ["aprovacao"]
         veredito = true
+      else
+        veredito = nil
       end
       Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => veredito, :mensagem => ativ["mensagem"])
     end
