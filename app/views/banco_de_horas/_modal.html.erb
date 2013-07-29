@@ -41,12 +41,13 @@ function validar_atividade_observacao(obs)
 
 function pega_horas_dia()
 {
-  var entradaH = document.getElementById("dia_entrada_4i").value;
-  var entradaM = document.getElementById("dia_entrada_5i").value;
-  var saidaH = document.getElementById("dia_saida_4i").value;
-  var saidaM = document.getElementById("dia_saida_5i").value;
-  var intervaloH = document.getElementById("dia_intervalo_4i").value;
-  var intervaloM = document.getElementById("dia_intervalo_5i").value;
+
+  var entradaH = document.getElementById("dia_0_entrada").value;
+  var entradaM = document.getElementById("dia_0_entrada").nextElementSibling.value;
+  var saidaH = document.getElementById("dia_0_saida").value;
+  var saidaM = document.getElementById("dia_0_saida").nextElementSibling.value;
+  var intervaloH = document.getElementById("dia_0_intervalo").value;
+  var intervaloM = document.getElementById("dia_0_intervalo").nextElementSibling.value;
 
   var entrada = entradaH * 60 + parseInt(entradaM, 10);
   var saida = saidaH * 60 + parseInt(saidaM, 10);
@@ -74,19 +75,45 @@ function recalculaHoras()
 
 <div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
   <div class="modal-body">
-    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
-      <% if @dia.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
-          <ul>
-            <% @dia.errors.full_messages.each do |msg| %>
-              <li>
-                <%= msg %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
+
+  <% @dias.each do |dia| %>
+    <div id = "<%= dia.id%>",  style="display:none">
+      <%= form_for(dia, url: banco_de_hora_path(dia)) do |f| %>
+        <%= hidden_field_tag :user_id, @user.id %>
+        <%= hidden_field_tag :ano, @year %>
+        <%= hidden_field_tag :mes, @month.id %>
+        <table width="100%">
+          <tr>
+            <td><%= f.label :dia %></td>
+            <td><%= f.label :entrada %></td>
+            <td><%= f.label :saida %></td>
+            <td><%= f.label :intervalo %></td>
+          </tr>
+          <tr>
+            <td width=24%><%= f.text_field :numero, :style => 'width: 15%'%></td>
+            <td><%= f.time_select :entrada, {}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
+            <td><%= f.time_select :saida, {}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
+            <td><%= f.time_select :intervalo_time, {} , :style => 'width: 35%;', :onchange => "recalculaHoras()"%></td>
+          </tr>
+        </table>
+        <table width="100%">
+          <tr>
+            <td>
+              <div class="actions" style="float: left; margin-right: 20px;">
+                <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
+                  Cancelar
+                </button>
+                <%= f.submit "Ok", :class => "btn default-button"%>
+              </div>
+            </td>
+          </tr>
+        </table>
       <% end %>
+    </div>
+  <% end %>
+
+  <div id = "0",  style="display:none">
+    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
       <%= hidden_field_tag :user_id, @user.id %>
       <%= hidden_field_tag :ano, @year %>
       <%= hidden_field_tag :mes, @month.id %>
@@ -102,9 +129,9 @@ function recalculaHoras()
            </tr>
             <tr>
               <td width=24%><%= f.text_field :numero, :value => Date.today.day, :style => 'width: 7%'%></td>
-              <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
-              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
-              <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 35%;', :onchange => "recalculaHoras()"%></td>
+              <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %></td>
+              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %></td>
+              <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 35%;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%></td>
             </tr>
           </table>
         </div>
@@ -150,5 +177,6 @@ function recalculaHoras()
         </table>
       </div>
     <% end %>
+  </div>
   </div>
 </div>

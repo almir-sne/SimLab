@@ -51,6 +51,30 @@ class BancoDeHorasController < ApplicationController
     redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
   end
 
+  def update
+    dia = Dia.find(params[:id])
+
+    respond_to do |format|
+      if dia.update_attributes(
+        :numero => params[:dia][:numero],
+        :entrada => convert_date(params[:dia], "entrada"),
+        :saida => convert_date(params[:dia], "saida"),
+        :intervalo => (params[:dia]["intervalo_time(4i)"].to_i * 3600 +  params[:dia]["intervalo_time(5i)"].to_i * 60),
+        :mes_id => params[:mes],
+        :usuario_id => params[:user_id]
+      )
+        format.html { redirect_to @projeto, notice: I18n.t("dia.update.sucess") }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @projeto.errors, status: :unprocessable_entity }
+      end
+     flash[:notice] = I18n.t("dia.update.sucess")
+      redirect_to :back
+    return
+    end
+  end
+
   def show_mes
     @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])

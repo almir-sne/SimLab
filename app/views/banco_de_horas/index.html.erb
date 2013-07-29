@@ -17,6 +17,7 @@
 
 <table class="list-table">
   <tr>
+    <th>Editar</th>
     <th>Dia</th>
     <th>Hora de entrada</th>
     <th>Hora de saída</th>
@@ -28,6 +29,9 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
+      <td style="border:none", onclick="showstuff('<%= dia.id%>');" >
+        <%= link_to "OK", "#new-banco-modal", "data-toggle" => "modal", :role => "button" %>
+      </td>
       <td style="border:none"><%= dia.numero.to_s + "-" + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
       <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
@@ -56,7 +60,13 @@
 <br />
 
 <%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
-  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
 
 <%= render :partial => "modal" %>
 <%= link_to 'Voltar', :back,:class => "btn default-button"%>
+<script>
+function showstuff(boxid)
+{
+  document.getElementById(boxid).style.display="block";
+}
+</script>

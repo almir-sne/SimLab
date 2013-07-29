@@ -1,5 +1,5 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id
+  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id, :intervalo_time
 
   belongs_to :usuario
   belongs_to :mes
@@ -13,6 +13,10 @@ class Dia < ActiveRecord::Base
   validates :mes_id, :presence => true
   validates :usuario_id, :presence => true
   validate :validar_horas
+
+  def intervalo_time
+    Time.new(2000,1,1,0,0,0,0) + intervalo
+  end
 
   def horas
     ((saida - entrada) - intervalo) / 3600
