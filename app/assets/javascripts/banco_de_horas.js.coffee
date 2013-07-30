@@ -12,3 +12,16 @@ $ ()->
 		$(this).find('input:visible:first').focus().end().find('form').enableClientSideValidations()
 	$("form.new_banco_de_hora").on "ajax:success", (event, data, status, xhr) ->
     $('#new-banco-modal').modal('hide')
+
+
+$ ->
+  $.loadModal = ->
+    $('.edit-dia a').click (event) ->
+      event.preventDefault()
+      loading = $ '<div id="loading" style="display: none;"><span><img src="/assets/loading.gif" alt="carregando..."/></span></div>'
+      $('.other_images').prepend loading
+      loading.fadeIn()
+      $.ajax type: 'GET', url: $(@).attr('href'), dataType: 'script', success: (-> loading.fadeOut -> loading.remove())
+      false
+
+  $.loadModal()

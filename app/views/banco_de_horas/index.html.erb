@@ -17,7 +17,6 @@
 
 <table class="list-table">
   <tr>
-    <th>Editar</th>
     <th>Dia</th>
     <th>Hora de entrada</th>
     <th>Hora de saída</th>
@@ -25,27 +24,33 @@
     <th>Atividades</th>
     <th style="padding-left: 25px;">Horas trabalhadas</th>
     <th>Horas em Atividades (Aprovadas)</th>
-    <th>Excluir</th>
+    <th></th>
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none", onclick="showstuff('<%= dia.id%>');" >
-        <%= link_to "OK", "#new-banco-modal", "data-toggle" => "modal", :role => "button" %>
-      </td>
-      <td style="border:none"><%= dia.numero.to_s + "-" + t("date.day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
+      <td style="border:none"><%= dia.numero.to_s + "-" + t("date.abbr_day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
       <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.formata_intervalo %></td>
       <td style="border:none"><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id, :user_id => @user, :month => @month.numero, :year => @year.to_i
-      ) %> </td>
+        ) %> </td>
       <td style="width: 70%; border: none">
-      <div class="blue-background" style="width: <%= (dia.bar_width)%>">
-        <%= dia.formata_horas %>h
-      </div>
+        <div class="blue-background" style="width: <%= (dia.bar_width)%>">
+          <%= dia.formata_horas %>h
+        </div>
       </td>
       <td style="border:none" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
-      <td >
-        <%= link_to "X", delete_dia_banco_de_horas_path(:dia_id => dia.id) , :confirm => "Deseja excluir o registro?"%>
+      <td style="width: 7%; border: none" >
+        <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id }, {:remote => true, :method => :post} ) do %>
+          <%= hidden_field_tag :user_id, @user.id %>
+          <%= hidden_field_tag :ano, @year %>
+          <%= hidden_field_tag :mes, @month.id %>
+
+          <%= submit_tag ' ', :class => 'icon-edit nohover edit-dia', :title => "Editar" %>
+        <% end %>
+        <%= link_to '<i class="icon-trash"> </i>'.html_safe,
+          delete_dia_banco_de_horas_path(:dia_id => dia.id) , :confirm => "Deseja excluir o registro?",
+          :class => 'nohover', :title => "Excluir"%>
       </td>
     </tr>
   <% end %>
@@ -62,11 +67,14 @@
 <%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
   :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
 
-<%= render :partial => "modal" %>
+<div id="primeiraprosanto">
+  <%= render :partial => "modal", :locals => { :id => @dia.id } %>
+</div>
+
 <%= link_to 'Voltar', :back,:class => "btn default-button"%>
 <script>
-function showstuff(boxid)
-{
-  document.getElementById(boxid).style.display="block";
-}
+  function showstuff(boxid)
+  {
+    document.getElementById(boxid).style.display="block";
+  }
 </script>

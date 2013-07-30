@@ -18,6 +18,17 @@ class BancoDeHorasController < ApplicationController
     @dia.atividades.build
   end
 
+  def modal
+    @year =      params[:ano].nil?  ? Date.today.year  : params[:year]
+    @user =      params[:user_id].nil?  ? current_user     : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @dia = Dia.find(params[:id])
+    respond_to do |format|
+      format.js { render :partial => 'modal'}
+    end
+
+  end
+
   def create
     @dia = Dia.new(
       :numero => params[:dia][:numero],
@@ -56,22 +67,22 @@ class BancoDeHorasController < ApplicationController
 
     respond_to do |format|
       if dia.update_attributes(
-        :numero => params[:dia][:numero],
-        :entrada => convert_date(params[:dia], "entrada"),
-        :saida => convert_date(params[:dia], "saida"),
-        :intervalo => (params[:dia]["intervalo_time(4i)"].to_i * 3600 +  params[:dia]["intervalo_time(5i)"].to_i * 60),
-        :mes_id => params[:mes],
-        :usuario_id => params[:user_id]
-      )
+          :numero => params[:dia][:numero],
+          :entrada => convert_date(params[:dia], "entrada"),
+          :saida => convert_date(params[:dia], "saida"),
+          :intervalo => (params[:dia]["intervalo_time(4i)"].to_i * 3600 +  params[:dia]["intervalo_time(5i)"].to_i * 60),
+          :mes_id => params[:mes],
+          :usuario_id => params[:user_id]
+        )
         format.html { redirect_to @projeto, notice: I18n.t("dia.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
-     flash[:notice] = I18n.t("dia.update.sucess")
+      flash[:notice] = I18n.t("dia.update.sucess")
       redirect_to :back
-    return
+      return
     end
   end
 
