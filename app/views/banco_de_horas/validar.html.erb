@@ -50,7 +50,7 @@ function correctCheck(id, id_2)
     <th> horas      </th>
     <th> aprovado?  </th>
     <th> reprovado? </th>
-    <th> mensagem</th>
+    <th> mensagem   </th>
   </tr>
 
     <% @atividades.each do |atividade| %>
@@ -59,7 +59,7 @@ function correctCheck(id, id_2)
           <td><%= Usuario.find(atividade.usuario_id).nome                                    %></td>
           <td><%= atividade.projeto.nome                                                     %></td>
           <td><%= atividade.observacao                                                       %></td>
-          <td><%= atividade.formato_horas                                                    %></td>
+          <td><%= atividade.formata_duracao                                                  %></td>
           <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
           <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
           <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>

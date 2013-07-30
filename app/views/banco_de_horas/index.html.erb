@@ -13,6 +13,10 @@
 
 
 </div>
+
+<%= link_to "Adicionar Dia", "#new-banco-modal", :class => "btn default-button",
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
+
 <div class="blue-line">  </div>
 
 <table class="list-table">
@@ -51,16 +55,13 @@
   <% end %>
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=5>Total</td>
-    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
-    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
+    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
+    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
 
   </tr>
 </table>
 
 <br />
-
-<%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
-  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
 
 <%= render :partial => "modal" %>
 <%= link_to 'Voltar', :back,:class => "btn default-button"%>

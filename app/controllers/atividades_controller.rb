@@ -73,7 +73,7 @@ class AtividadesController < ApplicationController
     @atividade = Atividade.find(params[:id])
     respond_to do |format|
       if @atividade.update_attributes(
-          :horas => (atividade_attr["horas(4i)"].to_f * 3600) +  (atividade_attr["horas(5i)"].to_f * 60),
+          :duracao => (atividade_attr["duracao(4i)"].to_f * 3600) +  (atividade_attr["duracao(5i)"].to_f * 60),
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
           :aprovacao => nil,

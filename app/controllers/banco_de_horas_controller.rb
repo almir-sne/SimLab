@@ -33,7 +33,7 @@ class BancoDeHorasController < ApplicationController
     atividades_failure = false
     params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
       atividade = Atividade.new(
-        :horas => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
+        :duracao => atividade_attr["duracao(4i)"].to_i * 3600 +  atividade_attr["duracao(5i)"].to_i * 60,
         :observacao => atividade_attr["observacao"],
         :projeto_id => atividade_attr["projeto_id"],
         :dia_id => @dia.id,
@@ -91,7 +91,7 @@ class BancoDeHorasController < ApplicationController
     authorize! :update, :validations
     @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id, :usuario_id => usuario_id).all
 
-    soma =  @atividades.map{|atividade| atividade.horas}.inject{|sum, x| sum + x}
+    soma =  @atividades.map{|atividade| atividade.duracao}.inject{|sum, x| sum + x}
     @total_horas = soma.nil? ? 0:  (soma/3600).round(2)
 
   end

@@ -143,12 +143,12 @@ function recalculaHoras()
               <table width = "100%">
                 <tr>
                   <td><%= atividade_form.label :projeto_id %></td>
-                  <td id="horas"><%= atividade_form.label :horas %></td>
+                  <td id="horas"><%= atividade_form.label :duracao %></td>
                   <td><%= atividade_form.label :observacao, "Observação" %></td>
                 </tr>
                 <tr>
                   <td style="margin-left: 20%; width: 24%"> <%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %></td>
-                  <td style="padding-right: 6%; width:25%"><%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 47%;'%></td>
+                  <td style="padding-right: 6%; width:25%"><%= atividade_form.time_select :duracao, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 47%;'%></td>
                   <td><%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %></td>
                 </tr>
               </table>

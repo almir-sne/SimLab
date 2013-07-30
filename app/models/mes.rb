@@ -9,23 +9,24 @@ class Mes < ActiveRecord::Base
   def horas_trabalhadas
     unless usuario_id.nil?
       dias = Dia.find_all_by_mes_id_and_usuario_id(id, usuario_id)
-      horas = dias.map{|dia| dia.horas}
-      total = horas.inject{|sum,x| sum + x }.nil? ? 0 : horas.inject{|sum,x| sum + x }
+      minutos_map = dias.map{|dia| dia.minutos}
+      total = minutos_map.inject{|sum,x| sum + x }.nil? ? 0 : minutos_map.inject{|sum,x| sum + x }
+      hh, mm = (total).divmod(60)
+      ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
     else
-      0
+      "00:00"
     end
   end
 
   def horas_trabalhadas_aprovadas
     unless usuario_id.nil?
-      # tarefas = Atividade.find_all_by_mes_id_and_user_id(id, user_id)
       tarefas = Atividade.where(:usuario_id => usuario_id, :mes_id => id, :aprovacao => true)
-      horas = tarefas.map{|tarefa| tarefa.horas}
-      total = horas.inject{|sum,x| sum + x }.nil? ? 0 : horas.inject{|sum,x| sum + x }/3600
+      minutos_map = tarefas.map{|tarefa| tarefa.minutos}
+      total = minutos_map.inject{|sum,x| sum + x }.nil? ? 0 : minutos_map.inject{|sum,x| sum + x }
+      hh, mm = (total).divmod(60)
+      ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
     else
-      0
+      "00:00"
     end
-
   end
-
 end
