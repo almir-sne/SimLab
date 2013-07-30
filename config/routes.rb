@@ -10,6 +10,7 @@ SinLab::Application.routes.draw do
       get  :validar
       post :mandar_validacao
       get  :delete_dia
+      post :modal
     end
   end
 
