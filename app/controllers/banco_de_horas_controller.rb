@@ -111,7 +111,11 @@ class BancoDeHorasController < ApplicationController
       else
         veredito = nil
       end
-      Atividade.find(ativ["id"].to_i).update_attributes(:aprovacao => veredito, :mensagem => ativ["mensagem"])
+      Atividade.find(ativ["id"].to_i).update_attributes(
+        :aprovacao => veredito,
+        :mensagem => ativ["mensagem"],
+        :avaliador_id => current_user.id
+        )
     end
 
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")

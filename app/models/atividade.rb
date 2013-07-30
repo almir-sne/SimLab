@@ -1,5 +1,5 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :duracao, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem
+  attr_accessible :dia_id, :duracao, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
   attr_accessible :aprovado, :reprovado
 
   belongs_to :mes
