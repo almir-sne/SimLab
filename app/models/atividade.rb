@@ -1,6 +1,7 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :duracao, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
   attr_accessible :aprovado, :reprovado
+  attr_accessor :horas
 
   belongs_to :mes
   belongs_to :dia
@@ -12,10 +13,13 @@ class Atividade < ActiveRecord::Base
   validates :usuario_id, :presence => true
   validates :duracao, :exclusion => {:in => 0..1}
 
-
   def data
     mes = Mes.find mes_id
     Date.new(mes.ano, mes.numero, Dia.find(self.dia_id).numero)
+  end
+
+  def horas
+    Time.new(2000,1,1,0,0,0)+duracao
   end
 
   def bar_width

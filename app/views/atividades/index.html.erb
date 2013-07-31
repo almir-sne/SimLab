@@ -34,8 +34,8 @@
         <% end %>
       </td>
       <td width="40%" style="border:none"><%= atividade.observacao %></td>
-      <td><%= atividade.avaliador_id.nil? ? "" : Usuario.find(atividade.avaliador_id).nome %></td>
-      <td><%= atividade.mensagem.nil? ? "" : atividade.mensagem %></td>
+      <td style="border:none"><%= atividade.avaliador_id.nil? ? "" : Usuario.find(atividade.avaliador_id).nome %></td>
+      <td style="border:none"><%= atividade.mensagem.nil? ? "" : atividade.mensagem %></td>
       <td style="border:none">
       	<%= link_to atividade, :method => :delete, :confirm => "Deseja excluir o registro?" do%>
       		X
