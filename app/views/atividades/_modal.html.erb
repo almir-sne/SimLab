@@ -11,7 +11,7 @@
          </tr>
          <tr>
             <td><%= f.select :projeto_id, options_for_select( acha_projetos.unshift([atividade.projeto.nome, atividade.projeto_id]) ) %></td>
-            <td width=50% ><%=f.time_select :horas %></td>
+            <td width=50% ><%=f.time_select :horas,{}, :style =>"width: 33%" %></td>
           </tr>
           <tr>
         </table>
