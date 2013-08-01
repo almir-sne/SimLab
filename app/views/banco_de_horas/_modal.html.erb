@@ -1,58 +1,53 @@
-<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
-  <div class="modal-body">
+<div class="modal-body">
 
-    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
-      <%= hidden_field_tag :user_id, @user.id %>
-      <%= hidden_field_tag :ano, @year %>
-      <%= hidden_field_tag :mes, @month.id %>
+  <%= nested_form_for(@dia, :url => :banco_de_horas, :method => :post) do |f| %>
+    <%= hidden_field_tag :user_id, @user.id %>
+    <%= hidden_field_tag :ano, @year %>
+    <%= hidden_field_tag :mes, @month.id %>
+    <%= hidden_field_tag :dia_id, @dia.id %>
 
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span4">
-            <%= f.label :dia %>
-            <%= f.text_field :numero, :value => Date.today.day, :style => 'width: 55px'%>
-            <%= f.label :entrada %>
-            <%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
-            <%= f.label :saida %>
-            <%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
-            <%= f.label :intervalo %>
-            <%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
-          </div>
-          <div class="span4">
-            <h3>Atividades</h3>
-            <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
-              <%= f.fields_for :atividades do |atividade_form| %>
-                <%= atividade_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe,
-                  :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-                <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-                <%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %>
-                <br/>
-                <%= atividade_form.label :horas, :class => 'inline-label' %>
-                <%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)},
-                  :style => 'width: 55px;'%>
-                <%= atividade_form.label :observacao, "Observação" %>
-                <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
-                <div class="grey-line"> </div>
-              <% end %>
-              <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button"%>
-            </div>
-          </div>
-          <div class="span4">
-            <div class="panel-scrollable" id="lista-de-atividades">
-              Hello!
-            </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <%= f.label :dia %>
+          <%= f.text_field :numero, :value => ((@dia.numero.blank?)? Date.today.day : @dia.numero), :style => 'width: 55px'%>
+          <%= f.label :entrada %>
+          <%= f.time_select :entrada, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
+          <%= f.label :saida %>
+          <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
+          <%= f.label :intervalo %>
+          <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
+        </div>
+        <div class="span9">
+          <h3>Atividades</h3>
+          <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
+            <%= f.fields_for :atividades do |atividade_form| %>
+              <%= atividade_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe,
+                :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+              <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>
+              <br/>
+              <%= atividade_form.label :horas, :class => 'inline-label' %>
+              <%= atividade_form.time_select :horas, {},
+                :style => 'width: 55px;'%>
+              <%= atividade_form.label :observacao, "Observação" %>
+              <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+              <div class="grey-line"> </div>
+            <% end %>
+            <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button"%>
           </div>
         </div>
+
       </div>
+    </div>
     <div class="blue-line" style="margin: 20px 10px">  </div>
-      <div style="width: 100%">
-        <div class="actions" style="float: left; margin-left: 10px;">
-          <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
-            Cancelar
-          </button>
-          <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validate()"%>
-        </div>
+    <div style="width: 100%">
+      <div class="actions" style="float: left; margin-left: 10px;">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
+          Cancelar
+        </button>
+        <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validate()"%>
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>

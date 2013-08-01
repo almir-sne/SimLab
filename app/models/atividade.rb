@@ -46,4 +46,15 @@ class Atividade < ActiveRecord::Base
     retorno
   end
 
+  def horas
+    aux_h = 0
+    aux_m = 0
+    unless read_attribute(:horas).nil?
+      aux_h = (read_attribute(:horas). / 3600).to_i
+
+      aux_m = ((read_attribute(:horas).%3600)/60).to_i
+    end
+    Time.new(2000, 1, 1 ,aux_h, aux_m, 0)
+  end
+
 end

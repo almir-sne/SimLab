@@ -162,3 +162,8 @@
     display: inline;
     margin-right: 10px
 }
+
+.inline-form {
+    display: inline;
+    padding: 0;
+}

@@ -31,7 +31,7 @@
       <td style="border:none"><%= dia.numero.to_s + "-" + t("date.abbr_day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
       <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
-      <td style="border:none"><%= dia.formata_intervalo %></td>
+      <td style="border:none"><%= dia.intervalo.utc.strftime("%H:%M") %></td>
       <td style="border:none"><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id, :user_id => @user, :month => @month.numero, :year => @year.to_i
         ) %> </td>
       <td style="width: 70%; border: none">
@@ -41,12 +41,12 @@
       </td>
       <td style="border:none" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
       <td style="width: 7%; border: none" >
-        <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id }, {:remote => true, :method => :post} ) do %>
+        <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
+          {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>
           <%= hidden_field_tag :ano, @year %>
           <%= hidden_field_tag :mes, @month.id %>
-
-          <%= submit_tag ' ', :class => 'icon-edit nohover edit-dia', :title => "Editar" %>
+          <%= link_to_submit ' ', :class => 'icon-edit nohover edit-dia', :title => "Editar" %>
         <% end %>
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
           delete_dia_banco_de_horas_path(:dia_id => dia.id) , :confirm => "Deseja excluir o registro?",
@@ -65,16 +65,17 @@
 <br />
 
 <%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
-  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
 
-<div id="primeiraprosanto">
-  <%= render :partial => "modal", :locals => { :id => @dia.id } %>
+<div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">>
+  <%= render :partial => "modal" %>
+</div>
+
+<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
+  <%= render :partial => "modal" %>
 </div>
 
 <%= link_to 'Voltar', :back,:class => "btn default-button"%>
-<script>
-  function showstuff(boxid)
-  {
-    document.getElementById(boxid).style.display="block";
-  }
-</script>
+
