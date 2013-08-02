@@ -1,9 +1,7 @@
 SinLab::Application.routes.draw do
   resources :addresses
 
-
   #  get "home/index"
-
   resources :banco_de_horas do
     collection do
       get  :show_mes
@@ -28,6 +26,8 @@ SinLab::Application.routes.draw do
   end
 
   resources :projetos
+
+  resources :dias
 
   resources :resumo do
     collection do

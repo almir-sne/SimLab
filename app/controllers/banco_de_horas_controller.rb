@@ -38,7 +38,7 @@ class BancoDeHorasController < ApplicationController
   def create
     dia = Dia.find_by_id(params[:dia_id])
     if dia.blank?
-      @dia = Dia.new(
+      dia = Dia.new(
         :numero => params[:dia][:numero],
         :entrada => convert_date(params[:dia], "entrada"),
         :saida => convert_date(params[:dia], "saida"),
@@ -46,15 +46,15 @@ class BancoDeHorasController < ApplicationController
         :mes_id => params[:mes],
         :usuario_id => params[:user_id]
       )
-      dia_success = @dia.save
-      Rails.logger.info(@dia.errors.messages.inspect).inspect
+      dia_success = dia.save
+      Rails.logger.info(dia.errors.messages.inspect).inspect
 
       params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
         atividade = Atividade.new(
           :horas => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
-          :dia_id => @dia.id,
+          :dia_id => dia.id,
           :mes_id => params[:mes],
           :usuario_id => params[:user_id]
         )
@@ -70,6 +70,30 @@ class BancoDeHorasController < ApplicationController
         :usuario_id => params[:user_id]
       )
       atividades_success = true
+      params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
+        atividade = Atividade.find_by_id atividade_attr[:id].to_i
+
+        if atividade.blank?
+          atividade = Atividade.new
+        end
+        #          atividade = Atividade.new(
+        #            :horas => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
+        #            :observacao => atividade_attr["observacao"],
+        #            :projeto_id => atividade_attr["projeto_id"],
+        #            :dia_id => @dia.id,
+        #            :mes_id => params[:mes],
+        #            :usuario_id => params[:user_id]
+        #          )
+
+        atividades_success = atividades_success and atividade.update_attributes(
+          :horas => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
+          :observacao => atividade_attr["observacao"],
+          :projeto_id => atividade_attr["projeto_id"],
+          :dia_id => dia.id,
+          :mes_id => params[:mes],
+          :usuario_id => params[:user_id]
+        )
+      end
     end
    
     if dia_success and atividades_success
@@ -162,6 +186,7 @@ class BancoDeHorasController < ApplicationController
       hash[attribute + '(2i)'].to_i,
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
-      hash[attribute + '(5i)'].to_i)
+      hash[attribute + '(5i)'].to_i,
+      0 )
   end
 end

@@ -134,7 +134,7 @@
 }
 
 .red-background {
-    background-color: rgb(255, 64, 64);
+    background-color: #FF9393;
     padding: 10px 10px;
 }
 
@@ -166,4 +166,8 @@
 .inline-form {
     display: inline;
     padding: 0;
+}
+
+.days-table td {
+    border: none;
 }

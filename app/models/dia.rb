@@ -35,8 +35,11 @@ class Dia < ActiveRecord::Base
   end
 
   def bar_width
-    width = horas.nil? ? "0" : (horas * 8).to_s
-    width + "%"
+    width = horas.nil? ? 0 : (horas * 8)
+    if width > 100
+      width = 100
+    end
+    width.to_s + "%"
   end
 
   def horas_atividades_formato

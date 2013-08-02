@@ -15,7 +15,7 @@
 </div>
 <div class="blue-line">  </div>
 
-<table class="list-table">
+<table class="list-table days-table">
   <tr>
     <th>Dia</th>
     <th>Hora de entrada</th>
@@ -28,19 +28,20 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="border:none"><%= dia.numero.to_s + "-" + t("date.abbr_day_names")[Date.new(@year.to_i, @month.numero, dia.numero).wday]%></td>
-      <td style="border:none"><%= dia.entrada.utc.strftime("%H:%M") %></td>
-      <td style="border:none"><%= dia.saida.utc.strftime("%H:%M") %></td>
-      <td style="border:none"><%= dia.intervalo.utc.strftime("%H:%M") %></td>
-      <td style="border:none"><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id, :user_id => @user, :month => @month.numero, :year => @year.to_i
-        ) %> </td>
-      <td style="width: 70%; border: none">
+      <td style="width: 11%"><%= dia.numero.to_s + " - " + t("date.abbr_day_names")[Date.new(@year.to_i,
+            @month.numero, dia.numero).wday]%></td>
+      <td><%= dia.entrada.utc.strftime("%H:%M") %></td>
+      <td><%= dia.saida.utc.strftime("%H:%M") %></td>
+      <td><%= dia.intervalo.utc.strftime("%H:%M") %></td>
+      <td><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id,
+          :user_id => @user, :month => @month.numero, :year => @year.to_i) %> </td>
+      <td style="width: 60%; border: none">
         <div class="blue-background" style="width: <%= (dia.bar_width)%>">
           <%= dia.formata_horas %>h
         </div>
       </td>
-      <td style="border:none" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
-      <td style="width: 7%; border: none" >
+      <td style="border: 15px solid #FFF" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
+      <td style="width: 7%;">
         <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
           {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>
@@ -54,10 +55,10 @@
       </td>
     </tr>
   <% end %>
-  <tr style="border-top:thin solid; border-color:black">
-    <td colspan=5>Total</td>
-    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
-    <td><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
+  <tr >
+    <td style="border-top:thin solid; border-color:black" colspan=5>Total</td>
+    <td style="border-top:thin solid; border-color:black"><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
+    <td style="border-top:thin solid; border-color:black"><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
 
   </tr>
 </table>
@@ -69,7 +70,7 @@
 
 <div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">>
-  <%= render :partial => "modal" %>
+       <%= render :partial => "modal" %>
 </div>
 
 <div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog"
