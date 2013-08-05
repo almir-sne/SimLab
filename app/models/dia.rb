@@ -14,6 +14,14 @@ class Dia < ActiveRecord::Base
   validates :usuario_id, :presence => true
   validate :validar_horas
 
+  def entrada
+    read_attribute(:entrada).nil? ? Time.now : read_attribute(:entrada).utc
+  end
+
+  def saida
+    read_attribute(:saida).nil? ? Time.now : read_attribute(:saida).utc
+  end
+
   def intervalo_time
     Time.new(2000,1,1,0,0,0,0) + read_attribute(:intervalo)
   end

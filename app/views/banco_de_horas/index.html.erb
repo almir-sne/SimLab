@@ -34,8 +34,8 @@
     <tr>
       <td style="width: 11%"><%= dia.numero.to_s + " - " + t("date.abbr_day_names")[Date.new(@year.to_i,
             @month.numero, dia.numero).wday]%></td>
-      <td><%= dia.entrada.utc.strftime("%H:%M") %></td>
-      <td><%= dia.saida.utc.strftime("%H:%M") %></td>
+      <td><%= dia.entrada.strftime("%H:%M") %></td>
+      <td><%= dia.saida.strftime("%H:%M") %></td>
       <td><%= dia.intervalo.utc.strftime("%H:%M") %></td>
       <td><%= link_to "ver", atividades_path(:dia_id => dia.id, :mes_id => @month.id,
           :user_id => @user, :month => @month.numero, :year => @year.to_i) %> </td>
