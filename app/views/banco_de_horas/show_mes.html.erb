@@ -17,7 +17,7 @@
         <%= link_to  t("date.month_names")[mes], banco_de_horas_url(:year => @year, :user => @user.id, :month => mes) %>
         <br/> <br/>
         <b>
-          <%= (@meses[mes].blank?)? "00" : ((@meses[mes].horas_trabalhadas < 10) ? "0"+@meses[mes].horas_trabalhadas.to_i.to_s : @meses[mes].horas_trabalhadas.to_i)  %> /
+          <%=(@meses[mes].blank?)? "00:00" : @meses[mes].horas_trabalhadas %> /
           <%= (@meses[mes].blank?)? @user.horario_mensal : @meses[mes].horas_contratadas %>
         </b>
       </td>

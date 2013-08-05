@@ -13,6 +13,10 @@
 
 
 </div>
+
+<%= link_to "Adicionar Dia", "#new-banco-modal", :class => "btn default-button",
+  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button", :onclick =>  "showstuff('0');" %>
+
 <div class="blue-line">  </div>
 
 <table class="list-table days-table">
@@ -40,14 +44,16 @@
           <%= dia.formata_horas %>h
         </div>
       </td>
-      <td style="border: 15px solid #FFF" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>><%= dia.horas_atividades_formato + " h" %></td>
-      <td style="width: 7%;">
+      <td style="border: 22px solid #FFF" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>>
+        <%= dia.horas_atividades_formato + " h" %>
+      </td>
+      <td style="width: 9%;">
         <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
           {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>
           <%= hidden_field_tag :ano, @year %>
           <%= hidden_field_tag :mes, @month.id %>
-          <%= link_to_submit ' ', :class => 'icon-edit nohover edit-dia', :title => "Editar" %>
+          <%= link_to_submit ' ', :class => 'icon-edit nohover', :style => "margin-right: 10px", :title => "Editar" %>
         <% end %>
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
           delete_dia_banco_de_horas_path(:dia_id => dia.id) , :confirm => "Deseja excluir o registro?",
@@ -55,11 +61,10 @@
       </td>
     </tr>
   <% end %>
-  <tr >
-    <td style="border-top:thin solid; border-color:black" colspan=5>Total</td>
-    <td style="border-top:thin solid; border-color:black"><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas < 10) ? "0"+@month.horas_trabalhadas.to_i.to_s+" h" : (@month.horas_trabalhadas.to_i).to_s + " h") %></td>
-    <td style="border-top:thin solid; border-color:black"><%= (@month.blank?)? "00 h" : ((@month.horas_trabalhadas_aprovadas < 10) ? "0"+@month.horas_trabalhadas_aprovadas.to_i.to_s+" h" : (@month.horas_trabalhadas_aprovadas.to_i).to_s + " h") %></td>
-
+  <tr style="border-top:thin solid; border-color:black">
+    <td colspan=5>Total</td>
+    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
+    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
   </tr>
 </table>
 

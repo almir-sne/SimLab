@@ -22,6 +22,10 @@ class Dia < ActiveRecord::Base
     ((saida - entrada) - read_attribute(:intervalo)) / 3600
   end
 
+  def minutos
+    ((saida - entrada) - read_attribute(:intervalo)) / 60
+  end
+
   def formata_horas
     hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i
     minuto = ((((saida - entrada) - read_attribute(:intervalo)) % 3600) / 60).to_i
@@ -43,17 +47,15 @@ class Dia < ActiveRecord::Base
   end
 
   def horas_atividades_formato
-    total_horas_atividade = 0
     total_minutos_atividade = 0
 
     self.atividades.each do |atividade|
-
       if atividade.aprovacao
-        total_horas_atividade = total_horas_atividade + (atividade.horas.nil? ? 0 : (atividade.horas/3600)).to_i
-        total_minutos_atividade = total_minutos_atividade + (atividade.horas.nil? ? 0 : ((atividade.horas % 3600) / 60)).to_i
+        total_minutos_atividade = total_minutos_atividade + (atividade.minutos.nil? ? 0 : (atividade.minutos))
       end
     end
-    total_horas_atividade.to_s.rjust(2, '0') + ":" + total_minutos_atividade.to_s.rjust(2, '0')
+    hh, mm = (total_minutos_atividade).divmod(60)
+    ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end
 
   def horas_atividades
@@ -68,20 +70,18 @@ class Dia < ActiveRecord::Base
   end
 
   def intervalo
-    aux_h = 0
-    aux_m = 0
-    unless read_attribute(:intervalo).nil?
-      aux_h = (read_attribute(:intervalo). / 3600).to_i
-      aux_m = ((read_attribute(:intervalo).%3600)/60).to_i
+    unless read_attribute(:intervalo).blank?
+      Time.new(2000, 1, 1 ,0, 0, 0) + read_attribute(:intervalo)
+    else
+      Time.new(2000, 1, 1 ,0, 0, 0)
     end
-    Time.new(2000, 1, 1 ,aux_h, aux_m, 0)
   end
 
   private
-    def validar_horas
-      if( saida - entrada - read_attribute(:intervalo)) <= 0
-        errors.add(:atividade, "Day has unvalid time")
-      end
+  def validar_horas
+    if( saida - entrada - read_attribute(:intervalo)) <= 0
+      errors.add(:atividade, "Day has unvalid time")
     end
+  end
 
 end

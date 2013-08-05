@@ -139,7 +139,7 @@
 }
 
 .panel-scrollable {
-    border: transparent;
+    border: none;
     overflow: hidden;
     overflow-y: auto;
 }
