@@ -22,6 +22,8 @@ SinLab::Application.routes.draw do
     end
   end
 
+  resources :recursos, :only => "index"
+
   resources :projetos
 
   resources :dias, :only => [:destroy, :create]
