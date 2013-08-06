@@ -1,1 +1,36 @@
-<%= @pessoas%>
+<div class="row-fluid" style="margin-left: 15px">
+  <div class="span2 blue-text">
+    <%= link_to "<", recursos_path(:ano => @ano.to_i - 1, :mes => @mes_numero) %>
+    <%=  @ano %>
+    <%= link_to ">", recursos_path(:ano => @ano.to_i + 1, :mes => @mes_numero) %>
+  </div>
+  <div class="span3 blue-text">
+    <%= link_to "<", recursos_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1) %>
+    <%= t("date.month_names")[@mes_numero.to_i] %>
+    <%= link_to ">", recursos_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1) %>
+  </div>
+</div>
+<div class="blue-line">  </div>
+
+<table class ="list-table">
+  <tr>
+    <td>Nome    </td>
+    <td>Banco   </td>
+    <td>Agencia </td>
+    <td>Conta   </td>
+    <td>Valor   </td>
+    <td>Fator 3 </td>
+    <td>Info XYZ</td>
+  </tr>
+  <%@pessoas.each do |pessoa|%>
+    <tr>
+      <td><%=pessoa[:nome]%>           </td>
+      <td><%=pessoa[:banco]%>          </td>
+      <td><%=pessoa[:agencia]%>        </td>
+      <td><%=pessoa[:conta]%>          </td>
+      <td><%=pessoa[:valor].round(2)%> </td>
+      <td><input type="radio" name= "<%=pessoa[:nome]%>" value="fator 3"></td>
+      <td><input type="radio" name= "<%=pessoa[:nome]%>" value="info xyz"></td>
+    </tr>
+  <%end%>
+</table>

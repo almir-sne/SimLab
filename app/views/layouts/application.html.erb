@@ -19,7 +19,10 @@
         <div class="span3 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
 
-            <li> <%= link_to 'Resumo', validar_banco_de_horas_path %> </li>
+            <%if can? :validar, :banco_de_horas%>
+              <li> <%= link_to 'Validar', validar_banco_de_horas_path %> </li>
+              <li> <%= link_to 'Recursos', recursos_path(:mes => 6, :ano => 2013) %> </li>
+            <%end%>
             <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url %> </li>
             <li>
 
