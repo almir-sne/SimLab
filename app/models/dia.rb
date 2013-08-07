@@ -5,7 +5,7 @@ class Dia < ActiveRecord::Base
   belongs_to :mes
   has_many :atividades, :dependent => :destroy
 
-  accepts_nested_attributes_for :atividades
+  accepts_nested_attributes_for :atividades, :allow_destroy => true
 
   attr_accessible :atividades_attributes
 

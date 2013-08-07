@@ -1,6 +1,6 @@
 <div class="modal-body">
 
-  <%= nested_form_for(@dia, :url => :banco_de_horas, :method => :post) do |f| %>
+  <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
     <%= hidden_field_tag :user_id, @user.id %>
     <%= hidden_field_tag :ano, @year %>
     <%= hidden_field_tag :mes, @month.id %>
@@ -21,7 +21,7 @@
         <div class="span9">
           <h3>Atividades</h3>
           <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
-            <%= f.fields_for :atividades do |atividade_form| %>
+            <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
               <%= atividade_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
