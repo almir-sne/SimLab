@@ -25,7 +25,12 @@ class BancoDeHorasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user     : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    @dia = Dia.find(params[:id])
+    if params[:id].nil?
+      @dia =  Dia.new
+      @dia.atividades.build
+    else
+      @dia =  Dia.find(params[:id])
+    end
     @projetos = Projeto.all(:order => :nome).collect do |p|
       [p.nome, p.id ]
     end

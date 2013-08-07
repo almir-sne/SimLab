@@ -1,5 +1,5 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id, :intervalo_time
+  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id
 
   belongs_to :usuario
   belongs_to :mes
@@ -20,10 +20,6 @@ class Dia < ActiveRecord::Base
 
   def saida
     read_attribute(:saida).nil? ? Time.now : read_attribute(:saida).utc
-  end
-
-  def intervalo_time
-    Time.new(2000,1,1,0,0,0,0) + read_attribute(:intervalo)
   end
 
   def horas
@@ -84,6 +80,11 @@ class Dia < ActiveRecord::Base
       Time.new(2000, 1, 1 ,0, 0, 0)
     end
   end
+
+#  def intervalo=(value)
+#    puts "\n\n\n\n\n\n\n #{value}"
+#    self[:intervalo] = value
+#  end
 
   private
   def validar_horas

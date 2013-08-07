@@ -3,12 +3,10 @@ function validate()
     var atividadeOBS = document.getElementById("dia_atividades_attributes_0_observacao").value;
     var horas_trabalhadas = pega_horas_dia();
     var horas_atividade = pega_horas_atividade();
-
     return(
         validar_horas(horas_trabalhadas, horas_atividade) &&
         validar_atividade_observacao(atividadeOBS)
         );
-
 }
 
 function validar_horas(hDia, hAtividade)
@@ -40,17 +38,15 @@ function validar_atividade_observacao(obs)
 
 function pega_horas_dia()
 {
-    var entradaH = document.getElementById("dia_0_entrada").value;
-    var entradaM = document.getElementById("dia_0_entrada").nextElementSibling.value;
-    var saidaH = document.getElementById("dia_0_saida").value;
-    var saidaM = document.getElementById("dia_0_saida").nextElementSibling.value;
-    var intervaloH = document.getElementById("dia_0_intervalo").value;
-    var intervaloM = document.getElementById("dia_0_intervalo").nextElementSibling.value;
-
-    var entrada = entradaH * 60 + parseInt(entradaM, 10);
-    var saida = saidaH * 60 + parseInt(saidaM, 10);
-    var intervalo = intervaloH * 60 + parseInt(intervaloM, 10);
-
+    var entradaH = parseInt($('#dia_0_entrada').val());
+    var entradaM = parseInt($('#dia_0_entrada').next().val());
+    var saidaH = parseInt($('#dia_0_saida').val());
+    var saidaM = parseInt($('#dia_0_saida').next().val());
+    var intervaloH = parseInt($('#dia_0_intervalo').val());
+    var intervaloM = parseInt($('#dia_0_intervalo').next().val());
+    var entrada = entradaH * 60 + entradaM;
+    var saida = saidaH * 60 + saidaM;
+    var intervalo = intervaloH * 60 + intervaloM;
     return saida - entrada - intervalo;
 }
 

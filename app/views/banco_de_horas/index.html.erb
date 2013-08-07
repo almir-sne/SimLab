@@ -35,7 +35,7 @@
             @month.numero, dia.numero).wday]%></td>
       <td><%= dia.entrada.strftime("%H:%M") %></td>
       <td><%= dia.saida.strftime("%H:%M") %></td>
-      <td><%= dia.intervalo.utc.strftime("%H:%M") %></td>
+      <td><%= dia.intervalo.strftime("%H:%M") %></td>
       <td style="width: 60%; border: none">
         <div class="blue-background" style="width: <%= (dia.bar_width)%>">
           <%= dia.formata_horas %>h
@@ -67,18 +67,18 @@
 
 <br />
 
-<%= link_to "Adicionar", "#new-banco-modal", :class => "btn default-button",
-  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
+
+<%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
+  {:remote => true, :method => :post, :class => "inline-form"} ) do %>
+  <%= hidden_field_tag :user_id, @user.id %>
+  <%= hidden_field_tag :ano, @year %>
+  <%= hidden_field_tag :mes, @month.id %>
+  <%= link_to_submit 'Adicionar', :class => 'btn default-button', :style => "margin: 15px;"%>
+<% end %>
 
 <div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">>
-       <%= render :partial => "modal" %>
-</div>
-
-<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
   <%= render :partial => "modal" %>
 </div>
-
 <%= link_to 'Voltar', :back,:class => "btn default-button"%>
 
