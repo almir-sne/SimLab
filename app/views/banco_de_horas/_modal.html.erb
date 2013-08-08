@@ -22,7 +22,7 @@
           <h3>Atividades</h3>
           <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
             <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
-              <%= atividade_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe,
+              <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>

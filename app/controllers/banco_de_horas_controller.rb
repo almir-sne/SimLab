@@ -45,6 +45,7 @@ class BancoDeHorasController < ApplicationController
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
     query = Mes.find_all_by_ano_and_usuario_id @year, @user.id
     @meses = {}
+    @usuarios = Usuario.all(:order => :nome).collect { |p| [p.nome, p.id]  }
     query.map {|e| @meses[e.numero] = e }
   end
 
