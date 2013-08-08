@@ -1,14 +1,14 @@
 <div class="row-fluid" style="margin-left: 15px">
   <div class="span2 blue-text">
-    <%= link_to "<", banco_de_horas_path(:year => @year.to_i - 1, :month => @month.numero) %>
+    <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i - 1, :month => @month.numero) %>
     <%= link_to @year, show_mes_banco_de_horas_path(:year => @year) %>
-    <%= link_to ">", banco_de_horas_path(:year => @year.to_i + 1, :month => @month.numero) %>
+    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i + 1, :month => @month.numero) %>
   </div>
 
   <div class="span3 blue-text">
-    <%= link_to "<", banco_de_horas_path(:year => @year.to_i, :month => @month.numero - 1) %>
+    <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i, :month => @month.numero - 1) %>
     <%= t("date.month_names")[@month.numero] %>
-    <%= link_to ">", banco_de_horas_path(:year => @year.to_i, :month => @month.numero + 1) %>
+    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i, :month => @month.numero + 1) %>
   </div>
 
 
@@ -31,8 +31,8 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="width: 11%"><%= dia.numero.to_s + " - " + t("date.abbr_day_names")[Date.new(@year.to_i,
-            @month.numero, dia.numero).wday]%></td>
+      <td style="width: 11%"><%= "#{dia.numero.to_s}  (#{t("date.abbr_day_names")[Date.new(@year.to_i,
+            @month.numero, dia.numero).wday]})"%></td>
       <td><%= dia.entrada.strftime("%H:%M") %></td>
       <td><%= dia.saida.strftime("%H:%M") %></td>
       <td><%= dia.intervalo.strftime("%H:%M") %></td>
@@ -44,7 +44,7 @@
       <td style="border: 22px solid #FFF" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>>
         <%= dia.horas_atividades_formato + " h" %>
       </td>
-      <td style="width: 9%;">
+      <td style="width: 10%;">
         <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
           {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>

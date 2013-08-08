@@ -171,3 +171,14 @@
 .days-table td {
     border: none;
 }
+
+[class^="icon-"]:hover{
+    cursor: pointer;
+    font-size: 28px;
+    text-decoration: none
+}
+[class^="icon-"]{
+    width:30px;
+    text-align:center;
+    line-height:20px;
+}
