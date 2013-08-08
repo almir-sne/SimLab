@@ -1,6 +1,6 @@
 <script>
 
-function asdf(id, id_2)
+function correctCheck(id, id_2)
 {
   document.getElementById(id).checked
   if(document.getElementById(id).checked == true)
@@ -8,6 +8,9 @@ function asdf(id, id_2)
       document.getElementById(id_2).checked = false;
 }
 </script>
+
+
+
 
 <div class="blue-text" style="margin-left: 30px">
   Validação de Atividades
@@ -40,7 +43,9 @@ function asdf(id, id_2)
 <div class="blue-line">  </div>
 
 <%= form_tag(mandar_validacao_banco_de_horas_path) do %>
-
+  <div class="navbar-fixed-bottom">
+    <%= submit_tag "Salvar", :style => "width:92.5%; margin-left:4%; border-radius:5px", :class => "btn default-button"%>
+  </div>
   <table class="list-table">
 
   <tr>
@@ -50,7 +55,7 @@ function asdf(id, id_2)
     <th> horas      </th>
     <th> aprovado?  </th>
     <th> reprovado? </th>
-    <th> mensagem</th>
+    <th> mensagem   </th>
   </tr>
 
     <% @atividades.each do |atividade| %>
@@ -59,18 +64,16 @@ function asdf(id, id_2)
           <td><%= Usuario.find(atividade.usuario_id).nome                                    %></td>
           <td><%= atividade.projeto.nome                                                     %></td>
           <td><%= atividade.observacao                                                       %></td>
-          <td><%= atividade.formato_horas                                                    %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "asdf(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
-          <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "asdf(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
+          <td><%= atividade.formata_duracao                                                  %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
+          <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
           <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
         </tr>
     <% end %>
 
   </table>
 
-  <div class="actions">
-    <%= submit_tag "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
-  </div>
+
 <% end %>
 
 <script>

@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!-- TWITTER BOOTSTRAP CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
-
-    <!-- TWITTER BOOTSTRAP JS -->
-    <script src="js/bootstrap.min.js"></script>
-
-  <title>SinLab</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-	<div class="center" style="margin-top: 70px">
-		<%= render 'layouts/messages'%>
-	</div>
-  <%= yield %>
+  <head>
+    <title>SinLab</title>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div class="center" style="margin-top: 70px">
+      <%= render 'layouts/messages'%>
+    </div>
+    <%= yield %>
 
 
 
-</body>
+  </body>
 </html>

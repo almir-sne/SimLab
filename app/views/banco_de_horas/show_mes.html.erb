@@ -1,11 +1,11 @@
 <div class="blue-text">
-  <%= link_to "<", show_mes_banco_de_horas_url(:year => @year.to_i - 1) %>
+  <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, show_mes_banco_de_horas_url(:year => @year.to_i - 1) %>
   <%= @year %>
-  <%= link_to ">", show_mes_banco_de_horas_url(:year => @year.to_i + 1) %>
+  <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, show_mes_banco_de_horas_url(:year => @year.to_i + 1) %>
 </div>
 
 <% if can? :see, :banco_de_horas %>
-  <%= select_tag(:menu_select, options_for_select(acha_usuarios.sort), :prompt => "escolha um usuario") %>
+  <%= select_tag(:menu_select, options_for_select(@usuarios, @user.id), :prompt => "escolha um usuario") %>
 <%end%>
 
 <div class="blue-line">  </div>
@@ -14,12 +14,9 @@
   <tr>
     <% (1..12).each do |mes| %>
       <td class="month-table">
-        <%= link_to  t("date.month_names")[mes], banco_de_horas_url(:year => @year, :user => @user.id, :month => mes) %>
-        <br/> <br/>
-        <b>
-          <%= (@meses[mes].blank?)? "00" : ((@meses[mes].horas_trabalhadas < 10) ? "0"+@meses[mes].horas_trabalhadas.to_i.to_s : @meses[mes].horas_trabalhadas.to_i)  %> /
-          <%= (@meses[mes].blank?)? @user.horario_mensal : @meses[mes].horas_contratadas %>
-        </b>
+        <%= link_to "#{t("date.month_names")[mes]} <br/> <br/>\n <b> #{(@meses[mes].blank?)? "00:00" :
+        @meses[mes].horas_trabalhadas} / #{(@meses[mes].blank?)? @user.horario_mensal : @meses[mes].horas_contratadas}</b>".html_safe,
+          banco_de_horas_url(:year => @year, :user => @user.id, :month => mes), :class => "month-link" %>
       </td>
       <% if mes == 6 %>
       </tr>

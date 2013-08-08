@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :horas, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem
-  attr_accessible :aprovado, :reprovado
+  attr_accessible :dia_id, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
+  attr_accessible :aprovado, :reprovado, :duracao
 
   belongs_to :mes
   belongs_to :dia
@@ -12,25 +12,36 @@ class Atividade < ActiveRecord::Base
   validates :usuario_id, :presence => true
   validates :horas, :exclusion => {:in => 0..1}
 
-
   def data
     mes = Mes.find mes_id
     Date.new(mes.ano, mes.numero, Dia.find(self.dia_id).numero)
   end
 
+  def horas
+    unless read_attribute(:duracao).blank?
+      Time.new(2000, 1, 1 ,0, 0, 0) + read_attribute(:duracao)
+    else
+      Time.new(2000, 1, 1 ,0, 0, 0)
+    end
+  end
+
   def bar_width
-    width = horas.nil? ? "0" : (horas / 360).to_s
+    width = duracao.nil? ? "0" : (duracao / 360).to_s
     width + "%"
   end
 
-  def formato_horas
+  def minutos
+    duracao/60
+  end
+
+  def formata_duracao
     aux_h = 0
     aux_m = 0
     retorno = "0:0"
-    if !horas.nil?
-      aux_h = (horas / 3600).to_i
+    if !duracao.nil?
+      aux_h = (duracao / 3600).to_i
 
-      aux_m = ((horas%3600)/60).to_i
+      aux_m = ((duracao%3600)/60).to_i
 
       retorno = aux_h.to_s + ":"
       if aux_h < 10

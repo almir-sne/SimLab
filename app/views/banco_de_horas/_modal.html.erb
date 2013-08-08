@@ -1,154 +1,53 @@
-<script>
-function validate()
-{
-  var atividadeOBS = document.getElementById("dia_atividades_attributes_0_observacao").value;
-  var horas_trabalhadas = pega_horas_dia();
-  var horas_atividade = pega_horas_atividade();
+<div class="modal-body">
 
-  return(
-    validar_horas(horas_trabalhadas, horas_atividade) &&
-    validar_atividade_observacao(atividadeOBS)
-  );
+  <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
+    <%= hidden_field_tag :user_id, @user.id %>
+    <%= hidden_field_tag :ano, @year %>
+    <%= hidden_field_tag :mes, @month.id %>
+    <%= hidden_field_tag :dia_id, @dia.id %>
 
-}
-
-function validar_horas(hDia, hAtividade)
-{
-  if(hDia <= 0 || hAtividade <= 0 || hAtividade > hDia)
-  {
-    if(hDia <=0)
-      alert("horas no dia inválidas");
-    else if(hAtividade <= 0)
-      alert("horas da atividade inválidas");
-    else
-      alert("atividade não pode ter mais horas que o dia ¬¬");
-    return false;
-  }
-  else
-    return true;
-}
-
-function validar_atividade_observacao(obs)
-{
-  if(obs == "")
-  {
-    alert("Atividade não pode ficar sem observação!");
-    return false;
-  }
-  else
-    return true;
-}
-
-function pega_horas_dia()
-{
-  var entradaH = document.getElementById("dia_entrada_4i").value;
-  var entradaM = document.getElementById("dia_entrada_5i").value;
-  var saidaH = document.getElementById("dia_saida_4i").value;
-  var saidaM = document.getElementById("dia_saida_5i").value;
-  var intervaloH = document.getElementById("dia_intervalo_4i").value;
-  var intervaloM = document.getElementById("dia_intervalo_5i").value;
-
-  var entrada = entradaH * 60 + parseInt(entradaM, 10);
-  var saida = saidaH * 60 + parseInt(saidaM, 10);
-  var intervalo = intervaloH * 60 + parseInt(intervaloM, 10);
-
-  return saida - entrada - intervalo;
-}
-
-function pega_horas_atividade()
-{
-  var atividadeH = document.getElementById("dia_atividades_attributes_0_horas_4i").value;
-  var atividadeM = document.getElementById("dia_atividades_attributes_0_horas_5i").value;
-
-  return(atividadeH *60 + parseInt(atividadeM));
-}
-
-function recalculaHoras()
-{
- var max_horas = pega_horas_dia();
-  document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
-  document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-
-}
-</script>
-
-<div id="new-banco-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
-  <div class="modal-body">
-    <%= nested_form_for(@dia, :url => banco_de_horas_path) do |f| %>
-      <% if @dia.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@dia.errors.count, "error") %> prohibited this banco_de_hora from being saved:</h2>
-          <ul>
-            <% @dia.errors.full_messages.each do |msg| %>
-              <li>
-                <%= msg %>
-              </li>
-            <% end %>
-          </ul>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <%= f.label :dia %>
+          <%= f.text_field :numero, :value => ((@dia.numero.blank?)? Date.today.day : @dia.numero), :style => 'width: 55px'%>
+          <%= f.label :entrada %>
+          <%= f.time_select :entrada, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
+          <%= f.label :saida %>
+          <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
+          <%= f.label :intervalo %>
+          <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
         </div>
-      <% end %>
-      <%= hidden_field_tag :user_id, @user.id %>
-      <%= hidden_field_tag :ano, @year %>
-      <%= hidden_field_tag :mes, @month.id %>
-
-      <div>
-        <div>
-          <table width="100%">
-            <tr>
-              <td><%= f.label :dia %></td>
-              <td><%= f.label :entrada %></td>
-              <td><%= f.label :saida %></td>
-              <td><%= f.label :intervalo %></td>
-           </tr>
-            <tr>
-              <td width=24%><%= f.text_field :numero, :value => Date.today.day, :style => 'width: 7%'%></td>
-              <td><%= f.time_select :entrada, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
-              <td><%= f.time_select :saida, {:default => Time.new(2000,1,1,0,0,0,0)}, :style => 'width: 35%;', :onchange => "recalculaHoras()" %></td>
-              <td><%= f.time_select :intervalo, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 35%;', :onchange => "recalculaHoras()"%></td>
-            </tr>
-          </table>
-        </div>
-        <div style="width: 100%">
+        <div class="span9">
           <h3>Atividades</h3>
-          <%= f.fields_for :atividades do |atividade_form| %>
-          <div style="float: none">
-            <div>
-              <table width = "100%">
-                <tr>
-                  <td><%= atividade_form.label :projeto_id %></td>
-                  <td id="horas"><%= atividade_form.label :horas %></td>
-                  <td><%= atividade_form.label :observacao, "Observação" %></td>
-                </tr>
-                <tr>
-                  <td style="margin-left: 20%; width: 24%"> <%= atividade_form.select :projeto_id, options_for_select(acha_projetos) %></td>
-                  <td style="padding-right: 6%; width:25%"><%= atividade_form.time_select :horas, {:default => Time.new(2000,1,1,0,0,0,0)} , :style => 'width: 47%;'%></td>
-                  <td><%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %></td>
-                </tr>
-              </table>
-
-            </div>
-            <div>
-              <%= atividade_form.link_to_remove "Remover Atividade", :class=>"btn default-button"%>
-            </div>
+          <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
+            <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
+              <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+                :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+              <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>
+              <br/>
+              <%= atividade_form.label :horas, :class => 'inline-label' %>
+              <%= atividade_form.time_select :horas, {},
+                :style => 'width: 55px;'%>
+              <%= atividade_form.label :observacao, "Observação" %>
+              <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+              <div class="grey-line"> </div>
+            <% end %>
+            <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button"%>
           </div>
-          <p></p>
-          <div class="blue-line">  </div>
-          <% end %>
-          <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button", :style =>"float:right; margin-top: 10px"%>
         </div>
-        <table width="100%">
-          <tr>
-            <td>
-              <div class="actions" style="float: left; margin-right: 20px;">
-                <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
-                  Cancelar
-                </button>
-                <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validate()"%>
-              </div>
-            </td>
-          </tr>
-        </table>
+
       </div>
-    <% end %>
-  </div>
+    </div>
+    <div class="blue-line" style="margin: 20px 10px">  </div>
+    <div style="width: 100%">
+      <div class="actions" style="float: left; margin-left: 10px;">
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
+          Cancelar
+        </button>
+        <%= f.submit "Ok", :class => "btn default-button"%>
+      </div>
+    </div>
+  <% end %>
 </div>

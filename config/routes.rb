@@ -1,19 +1,15 @@
 SinLab::Application.routes.draw do
   resources :addresses
 
-
   #  get "home/index"
-
-  resources :banco_de_horas do
+  resources :banco_de_horas, :only => [:index] do
     collection do
       get  :show_mes
       get  :validar
       post :mandar_validacao
-      get  :delete_dia
+      post :modal
     end
   end
-
-  resources :atividades
 
   devise_for :usuarios
   devise_scope :usuarios do
@@ -27,6 +23,8 @@ SinLab::Application.routes.draw do
   end
 
   resources :projetos
+
+  resources :dias, :only => [:destroy, :create]
 
   resources :resumo do
     collection do
