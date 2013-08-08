@@ -1,6 +1,6 @@
 function validate()
 {
-    var atividadeOBS = document.getElementById("dia_atividades_attributes_0_observacao").value;
+    var atividadeOBS = $("#dia_atividades_attributes_0_observacao").val();
     var horas_trabalhadas = pega_horas_dia();
     var horas_atividade = pega_horas_atividade();
     return(
@@ -52,10 +52,10 @@ function pega_horas_dia()
 
 function pega_horas_atividade()
 {
-    var atividadeH = document.getElementById("dia_atividades_attributes_0_horas_4i").value;
-    var atividadeM = document.getElementById("dia_atividades_attributes_0_horas_5i").value;
+    var atividadeH =  parseInt($("#dia_atividades_attributes_0_horas_4i").val());
+    var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
 
-    return(atividadeH *60 + parseInt(atividadeM));
+    return(atividadeH *60 + atividadeM);
 }
 
 function recalculaHoras()

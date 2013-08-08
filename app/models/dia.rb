@@ -12,7 +12,7 @@ class Dia < ActiveRecord::Base
   validates :numero, :uniqueness => {:scope => :mes_id}
   validates :mes_id, :presence => true
   validates :usuario_id, :presence => true
-  validate :validar_horas
+#  validate :validar_horas
 
   def entrada
     read_attribute(:entrada).nil? ? Time.now : read_attribute(:entrada).utc
@@ -80,11 +80,6 @@ class Dia < ActiveRecord::Base
       Time.new(2000, 1, 1 ,0, 0, 0)
     end
   end
-
-#  def intervalo=(value)
-#    puts "\n\n\n\n\n\n\n #{value}"
-#    self[:intervalo] = value
-#  end
 
   private
   def validar_horas

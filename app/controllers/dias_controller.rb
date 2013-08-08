@@ -10,7 +10,7 @@ class DiasController < ApplicationController
       :numero => params[:dia][:numero],
       :entrada => convert_date(params[:dia], "entrada"),
       :saida => convert_date(params[:dia], "saida"),
-      :intervalo => (params[:dia]["intervalo_time(4i)"].to_i * 3600 +  params[:dia]["intervalo_time(5i)"].to_i * 60),
+      :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
       :mes_id => params[:mes],
       :usuario_id => params[:user_id]
     )
