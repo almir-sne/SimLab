@@ -14,13 +14,20 @@ class RecursosController < ApplicationController
     pessoas.map!{|mes| pessoa = Usuario.find(mes.usuario_id)
     {
       :nome    => pessoa.nome,
-      :valor   => mes.valor_hora * mes.horas_trabalhadas - pessoa.valor_da_bolsa_fau,
+      :valor   => mes.valor_hora * mes.horas_trabalhadas[0..-4].to_i - pessoa.valor_da_bolsa_fau,
       :banco   => pessoa.banco,
       :agencia => pessoa.agencia,
       :conta   => pessoa.conta,
       :mes_id  => mes.id
     }}
     @pessoas = pessoas.select{|pessoa| pessoa[:valor] > 0}
+  end
+
+  def create
+    authorize! :create, :recurso
+    raise params[:recurso].inspect
+    flash[:notice] = I18n.t("recursos.create.sucess", :model => "Recurso")
+    redirect_to :back
   end
 
 end

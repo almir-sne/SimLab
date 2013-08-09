@@ -22,7 +22,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :recursos, :only => "index"
+  resources :recursos, :only => ["index", "create"]
 
   resources :projetos
 

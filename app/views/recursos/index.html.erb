@@ -22,15 +22,18 @@
     <td>Fator 3 </td>
     <td>Info XYZ</td>
   </tr>
-  <%@pessoas.each do |pessoa|%>
-    <tr>
-      <td><%=pessoa[:nome]%>           </td>
-      <td><%=pessoa[:banco]%>          </td>
-      <td><%=pessoa[:agencia]%>        </td>
-      <td><%=pessoa[:conta]%>          </td>
-      <td><%=pessoa[:valor].round(2)%> </td>
-      <td><input type="radio" name= "<%=pessoa[:nome]%>" value="fator 3"></td>
-      <td><input type="radio" name= "<%=pessoa[:nome]%>" value="info xyz"></td>
-    </tr>
+  <%=form_tag(recursos_path) do%>
+    <%@pessoas.each do |pessoa|%>
+      <tr>
+        <td><%=pessoa[:nome]%>           </td>
+        <td><%=pessoa[:banco]%>          </td>
+        <td><%=pessoa[:agencia]%>        </td>
+        <td><%=pessoa[:conta]%>          </td>
+        <td><%=pessoa[:valor].round(2)%> </td>
+        <td><%=radio_button_tag ("recurso[" + pessoa[:mes_id].to_s + "]"), ["fator 3" , pessoa[:valor]] %></td>
+        <td><%=radio_button_tag ("recurso[#{pessoa[:mes_id].to_s}]"), ["info xyz" , pessoa[:valor]] %></td>
+      </tr>
+    <%end%>
+  </table>
+    <%= submit_tag "Salvar"%>
   <%end%>
-</table>
