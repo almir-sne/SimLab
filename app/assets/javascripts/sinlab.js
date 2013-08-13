@@ -65,3 +65,11 @@ function recalculaHoras()
     document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
 
 }
+
+
+function correctCheck(id, id_2)
+{
+    if(document.getElementById(id).checked == true)
+        if(document.getElementById(id_2).checked == true)
+            document.getElementById(id_2).checked = false;
+}

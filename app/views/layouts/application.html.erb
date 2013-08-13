@@ -11,32 +11,29 @@
       <div class="row-fluid">
         <div class="span10"></div>
         <div class="span2" style="margin-left: 15px">
-          <img src="/images/logo.jpg" style="padding: 15px 0px; height: 30px; float: right;"></img>
+          <img alt="InfoXYZ" src="/images/logo.jpg" style="padding: 15px 0px; height: 30px; float: right;"></img>
         </div>
       </div>
       <div class="row-fluid">
 
-        <div class="span3 dropdown">
+        <div class="span2 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
-
-            <li> <%= link_to 'Resumo', validar_banco_de_horas_path %> </li>
-            <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url %> </li>
-            <li>
-
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Cadastros</a>
-              <ul class="top-nav dropdown-menu" role="menu"  aria-labelledby="dLabel">
-                <li> <%=  link_to "Projetos", projetos_path%> </li>
-                <li> <%=  link_to "Usuários", usuarios_path%></li>
-              </ul>
-
-            </li>
+            <li> <%= link_to 'Resumo', validar_banco_de_horas_path, :class => "nav-links" %> </li>
+            <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url, :class => "nav-links" %> </li>
           </ul>
         </div>
 
-        <div class="span4"></div>
+        <div class="span2 dropdown">
+          <ul class="top-nav dropdown-menu" style="display: block; position: static;">
+            <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
+            <li> <%=  link_to "Usuários", usuarios_path, :class => "nav-links"%> </li>
+          </ul>
+        </div>
 
-        <div class="span2 top-user" >
-          Bem vindo <a style="color: rgb(33, 147, 189); font-weight: bold"><%= current_usuario.nome + '!'%> </a>
+        <div class="span2"></div>
+
+        <div class="span3 top-user" >
+          Bem vindo <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome + '!'%> </b>
           <br/>
           <%= link_to "Alterar senha", edit_usuario_registration_path %>
           <br/>

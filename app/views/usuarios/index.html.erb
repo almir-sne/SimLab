@@ -5,15 +5,13 @@
 <div class="blue-line">  </div>
 
 <table class="list-table">
-
-
   <tr>
-<th>Usuário</th>
-<th>Atividade</th>
-<th>Email</th>
-</tr>
-<% @users.each do |user| %>
-  <tr>
+    <th>Usuário</th>
+    <th>Atividade</th>
+    <th>Email</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
       <td>
         <%= link_to user.nome, edit_usuario_path(user) %>
       </td>
@@ -32,6 +30,5 @@
 <% if can? :create, Usuario %>
   <%= link_to "Adicionar", "#myModal", :class => "btn default-button",
     :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
-
   <%= render :partial => "modal" %>
 <%end%>
