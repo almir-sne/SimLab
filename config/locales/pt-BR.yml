@@ -233,6 +233,10 @@ pt-BR:
       sucess: "Projeto criado com sucesso."
     update:
       sucess: "Projeto atualizado com sucesso."
+  recursos:
+    create:
+      sucess: "Recursos criados com sucesso."
+      faliure: "Não foi possível salvar os recursos."
   banco_de_horas:
     create:
       sucess: "Banco de horas criado com sucesso."

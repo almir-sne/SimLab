@@ -11,7 +11,6 @@
   </div>
 </div>
 <div class="blue-line">  </div>
-
 <table class ="list-table">
   <tr>
     <td>Nome    </td>
@@ -23,15 +22,19 @@
     <td>Info XYZ</td>
   </tr>
   <%=form_tag(recursos_path) do%>
+    <%n=0%>
     <%@pessoas.each do |pessoa|%>
+      <%n=n+1%>
       <tr>
         <td><%=pessoa[:nome]%>           </td>
         <td><%=pessoa[:banco]%>          </td>
         <td><%=pessoa[:agencia]%>        </td>
         <td><%=pessoa[:conta]%>          </td>
         <td><%=pessoa[:valor].round(2)%> </td>
-        <td><%=radio_button_tag ("recurso[" + pessoa[:mes_id].to_s + "]"), ["fator 3" , pessoa[:valor]] %></td>
-        <td><%=radio_button_tag ("recurso[#{pessoa[:mes_id].to_s}]"), ["info xyz" , pessoa[:valor]] %></td>
+        <td><%=radio_button_tag ("recurso[#{n}][origem_id]"), 1, pessoa[:is_origem_1] %></td>
+        <td><%=radio_button_tag ("recurso[#{n}][origem_id]"), 2, pessoa[:is_origem_2] %></td>
+        <%=hidden_field_tag ("recurso[#{n}][valor]"), pessoa[:valor] %>
+        <%=hidden_field_tag ("recurso[#{n}][mes_id]"), pessoa[:mes_id] %>
       </tr>
     <%end%>
   </table>
