@@ -108,6 +108,9 @@ ActiveRecord::Schema.define(:version => 20130730205618) do
   add_index "usuarios", ["reset_password_token"], :name => "index_usuarios_on_reset_password_token", :unique => true
 
   create_table "workons", :force => true do |t|
+    t.date     "data"
+    t.float    "horas"
+    t.text     "observacao"
     t.integer  "projeto_id"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false

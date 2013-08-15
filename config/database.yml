@@ -6,8 +6,8 @@
 development:
   encoding: utf8
   adapter: mysql2
-  database: sinlab
-  username: sinlab
+  database: simlab_dev
+  username: simlab
   password: <%= ENV['db_password'] %>
 #  socket: /tmp/mysql.sock
 #  pool: 5

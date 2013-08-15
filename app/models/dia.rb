@@ -19,7 +19,7 @@ class Dia < ActiveRecord::Base
   end
 
   def saida
-    read_attribute(:saida).nil? ? Time.now : read_attribute(:saida).utc
+    read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).utc
   end
 
   def horas
