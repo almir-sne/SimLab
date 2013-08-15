@@ -10,14 +10,12 @@
     <%= t("date.month_names")[@month.numero] %>
     <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i, :month => @month.numero + 1) %>
   </div>
-
-
 </div>
 
 <%= link_to "Adicionar Dia", "#new-banco-modal", :class => "btn default-button",
   :style => "margin: 15px;", "data-toggle" => "modal", :role => "button"%>
 
-<div class="blue-line">  </div>
+<div class="blue-line"></div>
 
 <table class="list-table days-table">
   <tr>
@@ -61,12 +59,12 @@
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=4>Total</td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
+    <td>Restantes <%= (@month.blank?)? "00:00" : @month.horas_restantes %> </td>
+    <td>Por dia <%= (@month.blank?)? "00:00" : @month.horas_a_fazer_por_dia %> </td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
   </tr>
 </table>
-
 <br />
-
 
 <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
   {:remote => true, :method => :post, :class => "inline-form"} ) do %>
@@ -80,5 +78,5 @@
      aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
   <%= render :partial => "modal" %>
 </div>
-<%= link_to 'Voltar', :back,:class => "btn default-button"%>
 
+<%= link_to 'Voltar', :back,:class => "btn default-button"%>
