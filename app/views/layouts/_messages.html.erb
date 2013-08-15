@@ -1,3 +1,8 @@
-<% flash.each do |name, msg| %>
-  <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+<% unless flash.blank? %>
+  <div class="alert">
+    <button type="button" class="close" data-dismiss="alert"><i class="icon-remove-sign"></i></button>
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+    <% end %>
+  </div>
 <% end %>
