@@ -15,11 +15,11 @@ class Dia < ActiveRecord::Base
 #  validate :validar_horas
 
   def entrada
-    read_attribute(:entrada).nil? ? Time.now : read_attribute(:entrada).utc
+    read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).utc
   end
 
   def saida
-    read_attribute(:saida).nil? ? Time.now : read_attribute(:saida).utc
+    read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).utc
   end
 
   def horas

@@ -4,7 +4,6 @@
     <%= link_to @year, show_mes_banco_de_horas_path(:year => @year) %>
     <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i + 1, :month => @month.numero) %>
   </div>
-
   <div class="span3 blue-text">
     <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i, :month => @month.numero - 1) %>
     <%= t("date.month_names")[@month.numero] %>
@@ -12,25 +11,22 @@
   </div>
 </div>
 
-<%= link_to "Adicionar Dia", "#new-banco-modal", :class => "btn default-button",
-  :style => "margin: 15px;", "data-toggle" => "modal", :role => "button"%>
-
-<div class="blue-line"></div>
+<div class="blue-line">  </div>
 
 <table class="list-table days-table">
   <tr>
     <th>Dia</th>
-    <th>Hora de entrada</th>
-    <th>Hora de saída</th>
+    <th>Entrada</th>
+    <th>Saída</th>
     <th>Intervalo</th>
     <th style="padding-left: 25px;">Horas trabalhadas</th>
-    <th>Horas em Atividades (Aprovadas)</th>
+    <th>Atividades (Aprovadas)</th>
     <th></th>
   </tr>
   <% @dias.each do |dia| %>
     <tr>
       <td style="width: 11%"><%= "#{dia.numero.to_s}  (#{t("date.abbr_day_names")[Date.new(@year.to_i,
-            @month.numero, dia.numero).wday]})"%></td>
+        @month.numero, dia.numero).wday]})"%></td>
       <td><%= dia.entrada.strftime("%H:%M") %></td>
       <td><%= dia.saida.strftime("%H:%M") %></td>
       <td><%= dia.intervalo.strftime("%H:%M") %></td>
@@ -65,18 +61,21 @@
   </tr>
 </table>
 <br />
+<br />
 
-<%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
-  {:remote => true, :method => :post, :class => "inline-form"} ) do %>
-  <%= hidden_field_tag :user_id, @user.id %>
-  <%= hidden_field_tag :ano, @year %>
-  <%= hidden_field_tag :mes, @month.id %>
-  <%= link_to_submit 'Adicionar', :class => 'btn default-button', :style => "margin: 15px;"%>
-<% end %>
+<div class="navbar-fixed-bottom toolbar">
+  <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
+    {:remote => true, :method => :post, :class => "inline-form"} ) do %>
+    <%= hidden_field_tag :user_id, @user.id %>
+    <%= hidden_field_tag :ano, @year %>
+    <%= hidden_field_tag :mes, @month.id %>
+    <%= link_to_submit 'Adicionar', :class => 'btn default-button'%>
+  <% end %>
+
+  <%= link_to 'Voltar', :back, :class => "btn default-button"%>
+</div>
 
 <div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="width: 60%; margin-left: -30%">
   <%= render :partial => "modal" %>
 </div>
-
-<%= link_to 'Voltar', :back,:class => "btn default-button"%>
