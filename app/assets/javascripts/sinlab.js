@@ -73,3 +73,87 @@ function correctCheck(id, id_2)
         if(document.getElementById(id_2).checked == true)
             document.getElementById(id_2).checked = false;
 }
+
+var onAuthorize = function() {
+    updateLoggedIn();
+    $("#output").empty();
+    Trello.members.get("me", function(member){
+        $("#fullName").text(member.fullName);
+        var $cards = $("<div>").text("Carregando cartões...").appendTo("#output");
+        Trello.get("members/me/cards", function(cards) {
+            $cards.empty();
+            $.each(cards, function(ix, card) {
+                $("<a>").attr({
+                    href: card.url,
+                    target: "trello",
+                    id: card.id,
+                    draggable: true,
+                    ondragstart: "dragCard(event)",
+                }).addClass("card").text(card.name).appendTo($cards);
+            });
+        });
+    });
+
+};
+
+function updateLoggedIn() {
+    var isLoggedIn = Trello.authorized();
+    $("#loggedout").toggle(!isLoggedIn);
+    $("#loggedin").toggle(isLoggedIn);
+}
+
+function loginTrello() {
+    Trello.authorize({
+        type: "popup",
+        success: onAuthorize
+    })
+}
+
+function logoutTrello() {
+    Trello.deauthorize();
+    updateLoggedIn();
+}
+
+function allowDrop(event) {
+    //    div.className = "trello-dropover-focus";
+    event.preventDefault();
+    console.log("allowDrop")
+}
+
+var pog;
+var pog2;
+
+function dropCard(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    console.log(data);
+    pog = event;
+    pog2 = $("#" + data);
+
+    if (event.target.tagName == "A")
+        formatCardLink(($("#" + data))).appendTo(event.target.parentElement);
+    else
+        formatCardLink(($("#" + data))).appendTo(event.target);
+
+}
+
+function dragCard(ev) {
+    ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function formatCardLink (card) {
+    var newLink = $("<a>").attr({
+        href: card.attr("href"),
+        target: "trello",
+        id: card.attr("id")
+    }).addClass("card").text(card.html());
+    $("<input>").attr({
+        type: "checkbox",
+        id: "trello[]",
+        name: "trello[]",
+        value: card.attr("id"),
+        checked: true,
+        style: "float: right"
+    }).appendTo(newLink);
+    return newLink;
+}
