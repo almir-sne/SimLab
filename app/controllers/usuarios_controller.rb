@@ -51,6 +51,7 @@ before_filter :authenticate_usuario!
     if @user.destroy
       flash[:notice] = I18n.t("usuario.delete.sucess")
     end
+    redirect_to :back
   end
 
 end
