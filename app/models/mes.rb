@@ -52,6 +52,10 @@ class Mes < ActiveRecord::Base
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
   def string_hora(minutos)
     hh, mm = (minutos).divmod(60)
+    if (hh < 0)
+      hh = 0
+      mm = 0
+    end
     return ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end
 end
