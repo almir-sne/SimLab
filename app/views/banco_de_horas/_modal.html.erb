@@ -33,7 +33,10 @@
               <%= atividade_form.label :observacao, "Observação" %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
-                &nbsp;Clique e arraste cartões do Trello aqui.
+                &nbsp;Arraste cartões do Trello aqui.
+                <% atividade_form.object.cartaos.each do |cartao| %>
+                  <%= javascript_tag "loadCard(\"#{cartao.cartao_id}\")", :id => "script_" + cartao.cartao_id %>
+                <% end %>
               </div>
               <div class="grey-line"> </div>
             <% end %>
@@ -55,7 +58,9 @@
 
             <div id="output" class="panel-scrollable" style="height: 260px"></div>
           </div>
-
+          <script>
+            checkTrello();
+          </script>
         </div>
       </div>
     </div>

@@ -88,7 +88,7 @@ var onAuthorize = function() {
                     target: "trello",
                     id: card.id,
                     draggable: true,
-                    ondragstart: "dragCard(event)",
+                    ondragstart: "dragCard(event)"
                 }).addClass("card").text(card.name).appendTo($cards);
             });
         });
@@ -109,51 +109,73 @@ function loginTrello() {
     })
 }
 
+function checkTrello() {
+    Trello.authorize({
+        interactive:false,
+        success: onAuthorize
+    });
+}
+
 function logoutTrello() {
     Trello.deauthorize();
     updateLoggedIn();
 }
 
 function allowDrop(event) {
-    //    div.className = "trello-dropover-focus";
     event.preventDefault();
-    console.log("allowDrop")
 }
-
-var pog;
-var pog2;
 
 function dropCard(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
-    console.log(data);
-    pog = event;
-    pog2 = $("#" + data);
-
+    var cartaoRepetido = false;
+    var target;
     if (event.target.tagName == "A")
-        formatCardLink(($("#" + data))).appendTo(event.target.parentElement);
+        target = event.target.parentElement;
     else
-        formatCardLink(($("#" + data))).appendTo(event.target);
-
+        target = event.target;
+    var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
+    $.each(target.children, function(index, pps) {
+        if (data == pps.childNodes[1].value) {
+            cartaoRepetido = true;  
+        }
+    })
+    if (cartaoRepetido == false) {
+        formatCardLink($("#" + data), name).appendTo(target);
+    }
 }
 
 function dragCard(ev) {
     ev.dataTransfer.setData("Text",ev.target.id);
 }
 
-function formatCardLink (card) {
+function formatCardLink (card, name) {
     var newLink = $("<a>").attr({
         href: card.attr("href"),
-        target: "trello",
-        id: card.attr("id")
+        target: "trello"
     }).addClass("card").text(card.html());
     $("<input>").attr({
         type: "checkbox",
-        id: "trello[]",
-        name: "trello[]",
+        name: name,
         value: card.attr("id"),
         checked: true,
         style: "float: right"
     }).appendTo(newLink);
     return newLink;
+}
+
+var pog;
+//TODO FINISH HIM!
+function loadCard(card_id) {
+    var parent = $("#script_" + card_id).parent;
+//    Trello.get("/cards/" + card_id, function(card) {
+//        $("<a>").attr({
+//            href: card.url,
+//            target: "trello",
+//            id: card.id,
+//            draggable: true,
+//            ondragstart: "dragCard(event)"
+//        }).addClass("card").text(card.name);
+//        console.log(card);
+//    });
 }

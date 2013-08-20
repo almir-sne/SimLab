@@ -32,6 +32,14 @@ class DiasController < ApplicationController
           :usuario_id => params[:user_id]
         )
       end
+      unless atividade_attr[:trello].blank?
+        atividade_attr[:trello].each do |id|
+          cartao = Cartao.new
+          cartao.atividade = atividade
+          cartao.cartao_id = id
+          cartao.save
+        end
+      end
     end
     if dia_success and atividades_success
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")

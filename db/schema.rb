@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130730205618) do
+ActiveRecord::Schema.define(:version => 20130819195431) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -38,6 +38,13 @@ ActiveRecord::Schema.define(:version => 20130730205618) do
     t.datetime "updated_at",   :null => false
     t.text     "mensagem"
     t.integer  "avaliador_id"
+  end
+
+  create_table "cartaos", :force => true do |t|
+    t.string   "cartao_id"
+    t.integer  "atividade_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "dia", :force => true do |t|
@@ -108,9 +115,6 @@ ActiveRecord::Schema.define(:version => 20130730205618) do
   add_index "usuarios", ["reset_password_token"], :name => "index_usuarios_on_reset_password_token", :unique => true
 
   create_table "workons", :force => true do |t|
-    t.date     "data"
-    t.float    "horas"
-    t.text     "observacao"
     t.integer  "projeto_id"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false

@@ -59,7 +59,7 @@ class BancoDeHorasController < ApplicationController
     soma =  @atividades.map{|atividade| atividade.duracao}.inject{|sum, x| sum + x}
     @total_horas = soma.nil? ? 0:  (soma/3600).round(2)
     @usuarios = [["TODOS"]] +  Usuario.all(:order => :nome).collect { |p| [p.nome, p.id]  }
-    @usuario = params[:usuario_id]
+    @usuario = params[:usuario_id].blank? ? params[:usuario_id] = "TODOS" : params[:usuario_id]
   end
 
   def mandar_validacao
