@@ -1,7 +1,9 @@
 class UsuariosController < ApplicationController
 before_filter :authenticate_usuario!
+load_and_authorize_resource
 
   def index
+    authorize! :see, Usuario
     @users = Usuario.all.sort{ |a,b| a.nome.downcase <=> b.nome.downcase }
     @user ||= Usuario.new
   end
@@ -37,12 +39,12 @@ before_filter :authenticate_usuario!
 
 
     if @user.update_attributes(params[:usuario])
-      Rails.logger.info(@user.errors.messages.inspect)
       flash[:notice] = "Successfully updated Usuario."
-      redirect_to usuarios_path
     else
       render :action => 'edit'
+      return
     end
+    redirect_to :back
   end
 
   def destroy

@@ -11,15 +11,10 @@ class Ability
       can :read,    Usuario
       can :read,    Dia
       can :create,  Dia
-      can :destroy, Dia do |bh|
-        bh.try(:usuario_id) == user.id
-      end
-      can :update,  Atividade do |bh|
-        bh.try(:usuario_id) == user.id
-      end
-      can :update,  Dia do |dia|
-        dia.try(:usuario_id) == user.id
-      end
+      can :destroy, Dia,       :id => true, :id => user.id
+      can :update,  Dia,       :id => true, :id => user.id
+      can :update,  Usuario,   :id => true, :id => user.id
+      can :update,  Atividade, :id => true, :id => user.id
     end
 
 
