@@ -6,6 +6,11 @@ before_filter :authenticate_usuario!
   def index
     @projetos = Projeto.all.sort{|a,b| a.nome <=> b.nome}
     @projeto = Projeto.new
+
+    @projetos.each do |projeto|
+      projeto.update_attribute :horas_totais, calcula_horas_totais_do_projeto(projeto.id)
+    end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projetos }
@@ -95,6 +100,14 @@ before_filter :authenticate_usuario!
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def calcula_horas_totais_do_projeto(id)
+    usuarios_ids = Workon.where(:projeto_id => id).collect{|work| work.usuario_id}
+    duracao_das_atividades = Atividade.where(:projeto_id => id, :aprovacao => true, :usuario_id => usuarios_ids).collect{|atividade| atividade.duracao}
+    horas_totais   = duracao_das_atividades.inject{|sum, sec| sum + sec}
+    horas_totais.nil? ? 0 : horas_totais/ 3600
   end
 
 end
