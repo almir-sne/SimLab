@@ -4,14 +4,12 @@ class BancoDeHorasController < ApplicationController
     @year =      params[:year].nil?  ? Date.today.year  : params[:year]
     @user =      params[:user].nil?  ? current_user     : Usuario.find(params[:user])
     @month_num = params[:month].nil? ? Date.today.month : params[:month]
-
     @month = Mes.find_or_initialize_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
     if @month.horas_contratadas.nil?
       @month.horas_contratadas = @user.horario_mensal
       @month.valor_hora = @user.valor_da_hora
       @month.save
     end
-
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
     @dia = Dia.new
@@ -64,10 +62,8 @@ class BancoDeHorasController < ApplicationController
 
   def mandar_validacao
     authorize! :update, :validations
-
     atividades = params[:atividades].try(:keys)
     atividades ||= []
-
     for i in atividades
       ativ = params[:atividades][i.to_str]
       if ativ["reprovacao"]

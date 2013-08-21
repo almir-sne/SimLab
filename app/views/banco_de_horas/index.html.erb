@@ -55,6 +55,8 @@
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=4>Total</td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
+    <td>Restantes <%= (@month.blank?)? "00:00" : @month.horas_restantes %> </td>
+    <td>Por dia <%= (@month.blank?)? "00:00" : @month.horas_a_fazer_por_dia %> </td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
   </tr>
 </table>
