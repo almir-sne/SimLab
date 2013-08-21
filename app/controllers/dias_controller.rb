@@ -31,13 +31,27 @@ class DiasController < ApplicationController
           :mes_id => params[:mes],
           :usuario_id => params[:user_id]
         )
-      end
-      unless atividade_attr[:trello].blank?
-        atividade_attr[:trello].each do |id|
-          cartao = Cartao.new
-          cartao.atividade = atividade
-          cartao.cartao_id = id
-          cartao.save
+        cartaos = atividade.cartaos
+        unless atividade_attr[:trello].blank?
+          atividade_attr[:trello].each do |id|
+            repetido = false
+            cartaos.each_with_index do |c, i|
+              if id == c.cartao_id
+                repetido = true
+                cartaos.delete_at i
+              end
+            end
+            unless repetido
+              cartao = Cartao.new
+              cartao.atividade = atividade
+              cartao.cartao_id = id
+              cartao.save
+            end
+          end
+        end
+        puts "\n\n\n\n\n\n depois #{cartaos}"
+        cartaos.each do |c|
+          c.destroy
         end
       end
     end

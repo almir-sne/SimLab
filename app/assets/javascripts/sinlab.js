@@ -134,6 +134,8 @@ function dropCard(event) {
         target = event.target.parentElement;
     else
         target = event.target;
+    if (target.className == "nodrop")
+        target = target.parentElement;
     var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
@@ -150,32 +152,40 @@ function dragCard(ev) {
 }
 
 function formatCardLink (card, name) {
-    var newLink = $("<a>").attr({
+    var div = $("<div>");
+    div.addClass("nodrop");
+    $("<a>").attr({
         href: card.attr("href"),
         target: "trello"
-    }).addClass("card").text(card.html());
+    }).addClass("card").text(card.html()).appendTo(div);
     $("<input>").attr({
         type: "checkbox",
         name: name,
         value: card.attr("id"),
         checked: true,
         style: "float: right"
-    }).appendTo(newLink);
-    return newLink;
+    }).appendTo(div);
+    return div;
 }
 
-var pog;
-//TODO FINISH HIM!
-function loadCard(card_id) {
-    var parent = $("#script_" + card_id).parent;
-//    Trello.get("/cards/" + card_id, function(card) {
-//        $("<a>").attr({
-//            href: card.url,
-//            target: "trello",
-//            id: card.id,
-//            draggable: true,
-//            ondragstart: "dragCard(event)"
-//        }).addClass("card").text(card.name);
-//        console.log(card);
-//    });
+function loadCard(card_id, id) {
+    var parent = $("#" + id).parent();
+    var name =  parent.prev().attr("name").replace("observacao", "trello") + "[]";
+    Trello.get("/cards/" + card_id, function(card) {
+        var div = $("<div>");
+        div.addClass("nodrop");
+        div.appendTo(parent);
+        $("<a>").attr({
+            href: card.url,
+            target: "trello"
+        }).addClass("card").text(card.name).appendTo(div);
+        $("<input>").attr({
+            type: "checkbox",
+            name: name,
+            value: card.id,
+            checked: true,
+            style: "float: right"
+        }).appendTo(div);
+    });
+    $("#" + id).detach();
 }

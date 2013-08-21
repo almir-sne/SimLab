@@ -35,7 +35,8 @@
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
                 &nbsp;Arraste cartões do Trello aqui.
                 <% atividade_form.object.cartaos.each do |cartao| %>
-                  <%= javascript_tag "loadCard(\"#{cartao.cartao_id}\")", :id => "script_" + cartao.cartao_id %>
+                  <% id = rand(100000000000).to_s %>
+                  <%= javascript_tag "loadCard(\"#{cartao.cartao_id}\", \"#{id}\")", :id => id %>
                 <% end %>
               </div>
               <div class="grey-line"> </div>
