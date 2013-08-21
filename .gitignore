@@ -51,3 +51,4 @@ nbproject
 /config/secrets.yml
 Gemfile.lock
 tmp.sql
+/public/assets

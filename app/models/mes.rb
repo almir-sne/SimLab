@@ -1,3 +1,5 @@
+require 'holidays'
+require 'holidays/br'
 class Mes < ActiveRecord::Base
   attr_accessible :ano, :horas_contratadas, :numero, :usuario_id, :valor_hora, :id
   has_many :atividades
@@ -17,12 +19,33 @@ class Mes < ActiveRecord::Base
   end
 
   def horas_a_fazer_por_dia
+    dias = dias_uteis_restantes
+    if dias == 0
+      return 0
+    end
+    string_hora(calcula_minutos_restantes / dias)
+  end
+
+  def dias_uteis_restantes(regiao='br')
     dia = Dia.find_by_mes_id_and_usuario_id_and_numero(self.id, usuario_id, Date.today.day)
     if dia
-      string_hora(calcula_media_restante(Date.today))
+      data = Date.today
     else
-      string_hora(calcula_media_restante(Date.tomorrow))
+      data = Date.tomorrow
     end
+    if data.month != Date.today.month
+      return 0
+    end
+    final_do_mes = data.at_end_of_month
+    dias_uteis = 0
+    d = data
+    while (d != final_do_mes + 1.day)
+      if (!d.sunday? and !d.saturday? and !d.holiday?(regiao))
+        dias_uteis+= 1
+      end
+      d = d.next
+    end
+    return dias_uteis
   end
 
   private
@@ -40,15 +63,14 @@ class Mes < ActiveRecord::Base
   end
 
   def calcula_minutos_restantes
+    if Usuario.find_by_id(usuario_id).horario_mensal.blank?
+      return 0
+    end
     min_totais = Usuario.find_by_id(usuario_id).horario_mensal*60
     min_trabalhados = calcula_minutos_trabalhados(false)
     return min_totais - min_trabalhados
   end
 
-  def calcula_media_restante(data)
-    calcula_minutos_restantes / data.dias_uteis_restantes
-  end
-  
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
   def string_hora(minutos)
     hh, mm = (minutos).divmod(60)

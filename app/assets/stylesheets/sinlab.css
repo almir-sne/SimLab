@@ -209,4 +209,54 @@
 .alert {
     background-color: rgb(168, 212, 229);
     color: #000000;
+    margin: 2px;
+    border-radius: 5px
+}
+
+#loggedout {
+    text-align: center;
+    font-size: 20px;
+    padding-top: 30px;
+}
+#loggedin {
+    display: none;
+}
+
+#header {
+    padding: 4px;
+    border-bottom: 1px solid #000;
+    background: #eee;
+}
+
+#disconnect {
+    cursor: pointer
+}
+
+#output {
+    padding: 4px;
+}
+
+.card {
+    display: inline-table;
+    width: 90%;
+    padding: 2px;
+    margin: 2px;
+    background-color: #eee
+}
+
+.card:visited {
+    color: black;
+}
+
+.card:hover {
+    background-color: rgb(33, 147, 189);
+    text-decoration: none;
+    color: white;
+}
+
+.trello-dropover {
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 10px;
+    width: 80%;
 }

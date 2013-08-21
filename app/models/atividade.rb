@@ -5,6 +5,7 @@ class Atividade < ActiveRecord::Base
   belongs_to :mes
   belongs_to :dia
   belongs_to :projeto
+  has_many :cartaos, :dependent => :destroy
 
   validates :dia_id, :presence => true
   validates :mes_id, :presence => true
