@@ -55,8 +55,6 @@
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=4>Total</td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
-    <td>Restantes <%= (@month.blank?)? "00:00" : @month.horas_restantes %> </td>
-    <td>Por dia <%= (@month.blank?)? "00:00" : @month.horas_a_fazer_por_dia %> </td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
   </tr>
 </table>
@@ -73,9 +71,18 @@
   <% end %>
 
   <%= link_to 'Voltar', :back, :class => "btn default-button"%>
+  <% m = Date.new(@year.to_i, @month.numero, 1) %>
+  <% today = Date.today %>
+  <% if m.month == today.month and m.year == today.year and !@month.blank?%>
+    <div style="float: right">
+      Restam <b> <%= @month.horas_restantes %> </b> horas de trabalho e
+      <b> <%= @month.dias_uteis_restantes %> </b> dias úteis para concluir a meta do mês <br/>
+      Trabalhe <b> <%= @month.horas_a_fazer_por_dia %> </b> horas por dia útil para comprir a meta
+    </div>
+  <% end %>
 </div>
 
 <div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70%; margin-left: -35%">
+     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 80%; margin-left: -40%">
   <%= render :partial => "modal" %>
 </div>
