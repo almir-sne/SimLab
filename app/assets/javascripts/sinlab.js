@@ -73,3 +73,119 @@ function correctCheck(id, id_2)
         if(document.getElementById(id_2).checked == true)
             document.getElementById(id_2).checked = false;
 }
+
+var onAuthorize = function() {
+    updateLoggedIn();
+    $("#output").empty();
+    Trello.members.get("me", function(member){
+        $("#fullName").text(member.fullName);
+        var $cards = $("<div>").text("Carregando cartões...").appendTo("#output");
+        Trello.get("members/me/cards", function(cards) {
+            $cards.empty();
+            $.each(cards, function(ix, card) {
+                $("<a>").attr({
+                    href: card.url,
+                    target: "trello",
+                    id: card.id,
+                    draggable: true,
+                    ondragstart: "dragCard(event)"
+                }).addClass("card").text(card.name).appendTo($cards);
+            });
+        });
+    });
+
+};
+
+function updateLoggedIn() {
+    var isLoggedIn = Trello.authorized();
+    $("#loggedout").toggle(!isLoggedIn);
+    $("#loggedin").toggle(isLoggedIn);
+}
+
+function loginTrello() {
+    Trello.authorize({
+        type: "popup",
+        success: onAuthorize
+    })
+}
+
+function checkTrello() {
+    Trello.authorize({
+        interactive:false,
+        success: onAuthorize
+    });
+}
+
+function logoutTrello() {
+    Trello.deauthorize();
+    updateLoggedIn();
+}
+
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function dropCard(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    var cartaoRepetido = false;
+    var target;
+    if (event.target.tagName == "A")
+        target = event.target.parentElement;
+    else
+        target = event.target;
+    if (target.className == "nodrop")
+        target = target.parentElement;
+    var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
+    $.each(target.children, function(index, pps) {
+        if (data == pps.childNodes[1].value) {
+            cartaoRepetido = true;  
+        }
+    })
+    if (cartaoRepetido == false) {
+        formatCardLink($("#" + data), name).appendTo(target);
+    }
+}
+
+function dragCard(ev) {
+    ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function formatCardLink (card, name) {
+    var div = $("<div>");
+    div.addClass("nodrop");
+    $("<a>").attr({
+        href: card.attr("href"),
+        target: "trello"
+    }).addClass("card").text(card.html()).appendTo(div);
+    $("<input>").attr({
+        type: "checkbox",
+        name: name,
+        value: card.attr("id"),
+        checked: true,
+        style: "float: right"
+    }).appendTo(div);
+    return div;
+}
+
+function loadCard(card_id, id) {
+    var parent = $("#" + id).parent();
+    var name =  parent.prev().attr("name").replace("observacao", "trello") + "[]";
+    Trello.get("/cards/" + card_id, function(card) {
+        var div = $("<div>");
+        div.addClass("nodrop");
+        div.appendTo(parent);
+        $("<a>").attr({
+            href: card.url,
+            target: "trello"
+        }).addClass("card").text(card.name).appendTo(div);
+        $("<input>").attr({
+            type: "checkbox",
+            name: name,
+            value: card.id,
+            checked: true,
+            style: "float: right"
+        }).appendTo(div);
+    });
+    $("#" + id).detach();
+}

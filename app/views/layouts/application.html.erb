@@ -3,7 +3,11 @@
   <head>
     <title>SimLab</title>
     <%= stylesheet_link_tag    "application", :media => "all" %>
+
     <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "bootstrap" %>
+    <script src="https://api.trello.com/1/client.js?key=98853929c4100832c39e0f3c505d0332"></script>
+    <%= javascript_include_tag "sinlab" %>
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -26,7 +30,11 @@
         <div class="span2 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
             <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
-            <li> <%=  link_to "Usuários", usuarios_path, :class => "nav-links"%> </li>
+            <%if can? :see, Usuario%>
+              <li> <%=  link_to "Usuários", usuarios_path(current_usuario), :class => "nav-links"%> </li>
+            <%else%>
+              <li> <%=  link_to "Usuário", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
+            <%end%>
           </ul>
         </div>
 

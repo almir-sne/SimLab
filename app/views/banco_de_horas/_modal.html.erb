@@ -18,9 +18,9 @@
           <%= f.label :intervalo %>
           <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
         </div>
-        <div class="span9">
+        <div class="span5">
           <h3>Atividades</h3>
-          <div class="panel-scrollable" style="height: 220px; padding-bottom: 10px">
+          <div class="panel-scrollable" style="height: 240px; padding-bottom: 10px">
             <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
               <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
@@ -32,12 +32,37 @@
                 :style => 'width: 55px;'%>
               <%= atividade_form.label :observacao, "Observação" %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+              <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
+                &nbsp;Arraste cartões do Trello aqui.
+                <% atividade_form.object.cartaos.each do |cartao| %>
+                  <% id = rand(100000000000).to_s %>
+                  <%= javascript_tag "loadCard(\"#{cartao.cartao_id}\", \"#{id}\")", :id => id %>
+                <% end %>
+              </div>
               <div class="grey-line"> </div>
             <% end %>
             <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button"%>
           </div>
         </div>
 
+        <div class="span4">
+          <div id="loggedout">
+            <a class="btn default-button" id="connectLink" onclick="loginTrello()"> Conectar ao Trello</a>
+          </div>
+
+          <div id="loggedin">
+            <div id="header">
+              Logado como <span id="fullName"></span>
+              <br/>
+              <a id="disconnect" onclick="logoutTrello()">Log Out</a>
+            </div>
+
+            <div id="output" class="panel-scrollable" style="height: 260px"></div>
+          </div>
+          <script>
+            checkTrello();
+          </script>
+        </div>
       </div>
     </div>
     <div class="blue-line" style="margin: 20px 10px">  </div>
