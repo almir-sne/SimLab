@@ -19,33 +19,16 @@ class Mes < ActiveRecord::Base
   end
 
   def horas_a_fazer_por_dia
-    dias = dias_uteis_restantes
+    dia = Dia.find_by_mes_id_and_usuario_id_and_numero(self.id, usuario_id, Date.today.day)
+    data = Date.today
+    if dia
+      data = data.next
+    end
+    dias =  data.dias_uteis_restantes
     if dias == 0
-      return 0
+      return string_hora(0)
     end
     string_hora(calcula_minutos_restantes / dias)
-  end
-
-  def dias_uteis_restantes(regiao='br')
-    dia = Dia.find_by_mes_id_and_usuario_id_and_numero(self.id, usuario_id, Date.today.day)
-    if dia
-      data = Date.today
-    else
-      data = Date.tomorrow
-    end
-    if data.month != Date.today.month
-      return 0
-    end
-    final_do_mes = data.at_end_of_month
-    dias_uteis = 0
-    d = data
-    while (d != final_do_mes + 1.day)
-      if (!d.sunday? and !d.saturday? and !d.holiday?(regiao))
-        dias_uteis+= 1
-      end
-      d = d.next
-    end
-    return dias_uteis
   end
 
   private
@@ -75,8 +58,7 @@ class Mes < ActiveRecord::Base
   def string_hora(minutos)
     hh, mm = (minutos).divmod(60)
     if (hh < 0)
-      hh = 0
-      mm = 0
+      hh = mm = 0
     end
     return ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end
