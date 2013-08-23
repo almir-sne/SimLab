@@ -10,6 +10,8 @@ class BancoDeHorasController < ApplicationController
       @month.valor_hora = @user.valor_da_hora
       @month.save
     end
+    data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
+    @diasdomes = (1..data_final).to_a
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
     @dia = Dia.new
@@ -23,6 +25,8 @@ class BancoDeHorasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user     : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
+    data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
+    @diasdomes = (1..data_final).to_a
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
@@ -39,6 +43,8 @@ class BancoDeHorasController < ApplicationController
   end
 
   def show_mes
+    #data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
+    #@diasdomes = (1..data_final).to_a
     @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
     query = Mes.find_all_by_ano_and_usuario_id @year, @user.id
