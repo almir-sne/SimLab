@@ -8,7 +8,7 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
           <%= f.label :dia %>
           <%= f.text_field :numero, :value => ((@dia.numero.blank?)? Date.today.day : @dia.numero), :style => 'width: 55px'%>
           <%= f.label :entrada %>
@@ -20,7 +20,7 @@
         </div>
         <div class="span5">
           <h3>Atividades</h3>
-          <div class="panel-scrollable" style="height: 240px; padding-bottom: 10px">
+          <div class="panel-scrollable" style="height: 300px; padding-bottom: 10px">
             <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
               <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
@@ -45,19 +45,19 @@
           </div>
         </div>
 
-        <div class="span4">
+        <div class="span5">
           <div id="loggedout">
             <a class="btn default-button" id="connectLink" onclick="loginTrello()"> Conectar ao Trello</a>
           </div>
 
           <div id="loggedin">
             <div id="header">
-              Logado como <span id="fullName"></span>
+              Logado como <b id="fullName"></b>
               <br/>
               <a id="disconnect" onclick="logoutTrello()">Log Out</a>
             </div>
 
-            <div id="output" class="panel-scrollable" style="height: 260px"></div>
+            <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
           <script>
             checkTrello();
@@ -71,7 +71,7 @@
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
           Cancelar
         </button>
-        <%= f.submit "Ok", :class => "btn default-button"%>
+        <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validate()" %>
       </div>
     </div>
   <% end %>
