@@ -1,11 +1,9 @@
 function validate()
 {
-    var atividadeOBS = $("#dia_atividades_attributes_0_observacao").val();
     var horas_trabalhadas = pega_horas_dia();
     var horas_atividade = pega_horas_atividade();
     return(
-        validar_horas(horas_trabalhadas, horas_atividade) &&
-        validar_atividade_observacao(atividadeOBS)
+        validar_horas(horas_trabalhadas, horas_atividade)
         );
 }
 
@@ -19,17 +17,6 @@ function validar_horas(hDia, hAtividade)
             alert("horas da atividade inválidas");
         else
             alert("atividade não pode ter mais horas que o dia ¬¬");
-        return false;
-    }
-    else
-        return true;
-}
-
-function validar_atividade_observacao(obs)
-{
-    if(obs == "")
-    {
-        alert("Atividade não pode ficar sem observação!");
         return false;
     }
     else
@@ -50,25 +37,20 @@ function pega_horas_dia()
     return saida - entrada - intervalo;
 }
 
-function pega_horas_atividade()
-{
+function pega_horas_atividade() {
     var atividadeH =  parseInt($("#dia_atividades_attributes_0_horas_4i").val());
     var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
-
     return(atividadeH *60 + atividadeM);
 }
 
-function recalculaHoras()
-{
+function recalculaHoras() {
     var max_horas = pega_horas_dia();
     document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
     document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-
 }
 
 
-function correctCheck(id, id_2)
-{
+function correctCheck(id, id_2) {
     if(document.getElementById(id).checked == true)
         if(document.getElementById(id_2).checked == true)
             document.getElementById(id_2).checked = false;
@@ -88,6 +70,7 @@ var onAuthorize = function() {
                     target: "trello",
                     id: card.id,
                     draggable: true,
+                    style: "width: 100%",
                     ondragstart: "dragCard(event)"
                 }).addClass("card").text(card.name).appendTo($cards);
             });
