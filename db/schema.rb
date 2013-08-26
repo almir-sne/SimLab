@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130819195431) do
+ActiveRecord::Schema.define(:version => 20130826203255) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -47,6 +47,15 @@ ActiveRecord::Schema.define(:version => 20130819195431) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "conta", :force => true do |t|
+    t.string   "agencia"
+    t.string   "banco"
+    t.string   "numero"
+    t.integer  "usuario_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "dia", :force => true do |t|
     t.integer  "numero"
     t.datetime "entrada"
@@ -79,6 +88,14 @@ ActiveRecord::Schema.define(:version => 20130819195431) do
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "telefones", :force => true do |t|
+    t.integer  "ddd"
+    t.integer  "numero"
+    t.integer  "usuario_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "usuarios", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
     t.string   "encrypted_password",     :default => "", :null => false
@@ -109,6 +126,9 @@ ActiveRecord::Schema.define(:version => 20130819195431) do
     t.string   "funcao"
     t.date     "data_admissao_fau"
     t.date     "data_demissao_fau"
+    t.string   "rg"
+    t.string   "curso"
+    t.boolean  "formado"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true

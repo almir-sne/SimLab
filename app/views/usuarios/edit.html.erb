@@ -1,136 +1,169 @@
-
 <div class="blue-text" style="margin-left: 30px">
- Edição de Usuários
+  Edição de Usuários
 </div>
 <div class="blue-line">  </div>
 
+<%= nested_form_for(@user,  :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <div class="div_edit">
 
-<%= form_for(@user,  :validate => true, :html => {"data-type" => :json}) do |f| %>
-      <div class="div_edit">
+    <div class="form-group">
+      <h3> Dados Pessoais </h3>
       <div class="container-fluid">
 
         <div class="row-fluid">
-        <div class="span6">
-        <%= f.label :nome %>
-        <%= f.text_field :nome, :style => "width: 100%"%>
+          <div class="span6">
+            <%= f.label :nome %>
+            <%= f.text_field :nome, :style => "width: 100%"%>
+          </div>
+          <div class="span5 offset1">
+            <%= f.label :email %>
+            <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
+          </div>
         </div>
-        <div class="span5 offset1">
-         <%= f.label :email %>
-        <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
-        </div>
-      </div>
-      </div>
-
-      <div class="container-fluid">
 
         <div class="row-fluid">
-          <div class="span7">
-           <% if can? :create, Usuario %>
-              <div class="field">
-                <%= f.label :horario_mensal %>
-                <%= f.number_field :horario_mensal, :style => "width: 65%" %>
-              </div>
+          <div class="span6">
+            <%= f.label :cpf %>
+            <%= f.text_field :cpf%>
+          </div>
+          <div class="span5 offset1">
+            <%= f.label :rg %>
+            <%= f.text_field :rg %>
+          </div>
+        </div>
 
-              <div class="field">
-                <%= f.label :valor_da_hora %>
-                <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
-              </div>
-
-              <div class="field">
-                <%= f.label :valor_da_bolsa_fau, "Valor da bolsa FAU" %>
-                <%= f.number_field :valor_da_bolsa_fau, :style => "width: 65%" %>
-              </div>
-
-              <div class="field">
-                <%= f.label :horas_da_bolsa_fau, "Horas da bolsa da FAU" %>
-                <%= f.number_field :horas_da_bolsa_fau , :style => "width: 65%"%>
-              </div>
-
-              <div class="field" >
-                <%= f.label :funcao, "função" %>
-                <%= f.text_field :funcao, :style => "width: 85%"%>
-              </div>
-
-              <div class="field">
-                <%= f.label :entrada_usp %>
-                <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
-              </div>
-
-              <div class="field">
-                <%= f.label "saida prevista usp"%>
-                <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
-              </div>
-
-             <div class="field">
-                <%= f.label :role %>
-                <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ]) %>
-             </div>
+        <%= f.fields_for :telefones, :allow_destroy => true do |tel| %>
+          <div class="row-fluid">
+            <div class="span1">
+              <%= tel.label :ddd , "DDD"%>
+              <%= tel.text_field :ddd, :style => "width: 35px;" %>
             </div>
-          <%end%>
-          <div class="span5">
+            <div class="span6">
+              <%= tel.label :numero, "Telefone" %>
+              <%= tel.text_field :numero %>
+              <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
+            </div>
+          </div>
+        <% end %>
+        <%= f.link_to_add 'Novo telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <h3> Dados Bancários </h3>
+      <div class="container-fluid">
+        <%= f.fields_for :contas, :allow_destroy => true do |c| %>
+          <div class="row-fluid">
+            <div class="span4">
+              <%= c.label :banco %>
+              <%= c.text_field :banco %>
+            </div>
+
+            <div class="span4">
+              <%= c.label :agencia %>
+              <%= c.text_field :agencia %>
+            </div>
+
+            <div class="span4">
+              <%= c.label :numero, "Conta" %>
+              <%= c.text_field :numero %>
+              <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
+            </div>
+          </div>
+        <% end %>
+        <%= f.link_to_add 'Nova conta', :contas, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <h3> Endereço </h3>
+      <div class="container-fluid">
+        <%= f.fields_for :address do |builder| %>
+          <%= render "/addresses/form", :f => builder %>
+        <% end %>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span7">
+          <% if can? :create, Usuario %>
+            <div class="field">
+              <%= f.label :horario_mensal %>
+              <%= f.number_field :horario_mensal, :style => "width: 65%" %>
+            </div>
 
             <div class="field">
-              <%= f.label :cpf %>
-              <%= f.text_field :cpf , :style => "width: 85%"%>
+              <%= f.label :valor_da_hora %>
+              <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
             </div>
 
             <div class="field">
-              <%= f.label :banco %>
-              <%= f.text_field :banco , :style => "width: 85%"%>
+              <%= f.label :valor_da_bolsa_fau, "Valor da bolsa FAU" %>
+              <%= f.number_field :valor_da_bolsa_fau, :style => "width: 65%" %>
             </div>
 
             <div class="field">
-              <%= f.label :conta %>
-              <%= f.number_field :conta , :style => "width: 85%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :agencia %>
-              <%= f.number_field :agencia , :style => "width: 85%"%>
-            </div>
-            <% if can? :create, Usuario %>
-              <div class="field">
-                <%= f.label :data_admissao_fau, "Data de admissão na FAU"%>
-                <%= f.date_select :data_admissao_fau, {}, :style => "width: 100px" %>
-              </div>
-
-              <div class="field">
-                <%= f.label :data_demissao_fau, "Data de Demissão da FAU" %>
-                <%= f.date_select :data_demissao_fau, {}, :style => "width: 100px" %>
-              </div>
-            <%end%>
-            <div class="field", style = "float:left; width:45px">
-              <%= f.label :ddd , "DDD"%>
-              <%= f.number_field :ddd, :value => @user.cel.nil? ? nil : @user.cel[0..1], :style => "width: 61%"%>
+              <%= f.label :horas_da_bolsa_fau, "Horas da bolsa da FAU" %>
+              <%= f.number_field :horas_da_bolsa_fau , :style => "width: 65%"%>
             </div>
 
             <div class="field" >
-              <%= f.label :tel_numero, "telefone" %>
-              <%= f.number_field :tel_numero, :value => @user.cel.nil? ? nil : @user.cel[2..(@user.cel.length)], :style => "width: 16%, inline-block"%>
+              <%= f.label :funcao, "função" %>
+              <%= f.text_field :funcao, :style => "width: 85%"%>
             </div>
 
+            <div class="field">
+              <%= f.label :entrada_usp %>
+              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
+            </div>
 
+            <div class="field">
+              <%= f.label "saida prevista usp"%>
+              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
+            </div>
+
+            <div class="field">
+              <%= f.label :role %>
+              <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ]) %>
+            </div>
           </div>
+        <%end%>
+        <div class="span5">
+
+
+          <% if can? :create, Usuario %>
+            <div class="field">
+              <%= f.label :data_admissao_fau, "Data de admissão na FAU"%>
+              <%= f.date_select :data_admissao_fau, {}, :style => "width: 100px" %>
+            </div>
+
+            <div class="field">
+              <%= f.label :data_demissao_fau, "Data de Demissão da FAU" %>
+              <%= f.date_select :data_demissao_fau, {}, :style => "width: 100px" %>
+            </div>
+          <%end%>
+
+
+
         </div>
       </div>
+    </div>
 
     <div class="blue-line">  </div>
     <div class="container-fluid">
       <div class="row-fluid">
 
-      <%= f.fields_for :address do |builder| %>
-        <%= render "/addresses/form", :f => builder %>
-      <% end %>
+
 
       </div>
     </div>
 
 
-      <br/>
-      <div class="actions">
-        <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
-        <%= f.submit "Salvar", :style => "float: left;margin-left: 10px;", :class => "btn default-button"%>
-      </div>
-      </div>
-<br />
-    <% end %>
+    <br/>
+    <div class="actions">
+      <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
+      <%= f.submit "Salvar", :style => "float: left;margin-left: 10px;", :class => "btn default-button"%>
+    </div>
+  </div>
+  <br />
+<% end %>

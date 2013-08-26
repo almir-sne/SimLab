@@ -28,6 +28,8 @@ load_and_authorize_resource
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
+    @user.telefones.build
+    @user.contas.build
     address = @user.address.nil? ? @user.create_address : @user.address
   end
 
