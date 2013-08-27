@@ -1,5 +1,5 @@
 class ProjetosController < ApplicationController
-before_filter :authenticate_usuario!
+  before_filter :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
@@ -34,13 +34,10 @@ before_filter :authenticate_usuario!
   def new
     authorize! :create, Projeto
     @projeto = Projeto.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @projeto }
-
     end
-
   end
 
   # GET /projetos/1/edit
@@ -54,18 +51,12 @@ before_filter :authenticate_usuario!
   def create
     authorize! :create, Projeto
     @projeto = Projeto.new(params[:projeto])
-
-    respond_to do |format|
-      if @projeto.save
-        format.html { redirect_to @projeto, notice: I18n.t("projetos.create.sucess")}
-        format.json { render json: @projeto, status: :created, location: @projeto }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @projeto.errors, status: :unprocessable_entity }
-      end
-      flash[:notice] = I18n.t("projetos.create.sucess", :model => "Projeto")
+    if @projeto.save
+      redirect_to projetos_path, notice: I18n.t("projetos.create.sucess")
+    else
+      puts @projeto.errors
+      flash[:errors] = I18n.t("projetos.create.failure")
       redirect_to projetos_path
-    return
     end
   end
 
@@ -83,9 +74,6 @@ before_filter :authenticate_usuario!
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
-     flash[:notice] = I18n.t("projetos.update.sucess")
-      redirect_to projetos_path
-    return
     end
   end
 
