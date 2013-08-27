@@ -231,8 +231,10 @@ pt-BR:
   projetos:
     create:
       sucess: "Projeto criado com sucesso."
+      failure: "Erro na criação do projeto."
     update:
       sucess: "Projeto atualizado com sucesso."
+      failure: "Erro na atualização do projeto."
   banco_de_horas:
     create:
       sucess: "Banco de horas criado com sucesso."
