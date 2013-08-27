@@ -83,87 +83,79 @@
         <% end %>
       </div>
     </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span7">
-          <% if can? :create, Usuario %>
-            <div class="field">
+
+    <% if can? :create, Usuario %>
+      <div class="form-group">
+        <h3> Dados Profissionais </h3>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="span3">
               <%= f.label :horario_mensal %>
-              <%= f.number_field :horario_mensal, :style => "width: 65%" %>
-            </div>
+              <%= f.text_field :horario_mensal, :style => "width: 50%" %>
 
-            <div class="field">
               <%= f.label :valor_da_hora %>
-              <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
-            </div>
+              <%= f.text_field :valor_da_hora, :style => "width: 50%" %>
 
-            <div class="field">
               <%= f.label :valor_da_bolsa_fau, "Valor da bolsa FAU" %>
-              <%= f.number_field :valor_da_bolsa_fau, :style => "width: 65%" %>
+              <%= f.text_field :valor_da_bolsa_fau, :style => "width: 50%" %>
             </div>
-
-            <div class="field">
+            <div class="span4">
               <%= f.label :horas_da_bolsa_fau, "Horas da bolsa da FAU" %>
-              <%= f.number_field :horas_da_bolsa_fau , :style => "width: 65%"%>
+              <%= f.text_field :horas_da_bolsa_fau, :style => "width: 50%" %>
+
+              <%= f.label :funcao, "Função" %>
+              <%= f.text_field :funcao, :style => "width: 50%" %>
             </div>
-
-            <div class="field" >
-              <%= f.label :funcao, "função" %>
-              <%= f.text_field :funcao, :style => "width: 85%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :entrada_usp %>
-              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
-            </div>
-
-            <div class="field">
-              <%= f.label "saida prevista usp"%>
-              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
-            </div>
-
-            <div class="field">
-              <%= f.label :role %>
-              <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ]) %>
-            </div>
-          </div>
-        <%end%>
-        <div class="span5">
-
-
-          <% if can? :create, Usuario %>
-            <div class="field">
+            <div class="span5">
               <%= f.label :data_admissao_fau, "Data de admissão na FAU"%>
               <%= f.date_select :data_admissao_fau, {}, :style => "width: 100px" %>
-            </div>
 
-            <div class="field">
               <%= f.label :data_demissao_fau, "Data de Demissão da FAU" %>
               <%= f.date_select :data_demissao_fau, {}, :style => "width: 100px" %>
             </div>
-          <%end%>
-
-
-
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="blue-line">  </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-
-
-
+      <div class="form-group">
+        <h3> Dados Acadêmicos </h3>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="span6">
+              <%= f.label :entrada_usp, "Entrada na USP" %>
+              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
+              <%= f.label :saida_usp, "Data ou previsão de formatura"%>
+              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
+            </div>
+            <div class="span6">
+              <%= f.label :curso %>
+              <%= f.text_field :curso, :style => "width: 50%" %>
+              <%= f.label :formado, "Formado?" %>
+              <%= f.label :sim, :class => "inline-label" %>
+              <%= f.radio_button :formado, true, :class => "inline-label", :style => "margin: 0;" %>
+              <%= f.label "Não", :class => "inline-label", :style => "margin-left: 20px;" %>
+              <%= f.radio_button :formado, false, :style => "margin: 0;" %>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
+      <div class="form-group">
+        <h3> Configuração </h3>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="span6">
+              <%= f.label :role %>
+              <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ], @user.role) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <%end%>
 
-    <br/>
-    <div class="actions">
-      <%= link_to 'Cancelar', :back , :style=>"float: left;margin-left: 21px;", :class => "btn default-button"%>
-      <%= f.submit "Salvar", :style => "float: left;margin-left: 10px;", :class => "btn default-button"%>
+    <div class="form-group" style="background: none">
+      <%= f.submit "Salvar", :class => "btn default-button"%>
+      <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
     </div>
   </div>
-  <br />
 <% end %>

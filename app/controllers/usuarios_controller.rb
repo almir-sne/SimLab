@@ -28,25 +28,28 @@ load_and_authorize_resource
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    @user.telefones.build
-    @user.contas.build
-    address = @user.address.nil? ? @user.create_address : @user.address
+    if @user.telefones.blank?
+      @user.telefones.build
+    end
+    if @user.contas.blank?
+      @user.contas.build
+    end
+    if @user.address.blank?
+      @user.create_address
+    end
   end
 
   def update
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    @user.phone params[:usuario][:ddd], params[:usuario][:tel_numero]
-    params[:usuario].except! :ddd, :tel_numero
-
-
     if @user.update_attributes(params[:usuario])
-      flash[:notice] = "Successfully updated Usuario."
+      flash[:notice] = "Usuário atualizado com sucesso"
+      redirect_to edit_usuario_path(@user)
     else
+      flash[:notice] = "Erro durante atualização de cadastro"
       render :action => 'edit'
-      return
     end
-    redirect_to :back
+    
   end
 
   def destroy
