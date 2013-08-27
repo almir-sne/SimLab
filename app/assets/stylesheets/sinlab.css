@@ -260,3 +260,23 @@
     padding: 10px;
     width: 80%;
 }
+
+.modal {
+    height:500px;
+}
+
+.modal-body {
+    height: 100%;
+    max-height:100%;
+}
+
+.form-group {
+    text-align: left;
+    border-radius: 10px;
+    margin: 10px;
+    background-color: #EBEBEB
+}
+
+.form-group h3 {
+    padding: 20px;
+}

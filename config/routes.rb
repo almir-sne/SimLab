@@ -1,6 +1,4 @@
 SinLab::Application.routes.draw do
-  resources :addresses
-
   #  get "home/index"
   resources :banco_de_horas, :only => [:index] do
     collection do

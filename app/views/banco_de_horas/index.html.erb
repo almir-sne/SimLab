@@ -75,9 +75,9 @@
   <% today = Date.today %>
   <% if m.month == today.month and m.year == today.year and !@month.blank?%>
     <div style="float: right">
-      Restam <b> <%= @month.horas_restantes %> </b> horas de trabalho e
-      <b> <%= @month.dias_uteis_restantes %> </b> dias úteis para concluir a meta do mês <br/>
-      Trabalhe <b> <%= @month.horas_a_fazer_por_dia %> </b> horas por dia útil para comprir a meta
+      Resta(m) <b> <%= @month.horas_restantes %> </b> hora(s) de trabalho e
+      <b> <%= @month.dias_uteis_restantes %> </b> dia(s) útei(s) para concluir a meta do mês <br/>
+      Trabalhe <b> <%= @month.horas_a_fazer_por_dia %> </b> hora(s) por dia útil para comprir a meta
     </div>
   <% end %>
 </div>
