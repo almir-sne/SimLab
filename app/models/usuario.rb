@@ -29,4 +29,20 @@ class Usuario < ActiveRecord::Base
   has_many :mes
   has_many :dias
   has_many :atividades
+
+  def projetos_coordenados
+    self.projetos.includes(:workon).where("workons.coordenador" => true)
+  end
+
+  def equipe_coordenada
+    projetos = self.projetos_coordenados
+    coord = Array.new
+    projetos.each{ |p|
+      p.usuarios.each  { |u|
+       coord << u if (!coord.include? u)
+      }
+    }
+    coord
+  end
+
 end
