@@ -58,7 +58,7 @@ class BancoDeHorasController < ApplicationController
     @ano         = params[:ano].nil? ? Date.today.year  : params[:ano]
     @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
-    if current_usuario == "admin"
+    if current_usuario.role == "admin"
       usuarios_ids = (params[:usuario_id].nil? || params[:usuario_id] == "TODOS") ? Usuario.all.map{|usuario| usuario.id } : params[:usuario_id]
       @atividades  =  Atividade.where(
         :aprovacao => [false, nil],
