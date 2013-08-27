@@ -29,23 +29,19 @@
         </div>
       </div>
       <div class="span5">
-        <h2>Colaboradores<h2/>
+        <h2>Colaboradores</h2>
         <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
         <%= f.fields_for :workon do |worker| %>
           <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.pop)) %>
-          <%= worker.link_to_remove "Remover" %>
+          <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe %>
         <% end %>
         <p><%= f.link_to_add "Adicionar pessoa", :workon %></p>
       </div>
-
     </div>
 
-
     <div class="actions">
-      <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">
-        Cancelar
-      </button>
-      <%= f.submit "Salvar", :style => "float: left; margin-left: 10px", :class => "btn default-button"%>
+      <%= f.submit "Salvar", :class => "btn default-button"%>
+      <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
     </div>
     <br />
   </div>

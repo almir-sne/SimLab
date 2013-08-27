@@ -4,7 +4,7 @@ class ProjetosController < ApplicationController
   # GET /projetos
   # GET /projetos.json
   def index
-    @projetos = Projeto.all.sort{|a,b| a.nome <=> b.nome}
+    @projetos = Projeto.all(:order => :nome)
     @projeto = Projeto.new
 
     @projetos.each do |projeto|
@@ -68,7 +68,7 @@ class ProjetosController < ApplicationController
 
     respond_to do |format|
       if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to @projeto, notice: I18n.t("projetos.update.sucess") }
+        format.html { redirect_to projetos_path, notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -97,5 +97,4 @@ class ProjetosController < ApplicationController
     horas_totais   = duracao_das_atividades.inject{|sum, sec| sum + sec}
     horas_totais.nil? ? 0 : horas_totais/ 3600
   end
-
 end
