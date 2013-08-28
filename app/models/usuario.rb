@@ -10,7 +10,7 @@ class Usuario < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome, :horario_mensal
   attr_accessible :valor_da_hora, :entrada_usp, :saida_usp, :cpf, :banco, :conta, :agencia
   attr_accessible :role, :address_id, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
-  attr_accessible :data_admissao_fau, :data_demissao_fau, :formado
+  attr_accessible :data_admissao_fau, :data_demissao_fau, :formado, :status
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy

@@ -1,10 +1,17 @@
 class UsuariosController < ApplicationController
-before_filter :authenticate_usuario!
-load_and_authorize_resource
+  before_filter :authenticate_usuario!
+  load_and_authorize_resource
 
   def index
     authorize! :see, Usuario
-    @users = Usuario.all.sort{ |a,b| a.nome.downcase <=> b.nome.downcase }
+    @status = params[:status]
+    unless @status.blank? or @status == "Todos"
+      @users = Usuario.where(:status => @status == "true").order(:nome)
+    else
+      @users = Usuario.all(:order => :nome)
+      @status = "Todos"
+    end
+    @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
     @user ||= Usuario.new
   end
 
