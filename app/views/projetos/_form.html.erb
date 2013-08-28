@@ -32,8 +32,8 @@
         <h2>Equipe</h2>
         <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
         <%= f.fields_for :workon do |worker| %>
-          <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.shift)) %>
           <%= worker.check_box :coordenador%>
+          <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.shift)) %>
           <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe %>
         <% end %>
         <p><%= f.link_to_add "Adicionar pessoa", :workon %></p>

@@ -49,7 +49,7 @@ load_and_authorize_resource
       flash[:notice] = "Erro durante atualização de cadastro"
       render :action => 'edit'
     end
-    
+
   end
 
   def destroy

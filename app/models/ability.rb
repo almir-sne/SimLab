@@ -9,8 +9,14 @@ class Ability
       can :see, :banco_de_horas
     elsif user.role == "diretor"
       can :manage, Projeto
-      can :update, :validations
+      can [:create, :custom_create, :see, :read ], Usuario
+      unless user.projetos_coordenados.blank?
+        can :update, :validations
+      end
     elsif user.role == "usuario normal"
+      unless user.projetos_coordenados.blank?
+        can :update, :validations
+      end
       can :read,    Usuario
       can [:read,:create], Dia
       can [:destroy,:update], Dia, :id => true, :id => user.id

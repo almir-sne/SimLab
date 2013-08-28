@@ -54,7 +54,7 @@ class BancoDeHorasController < ApplicationController
   end
 
   def validar
-    #authorize! :update, :validations
+    authorize! :update, :validations
     @ano         = params[:ano].nil? ? Date.today.year  : params[:ano]
     @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
@@ -66,7 +66,11 @@ class BancoDeHorasController < ApplicationController
         :usuario_id => usuarios_ids
         ).all
     else
-      usuarios_ids = (params[:usuario_id].nil? || params[:usuario_id] == "TODOS") ? current_usuario.equipe_coordenada : params[:usuario_id]
+      if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"
+        usuarios_ids = current_usuario.equipe_coordenada
+      else
+        usuarios_ids = current_usuario.equipe_coordenada.select{|usuario| usuario.id == params[:usuario_id].to_i}
+      end
       @atividades  =  Atividade.where(
         :aprovacao => [false, nil],
         :mes_id => meses_id,
