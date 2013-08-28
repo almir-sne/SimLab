@@ -274,9 +274,10 @@
     text-align: left;
     border-radius: 10px;
     margin: 10px;
-    background-color: #EBEBEB
+    background-color: #EBEBEB;
+    padding-bottom: 10px;
 }
 
 .form-group h3 {
-    padding: 20px;
+    padding: 15px 20px;
 }
