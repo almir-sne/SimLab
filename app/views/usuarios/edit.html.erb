@@ -148,6 +148,13 @@
               <%= f.label :role %>
               <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ], @user.role) %>
             </div>
+
+            <div class="span6">
+              <%= f.label :projetos %>
+              <% @user.projetos.each do |p| %>
+                <%= p.nome %> <br/>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
