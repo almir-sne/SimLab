@@ -146,8 +146,7 @@
           <div class="row-fluid">
             <div class="span6">
               <%= f.label :role %>
-              <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ], @user.role) %>
-
+              <%= f.select :role, options_for_select(["usuario normal", "diretor", "admin" ], @user.role) %>
               <%= f.label :status, "Status no Sistema" %>
               <%= f.label :ativo, :class => "inline-label" %>
               <%= f.radio_button :status, true, :class => "inline-label", :style => "margin: 0;" %>
