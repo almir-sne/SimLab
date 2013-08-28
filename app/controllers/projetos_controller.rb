@@ -1,10 +1,10 @@
 class ProjetosController < ApplicationController
-before_filter :authenticate_usuario!
+  before_filter :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
   def index
-    @projetos = Projeto.all.sort{|a,b| a.nome <=> b.nome}
+    @projetos = Projeto.all(:order => :nome)
     @projeto = Projeto.new
 
     @projetos.each do |projeto|
@@ -34,13 +34,10 @@ before_filter :authenticate_usuario!
   def new
     authorize! :create, Projeto
     @projeto = Projeto.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @projeto }
-
     end
-
   end
 
   # GET /projetos/1/edit
@@ -54,18 +51,12 @@ before_filter :authenticate_usuario!
   def create
     authorize! :create, Projeto
     @projeto = Projeto.new(params[:projeto])
-
-    respond_to do |format|
-      if @projeto.save
-        format.html { redirect_to @projeto, notice: I18n.t("projetos.create.sucess")}
-        format.json { render json: @projeto, status: :created, location: @projeto }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @projeto.errors, status: :unprocessable_entity }
-      end
-      flash[:notice] = I18n.t("projetos.create.sucess", :model => "Projeto")
+    if @projeto.save
+      redirect_to projetos_path, notice: I18n.t("projetos.create.sucess")
+    else
+      puts @projeto.errors
+      flash[:errors] = I18n.t("projetos.create.failure")
       redirect_to projetos_path
-    return
     end
   end
 
@@ -77,15 +68,12 @@ before_filter :authenticate_usuario!
 
     respond_to do |format|
       if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to @projeto, notice: I18n.t("projetos.update.sucess") }
+        format.html { redirect_to projetos_path, notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
-     flash[:notice] = I18n.t("projetos.update.sucess")
-      redirect_to projetos_path
-    return
     end
   end
 
@@ -109,5 +97,4 @@ before_filter :authenticate_usuario!
     horas_totais   = duracao_das_atividades.inject{|sum, sec| sum + sec}
     horas_totais.nil? ? 0 : horas_totais/ 3600
   end
-
 end

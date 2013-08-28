@@ -129,7 +129,6 @@ ActiveRecord::Schema.define(:version => 20130828200830) do
     t.datetime "updated_at",                             :null => false
     t.string   "role"
     t.text     "address"
-    t.string   "cel"
     t.float    "valor_da_bolsa_fau"
     t.integer  "horas_da_bolsa_fau"
     t.string   "funcao"
@@ -138,6 +137,7 @@ ActiveRecord::Schema.define(:version => 20130828200830) do
     t.string   "rg"
     t.string   "curso"
     t.boolean  "formado"
+    t.boolean  "status"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
