@@ -28,15 +28,10 @@ load_and_authorize_resource
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    if @user.telefones.blank?
-      @user.telefones.build
-    end
-    if @user.contas.blank?
-      @user.contas.build
-    end
-    if @user.address.blank?
-      @user.create_address
-    end
+    @user.telefones.build if @user.telefones.blank?
+    @user.contas.build if @user.contas.blank?
+    @user.create_address if @user.address.blank?
+    @user.contratos.build if @user.contratos.blank?
   end
 
   def update
