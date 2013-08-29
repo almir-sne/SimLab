@@ -6,6 +6,10 @@ class Mes < ActiveRecord::Base
   has_many :dias
   belongs_to :usuario
 
+  def tem_reprovacao?
+    !self.atividades.where("aprovacao is false").blank?
+  end
+
   def dias_uteis_restantes
     calcula_dias_uteis_restantes.to_s 
   end
@@ -40,7 +44,7 @@ class Mes < ActiveRecord::Base
       dias = self.dias 
       minutos_map = dias.collect{|dia| dia.minutos}
     end
-  return minutos_map.inject{|sum,x| sum + x }.nil? ? 0 : minutos_map.inject{|sum,x| sum + x }
+    return minutos_map.inject{|sum,x| sum + x }.nil? ? 0 : minutos_map.inject{|sum,x| sum + x }
   end
 
   def calcula_minutos_restantes

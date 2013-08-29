@@ -56,7 +56,6 @@
 
 .month-table {
     margin: 5px !important;
-    background: rgb(33, 147, 189);
     height: 200px;
     font-size: 25px;
     font-family: Arial,Helvetica,sans-serif;
@@ -182,7 +181,6 @@
 }
 
 .month-link:hover {
-    background-color: rgb(0, 112, 153) !important;
     text-decoration: none
 }
 
@@ -287,4 +285,20 @@
     border-radius: 10px;
     margin-bottom: 10px;
     width: 85%
+}
+
+.red-link {
+    background-color: #CC0000;
+}
+
+.red-link:hover {
+    background-color: #B10000 !important;
+}
+
+.blue-link {
+    background: rgb(33, 147, 189);
+}
+
+.blue-link:hover {
+    background-color: rgb(0, 112, 153) !important;
 }
