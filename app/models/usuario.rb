@@ -46,7 +46,7 @@ class Usuario < ActiveRecord::Base
     coord
   end
 
-  def horario_mensal(data)
+  def horario_data(data)
     c = self.contratos.where("inicio < ? and fim > ?", data, data).first
     if c.blank?
       c = self.contratos.last
