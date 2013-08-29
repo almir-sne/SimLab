@@ -7,10 +7,9 @@ class Usuario < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :nome, :horario_mensal
-  attr_accessible :valor_da_hora, :entrada_usp, :saida_usp, :cpf, :banco, :conta, :agencia
-  attr_accessible :role, :address_id, :cel, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
-  attr_accessible :data_admissao_fau, :data_demissao_fau, :formado
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
+  attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
+  attr_accessible :role, :address_id, :formado, :status
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy
@@ -18,10 +17,12 @@ class Usuario < ActiveRecord::Base
   has_many :workon
   has_many :telefones
   has_many :contas
+  has_many :contratos
 
   accepts_nested_attributes_for :address, :allow_destroy => true
   accepts_nested_attributes_for :telefones, :allow_destroy => true
   accepts_nested_attributes_for :contas, :allow_destroy => true
+  accepts_nested_attributes_for :contratos, :allow_destroy => true
 
   validates :nome, :presence => true,
     :uniqueness => true
@@ -29,4 +30,31 @@ class Usuario < ActiveRecord::Base
   has_many :mes
   has_many :dias
   has_many :atividades
+
+  def projetos_coordenados
+    self.projetos.includes(:workon).where("workons.coordenador" => true)
+  end
+
+  def equipe_coordenada
+    projetos = self.projetos_coordenados
+    coord = Array.new
+    projetos.each{ |p|
+      p.usuarios.each  { |u|
+        coord << u if (!coord.include? u)
+      }
+    }
+    coord
+  end
+
+  def horario_mensal(data)
+    c = self.contratos.where("inicio < ? and fim > ?", data, data).first
+    if c.blank?
+      c = self.contratos.last
+    end
+    if c.blank?
+      0
+    else
+      c.hora_mes
+    end
+  end
 end

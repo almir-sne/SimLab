@@ -1,10 +1,13 @@
 <div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 25%;height: 550px; ">
+     aria-hidden="true" style="width: 400px;height: 550px; ">
 
-  <div class="modal-body" style="max-height: 550px !important;">
+  <div class="modal-body" style="max-height: 550px;">
 
     <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
-
+      <div class="red-background">
+        Todos os campos são obrigatórios. <br/>
+        Nome do projeto deve ser único.
+      </div>
       <div class="field">
         <%= f.label :nome %>
         <%= f.text_field :nome%>
@@ -17,7 +20,7 @@
 
       <div class="field">
         <%= f.label :descricao %>
-        <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
+        <%= f.text_area :descricao, :style => "height: 80px; width: 300px"%>
       </div>
 
       <div class="field">

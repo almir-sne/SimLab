@@ -1,5 +1,5 @@
 class Workon < ActiveRecord::Base
-  attr_accessible :projeto_id, :usuario_id
+  attr_accessible :projeto_id, :usuario_id, :coordenador
 
   belongs_to :usuario
   belongs_to :projeto
