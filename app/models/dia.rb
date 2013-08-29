@@ -73,6 +73,14 @@ class Dia < ActiveRecord::Base
     retorno/3600
   end
 
+  def tem_mensagem?
+    !self.atividades.where("mensagem is not null").blank?
+  end
+
+  def tem_reprovacao?
+    !self.atividades.where("aprovacao is false").blank?
+  end
+
   def intervalo
     unless read_attribute(:intervalo).blank?
       Time.new(2000, 1, 1 ,0, 0, 0) + read_attribute(:intervalo)

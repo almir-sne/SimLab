@@ -38,33 +38,12 @@
           </ul>
         </div>
 
-        <div class="span2"></div>
-
-        <div class="span3 top-user" >
+        <div class="span5 top-user offset3" >
           Bem vindo <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome + '!'%> </b>
           <br/>
           <%= link_to "Alterar senha", edit_usuario_registration_path %>
           <br/>
           <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
-        </div>
-
-        <div class="span3">
-          <table class="top-table">
-            <tr>
-              <td rowspan="2" class="saldo">
-                Saldo
-              </td>
-              <td class="data" style="color: rgb(0, 255, 0)">
-                +40
-              </td>
-            </tr>
-            <tr>
-              <td class="data">
-                47/120
-              </td>
-
-            </tr>
-          </table>
         </div>
       </div>
       <div class="messages">

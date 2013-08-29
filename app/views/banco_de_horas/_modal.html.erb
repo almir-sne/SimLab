@@ -32,6 +32,12 @@
                 :style => 'width: 55px;'%>
               <%= atividade_form.label :observacao, "Observação" %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+              <% unless atividade_form.object.mensagem.blank?  %>
+              <div class="<%= atividade_form.object.aprovacao ? "blue-background" : "red-background" %> activity-message">
+                  Mensagem: <br/>
+                  <%= atividade_form.object.mensagem %>
+                </div>
+              <% end %>
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
                 &nbsp;Arraste cartões do Trello aqui.
                 <% atividade_form.object.cartaos.each do |cartao| %>
