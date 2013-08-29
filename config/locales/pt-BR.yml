@@ -221,7 +221,6 @@ pt-BR:
         descricao: "Descrição"
       banco_de_horas:
         observacao: "Observações"
-  string:
 
   unauthorized:
     manage:
@@ -249,3 +248,11 @@ pt-BR:
   atividades:
     create:
       sucess: "Atividade(s) criada(s) com sucesso!"
+  simlab:
+    titulo: "SimLab"
+  funcionalidade:
+    validacao:
+      atividade: "Validação de Atividades"
+  prompt:
+    exclusao:
+      confirmacao: "Deseja excluir o registro?"

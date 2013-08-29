@@ -5,6 +5,7 @@ class Atividade < ActiveRecord::Base
   belongs_to :mes
   belongs_to :dia
   belongs_to :projeto
+  belongs_to :usuario
   has_many :cartaos, :dependent => :destroy
 
   validates :dia_id, :presence => true
@@ -14,8 +15,7 @@ class Atividade < ActiveRecord::Base
   validates :horas, :exclusion => {:in => 0..1}
 
   def data
-    mes = Mes.find mes_id
-    Date.new(mes.ano, mes.numero, Dia.find(self.dia_id).numero)
+    Date.new(self.dia.mes.ano, self.dia.mes.numero, self.dia.numero)
   end
 
   def horas

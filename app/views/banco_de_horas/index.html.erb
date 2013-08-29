@@ -47,7 +47,7 @@
           <%= link_to_submit ' ', :class => 'icon-edit nohover', :style => "margin-right: 10px", :title => "Editar" %>
         <% end %>
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
-          dia_path(dia.id), :method => :delete, :confirm => "Deseja excluir o registro?",
+          dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
           :class => 'nohover', :title => "Excluir"%>
       </td>
     </tr>

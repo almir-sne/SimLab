@@ -59,7 +59,7 @@ class BancoDeHorasController < ApplicationController
     @mes_numero = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).map{|month| month.id }
     authorize! :update, :validations
-    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id, :usuario_id => usuario_id).all
+    @atividades =  Atividade.where(:aprovacao => [false, nil], :mes_id => meses_id, :usuario_id => usuario_id).includes(:dia).all(:order => 'dia.numero')
     soma =  @atividades.map{|atividade| atividade.duracao}.inject{|sum, x| sum + x}
     @total_horas = soma.nil? ? 0:  (soma/3600).round(2)
     @usuarios = [["TODOS"]] +  Usuario.all(:order => :nome).collect { |p| [p.nome, p.id]  }
