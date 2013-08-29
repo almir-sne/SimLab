@@ -45,7 +45,7 @@
             </div>
           </div>
         <% end %>
-        <%= f.link_to_add 'Novo telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+        <%= f.link_to_add 'Adicionar telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
             </div>
           </div>
         <% end %>
-        <%= f.link_to_add 'Nova conta', :contas, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+        <%= f.link_to_add 'Adicionar conta', :contas, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
       </div>
     </div>
 
@@ -88,32 +88,39 @@
       <div class="form-group">
         <h3> Dados Profissionais </h3>
         <div class="container-fluid">
-          <div class="row-fluid">
-            <div class="span3">
-              <%= f.label :horario_mensal %>
-              <%= f.text_field :horario_mensal, :style => "width: 50%" %>
+          <%= f.fields_for :contratos, :allow_destroy => true do |c| %>
+            <div class="row-fluid">
+              <div class="span3">
+                <%= c.label :hora_mes %>
+                <%= c.text_field :hora_mes, :style => "width: 50%" %>
 
-              <%= f.label :valor_da_hora %>
-              <%= f.text_field :valor_da_hora, :style => "width: 50%" %>
+                <%= c.label :valor_hora %>
+                <%= c.text_field :valor_hora, :style => "width: 50%" %>
 
-              <%= f.label :valor_da_bolsa_fau, "Valor da bolsa FAU" %>
-              <%= f.text_field :valor_da_bolsa_fau, :style => "width: 50%" %>
+                <%= c.label :contratante %>
+                <%= c.text_field :contratante, :style => "width: 100%" %>
+
+              </div>
+              <div class="span4">
+                <%= c.label :tipo, "Tipo de Contrato" %>
+                <%= c.text_field :tipo, :style => "width: 50%" %>
+
+                <%= c.label :funcao, "Função" %>
+                <%= c.text_field :funcao, :style => "width: 50%" %>
+              </div>
+              <div class="span5">
+                <%= c.label :inicio, "Data de inicio do contrato"%>
+                <%= c.date_select :inicio, {}, :style => "width: 100px" %>
+
+                <%= c.label :fim, "Data de término do contrato" %>
+                <%= c.date_select :fim, {}, :style => "width: 100px" %>
+
+                <br/> <br/>
+                <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
+              </div>
             </div>
-            <div class="span4">
-              <%= f.label :horas_da_bolsa_fau, "Horas da bolsa da FAU" %>
-              <%= f.text_field :horas_da_bolsa_fau, :style => "width: 50%" %>
-
-              <%= f.label :funcao, "Função" %>
-              <%= f.text_field :funcao, :style => "width: 50%" %>
-            </div>
-            <div class="span5">
-              <%= f.label :data_admissao_fau, "Data de admissão na FAU"%>
-              <%= f.date_select :data_admissao_fau, {}, :style => "width: 100px" %>
-
-              <%= f.label :data_demissao_fau, "Data de Demissão da FAU" %>
-              <%= f.date_select :data_demissao_fau, {}, :style => "width: 100px" %>
-            </div>
-          </div>
+          <% end %>
+          <%= f.link_to_add 'Adicionar contrato', :contratos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
         </div>
       </div>
 
@@ -146,7 +153,12 @@
           <div class="row-fluid">
             <div class="span6">
               <%= f.label :role %>
-              <%= f.select :role, options_for_select(["desenvolvedor", "coordenador", "admin" ], @user.role) %>
+              <%= f.select :role, options_for_select(["usuario normal", "diretor", "admin" ], @user.role) %>
+              <%= f.label :status, "Status no Sistema" %>
+              <%= f.label :ativo, :class => "inline-label" %>
+              <%= f.radio_button :status, true, :class => "inline-label", :style => "margin: 0;" %>
+              <%= f.label :inativo, :class => "inline-label", :style => "margin-left: 20px;" %>
+              <%= f.radio_button :status, false, :style => "margin: 0;" %>
             </div>
 
             <div class="span6">

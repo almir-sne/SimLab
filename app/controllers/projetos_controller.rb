@@ -4,9 +4,13 @@ class ProjetosController < ApplicationController
   # GET /projetos
   # GET /projetos.json
   def index
-    @projetos = Projeto.all(:order => :nome)
+    authorize! :read, Projeto
+    if current_usuario.role == "admin"
+      @projetos = Projeto.all(:order => :nome)
+    else
+      @projetos = current_usuario.projetos_coordenados.all(:order => :nome)
+    end
     @projeto = Projeto.new
-
     @projetos.each do |projeto|
       projeto.update_attribute :horas_totais, calcula_horas_totais_do_projeto(projeto.id)
     end
