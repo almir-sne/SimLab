@@ -15,7 +15,8 @@
     <% (1..12).each do |mes| %>
       <td class="month-table">
         <%= link_to "#{t("date.month_names")[mes]} <br/> <br/>\n <b> #{(@meses[mes].blank?)? "00:00" :
-        @meses[mes].horas_trabalhadas} / #{(@meses[mes].blank?)? @user.horario_mensal : @meses[mes].horas_contratadas}</b>".html_safe,
+        @meses[mes].horas_trabalhadas} / #{(@meses[mes].blank?)? @user.horario_mensal(
+        Date.new(@year.to_i, mes, 1)) : @meses[mes].horas_contratadas}</b>".html_safe,
           banco_de_horas_url(:year => @year, :user => @user.id, :month => mes), :class => "month-link" %>
       </td>
       <% if mes == 6 %>

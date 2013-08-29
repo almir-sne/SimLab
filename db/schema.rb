@@ -11,7 +11,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130828200830) do
+ActiveRecord::Schema.define(:version => 20130829181108) do
+
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -120,8 +121,6 @@ ActiveRecord::Schema.define(:version => 20130828200830) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "nome"
-    t.integer  "horario_mensal"
-    t.float    "valor_da_hora"
     t.date     "entrada_usp"
     t.date     "saida_usp"
     t.string   "cpf"
@@ -129,11 +128,6 @@ ActiveRecord::Schema.define(:version => 20130828200830) do
     t.datetime "updated_at",                             :null => false
     t.string   "role"
     t.text     "address"
-    t.float    "valor_da_bolsa_fau"
-    t.integer  "horas_da_bolsa_fau"
-    t.string   "funcao"
-    t.date     "data_admissao_fau"
-    t.date     "data_demissao_fau"
     t.string   "rg"
     t.string   "curso"
     t.boolean  "formado"

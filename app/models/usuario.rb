@@ -7,10 +7,9 @@ class Usuario < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :nome, :horario_mensal
-  attr_accessible :valor_da_hora, :entrada_usp, :saida_usp, :cpf, :contratos_attributes
-  attr_accessible :role, :address_id, :valor_da_bolsa_fau, :horas_da_bolsa_fau, :funcao
-  attr_accessible :data_admissao_fau, :data_demissao_fau, :formado, :status
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
+  attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
+  attr_accessible :role, :address_id, :formado, :status
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy
@@ -31,4 +30,16 @@ class Usuario < ActiveRecord::Base
   has_many :mes
   has_many :dias
   has_many :atividades
+
+  def horario_mensal(data)
+    c = self.contratos.where("inicio < ? and fim > ?", data, data).first
+    if c.blank?
+      c = self.contratos.last
+    end
+    if c.blank?
+      0
+    else
+      c.hora_mes
+    end
+  end
 end
