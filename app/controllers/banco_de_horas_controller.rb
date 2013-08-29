@@ -58,17 +58,17 @@ class BancoDeHorasController < ApplicationController
     @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
     if current_usuario.role == "admin"
-      usuarios_ids = (params[:usuario_id].nil? || params[:usuario_id] == "TODOS") ? Usuario.all.map{|usuario| usuario.id } : params[:usuario_id]
+      equipe = Usuario.select("id, nome")
       @atividades  =  Atividade.where(
         :aprovacao => [false, nil],
         :mes_id => meses_id,
-        :usuario_id => usuarios_ids
         ).includes(:dia).all(:order => 'dia.numero')
     else
-      if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"
-        usuarios_ids = current_usuario.equipe_coordenada
+      equipe = current_usuario.equipe_coordenada
+      if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"       
+        usuarios_ids = equipe
       else
-        usuarios_ids = current_usuario.equipe_coordenada.select{|usuario| usuario.id == params[:usuario_id].to_i}
+        usuarios_ids = equipe.select{|usuario| usuario.id == params[:usuario_id].to_i}
       end
       @atividades  =  Atividade.where(
         :aprovacao => [false, nil],
@@ -80,7 +80,7 @@ class BancoDeHorasController < ApplicationController
     soma         =  @atividades.collect{|atividade| atividade.duracao}.sum
     @total_horas = soma.nil? ? 0 : (soma/3600).round(2)
     @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = "TODOS" : params[:usuario_id]
-    @usuarios    = [["TODOS"]] + Usuario.all(:order => :nome).collect { |p| [p.nome, p.id]  }
+    @usuarios    = [["TODOS"]] + equipe.collect { |p| [p.nome, p.id]  }
   end
 
   def mandar_validacao
