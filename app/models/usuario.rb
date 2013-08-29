@@ -43,7 +43,7 @@ class Usuario < ActiveRecord::Base
         coord << u if (!coord.include? u)
       }
     }
-    coord
+    coord.sort
   end
 
   def horario_data(data)
