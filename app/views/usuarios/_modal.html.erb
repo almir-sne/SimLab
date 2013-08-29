@@ -1,11 +1,9 @@
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 50%; margin-left: -25%; height: 560px">
+     aria-hidden="true" style="width: 50%; margin-left: -25%; height: 240px">
 
   <div class="modal-body" style="max-height: 95%">
     <%= form_for(@user, :url => custom_create_usuarios_path , :validate => true, :html => {"data-type" => :json}) do |f| %>
-
       <div class="container-fluid">
-
         <div class="row-fluid">
           <div class="span6">
             <%= f.label :nome %>
@@ -19,30 +17,10 @@
       </div>
 
       <div class="container-fluid">
-
         <div class="row-fluid">
           <div class="span7">
-            <div class="field">
-              <%= f.label :horario_mensal %>
-              <%= f.number_field :horario_mensal, :style => "width: 65%" %>
-            </div>
-            <div class="field">
-              <%= f.label :valor_da_hora %>
-              <%= f.number_field :valor_da_hora , :style => "width: 65%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :entrada_usp %>
-              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
-            </div>
-
-            <div class="field">
-              <%= f.label "saida prevista usp"%>
-              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
-            </div>
-
             <div>
-              <%= f.label :password %>
+              <%= f.label :password, "Senha" %>
               <%= f.password_field :password , :style => "width: 65%"%>
             </div>
             <div class="field">
@@ -51,44 +29,20 @@
             </div>
           </div>
           <div class="span5">
-
-            <div class="field">
-              <%= f.label :cpf %>
-              <%= f.text_field :cpf , :style => "width: 85%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :banco %>
-              <%= f.text_field :banco , :style => "width: 85%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :conta %>
-              <%= f.number_field :conta , :style => "width: 85%"%>
-            </div>
-
-            <div class="field">
-              <%= f.label :agencia %>
-              <%= f.number_field :agencia , :style => "width: 85%"%>
-            </div>
-
             <div>
-              <%= f.label :password_confirmation %>
+              <%= f.label :password_confirmation, "Confirmar senha" %>
               <%= f.password_field :password_confirmation , :style => "width: 85%"%>
             </div>
             <br />
             <div class="actions" style="margin-top: 7px">
-
               <%= f.submit "Salvar", :style => "float: right;", :class => "btn default-button"%>
-              <!-- <br /><br /> -->
               <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;">
-                                                          Cancelar
+                Cancelar
               </button>
             </div>
           </div>
         </div>
       </div>
-
     <% end %>
 
   </div>

@@ -44,10 +44,7 @@ class Mes < ActiveRecord::Base
   end
 
   def calcula_minutos_restantes
-    horario = self.usuario.horario_mensal
-    if horario.blank? 
-      return 0
-    end
+    horario = self.horas_contratadas
     min_totais = horario*60
     min_trabalhados = calcula_minutos_trabalhados(false)
     return min_totais - min_trabalhados
