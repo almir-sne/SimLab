@@ -69,10 +69,30 @@ class ProjetosController < ApplicationController
   def update
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
-
+    boards = @projeto.boards
+    unless params[:trello].blank?
+      params[:trello].each do |id|
+        repetido = false
+        boards.each_with_index do |c, i|
+          if id == c.board_id
+            repetido = true
+            boards.delete_at i
+          end
+        end
+        unless repetido
+          board = Board.new
+          board.projeto = @projeto
+          board.board_id = id
+          board.save
+        end
+      end
+    end
+    boards.each do |b|
+      b.destroy
+    end
     respond_to do |format|
       if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to projetos_path, notice: I18n.t("projetos.update.sucess") }
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

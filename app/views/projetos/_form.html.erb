@@ -54,7 +54,8 @@
               </tr>
             </table>
           </div>
-          <div class="offset1 span5">
+          <div class="offset2 span3">
+
             <h3> Boards do Trello </h3>
             <div id="loggedout">
               <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
@@ -83,5 +84,6 @@
     var $tr = $(link).closest('tr');
     return $(content).insertBefore($tr);
   }
+  var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
   checkTrello(getBoards);
 </script>
