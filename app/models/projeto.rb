@@ -15,7 +15,9 @@ class Projeto < ActiveRecord::Base
   has_many :atividades
   has_many :usuarios,  :through => :workon
   has_many :workon
+  has_many :boards
   accepts_nested_attributes_for :workon, :allow_destroy => true
+  accepts_nested_attributes_for :boards, :allow_destroy => true
 
   def coordenadores
     self.usuarios.includes(:workon).where("workons.coordenador" => true)

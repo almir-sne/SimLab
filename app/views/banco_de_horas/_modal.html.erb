@@ -53,7 +53,7 @@
 
         <div class="span5">
           <div id="loggedout">
-            <a class="btn default-button" id="connectLink" onclick="loginTrello()"> Conectar ao Trello</a>
+            <a class="btn default-button" id="connectLink" onclick="loginTrello(getCards)"> Conectar ao Trello</a>
           </div>
 
           <div id="loggedin">
@@ -66,7 +66,7 @@
             <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
           <script>
-            checkTrello();
+            checkTrello(getCards);
           </script>
         </div>
       </div>

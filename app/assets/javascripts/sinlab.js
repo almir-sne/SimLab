@@ -56,7 +56,7 @@ function correctCheck(id, id_2) {
             document.getElementById(id_2).checked = false;
 }
 
-var onAuthorize = function() {
+function getCards () {
     updateLoggedIn();
     $("#output").empty();
     Trello.members.get("me", function(member){
@@ -76,7 +76,6 @@ var onAuthorize = function() {
             });
         });
     });
-
 };
 
 function updateLoggedIn() {
@@ -85,17 +84,17 @@ function updateLoggedIn() {
     $("#loggedin").toggle(isLoggedIn);
 }
 
-function loginTrello() {
+function loginTrello(callback) {
     Trello.authorize({
         type: "popup",
-        success: onAuthorize
+        success: callback
     })
 }
 
-function checkTrello() {
+function checkTrello(callback) {
     Trello.authorize({
         interactive:false,
-        success: onAuthorize
+        success: callback
     });
 }
 
@@ -172,3 +171,26 @@ function loadCard(card_id, id) {
     });
     $("#" + id).detach();
 }
+
+function getBoards () {
+    updateLoggedIn();
+    $("#output").empty();
+    Trello.members.get("me", function(member){
+        $("#fullName").text(member.fullName);
+        var $cards = $("<div>").text("Carregando cartões...").appendTo("#output");
+        Trello.get("members/me/cards", function(cards) {
+            $cards.empty();
+            $.each(cards, function(ix, card) {
+                $("<a>").attr({
+                    href: card.url,
+                    target: "trello",
+                    id: card.id,
+                    draggable: true,
+                    style: "width: 100%",
+                    ondragstart: "dragCard(event)"
+                }).addClass("card").text(card.name).appendTo($cards);
+            });
+        });
+    });
+
+};
