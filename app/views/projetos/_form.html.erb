@@ -1,49 +1,89 @@
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
-    <div class="row-fluid">
-      <div class="span7">
-        <div class="field">
-          <%= f.label :nome %>
-          <%= f.text_field :nome%>
-        </div>
+    <div class="form-group">
+      <h3> Dados do Projeto </h3>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class=" span6">
+            <%= f.label :nome %>
+            <%= f.text_field :nome, :style => "width: 100%"%>
 
-        <div class="field">
-          <%= f.label :data_de_inicio %>
-          <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
-        </div>
+            <%= f.label :descricao %>
+            <%= f.text_area :descricao, :style => "height: 80px; width: 100%"%>
+          </div>
+          <div class="offset1 span5">
+            <%= f.label :data_de_inicio %>
+            <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
 
-        <div class="field">
-          <%= f.label :descricao %>
-          <%= f.text_area :descricao, :style => "height: 100px; width: 300px"%>
-        </div>
+            <%= f.label :valor %>
+            <%= f.text_field :valor %>
 
-        <div class="field">
-          <%= f.label :valor %><br />
-          <%= f.text_field :valor %>
+            <%= f.label :horas_totais %>
+            <%= f.text_field :horas_totais %>
+          </div>
         </div>
-
-        <div class="field">
-          <%= f.label :horas_totais %><br />
-          <%= f.number_field :horas_totais %>
-        </div>
-      </div>
-      <div class="span5">
-        <h2>Equipe</h2>
-        <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
-        <%= f.fields_for :workon do |worker| %>
-          <%= worker.check_box :coordenador%>
-          <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.shift)) %>
-          <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe %>
-        <% end %>
-        <p><%= f.link_to_add "Adicionar pessoa", :workon %></p>
       </div>
     </div>
+    <div class="form-group">
 
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span5">
+            <h3> Equipe </h3>
+            <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
+            <table>
+              <tr>
+                <th> Coodernador? </th>
+                <th style="padding: 0px 20px;"> Nome </th>
+                <th> Remover </th>
+              </tr>
+              <%= f.fields_for :workon, :wrapper => false do |worker| %>
+                <tr>
+                  <td style="float: right"><%= worker.check_box :coordenador%> </td>
+                  <td style="padding: 0px 20px;">
+                    <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.shift)) %>
+                  </td>
+                  <td style="margin-left: 10px">
+                    <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+                  </td>
+                </tr>
+              <% end %>
+              <tr>
+                <th> <%= f.link_to_add "Adicionar pessoa", :workon %> </th>
+              </tr>
+            </table>
+          </div>
+          <div class="offset2 span3">
+
+            <h3> Boards do Trello </h3>
+            <div id="loggedout">
+              <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
+            </div>
+            <div id="loggedin">
+              <div id="header">
+                Logado como <b id="fullName"></b>
+                <br/>
+                <a id="disconnect" onclick="logoutTrello()">Log Out</a>
+              </div>
+              <div id="output" class="panel-scrollable" style="height: 200px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="actions">
       <%= f.submit "Salvar", :class => "btn default-button"%>
       <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
     </div>
-    <br />
   </div>
 <% end %>
+
+<script>
+  window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
+    var $tr = $(link).closest('tr');
+    return $(content).insertBefore($tr);
+  }
+  var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
+  checkTrello(getBoards);
+</script>

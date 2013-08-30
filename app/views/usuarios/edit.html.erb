@@ -124,7 +124,7 @@
           <%= f.link_to_add 'Adicionar contrato', :contratos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
         </div>
       </div>
-
+      <% end %>
       <div class="form-group">
         <h3> Dados Acadêmicos </h3>
         <div class="container-fluid">
@@ -147,7 +147,7 @@
           </div>
         </div>
       </div>
-
+    <% if can? :create, Usuario %>
       <div class="form-group">
         <h3> Configuração </h3>
         <div class="container-fluid">

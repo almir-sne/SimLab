@@ -8,7 +8,7 @@
   </div>
   <div class="span3 blue-text">
     <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, banco_de_horas_path(:year =>
-        (@month.numero == 1) ? @year.to_i - 1 : @year.to_i, :month => (@month.numero == 1) ? 12 : @month.numero + 1) %>
+        (@month.numero == 1) ? @year.to_i - 1 : @year.to_i, :month => (@month.numero == 1) ? 12 : @month.numero - 1) %>
     <%= t("date.month_names")[@month.numero] %>
     <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, banco_de_horas_path(:year =>
         (@month.numero == 12) ? @year.to_i + 1 : @year.to_i, :month => (@month.numero == 12) ? 1 : @month.numero + 1) %>
@@ -39,10 +39,10 @@
           <%= dia.formata_horas %>h
         </div>
       </td>
-      <td style="border: 22px solid #FFF" <%= "class=red-background" if dia.horas_atividades_formato != dia.formata_horas %>>
+      <td style="border: 22px solid #FFF" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
         <%= dia.horas_atividades_formato + " h" %>
       </td>
-      <td style="width: 10%;">
+      <td style="width: 13%;">
         <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
           {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>
@@ -53,6 +53,9 @@
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
           dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
           :class => 'nohover', :title => "Excluir"%>
+        <% if dia.tem_mensagem? %>
+          <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
+        <% end %>
       </td>
     </tr>
   <% end %>

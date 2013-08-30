@@ -24,10 +24,16 @@
             <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
               <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+              <% unless atividade_form.object.mensagem.blank?  %>
+                <div class="red-background activity-message">
+                  <%= atividade_form.object.avaliador.nome %>: <br/>
+                  <%= atividade_form.object.mensagem %>
+                </div>
+              <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>
               <br/>
-              <%= atividade_form.label :horas, :class => 'inline-label' %>
+              <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
               <%= atividade_form.time_select :horas, {},
                 :style => 'width: 55px;'%>
               <%= atividade_form.label :observacao, "Observação" %>
@@ -41,13 +47,13 @@
               </div>
               <div class="grey-line"> </div>
             <% end %>
-            <%= f.link_to_add "Incluir Atividade", :atividades, :class=>"btn default-button"%>
+            <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button"%>
           </div>
         </div>
 
         <div class="span5">
           <div id="loggedout">
-            <a class="btn default-button" id="connectLink" onclick="loginTrello()"> Conectar ao Trello</a>
+            <a class="btn default-button" id="connectLink" onclick="loginTrello(getCards)"> Conectar ao Trello</a>
           </div>
 
           <div id="loggedin">
@@ -60,7 +66,7 @@
             <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
           <script>
-            checkTrello();
+            checkTrello(getCards);
           </script>
         </div>
       </div>

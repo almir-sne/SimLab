@@ -12,7 +12,7 @@ class Dia < ActiveRecord::Base
   validates :numero, :uniqueness => {:scope => :mes_id}
   validates :mes_id, :presence => true
   validates :usuario_id, :presence => true
-#  validate :validar_horas
+  #  validate :validar_horas
 
   def entrada
     read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).utc
@@ -71,6 +71,22 @@ class Dia < ActiveRecord::Base
       end
     end
     retorno/3600
+  end
+
+  def tem_mensagem?
+    !self.atividades.where("mensagem is not null").blank?
+  end
+
+  def tem_reprovacao?
+    !self.atividades.where("aprovacao is false").blank?
+  end
+
+  def formata_mensagens
+    m = ""
+    self.atividades.where("mensagem is not null").each do |a|
+      m += "#{a.mensagem}\n"
+    end
+    m.strip
   end
 
   def intervalo
