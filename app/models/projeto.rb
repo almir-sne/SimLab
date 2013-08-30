@@ -1,5 +1,5 @@
 class Projeto < ActiveRecord::Base
-  attr_accessible :data_de_inicio, :descricao, :horas_totais, :nome, :valor, :workon_attributes
+  attr_accessible :data_de_inicio, :descricao, :nome, :workon_attributes
 
   validates :valor,          :numericality =>true
 
@@ -21,6 +21,18 @@ class Projeto < ActiveRecord::Base
 
   def coordenadores
     self.usuarios.includes(:workon).where("workons.coordenador" => true)
+  end
+
+  def horas_totais
+    atividades.where(:aprovacao => true).sum(:duracao)/3600
+  end
+
+  def valor
+    atividades_aprovadas = atividades.where(:aprovacao => true)
+    atividades_aprovadas.map{ |atividade|
+      val_hora = atividade.usuario.contrato_vigente_em(atividade.data).valor_hora
+      (atividade.duracao / 3600) * (val_hora.nil? ? 0 : val_hora )
+    }.sum
   end
 
 end

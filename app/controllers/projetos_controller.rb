@@ -11,9 +11,8 @@ class ProjetosController < ApplicationController
       @projetos = current_usuario.projetos_coordenados.all(:order => :nome)
     end
     @projeto = Projeto.new
-    @projetos.each do |projeto|
-      projeto.update_attribute :horas_totais, calcula_horas_totais_do_projeto(projeto.id)
-    end
+
+    @valor = carrega_valor
 
     respond_to do |format|
       format.html # index.html.erb
@@ -115,10 +114,8 @@ class ProjetosController < ApplicationController
   end
 
   private
-  def calcula_horas_totais_do_projeto(id)
-    usuarios_ids = Workon.where(:projeto_id => id).collect{|work| work.usuario_id}
-    duracao_das_atividades = Atividade.where(:projeto_id => id, :aprovacao => true, :usuario_id => usuarios_ids).collect{|atividade| atividade.duracao}
-    horas_totais   = duracao_das_atividades.inject{|sum, sec| sum + sec}
-    horas_totais.nil? ? 0 : horas_totais/ 3600
+  def carrega_valor
+
   end
+
 end

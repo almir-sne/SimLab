@@ -97,6 +97,10 @@ class Dia < ActiveRecord::Base
     end
   end
 
+  def data
+    Date.new(mes.ano, mes.numero, numero)
+  end
+
   private
   def validar_horas
     if( saida - entrada - read_attribute(:intervalo)) <= 0
