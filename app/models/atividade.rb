@@ -6,6 +6,7 @@ class Atividade < ActiveRecord::Base
   belongs_to :dia
   belongs_to :projeto
   belongs_to :usuario
+  belongs_to :avaliador, :class_name => "Usuario"
   has_many :cartaos, :dependent => :destroy
 
   validates :dia_id, :presence => true
