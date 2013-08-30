@@ -54,7 +54,7 @@
           dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
           :class => 'nohover', :title => "Excluir"%>
         <% if dia.tem_mensagem? %>
-          <i class="icon-envelope" style="float: right; color:#FF9393"></i>
+          <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
         <% end %>
       </td>
     </tr>
