@@ -57,30 +57,35 @@ class BancoDeHorasController < ApplicationController
     @ano         = params[:ano].nil? ? Date.today.year  : params[:ano]
     @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
     meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
-    if current_usuario.role == "admin"
-      equipe = Usuario.select("id, nome")
-      @atividades  =  Atividade.where(
-        :aprovacao => [false, nil],
-        :mes_id => meses_id,
-        ).includes(:dia).all(:order => 'dia.numero')
+    if current_usuario.role == "admin"   
+      equipe = Usuario.all(:order => "nome")
+      projetos = Projeto.all(:order => "nome")
     else
-      equipe = current_usuario.equipe_coordenada
-      if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"       
-        usuarios_ids = equipe
-      else
-        usuarios_ids = equipe.select{|usuario| usuario.id == params[:usuario_id].to_i}
-      end
-      @atividades  =  Atividade.where(
-        :aprovacao => [false, nil],
-        :mes_id => meses_id,
-        :projeto_id => current_usuario.projetos_coordenados,
-        :usuario_id => usuarios_ids
-        ).includes(:dia).all(:order => 'dia.numero')
+      projetos = current_usuario.projetos_coordenados
+      equipe = current_usuario.equipe(projetos)
     end
+    if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"     
+      usuarios_selected = Usuario.select(:id)
+    else
+      usuarios_selected = Usuario.where(:id => params[:usuario_id].to_i)
+    end
+    if params[:projeto_id].nil? || params[:projeto_id] == "TODOS"
+      projetos_selected = Projeto.select(:id)
+    else
+      projetos_selected = Projeto.where(:id => params[:projeto_id].to_i)
+    end
+    @atividades = Atividade.where(
+      :aprovacao => [false, nil],
+      :mes_id => meses_id,
+      :usuario_id => usuarios_selected,
+      :projeto_id => projetos_selected
+    ).includes(:dia).all(:order => 'dia.numero')    
     soma         =  @atividades.collect{|atividade| atividade.duracao}.sum
     @total_horas = soma.nil? ? 0 : (soma/3600).round(2)
     @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = "TODOS" : params[:usuario_id]
     @usuarios    = [["TODOS"]] + equipe.collect { |p| [p.nome, p.id]  }
+    @projeto     = params[:projeto_id].blank? ? params[:projeto_id] = "TODOS" : params[:projeto_id]
+    @projetos    = [["TODOS"]] + projetos.collect { |p| [p.nome, p.id]  }
   end
 
   def mandar_validacao

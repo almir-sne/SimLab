@@ -36,7 +36,10 @@ class Usuario < ActiveRecord::Base
   end
 
   def equipe_coordenada
-    projetos = self.projetos_coordenados
+    equipe(projetos_coordenados)
+  end
+
+  def equipe(projetos)
     coord = Array.new
     projetos.each{ |p|
       p.usuarios.each  { |u|
