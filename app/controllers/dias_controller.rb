@@ -29,7 +29,8 @@ class DiasController < ApplicationController
           :projeto_id => atividade_attr["projeto_id"],
           :dia_id => dia.id,
           :mes_id => params[:mes],
-          :usuario_id => params[:user_id]
+          :usuario_id => params[:user_id],
+          :aprovacao => nil,
         )
         cartaos = atividade.cartaos
         unless atividade_attr[:trello].blank?
@@ -49,7 +50,6 @@ class DiasController < ApplicationController
             end
           end
         end
-        puts "\n\n\n\n\n\n depois #{cartaos}"
         cartaos.each do |c|
           c.destroy
         end
