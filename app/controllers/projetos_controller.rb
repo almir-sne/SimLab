@@ -12,8 +12,6 @@ class ProjetosController < ApplicationController
     end
     @projeto = Projeto.new
 
-    @valor = carrega_valor
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projetos }
@@ -113,9 +111,5 @@ class ProjetosController < ApplicationController
     end
   end
 
-  private
-  def carrega_valor
-
-  end
 
 end

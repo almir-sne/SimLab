@@ -1,8 +1,6 @@
 class Projeto < ActiveRecord::Base
   attr_accessible :data_de_inicio, :descricao, :nome, :workon_attributes
 
-  validates :valor,          :numericality =>true
-
   validates :data_de_inicio, :presence => true
 
   validates :descricao,      :presence => true
