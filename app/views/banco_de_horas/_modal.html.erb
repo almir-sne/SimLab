@@ -31,7 +31,8 @@
                 </div>
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>
+              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+                {}, {:class=>"teste", :onchange => "filterCards(this)"}%>
               <br/>
               <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
               <%= atividade_form.time_select :horas, {},
@@ -66,6 +67,7 @@
             <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
           <script>
+            var projetos_boards = <%= @projetos_boards %>
             checkTrello(getCards);
           </script>
         </div>

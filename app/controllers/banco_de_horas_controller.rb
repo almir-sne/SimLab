@@ -13,11 +13,6 @@ class BancoDeHorasController < ApplicationController
     @diasdomes = (1..data_final).to_a
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
-    @dia = Dia.new
-    @dia.atividades.build
-    @projetos = Projeto.all(:order => :nome).collect do |p|
-      [p.nome, p.id ]
-    end
   end
 
   def modal
@@ -32,9 +27,8 @@ class BancoDeHorasController < ApplicationController
     else
       @dia =  Dia.find(params[:id])
     end
-    @projetos = Projeto.all(:order => :nome).collect do |p|
-      [p.nome, p.id ]
-    end
+    @projetos = Projeto.all(:order => :nome).collect {|p| [p.nome, p.id ] }
+    @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
       format.html
       format.js
