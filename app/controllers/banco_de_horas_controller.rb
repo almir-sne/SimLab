@@ -9,8 +9,7 @@ class BancoDeHorasController < ApplicationController
       @month.horas_contratadas = @user.horario_data Date.new(@month.ano, @month.numero, 1)
       @month.save
     end
-    data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
-    @diasdomes = (1..data_final).to_a
+    @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
     @dia = Dia.new
@@ -24,8 +23,7 @@ class BancoDeHorasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user     : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
-    @diasdomes = (1..data_final).to_a
+    @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
@@ -42,8 +40,6 @@ class BancoDeHorasController < ApplicationController
   end
 
   def show_mes
-    #data_final = Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day
-    #@diasdomes = (1..data_final).to_a
     @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
     query = Mes.find_all_by_ano_and_usuario_id @year, @user.id
@@ -56,6 +52,7 @@ class BancoDeHorasController < ApplicationController
     authorize! :update, :validations
     @ano         = params[:ano].nil? ? Date.today.year  : params[:ano]
     @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
+    dia_numero      = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
     meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
     if current_usuario.role == "admin"   
       equipe = Usuario.all(:order => "nome")
@@ -64,28 +61,33 @@ class BancoDeHorasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe(projetos)
     end
-    if params[:usuario_id].nil? || params[:usuario_id] == "TODOS"     
+    if params[:usuario_id].nil? || params[:usuario_id] == "-1"     
       usuarios_selected = Usuario.select(:id)
     else
       usuarios_selected = Usuario.where(:id => params[:usuario_id].to_i)
     end
-    if params[:projeto_id].nil? || params[:projeto_id] == "TODOS"
+    if params[:projeto_id].nil? || params[:projeto_id] == "-1"
       projetos_selected = Projeto.select(:id)
     else
       projetos_selected = Projeto.where(:id => params[:projeto_id].to_i)
     end
-    @atividades = Atividade.where(
+    @atividades = Atividade.joins(:dia).where(
       :aprovacao => [false, nil],
       :mes_id => meses_id,
       :usuario_id => usuarios_selected,
-      :projeto_id => projetos_selected
-    ).includes(:dia).all(:order => 'dia.numero')    
+      :projeto_id => projetos_selected,
+      dia: {numero: dia_numero}
+    )
     soma         =  @atividades.collect{|atividade| atividade.duracao}.sum
     @total_horas = soma.nil? ? 0 : (soma/3600).round(2)
-    @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = "TODOS" : params[:usuario_id]
-    @usuarios    = [["TODOS"]] + equipe.collect { |p| [p.nome, p.id]  }
-    @projeto     = params[:projeto_id].blank? ? params[:projeto_id] = "TODOS" : params[:projeto_id]
-    @projetos    = [["TODOS"]] + projetos.collect { |p| [p.nome, p.id]  }
+    @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
+    @usuarios    = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
+    @projeto     = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
+    @projetos    = [["Projetos - Todos", -1]] + projetos.collect { |p| [p.nome, p.id]  }
+    @dia         = params[:dia].blank? ? params[:dia] = -1 : params[:dia]
+    @dias        = [["Dias - Todos", -1]] + (1..31).to_a
+    @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
+    @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]} 
   end
 
   def mandar_validacao
@@ -109,6 +111,12 @@ class BancoDeHorasController < ApplicationController
     end
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
     redirect_to :back
+  end
+  
+  private
+  def lista_dias_no_mes(ano, mes)
+    data_final = Date.new(ano, mes, 5).at_end_of_month.day
+    (1..data_final).to_a
   end
 
 end
