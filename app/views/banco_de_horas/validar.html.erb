@@ -3,23 +3,33 @@
 </div>
 
 <div class="row-fluid" style="margin-left: 15px">
-  <div class="span2 blue-text">
-    <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i - 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %>
+  <div class="span3 blue-text">
+    <%= select_tag(:ano_select, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
+   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i - 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %>
     <%= link_to @ano, show_mes_banco_de_horas_path(:ano => @ano) %>
-    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i + 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %>
+    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i + 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %> -->
   </div>
 
   <div class="span3 blue-text">
-    <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1, :usuario_id => params[:usuario_id]) %>
+    <%= select_tag(:mes_select, options_for_select(@meses, @mes_numero), {:class => 'menu_select'}) %>
+   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1, :usuario_id => params[:usuario_id]) %>
     <%= t("date.month_names")[@mes_numero.to_i] %>
-    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1, :usuario_id => params[:usuario_id]) %>
+    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1, :usuario_id => params[:usuario_id]) %> -->
   </div>
+  
+  <div class="span3 blue-text">
+    <%= select_tag(:dia_select, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
+   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1, :usuario_id => params[:usuario_id]) %>
+    <%= t("date.month_names")[@mes_numero.to_i] %>
+    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1, :usuario_id => params[:usuario_id]) %> -->
+  </div>
+
 
 </div>
 
 <div class="row-fluid">
   <div class="span2">
-    <%= select_tag(:user_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+    <%= select_tag(:usuario_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
     </div>
   <div class="span2">
     <%= select_tag(:projeto_select, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
@@ -69,5 +79,5 @@
 <br />
 
 <script>
-  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=<%= @mes_numero%>&ano=<%=@ano%>&usuario_id=" + $('#user_select').val()+"&projeto_id="+ $('#projeto_select').val() });
+  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=<%=@ano%>&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val()});
 </script>

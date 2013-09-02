@@ -244,7 +244,7 @@ pt-BR:
       failure: "Erro ao validar atividades."
   usuario:
     create:
-      failure: "Não foi possível saver o registro."
+      failure: "Não foi possível salvar o registro."
     delete:
       sucess: "Usuario apagado com sucesso."
   atividades:

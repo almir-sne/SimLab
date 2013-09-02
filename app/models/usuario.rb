@@ -50,14 +50,12 @@ class Usuario < ActiveRecord::Base
   end
 
   def horario_data(data)
-    c = self.contratos.where("inicio < ? and fim > ?", data, data).first
-    if c.blank?
-      c = self.contratos.last
-    end
-    if c.blank?
-      0
-    else
-      c.hora_mes
-    end
+    contrato_vigente_em(data).hora_mes
   end
+
+  def contrato_vigente_em(data)
+    contrato = contratos.where("inicio < ? and fim > ?", data, data).first
+    contrato ||= contratos.last
+  end
+
 end

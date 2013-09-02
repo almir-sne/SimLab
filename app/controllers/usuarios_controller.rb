@@ -51,7 +51,6 @@ class UsuariosController < ApplicationController
       flash[:notice] = "Erro durante atualização de cadastro"
       render :action => 'edit'
     end
-
   end
 
   def destroy
@@ -62,5 +61,4 @@ class UsuariosController < ApplicationController
     end
     redirect_to :back
   end
-
 end
