@@ -80,11 +80,6 @@ function getCards () {
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
-<<<<<<< HEAD
-
-=======
-
->>>>>>> 6e455c87dd0de950c741335c51a1f4f0d3fb5414
     });
 }
 
