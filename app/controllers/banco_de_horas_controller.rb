@@ -95,7 +95,7 @@ class BancoDeHorasController < ApplicationController
 
   def log_de_atividades
     @atividades = Atividade.where(:usuario_id => current_usuario, :aprovacao => [true, false]).
-      paginate(:page => params[:page], :per_page => 15).order("updated_at DESC")
+      paginate(:page => params[:page], :per_page => 30).order("updated_at DESC")
   end
 
   private

@@ -1,4 +1,4 @@
-<%= will_paginate @atividades %>
+<%= will_paginate @atividades, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
 
 <% @atividades.each do |atividade| %>
   <%if atividade.aprovacao != nil%>
@@ -13,4 +13,4 @@
   <% end %>
 <% end %>
 
-<%= will_paginate @atividades %>
+<%= will_paginate @atividades, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
