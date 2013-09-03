@@ -74,7 +74,7 @@ class Dia < ActiveRecord::Base
   end
 
   def tem_mensagem?
-    !self.atividades.where("mensagem is not null").blank?
+    self.atividades.where("mensagem is not null").blank?
   end
 
   def tem_reprovacao?
