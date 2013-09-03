@@ -43,12 +43,16 @@ function pega_horas_atividade() {
     return(atividadeH *60 + atividadeM);
 }
 
+function pad (str, max) {
+  return str.length < max ? pad("0" + str, max) : str;
+}
+
 function recalculaHoras() {
     var max_horas = pega_horas_dia();
     document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
     document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
+    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
 }
-
 
 function correctCheck(id, id_2) {
     if(document.getElementById(id).checked == true)
@@ -76,7 +80,11 @@ function getCards () {
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
-        
+<<<<<<< HEAD
+
+=======
+
+>>>>>>> 6e455c87dd0de950c741335c51a1f4f0d3fb5414
     });
 }
 
@@ -123,7 +131,7 @@ function dropCard(event) {
     var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
-            cartaoRepetido = true;  
+            cartaoRepetido = true;
         }
     })
     if (cartaoRepetido == false) {
