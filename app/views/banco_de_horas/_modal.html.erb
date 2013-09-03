@@ -17,7 +17,7 @@
           <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
           <%= f.label :intervalo %>
           <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
-          <div id="horas_do_dia"><p></p></div>
+          <p>Total de horas<div id="horas_do_dia">00:00</div></p>
         </div>
         <div class="span5">
           <h3>Atividades</h3>
@@ -32,7 +32,8 @@
                 </div>
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id) %>
+              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+                {}, {:class=>"teste", :onchange => "filterCards(this)"}%>
               <br/>
               <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
               <%= atividade_form.time_select :horas, {},
@@ -67,6 +68,7 @@
             <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
           <script>
+            var projetos_boards = <%= @projetos_boards %>
             checkTrello(getCards);
           </script>
         </div>
