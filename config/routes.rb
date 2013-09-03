@@ -4,6 +4,7 @@ SinLab::Application.routes.draw do
     collection do
       get  :show_mes
       get  :validar
+      get  :log_de_atividades
       post :mandar_validacao
       post :modal
     end

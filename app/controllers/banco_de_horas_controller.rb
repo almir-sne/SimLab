@@ -56,7 +56,7 @@ class BancoDeHorasController < ApplicationController
       dia: {numero: dias_selecionados}
     )
     #popular os combobox
-    if current_usuario.role == "admin"   
+    if current_usuario.role == "admin"
       equipe = Usuario.all(:order => "nome")
       projetos = Projeto.all(:order => "nome")
     else
@@ -74,7 +74,7 @@ class BancoDeHorasController < ApplicationController
     @ano         = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano]
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
-    @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]} 
+    @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
   end
 
   def mandar_validacao
@@ -92,13 +92,18 @@ class BancoDeHorasController < ApplicationController
     flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
     redirect_to :back
   end
-  
+
+  def log_de_atividades
+    @atividades = Atividade.where(:usuario_id => current_usuario, :aprovacao => [true, false]).
+      paginate(:page => params[:page], :per_page => 15).order("updated_at DESC")
+  end
+
   private
   def lista_dias_no_mes(ano, mes)
     data_final = Date.new(ano, mes, 5).at_end_of_month.day
     (1..data_final).to_a
   end
-  
+
   def anos_selecionados(param_anos, hoje)
     if param_anos.nil?
       hoje.year
@@ -120,7 +125,7 @@ class BancoDeHorasController < ApplicationController
   end
 
   def usuarios_selecionados(param_usuarios)
-    if param_usuarios.nil? || param_usuarios == "-1"     
+    if param_usuarios.nil? || param_usuarios == "-1"
       Usuario.select(:id)
     else
       Usuario.where(:id => param_usuarios.to_i)

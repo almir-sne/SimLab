@@ -1,0 +1,16 @@
+<%= will_paginate @atividades %>
+
+<% @atividades.each do |atividade| %>
+  <%if atividade.aprovacao != nil%>
+    <p>
+      <%= atividade.updated_at.utc.to_s[0..-4] + " - " + "Sua atividade no projeto " +
+        atividade.projeto.nome + " de " + atividade.data.to_s + " foi " +
+        (atividade.aprovacao ? "aprovada" : "reprovada") +
+        " por " + atividade.avaliador.try(:nome).to_s +
+        (atividade.aprovacao ? "." : (" com a mensagem: '" + atividade.mensagem + "'."))
+       %>
+    </p>
+  <% end %>
+<% end %>
+
+<%= will_paginate @atividades %>
