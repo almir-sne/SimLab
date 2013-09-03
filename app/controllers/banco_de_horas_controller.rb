@@ -44,10 +44,18 @@ class BancoDeHorasController < ApplicationController
 
   def validar
     authorize! :update, :validations
-    @ano         = params[:ano].nil? ? Date.today.year  : params[:ano]
-    @mes_numero  = params[:mes].nil? ? Date.today.month : params[:mes]
-    dia_numero      = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
-    meses_id     = Mes.find_all_by_numero_and_ano(@mes_numero, @ano).collect{|month| month.id }
+    #filtrar as atividades
+    hoje = Date.today
+    meses_id = Mes.find_all_by_numero_and_ano(meses_selecionados(params[:mes], hoje), anos_selecionados(params[:ano], hoje)).collect{|month| month.id }
+    dias_selecionados  = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
+    @atividades = Atividade.joins(:dia).where(
+      :aprovacao => [false, nil],
+      :mes_id => meses_id,
+      :usuario_id => usuarios_selecionados(params[:usuario_id]),
+      :projeto_id => projetos_selecionados(params[:projeto_id]),
+      dia: {numero: dias_selecionados}
+    )
+    #popular os combobox
     if current_usuario.role == "admin"   
       equipe = Usuario.all(:order => "nome")
       projetos = Projeto.all(:order => "nome")
@@ -55,23 +63,6 @@ class BancoDeHorasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe(projetos)
     end
-    if params[:usuario_id].nil? || params[:usuario_id] == "-1"     
-      usuarios_selected = Usuario.select(:id)
-    else
-      usuarios_selected = Usuario.where(:id => params[:usuario_id].to_i)
-    end
-    if params[:projeto_id].nil? || params[:projeto_id] == "-1"
-      projetos_selected = Projeto.select(:id)
-    else
-      projetos_selected = Projeto.where(:id => params[:projeto_id].to_i)
-    end
-    @atividades = Atividade.joins(:dia).where(
-      :aprovacao => [false, nil],
-      :mes_id => meses_id,
-      :usuario_id => usuarios_selected,
-      :projeto_id => projetos_selected,
-      dia: {numero: dia_numero}
-    )
     soma         =  @atividades.collect{|atividade| atividade.duracao}.sum
     @total_horas = soma.nil? ? 0 : (soma/3600).round(2)
     @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
@@ -80,7 +71,9 @@ class BancoDeHorasController < ApplicationController
     @projetos    = [["Projetos - Todos", -1]] + projetos.collect { |p| [p.nome, p.id]  }
     @dia         = params[:dia].blank? ? params[:dia] = -1 : params[:dia]
     @dias        = [["Dias - Todos", -1]] + (1..31).to_a
+    @ano         = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano]
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
+    @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]} 
   end
 
@@ -90,15 +83,8 @@ class BancoDeHorasController < ApplicationController
     atividades ||= []
     for i in atividades
       ativ = params[:atividades][i.to_str]
-      if ativ["reprovacao"]
-        veredito = false
-      elsif ativ["aprovacao"]
-        veredito = true
-      else
-        veredito = nil
-      end
       Atividade.find(ativ["id"].to_i).update_attributes(
-        :aprovacao => veredito,
+        :aprovacao => ativ["aprovacao"],
         :mensagem => ativ["mensagem"],
         :avaliador_id => current_user.id
       )
@@ -111,6 +97,42 @@ class BancoDeHorasController < ApplicationController
   def lista_dias_no_mes(ano, mes)
     data_final = Date.new(ano, mes, 5).at_end_of_month.day
     (1..data_final).to_a
+  end
+  
+  def anos_selecionados(param_anos, hoje)
+    if param_anos.nil?
+      hoje.year
+    elsif param_anos == "-1"
+      [2012,2013,2014]
+    else
+      param_anos
+    end
+  end
+
+  def meses_selecionados(param_meses, hoje)
+    if param_meses.nil?
+      return hoje.month
+    elsif param_meses == "-1"
+      (1..12).to_a
+    else
+      param_meses
+    end
+  end
+
+  def usuarios_selecionados(param_usuarios)
+    if param_usuarios.nil? || param_usuarios == "-1"     
+      Usuario.select(:id)
+    else
+      Usuario.where(:id => param_usuarios.to_i)
+    end
+  end
+
+  def projetos_selecionados(param_projetos)
+    if param_projetos.nil? || param_projetos == "-1"
+      Projeto.select(:id)
+    else
+      Projeto.where(:id => param_projetos .to_i)
+    end
   end
 
 end

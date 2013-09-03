@@ -38,13 +38,10 @@ class Mes < ActiveRecord::Base
   private
   def calcula_minutos_trabalhados(aprovados)
     if aprovados
-      tarefas = self.atividades.where(aprovacao: 'true')
-      minutos_map = tarefas.map{|tarefa| tarefa.minutos}
+      return self.atividades.where(:aprovacao => true).sum(:duracao)/60
     else
-      dias = self.dias 
-      minutos_map = dias.collect{|dia| dia.minutos}
+      return self.atividades.sum(:duracao)/60
     end
-    return minutos_map.inject{|sum,x| sum + x }.nil? ? 0 : minutos_map.inject{|sum,x| sum + x }
   end
 
   def calcula_minutos_restantes
