@@ -4,12 +4,13 @@ class ProjetosController < ApplicationController
   # GET /projetos
   # GET /projetos.json
   def index
-    @projetos = Projeto.all(:order => :nome)
-    @projeto = Projeto.new
-
-    @projetos.each do |projeto|
-      projeto.update_attribute :horas_totais, calcula_horas_totais_do_projeto(projeto.id)
+    authorize! :read, Projeto
+    if current_usuario.role == "admin"
+      @projetos = Projeto.all(:order => :nome)
+    else
+      @projetos = current_usuario.projetos_coordenados.all(:order => :nome)
     end
+    @projeto = Projeto.new
 
     respond_to do |format|
       format.html # index.html.erb
@@ -65,10 +66,30 @@ class ProjetosController < ApplicationController
   def update
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
-
+    boards = @projeto.boards
+    unless params[:trello].blank?
+      params[:trello].each do |id|
+        repetido = false
+        boards.each_with_index do |c, i|
+          if id == c.board_id
+            repetido = true
+            boards.delete_at i
+          end
+        end
+        unless repetido
+          board = Board.new
+          board.projeto = @projeto
+          board.board_id = id
+          board.save
+        end
+      end
+    end
+    boards.each do |b|
+      b.destroy
+    end
     respond_to do |format|
       if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to projetos_path, notice: I18n.t("projetos.update.sucess") }
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -90,11 +111,5 @@ class ProjetosController < ApplicationController
     end
   end
 
-  private
-  def calcula_horas_totais_do_projeto(id)
-    usuarios_ids = Workon.where(:projeto_id => id).collect{|work| work.usuario_id}
-    duracao_das_atividades = Atividade.where(:projeto_id => id, :aprovacao => true, :usuario_id => usuarios_ids).collect{|atividade| atividade.duracao}
-    horas_totais   = duracao_das_atividades.inject{|sum, sec| sum + sec}
-    horas_totais.nil? ? 0 : horas_totais/ 3600
-  end
+
 end

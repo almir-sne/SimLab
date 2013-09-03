@@ -1,10 +1,17 @@
 class UsuariosController < ApplicationController
-before_filter :authenticate_usuario!
-load_and_authorize_resource
+  before_filter :authenticate_usuario!
+  load_and_authorize_resource
 
   def index
     authorize! :see, Usuario
-    @users = Usuario.all.sort{ |a,b| a.nome.downcase <=> b.nome.downcase }
+    @status = params[:status]
+    unless @status.blank? or @status == "Todos"
+      @users = Usuario.where(:status => @status == "true").order(:nome)
+    else
+      @users = Usuario.all(:order => :nome)
+      @status = "Todos"
+    end
+    @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
     @user ||= Usuario.new
   end
 
@@ -28,15 +35,10 @@ load_and_authorize_resource
   def edit
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
-    if @user.telefones.blank?
-      @user.telefones.build
-    end
-    if @user.contas.blank?
-      @user.contas.build
-    end
-    if @user.address.blank?
-      @user.create_address
-    end
+    @user.telefones.build if @user.telefones.blank?
+    @user.contas.build if @user.contas.blank?
+    @user.create_address if @user.address.blank?
+    @user.contratos.build if @user.contratos.blank?
   end
 
   def update
@@ -49,7 +51,6 @@ load_and_authorize_resource
       flash[:notice] = "Erro durante atualização de cadastro"
       render :action => 'edit'
     end
-    
   end
 
   def destroy
@@ -60,5 +61,4 @@ load_and_authorize_resource
     end
     redirect_to :back
   end
-
 end

@@ -1,7 +1,7 @@
 <div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 400px;height: 550px; ">
+     aria-hidden="true" style="width: 400px;height: 410px; ">
 
-  <div class="modal-body" style="max-height: 550px;">
+  <div class="modal-body" style="max-height: 380px;">
 
     <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
       <div class="red-background">
@@ -23,15 +23,6 @@
         <%= f.text_area :descricao, :style => "height: 80px; width: 300px"%>
       </div>
 
-      <div class="field">
-        <%= f.label :valor %>
-        <%= f.text_field :valor %>
-      </div>
-      <div class="field">
-        <%= f.label :horas_totais %>
-        <%= f.number_field :horas_totais %>
-      </div>
-
       <div class="actions">
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
         <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
@@ -40,5 +31,3 @@
 
   </div>
 </div>
-
-

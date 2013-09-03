@@ -4,17 +4,24 @@ class Ability
   def initialize(user)
     user ||= Usuario.new # guest user
 
-    if (user.role == "admin")||(user.role == "coordenador")
+    if user.role == "admin"
       can :manage, :all
       can :see, :banco_de_horas
-    elsif user.role == "desenvolvedor"
+    elsif user.role == "diretor"
+      can :manage, Projeto
+      can [:create, :custom_create, :read ], Usuario
+      can [:update, :see], Usuario, :id => true, :id => user.id
+      unless user.projetos_coordenados.blank?
+        can :update, :validations
+      end
+    elsif user.role == "usuario normal"
+      unless user.projetos_coordenados.blank?
+        can :update, :validations
+      end
       can :read,    Usuario
-      can :read,    Dia
-      can :create,  Dia
-      can :destroy, Dia,       :id => true, :id => user.id
-      can :update,  Dia,       :id => true, :id => user.id
-      can :update,  Usuario,   :id => true, :id => user.id
-      can :update,  Atividade, :id => true, :id => user.id
+      can [:read,:create], Dia
+      can [:destroy,:update], Dia, :id => true, :id => user.id
+      can :update,  [Usuario, Atividade],   :id => true, :id => user.id
     end
 
 

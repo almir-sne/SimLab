@@ -1,5 +1,7 @@
 <div class="blue-text" style="margin-left: 30px">
   Usuários
+
+  <%= select_tag :status, options_for_select(@status_list, @status), :style => "float:right; margin-right: 10px" %>
 </div>
 
 <div class="blue-line">  </div>
@@ -23,7 +25,7 @@
       <td>
         <%=  user.email %>
         <%= link_to '<i class="icon-trash"> </i>'.html_safe, usuario_path(user.id),
-          :method => :delete, :confirm => "Deseja excluir o registro?",
+          :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
           :class => 'nohover', :title => "Excluir", :style => "position:absolute; right:3.5%;"%>
       </td>
     </tr>
@@ -35,3 +37,7 @@
     :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
   <%= render :partial => "modal" %>
 <%end%>
+
+<script>
+  $('#status').bind('change', function() { location.href = "<%= usuarios_path %>" + "?status=" + $(this).val() });
+</script>

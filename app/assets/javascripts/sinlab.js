@@ -56,7 +56,7 @@ function correctCheck(id, id_2) {
             document.getElementById(id_2).checked = false;
 }
 
-var onAuthorize = function() {
+function getCards () {
     updateLoggedIn();
     $("#output").empty();
     Trello.members.get("me", function(member){
@@ -72,12 +72,13 @@ var onAuthorize = function() {
                     draggable: true,
                     style: "width: 100%",
                     ondragstart: "dragCard(event)"
-                }).addClass("card").text(card.name).appendTo($cards);
+                }).addClass("card " + card.idBoard).text(card.name).appendTo($cards);
             });
+            filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
+        
     });
-
-};
+}
 
 function updateLoggedIn() {
     var isLoggedIn = Trello.authorized();
@@ -85,17 +86,17 @@ function updateLoggedIn() {
     $("#loggedin").toggle(isLoggedIn);
 }
 
-function loginTrello() {
+function loginTrello(callback) {
     Trello.authorize({
         type: "popup",
-        success: onAuthorize
+        success: callback
     })
 }
 
-function checkTrello() {
+function checkTrello(callback) {
     Trello.authorize({
         interactive:false,
-        success: onAuthorize
+        success: callback
     });
 }
 
@@ -171,4 +172,51 @@ function loadCard(card_id, id) {
         }).appendTo(div);
     });
     $("#" + id).detach();
+}
+
+function getBoards() {
+    updateLoggedIn();
+    $("#output").empty();
+    Trello.members.get("me", function(member){
+        $("#fullName").text(member.fullName);
+        var $boards = $("<div>").text("Carregando boards...").appendTo("#output");
+        Trello.get("members/me/boards", function(boards) {
+            $boards.empty();
+            $.each(boards, function(ix, board) {
+                var check;
+                $.each(segundaPraMim, function(index, pps) {
+                    if (pps == board.id) {
+                        check = true;
+                    }
+                });
+                if (board.closed == false) {
+                    var div = $("<div>");
+                    div.appendTo($boards);
+                    $("<input>").attr({
+                        type: "checkbox",
+                        name: "trello[]",
+                        value: board.id,
+                        checked: check
+                    }).appendTo(div);
+                    $("<a>").attr({
+                        href: board.url,
+                        target: "trello"
+                    }).addClass("card").text(board.name).appendTo(div);
+                }
+            });
+        });
+    });
+}
+
+function filterCards(selector) {
+    console.log(projetos_boards[selector.value]);
+    if (projetos_boards[selector.value][0] !=  null) {
+        $(".card").css("display", "none");
+        console.log("????")
+        $.each(projetos_boards[selector.value], function(ix, board) {
+            $("." + board).css("display", "block");
+        });
+    }
+    else
+        $(".card").css("display", "block");
 }
