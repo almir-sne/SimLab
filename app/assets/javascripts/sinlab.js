@@ -76,7 +76,7 @@ function getCards () {
                     draggable: true,
                     style: "width: 100%",
                     ondragstart: "dragCard(event)"
-                }).addClass("card " + card.idBoard).text(card.name).appendTo($cards);
+                }).addClass("card filter" + card.idBoard).text(card.name).appendTo($cards);
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
@@ -214,12 +214,12 @@ function getBoards() {
 function filterCards(selector) {
     console.log(projetos_boards[selector.value]);
     if (projetos_boards[selector.value][0] !=  null) {
-        $(".card").css("display", "none");
+        $(".filter").css("display", "none");
         console.log("????")
         $.each(projetos_boards[selector.value], function(ix, board) {
-            $("." + board).css("display", "block");
+            $("." + board).css("display", "inline-table");
         });
     }
     else
-        $(".card").css("display", "block");
+        $(".filter").css("display", "inline-table");
 }
