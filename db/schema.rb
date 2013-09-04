@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130830140330) do
+ActiveRecord::Schema.define(:version => 20130903172053) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20130830140330) do
     t.datetime "updated_at",   :null => false
     t.text     "mensagem"
     t.integer  "avaliador_id"
+    t.date     "data"
   end
 
   create_table "boards", :force => true do |t|

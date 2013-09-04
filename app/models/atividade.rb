@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
-  attr_accessible :aprovado, :reprovado, :duracao
+  attr_accessible :aprovado, :reprovado, :duracao, :data
 
   belongs_to :mes
   belongs_to :dia
@@ -15,9 +15,9 @@ class Atividade < ActiveRecord::Base
   validates :usuario_id, :presence => true
   validates :horas, :exclusion => {:in => 0..1}
 
-  def data
-    Date.new(self.dia.mes.ano, self.dia.mes.numero, self.dia.numero)
-  end
+#  def data
+#    Date.new(self.dia.mes.ano, self.dia.mes.numero, self.dia.numero)
+#  end
 
   def horas
     unless read_attribute(:duracao).blank?

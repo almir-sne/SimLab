@@ -31,6 +31,7 @@ class DiasController < ApplicationController
           :mes_id => params[:mes],
           :usuario_id => params[:user_id],
           :aprovacao => nil,
+          :data => dia.data
         )
         cartaos = atividade.cartaos
         unless atividade_attr[:trello].blank?
