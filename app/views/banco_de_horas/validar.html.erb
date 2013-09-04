@@ -5,24 +5,15 @@
 <div class="row-fluid" style="margin-left: 15px">
   <div class="span3 blue-text">
     <%= select_tag(:ano_select, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
-   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i - 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %>
-    <%= link_to @ano, show_mes_banco_de_horas_path(:ano => @ano) %>
-    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i + 1, :mes => @mes_numero, :usuario_id => params[:usuario_id]) %> -->
-  </div>
+   </div>
 
   <div class="span3 blue-text">
-    <%= select_tag(:mes_select, options_for_select(@meses, @mes_numero), {:class => 'menu_select'}) %>
-   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1, :usuario_id => params[:usuario_id]) %>
-    <%= t("date.month_names")[@mes_numero.to_i] %>
-    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1, :usuario_id => params[:usuario_id]) %> -->
+    <%= select_tag(:mes_select, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
   </div>
   
   <div class="span3 blue-text">
     <%= select_tag(:dia_select, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
-   <!-- <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i - 1, :usuario_id => params[:usuario_id]) %>
-    <%= t("date.month_names")[@mes_numero.to_i] %>
-    <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, validar_banco_de_horas_path(:ano => @ano.to_i, :mes => @mes_numero.to_i + 1, :usuario_id => params[:usuario_id]) %> -->
-  </div>
+   </div>
 
 
 </div>
@@ -47,29 +38,31 @@
 <%= form_tag(mandar_validacao_banco_de_horas_path) do %>
   <div class="navbar-fixed-bottom toolbar">
     <%= submit_tag "Salvar", :class => "btn default-button"%>
+    <%= button_tag('Aprovar Todas', {:type => 'button', :id => 'aprova_todas', :class => 'btn default-button', :style => 'float: right; margin-right: 10px'}) %>
   </div>
   <table class="list-table">
     <tr>
-      <th> Dia        </th>
+      <th> Data       </th>
       <th> Usuário    </th>
       <th> Projeto    </th>
       <th> Detalhes   </th>
       <th> horas      </th>
-      <th> aprovado?  </th>
-      <th> reprovado? </th>
+      <th></th>
       <th> mensagem   </th>
     </tr>
 
     <% @atividades.each do |atividade| %>
       <tr <%= "class=red-background" if atividade.aprovacao == false                       %> >
         <%= hidden_field_tag "atividades[#{atividade.id}[id]]",atividade.id                %>
-        <td><%= atividade.data.strftime("%d")                                              %></td>
+        <td><%= atividade.data.strftime("%d/%m/%Y")                                        %></td>
         <td><%= atividade.usuario.nome                                                     %></td>
         <td><%= atividade.projeto.nome                                                     %></td>
         <td><%= atividade.observacao                                                       %></td>
         <td><%= atividade.formata_duracao                                                  %></td>
-        <td><%= check_box_tag "atividades[#{atividade.id}[aprovacao]]", true, false, :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_reprovacao')" %></td>
-        <td><%= check_box_tag "atividades[#{atividade.id}[reprovacao]]", true, (atividade.aprovacao == false), :onchange => "correctCheck(this.id,'atividades_#{atividade.id}_aprovacao')"  %></td>
+        <td style='text-align : right; width: 45px'>
+          a. <%= radio_button_tag "atividades[#{atividade.id}[aprovacao]]", true,(atividade.aprovacao == true), {:class => 'aprovacao_radio'} %> <br />
+          r. <%= radio_button_tag "atividades[#{atividade.id}[aprovacao]]", false,(atividade.aprovacao == false),{:class => 'aprovacao_radio'} %> 
+        </td>
         <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
       </tr>
     <% end %>
@@ -79,5 +72,7 @@
 <br />
 
 <script>
-  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=<%=@ano%>&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val()});
+  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val()});
+
+  $('#aprova_todas').click(function(){$('.aprovacao_radio').filter('[value=true]').prop('checked', true) });
 </script>

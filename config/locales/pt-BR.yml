@@ -227,6 +227,8 @@ pt-BR:
       all: "Você não está autorizado a acessar esse recurso"
   messages:
     logged_in: "Logado como %{email}. Esse não é você?"
+    next: Próximo
+    previous: Anterior
   projetos:
     create:
       sucess: "Projeto criado com sucesso."
@@ -255,6 +257,8 @@ pt-BR:
   funcionalidade:
     validacao:
       atividade: "Validação de Atividades"
+    log:
+      atividade: "Log de Atividades"
   prompt:
     exclusao:
       confirmacao: "Deseja excluir o registro?"
