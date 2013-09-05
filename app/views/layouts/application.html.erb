@@ -22,7 +22,11 @@
 
         <div class="span2 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
-            <li> <%= link_to t('funcionalidade.validacao.atividade'), validar_banco_de_horas_path, :class => "nav-links" %> </li>
+            <%if can? :update, :validations%>
+              <li> <%= link_to t('funcionalidade.validacao.atividade'), validar_banco_de_horas_path, :class => "nav-links" %> </li>
+            <%else%>
+              <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
+            <%end%>
             <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url, :class => "nav-links" %> </li>
           </ul>
         </div>

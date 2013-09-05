@@ -43,12 +43,16 @@ function pega_horas_atividade() {
     return(atividadeH *60 + atividadeM);
 }
 
+function pad (str, max) {
+  return str.length < max ? pad("0" + str, max) : str;
+}
+
 function recalculaHoras() {
     var max_horas = pega_horas_dia();
     document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
     document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
+    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
 }
-
 
 function correctCheck(id, id_2) {
     if(document.getElementById(id).checked == true)
@@ -72,11 +76,10 @@ function getCards () {
                     draggable: true,
                     style: "width: 100%",
                     ondragstart: "dragCard(event)"
-                }).addClass("card " + card.idBoard).text(card.name).appendTo($cards);
+                }).addClass("card filter" + card.idBoard).text(card.name).appendTo($cards);
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
-        
     });
 }
 
@@ -123,7 +126,7 @@ function dropCard(event) {
     var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
-            cartaoRepetido = true;  
+            cartaoRepetido = true;
         }
     })
     if (cartaoRepetido == false) {
@@ -211,12 +214,12 @@ function getBoards() {
 function filterCards(selector) {
     console.log(projetos_boards[selector.value]);
     if (projetos_boards[selector.value][0] !=  null) {
-        $(".card").css("display", "none");
+        $(".filter").css("display", "none");
         console.log("????")
         $.each(projetos_boards[selector.value], function(ix, board) {
-            $("." + board).css("display", "block");
+            $("." + board).css("display", "inline-table");
         });
     }
     else
-        $(".card").css("display", "block");
+        $(".filter").css("display", "inline-table");
 }

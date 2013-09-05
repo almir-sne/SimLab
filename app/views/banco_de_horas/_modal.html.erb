@@ -17,9 +17,14 @@
           <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
           <%= f.label :intervalo %>
           <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
+          <p>Total de horas<div id="horas_do_dia">00:00</div></p>
         </div>
         <div class="span5">
           <h3>Atividades</h3>
+          <script>
+            var projetos_boards = <%= @projetos_boards %>
+            checkTrello(getCards);
+          </script>
           <div class="panel-scrollable" style="height: 300px; padding-bottom: 10px">
             <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
               <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
@@ -66,10 +71,6 @@
 
             <div id="output" class="panel-scrollable" style="height: 320px"></div>
           </div>
-          <script>
-            var projetos_boards = <%= @projetos_boards %>
-            checkTrello(getCards);
-          </script>
         </div>
       </div>
     </div>
@@ -84,3 +85,8 @@
     </div>
   <% end %>
 </div>
+
+
+<scrip>
+
+</script>

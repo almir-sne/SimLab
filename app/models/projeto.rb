@@ -26,12 +26,9 @@ class Projeto < ActiveRecord::Base
   end
 
   def valor
-#    atividades_aprovadas = atividades.where(:aprovacao => true)
-#    atividades_aprovadas.map{ |atividade|
-#      val_hora = atividade.usuario.contrato_vigente_em(atividade.data).valor_hora
-#      (atividade.duracao / 3600) * (val_hora.nil? ? 0 : val_hora )
-#    }.sum
-    0
+    atividades.joins(:usuario => :contratos).
+      where("atividades.aprovacao = 1 and contratos.inicio < atividades.data and contratos.fim >= atividades.data").
+      sum("atividades.duracao/3600 * contratos.valor_hora")
   end
 
 end
