@@ -9,7 +9,7 @@ class Usuario < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
   attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
-  attr_accessible :role, :address_id, :formado, :status
+  attr_accessible :role, :address_id, :formado, :status, :data_de_nascimento
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy
