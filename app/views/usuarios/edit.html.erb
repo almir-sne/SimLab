@@ -24,11 +24,11 @@
         <div class="row-fluid">
           <div class="span6">
             <%= f.label :cpf %>
-            <%= f.text_field :cpf%>
+            <%= f.text_field :cpf, class: 'cpf' %>
           </div>
           <div class="span5 offset1">
             <%= f.label :rg %>
-            <%= f.text_field :rg %>
+            <%= f.text_field :rg , class: 'rg' %>
           </div>
         </div>
 
@@ -36,11 +36,11 @@
           <div class="row-fluid">
             <div class="span1">
               <%= tel.label :ddd , "DDD"%>
-              <%= tel.text_field :ddd, :style => "width: 35px;" %>
+              <%= tel.text_field :ddd, :style => "width: 35px;", class: 'ddd' %>
             </div>
             <div class="span6">
               <%= tel.label :numero, "Telefone" %>
-              <%= tel.text_field :numero %>
+              <%= tel.text_field :numero, class: 'telefone' %>
               <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
             </div>
           </div>
@@ -61,12 +61,12 @@
 
             <div class="span4">
               <%= c.label :agencia %>
-              <%= c.text_field :agencia %>
+              <%= c.text_field :agencia, class: 'agencia' %>
             </div>
 
             <div class="span4">
               <%= c.label :numero, "Conta" %>
-              <%= c.text_field :numero %>
+              <%= c.text_field :numero, class: 'conta' %>
               <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
             </div>
           </div>
@@ -95,7 +95,7 @@
                 <%= c.text_field :hora_mes, :style => "width: 50%" %>
 
                 <%= c.label :valor_hora %>
-                <%= c.text_field :valor_hora, :style => "width: 50%" %>
+                <%= c.text_field :valor_hora, :style => "width: 50%", class: 'dinheiro' %>
 
                 <%= c.label :contratante %>
                 <%= c.text_field :contratante, :style => "width: 100%" %>
@@ -179,3 +179,16 @@
     </div>
   </div>
 <% end %>
+
+<script>  
+  $(document).ready(function() {
+    $('.cpf').mask('000.000.000-00', {reverse: true});
+    $('.telefone').mask('00009-0000', {reverse: true});
+    $('.ddd').mask('00');
+    $('.rg').mask('000.000.000-A', {reverse: true});
+    $('.conta').mask('000.000-A', {reverse: true});
+    $('.agencia').mask('0000-9');
+    $('.dinheiro').mask('R$ 000.000.000,00', {reverse: true});
+    $('.cep').mask('00000-000');
+    });
+</script>

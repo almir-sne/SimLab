@@ -52,8 +52,7 @@ class Dia < ActiveRecord::Base
 
   def horas_atividades_formato
     total_minutos_atividade = 0
-
-    self.atividades.each do |atividade|
+      self.atividades.each do |atividade|
       if atividade.aprovacao
         total_minutos_atividade = total_minutos_atividade + (atividade.minutos.nil? ? 0 : (atividade.minutos))
       end
@@ -65,7 +64,6 @@ class Dia < ActiveRecord::Base
   def horas_atividades
     retorno = 0
     self.atividades.each do |atividade|
-
       if atividade.aprovacao
         retorno = retorno + (atividade.horas.nil? ? 0 : atividade.horas.to_i)
       end
