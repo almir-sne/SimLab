@@ -3,8 +3,8 @@ function validate()
     var horas_trabalhadas = pega_horas_dia();
     var horas_atividade = pega_horas_atividade();
     return(
-        validar_horas(horas_trabalhadas, horas_atividade)
-        );
+    validar_horas(horas_trabalhadas, horas_atividade)
+);
 }
 
 function validar_horas(hDia, hAtividade)
@@ -49,9 +49,10 @@ function pad (str, max) {
 
 function recalculaHoras() {
     var max_horas = pega_horas_dia();
-    document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
-    document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
+    updateAllSliders();
+//    document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
+//    document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
+//    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
 }
 
 function correctCheck(id, id_2) {
@@ -222,10 +223,14 @@ function filterCards(selector) {
         $(".filter").css("display", "inline-table");
 }
 
+/***********/
+/* Sliders */
+/***********/
+
 function slideTime(event, ui){
     $(event.target).parent().find("#time").text(
-        getTime(ui.value)
-        );
+    getTime(ui.value)
+);
     $(event.target).parent().find(".hora_field")[0].value = ui.value;
 }
 
@@ -240,7 +245,7 @@ function sumSliders() {
 function getTime(val) {
     var hours = parseInt(val / 60);
     var minutes = pad(val % 60 + "", 2);
-    return hours + ":" + minutes;
+    return hours + ":" + minutes + " horas";
 }
 
 function initializeSliders() {
@@ -259,8 +264,8 @@ function initTime(div, time) {
     div.text(getTime(time));
 }
 
-function initSlider(sly, time) {
-    sly.slider({
+function initSlider(div, time) {
+    div.slider({
         min: 0,
         max: pega_horas_dia(),
         value: time,
@@ -268,5 +273,17 @@ function initSlider(sly, time) {
         slide: slideTime,
         orientation: "horizontal",
         range: "min"
+    });
+}
+
+function updateAllSliders() {
+    var max = pega_horas_dia();
+    $(".slider").each (function(i, e) {
+        if ($(e).find(".hora_field")[0].value  > max) {
+            $(e).find(".hora_field")[0].value = max;
+            initTime($(e).find("#time"), max);
+            $(e).find("#slider").slider("value", max);
+        }
+        $(e).find("#slider").slider("option", "max", max);
     });
 }

@@ -24,7 +24,7 @@ class DiasController < ApplicationController
         atividade.destroy()
       else
         atividades_success = atividades_success and atividade.update_attributes(
-          :duracao => atividade_attr["horas(4i)"].to_i * 3600 +  atividade_attr["horas(5i)"].to_i * 60,
+          :duracao => atividade_attr["horas"].to_i * 60,
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
           :dia_id => dia.id,
