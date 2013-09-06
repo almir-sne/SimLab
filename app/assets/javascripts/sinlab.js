@@ -44,7 +44,7 @@ function pega_horas_atividade() {
 }
 
 function pad (str, max) {
-  return str.length < max ? pad("0" + str, max) : str;
+    return str.length < max ? pad("0" + str, max) : str;
 }
 
 function recalculaHoras() {
@@ -76,7 +76,7 @@ function getCards () {
                     draggable: true,
                     style: "width: 100%",
                     ondragstart: "dragCard(event)"
-                }).addClass("card filter" + card.idBoard).text(card.name).appendTo($cards);
+                }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
@@ -212,14 +212,61 @@ function getBoards() {
 }
 
 function filterCards(selector) {
-    console.log(projetos_boards[selector.value]);
     if (projetos_boards[selector.value][0] !=  null) {
         $(".filter").css("display", "none");
-        console.log("????")
         $.each(projetos_boards[selector.value], function(ix, board) {
             $("." + board).css("display", "inline-table");
         });
     }
     else
         $(".filter").css("display", "inline-table");
+}
+
+function slideTime(event, ui){
+    $(event.target).parent().find("#time").text(
+        getTime(ui.value)
+        );
+    $(event.target).parent().find(".hora_field")[0].value = ui.value;
+}
+
+function sumSliders() {
+    var val = 0;
+    $(".slider > #slider").each (function(i, e) {
+        val += $(e).slider("value");
+    });
+    return val;
+}
+
+function getTime(val) {
+    var hours = parseInt(val / 60);
+    var minutes = pad(val % 60 + "", 2);
+    return hours + ":" + minutes;
+}
+
+function initializeSliders() {
+    $(".slider").each (function(i, e) {
+        createSlider($(e));
+    });
+}
+
+function createSlider(sliderParent) {
+    var time = sliderParent.find(".hora_field")[0].value
+    initSlider(sliderParent.find('#slider'), time);
+    initTime(sliderParent.find('#time'), time);
+}
+
+function initTime(div, time) {
+    div.text(getTime(time));
+}
+
+function initSlider(sly, time) {
+    sly.slider({
+        min: 0,
+        max: pega_horas_dia(),
+        value: time,
+        step:10,
+        slide: slideTime,
+        orientation: "horizontal",
+        range: "min"
+    });
 }

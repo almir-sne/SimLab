@@ -39,9 +39,13 @@
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
                 {}, {:class=>"teste", :onchange => "filterCards(this)"}%>
               <br/>
-              <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
-              <%= atividade_form.time_select :horas, {},
-                :style => 'width: 55px;'%>
+
+              <div class="slider">
+                <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
+                <%= atividade_form.text_field :horas, :style => 'width: 55px;', :class => 'hora_field'%>
+                <div id="time"> </div>
+                <div id="slider"> </div>
+              </div>
               <%= atividade_form.label :observacao, "Observação" %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
@@ -87,6 +91,10 @@
 </div>
 
 
-<scrip>
-
+<script>
+  initializeSliders();
+  $(document).on('nested:fieldAdded', function(event){
+    // this field was just inserted into your form
+    createSlider(event.field.find('.slider'));
+  })
 </script>
