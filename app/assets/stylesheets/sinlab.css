@@ -252,6 +252,13 @@
     color: white;
 }
 
+.card.naohover:hover { 
+    background-color: #EEEEEE;
+    text-decoration: none;
+    color: black;
+
+}
+
 .trello-dropover {
     background-color: #eee;
     border-radius: 10px;

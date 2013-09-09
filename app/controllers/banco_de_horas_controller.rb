@@ -16,7 +16,7 @@ class BancoDeHorasController < ApplicationController
 
   def modal
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
-    @user = params[:user_id].nil?  ? current_user     : Usuario.find(params[:user_id])
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
     @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
     if params[:id].nil?
@@ -25,7 +25,7 @@ class BancoDeHorasController < ApplicationController
     else
       @dia =  Dia.find(params[:id])
     end
-    @projetos = Projeto.all(:order => :nome).collect {|p| [p.nome, p.id ] }
+    @projetos = @user.projetos(:order => :nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
       format.html

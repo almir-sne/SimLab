@@ -155,6 +155,20 @@ function formatCardLink (card, name) {
     return div;
 }
 
+function loadCard2(card_id, id) {            
+    var parent = $("#" + id)
+      Trello.get("/cards/" + card_id, function(card) {
+        var div = $("<div>");
+        div.addClass("nodrop");
+        div.appendTo(parent);
+        $("<a>").attr({
+            href: card.url,
+            target: "trello"
+        }).addClass("card naohover").text(card.name).appendTo(div);
+    });
+}
+
+
 function loadCard(card_id, id) {
     var parent = $("#" + id).parent();
     var name =  parent.prev().attr("name").replace("observacao", "trello") + "[]";
@@ -212,7 +226,7 @@ function getBoards() {
 }
 
 function filterCards(selector) {
-    console.log(projetos_boards[selector.value]);
+    if (typeof projetos_boards != 'undefined') {
     if (projetos_boards[selector.value][0] !=  null) {
         $(".filter").css("display", "none");
         console.log("????")
@@ -222,4 +236,5 @@ function filterCards(selector) {
     }
     else
         $(".filter").css("display", "inline-table");
+    }
 }

@@ -252,6 +252,7 @@ pt-BR:
   atividades:
     create:
       sucess: "Atividade(s) criada(s) com sucesso!"
+    title: "Atividades"
   simlab:
     titulo: "SimLab"
   funcionalidade:
