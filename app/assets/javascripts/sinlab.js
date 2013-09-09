@@ -50,9 +50,9 @@ function pad (str, max) {
 function recalculaHoras() {
     var max_horas = pega_horas_dia();
     updateAllSliders();
-//    document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
-//    document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-//    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
+    document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
+    document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
+    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
 }
 
 function correctCheck(id, id_2) {
@@ -153,6 +153,7 @@ function formatCardLink (card, name) {
         checked: true,
         style: "float: right"
     }).appendTo(div);
+    cardSlider(div);
     return div;
 }
 
@@ -174,6 +175,7 @@ function loadCard(card_id, id) {
             checked: true,
             style: "float: right"
         }).appendTo(div);
+        cardSlider(div);
     });
     $("#" + id).detach();
 }
@@ -256,7 +258,12 @@ function initializeSliders() {
 
 function createSlider(sliderParent) {
     var time = sliderParent.find(".hora_field")[0].value
-    initSlider(sliderParent.find('#slider'), time);
+    var maxtime;
+    if (sliderParent.className == ".slider")
+        maxtime = pega_horas_dia();
+    else
+        maxtime = pega_horas_dia();
+    initSlider(sliderParent.find('#slider'), time, maxtime);
     initTime(sliderParent.find('#time'), time);
 }
 
@@ -264,10 +271,10 @@ function initTime(div, time) {
     div.text(getTime(time));
 }
 
-function initSlider(div, time) {
+function initSlider(div, time, max_time) {
     div.slider({
         min: 0,
-        max: pega_horas_dia(),
+        max: max_time,
         value: time,
         step:10,
         slide: slideTime,
@@ -286,4 +293,23 @@ function updateAllSliders() {
         }
         $(e).find("#slider").slider("option", "max", max);
     });
+}
+
+function cardSlider(parent) {
+    var div = $("<div>");
+    div.addClass("card-slider");
+    $("<div>").attr({
+        id: "slider"
+    }).appendTo(div);
+    $("<div>").attr({
+        id: "time"
+    }).appendTo(div);
+    $("<input>").attr({
+            type: "text",
+            name: "name",
+            value: 0,
+            style: "display: none"
+        }).addClass("hora_field").appendTo(div);
+    div.appendTo(parent);
+    createSlider(div);
 }

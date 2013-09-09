@@ -247,7 +247,7 @@
 }
 
 .card:hover {
-    background-color: rgb(33, 147, 189);
+    background-color: rgb(33, 147, 189) !important;
     text-decoration: none;
     color: white;
 }
@@ -315,3 +315,26 @@
     margin: 10px;
 }
 
+.card-slider {
+    padding: 5px;
+}
+
+.card-slider > #slider {
+    width: 60%;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.card-slider > #time {
+    display: inline-block;
+    float: right;
+}
+
+.nodrop {
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+.nodrop > .card {
+    background-color: white;
+}
