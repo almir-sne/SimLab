@@ -36,7 +36,7 @@
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
             <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
             <%if can? :see, Usuario%>
-              <li> <%=  link_to "Usuários", usuarios_path, :class => "nav-links"%> </li>
+              <li> <%=  link_to "Usuários", usuarios_path(:status => "true"), :class => "nav-links"%> </li>
             <%else%>
               <li> <%=  link_to "Meu Perfil", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
             <%end%>
