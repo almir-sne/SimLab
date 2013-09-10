@@ -51,7 +51,7 @@ function recalculaHoras() {
     var max_horas = pega_horas_dia();
     document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
     document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
+    document.getElementById("horas_do_dia").innerHTML = Math.floor(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
 }
 
 function correctCheck(id, id_2) {
@@ -155,7 +155,7 @@ function formatCardLink (card, name) {
     return div;
 }
 
-function loadCard2(card_id, id) {            
+function loadCard2(card_id, id) {
     var parent = $("#" + id)
       Trello.get("/cards/" + card_id, function(card) {
         var div = $("<div>");
