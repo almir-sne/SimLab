@@ -164,7 +164,7 @@ function loadCard2(card_id, id) {
         $("<a>").attr({
             href: card.url,
             target: "trello"
-        }).addClass("card naohover").text(card.name).appendTo(div);
+        }).addClass("cardnaohover").text(card.name).appendTo(div);
     });
 }
 

@@ -41,12 +41,11 @@
       <td><%= dia.intervalo.strftime("%H:%M") %></td>
       <td style="width: 60%; border: none">
         <% dia.atividades.each do |atividade| %>
-          <%= content_tag(:div, "", id: 'atividade' + atividade.id.to_s) %>
+          <%= content_tag(:div, 'Observação: ' + atividade.observacao, id: 'atividade' + atividade.id.to_s, class: atividade.cor_status) %>
            <% atividade.cartaos.each do |cartao| %>         
             <% id = 'atividade' + atividade.id.to_s %>
             <%= javascript_tag "loadCard2(\"#{cartao.cartao_id}\", \"#{id}\")", :id => id %>
           <% end %>
-          <%= atividade.observacao %>
           <br />
           <!-- <div class="blue-background" style="width: <%= (dia.bar_width)%>"> -->
           <!-- </div> -->
