@@ -51,8 +51,17 @@ class Atividade < ActiveRecord::Base
       end
       retorno = retorno + aux_m.to_s
     end
-
     retorno
   end
-
+  
+  def cor_status
+    if self.aprovacao == true
+      "green-background"
+    elsif self.aprovacao == false
+      "red-background"
+    else
+      ""  
+    end
+  end  
+  
 end

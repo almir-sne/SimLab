@@ -181,6 +181,19 @@ function loadCards() {
     });
 }
 
+function loadCard2(card_id, id) {
+    var parent = $("#" + id)
+    Trello.get("/cards/" + card_id, function(card) {
+        var div = $("<div>");
+        div.addClass("nodrop");
+        div.appendTo(parent);
+        $("<a>").attr({
+            href: card.url,
+            target: "trello"
+        }).addClass("cardnaohover").text(card.name).appendTo(div);
+    });
+}
+
 function getBoards() {
     updateLoggedIn();
     $("#output").empty();
@@ -216,14 +229,16 @@ function getBoards() {
 }
 
 function filterCards(selector) {
-    if (projetos_boards[selector.value][0] !=  null) {
-        $(".filter").css("display", "none");
-        $.each(projetos_boards[selector.value], function(ix, board) {
-            $("." + board).css("display", "inline-table");
-        });
+    if (typeof projetos_boards != 'undefined') {
+        if (projetos_boards[selector.value][0] !=  null) {
+            $(".filter").css("display", "none");
+            $.each(projetos_boards[selector.value], function(ix, board) {
+                $("." + board).css("display", "inline-table");
+            });
+        }
+        else
+            $(".filter").css("display", "inline-table");
     }
-    else
-        $(".filter").css("display", "inline-table");
 }
 
 /***********/
@@ -243,7 +258,7 @@ function slideTime(event, ui){
     else {
         var parent = $(event.target).parents('div[class^="trello"]');
         updateHorasAtividades(sumCardSliders(parent), parent.parent().find(".hora_field")[0].value,
-        $(parent.parent().find("#horas_cartao")[0]));
+            $(parent.parent().find("#horas_cartao")[0]));
     }
 }
 

@@ -54,7 +54,7 @@ class Usuario < ActiveRecord::Base
   end
 
   def contrato_vigente_em(data)
-    contrato = contratos.where("inicio < ? and fim > ?", data, data).first
+    contrato = contratos.where("inicio <= ? and fim >= ?", data, data).first
     contrato ||= contratos.last
   end
 
