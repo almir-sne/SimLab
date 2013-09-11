@@ -27,7 +27,7 @@ class Projeto < ActiveRecord::Base
 
   def valor
     atividades.joins(:usuario => :contratos).
-      where("atividades.aprovacao = 1 and contratos.inicio < atividades.data and contratos.fim >= atividades.data").
+      where("atividades.aprovacao = 1 and contratos.inicio <= atividades.data and contratos.fim >= atividades.data").
       sum("atividades.duracao/3600 * contratos.valor_hora")
   end
 
