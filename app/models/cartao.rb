@@ -1,4 +1,4 @@
 class Cartao < ActiveRecord::Base
-  attr_accessible :atividade_id, :card_id
+  attr_accessible :atividade_id, :cartao_id, :duracao
   belongs_to :atividade
 end

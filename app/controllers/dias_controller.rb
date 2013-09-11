@@ -33,26 +33,20 @@ class DiasController < ApplicationController
           :aprovacao => nil,
           :data => dia.data
         )
-        cartaos = atividade.cartaos
         unless atividade_attr[:trello].blank?
-          atividade_attr[:trello].each do |id|
-            repetido = false
-            cartaos.each_with_index do |c, i|
-              if id == c.cartao_id
-                repetido = true
-                cartaos.delete_at i
-              end
-            end
-            unless repetido
-              cartao = Cartao.new
-              cartao.atividade = atividade
-              cartao.cartao_id = id
-              cartao.save
+          atividade_attr[:trello].each_key do |k|
+            c = Cartao.where(:atividade_id => atividade.id, :cartao_id => k).last
+            if c.blank? and atividade_attr[:trello][k][:check]
+              c = Cartao.new(:atividade_id => atividade.id, :cartao_id => k,
+                :duracao => atividade_attr[:trello][k][:slider])
+              c.save
+            elsif !c.blank? and !atividade_attr[:trello][k][:check]
+              c.destroy
+            elsif !c.blank? and atividade_attr[:trello][k][:check]
+              c.duracao = atividade_attr[:trello][k][:slider]
+              c.save
             end
           end
-        end
-        cartaos.each do |c|
-          c.destroy
         end
       end
     end

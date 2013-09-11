@@ -17,8 +17,11 @@
           <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
           <%= f.label :intervalo %>
           <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
-          <p>Total de horas  </p>
-          <div id="horas_do_dia"> 00:00</div>
+          Total de horas
+          <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
+          <br/>
+          Horas em atividades
+          <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
         </div>
         <div class="span5">
           <h3>Atividades</h3>
@@ -43,17 +46,22 @@
 
               <div class="slider">
                 <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
-                <%= atividade_form.text_field :horas, :style => 'width: 55px;', :class => 'hora_field'%>
+                <%= atividade_form.hidden_field :horas, :style => 'width: 55px;', :class => 'hora_field'%>
                 <div id="time"> </div>
                 <div id="slider"> </div>
               </div>
               <%= atividade_form.label :observacao, "Observação" %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+              <br/>
+              Horas dos cartões
+              <div style="display: inline" id="horas_cartao"> 00:00 </div>
+              <br/>
+              <br/>
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
                 &nbsp;Arraste cartões do Trello aqui.
+
                 <% atividade_form.object.cartaos.each do |cartao| %>
-                  <% id = rand(100000000000).to_s %>
-                  <%= javascript_tag "loadCard(\"#{cartao.cartao_id}\", \"#{id}\")", :id => id %>
+                  <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
                 <% end %>
               </div>
               <div class="grey-line"> </div>

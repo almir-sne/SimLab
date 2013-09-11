@@ -338,3 +338,11 @@
 .nodrop > .card {
     background-color: white;
 }
+
+.ok {
+    color: green
+}
+
+.nok {
+    color: red
+}

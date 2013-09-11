@@ -3,8 +3,8 @@ function validate()
     var horas_trabalhadas = pega_horas_dia();
     var horas_atividade = pega_horas_atividade();
     return(
-    validar_horas(horas_trabalhadas, horas_atividade)
-);
+        validar_horas(horas_trabalhadas, horas_atividade)
+        );
 }
 
 function validar_horas(hDia, hAtividade)
@@ -49,10 +49,8 @@ function pad (str, max) {
 
 function recalculaHoras() {
     var max_horas = pega_horas_dia();
-    updateAllSliders();
-    document.getElementById("dia_atividades_attributes_0_horas_4i").selectedIndex = max_horas/60;
-    document.getElementById("dia_atividades_attributes_0_horas_5i").selectedIndex = max_horas%60;
-    document.getElementById("horas_do_dia").innerHTML = Math.round(max_horas/60) + ":" + pad((max_horas%60).toString(), 2);
+    updateAllSliders(max_horas);
+    $("#horas_do_dia").text(getTime(max_horas));
 }
 
 function correctCheck(id, id_2) {
@@ -81,6 +79,7 @@ function getCards () {
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
+        loadCards();
     });
 }
 
@@ -117,14 +116,11 @@ function dropCard(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var cartaoRepetido = false;
-    var target;
-    if (event.target.tagName == "A")
-        target = event.target.parentElement;
-    else
-        target = event.target;
-    if (target.className == "nodrop")
-        target = target.parentElement;
-    var name =  target.previousElementSibling.name.replace("observacao", "trello") + "[]"
+    var target = event.target;
+    while (target.className != "trello-dropover") {
+        target = target.parentElement
+    }
+    var name =  $(target.parentElement).find(".hora_field")[0].name.replace("horas", "trello") + "[" + data + "]"
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
             cartaoRepetido = true;
@@ -148,36 +144,41 @@ function formatCardLink (card, name) {
     }).addClass("card").text(card.html()).appendTo(div);
     $("<input>").attr({
         type: "checkbox",
-        name: name,
-        value: card.attr("id"),
+        name: name + "[check]",
+        value: true,
         checked: true,
         style: "float: right"
     }).appendTo(div);
-    cardSlider(div);
+    cardSlider(div, name);
     return div;
 }
 
-function loadCard(card_id, id) {
-    var parent = $("#" + id).parent();
-    var name =  parent.prev().attr("name").replace("observacao", "trello") + "[]";
-    Trello.get("/cards/" + card_id, function(card) {
-        var div = $("<div>");
-        div.addClass("nodrop");
-        div.appendTo(parent);
-        $("<a>").attr({
-            href: card.url,
-            target: "trello"
-        }).addClass("card").text(card.name).appendTo(div);
-        $("<input>").attr({
-            type: "checkbox",
-            name: name,
-            value: card.id,
-            checked: true,
-            style: "float: right"
-        }).appendTo(div);
-        cardSlider(div);
+function loadCards() {
+    $(".card-placeholder").each(function (index, input) {
+        var parent = input.parentElement;
+        var card_id = input.id
+        var horas = $(parent.parentElement).find(".hora_field")[0]
+        var name =  horas.name.replace("horas", "trello") + "[" + card_id + "]"
+        Trello.get("/cards/" + card_id, function(card) {
+            var div = $("<div>");
+            div.addClass("nodrop");
+            div.appendTo(parent);
+            $("<a>").attr({
+                href: card.url,
+                target: "trello"
+            }).addClass("card").text(card.name).appendTo(div);
+            $("<input>").attr({
+                type: "checkbox",
+                name: name + "[check]",
+                value: "true",
+                checked: true,
+                style: "float: right"
+            }).appendTo(div);
+            cardSlider(div, name, input.value);
+            $(input).detach();
+            updateHorasAtividades(sumCardSliders(parent), horas.value, $(parent.parentElement).find("#horas_cartao"))
+        });
     });
-    $("#" + id).detach();
 }
 
 function getBoards() {
@@ -228,18 +229,45 @@ function filterCards(selector) {
 /***********/
 /* Sliders */
 /***********/
-
+var pog;
 function slideTime(event, ui){
     $(event.target).parent().find("#time").text(
-    getTime(ui.value)
-);
+        getTime(ui.value)
+        );
+    pog = event;
     $(event.target).parent().find(".hora_field")[0].value = ui.value;
+    if (event.target.parentElement.className == "slider") {
+        updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"))
+    }
+
+    else {
+        var parent = $(event.target).parents('div[class^="trello"]');
+        updateHorasAtividades(sumCardSliders(parent), parent.parent().find(".hora_field")[0].value,
+        $(parent.parent().find("#horas_cartao")[0]));
+    }
+}
+
+function updateHorasAtividades(val, max, div) {
+    div.text(getTime(val));
+    div.removeClass();
+    if (val > max)
+        div.addClass("nok");
+    else if (val == max)
+        div.addClass("ok");
 }
 
 function sumSliders() {
     var val = 0;
-    $(".slider > #slider").each (function(i, e) {
-        val += $(e).slider("value");
+    $(".slider > .hora_field").each (function(i, e) {
+        val += parseInt(e.value);
+    });
+    return val;
+}
+
+function sumCardSliders(parent) {
+    var val = 0;
+    $(parent).find(".hora_field").each (function(i, e) {
+        val += parseInt(e.value);
     });
     return val;
 }
@@ -258,12 +286,7 @@ function initializeSliders() {
 
 function createSlider(sliderParent) {
     var time = sliderParent.find(".hora_field")[0].value
-    var maxtime;
-    if (sliderParent.className == ".slider")
-        maxtime = pega_horas_dia();
-    else
-        maxtime = pega_horas_dia();
-    initSlider(sliderParent.find('#slider'), time, maxtime);
+    initSlider(sliderParent.find('#slider'), time, pega_horas_dia());
     initTime(sliderParent.find('#time'), time);
 }
 
@@ -283,19 +306,18 @@ function initSlider(div, time, max_time) {
     });
 }
 
-function updateAllSliders() {
-    var max = pega_horas_dia();
-    $(".slider").each (function(i, e) {
-        if ($(e).find(".hora_field")[0].value  > max) {
-            $(e).find(".hora_field")[0].value = max;
-            initTime($(e).find("#time"), max);
-            $(e).find("#slider").slider("value", max);
+function updateAllSliders(maxtime) {
+    $(".slider, .card-slider").each (function(i, e) {
+        if ($(e).find(".hora_field")[0].value  > maxtime) {
+            $(e).find(".hora_field")[0].value = maxtime;
+            initTime($(e).find("#time"), maxtime);
+            $(e).find("#slider").slider("value", maxtime);
         }
-        $(e).find("#slider").slider("option", "max", max);
+        $(e).find("#slider").slider("option", "max", maxtime);
     });
 }
 
-function cardSlider(parent) {
+function cardSlider(parent, name, time) {
     var div = $("<div>");
     div.addClass("card-slider");
     $("<div>").attr({
@@ -305,11 +327,11 @@ function cardSlider(parent) {
         id: "time"
     }).appendTo(div);
     $("<input>").attr({
-            type: "text",
-            name: "name",
-            value: 0,
-            style: "display: none"
-        }).addClass("hora_field").appendTo(div);
+        type: "text",
+        name: name + "[slider]",
+        value: time,
+        style: "display: none"
+    }).addClass("hora_field").appendTo(div);
     div.appendTo(parent);
     createSlider(div);
 }
