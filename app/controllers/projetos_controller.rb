@@ -6,9 +6,10 @@ class ProjetosController < ApplicationController
   def index
     authorize! :read, Projeto
     if current_usuario.role == "admin"
-      @projetos = Projeto.all(:order => :nome)
+      @projetos = Projeto.where(:super_projeto_id => nil).order(:nome)
+      @projetos = @projetos.map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}.flatten
     else
-      @projetos = current_usuario.projetos_coordenados.all(:order => :nome)
+      @projetos = current_usuario.projetos_coordenados.sort{|a,b| a.nome <=> b.nome}
     end
     @projeto = Projeto.new
 

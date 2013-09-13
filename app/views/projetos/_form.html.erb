@@ -20,6 +20,25 @@
         </div>
       </div>
     </div>
+        <div class="form-group">
+      <h3> Projetos relacionados </h3>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class=" span6">
+            <%= f.label "Super-Projeto" %>
+            <%= f.radio_button :super_projeto, true%>
+            <%= f.label "quais:" %>
+            <%= f.text_field :nome, :style => "width: 70%"%>
+          </div>
+          <div class="offset1 span5">
+            <%= f.label "Sub-Projetos" %>
+            <%= f.radio_button :super_projeto, false%>
+            <%= f.label "de:" %>
+            <%= f.text_field :nome, :style => "width: 70%"%>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="form-group">
 
       <div class="container-fluid">

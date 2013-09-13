@@ -9,7 +9,7 @@ class Projeto < ActiveRecord::Base
                              :uniqueness => true
 
   belongs_to :super_projeto, :class_name => "Projeto"
-  has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id"
+  has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id", :dependent => :nullify
   has_many :atividades
   has_many :usuarios,  :through => :workon
   has_many :workon
@@ -39,5 +39,4 @@ class Projeto < ActiveRecord::Base
       sub_projetos.map{ |proj| proj.valor }.sum
     end
   end
-
 end

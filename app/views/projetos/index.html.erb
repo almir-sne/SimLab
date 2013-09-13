@@ -15,7 +15,11 @@
   </tr>
   <% @projetos.each do |projeto| %>
     <tr>
-      <td><%= link_to projeto.nome, edit_projeto_path(projeto) %></td>
+      <td><% if projeto.super_projeto.nil?%>
+        <%= link_to projeto.nome, edit_projeto_path(projeto) %>
+      <%else%>
+        <%=projeto.super_projeto.nome%> - <%= link_to projeto.nome, edit_projeto_path(projeto) %>
+      <%end%></td>
       <td><%= projeto.data_de_inicio                           %></td>
       <td><%= projeto.horas_totais                             %></td>
       <td><%= projeto.valor                                    %></td>
