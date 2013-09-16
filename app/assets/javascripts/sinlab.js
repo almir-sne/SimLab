@@ -244,12 +244,10 @@ function filterCards(selector) {
 /***********/
 /* Sliders */
 /***********/
-var pog;
 function slideTime(event, ui){
     $(event.target).parent().find("#time").text(
         getTime(ui.value)
         );
-    pog = event;
     $(event.target).parent().find(".hora_field")[0].value = ui.value;
     if (event.target.parentElement.className == "slider") {
         updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"))

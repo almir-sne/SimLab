@@ -12,11 +12,11 @@
           <%= f.label :dia %>
           <%= f.select :numero, options_for_select(@diasdomes, ((@dia.numero.blank?)? Time.now.in_time_zone('Brasilia').day : @dia.numero)), {}, :style => 'width: 55px;'%>
           <%= f.label :entrada %>
-          <%= f.time_select :entrada, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
+          <%= f.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
           <%= f.label :saida %>
-          <%= f.time_select :saida, {}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
+          <%= f.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
           <%= f.label :intervalo %>
-          <%= f.time_select :intervalo, {} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
+          <%= f.time_select :intervalo, {minute_step: 5} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
           Total de horas
           <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
           <br/>
