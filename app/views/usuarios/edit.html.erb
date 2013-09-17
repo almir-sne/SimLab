@@ -25,6 +25,8 @@
           <div class="span6">
             <%= f.label :cpf %>
             <%= f.text_field :cpf, class: 'cpf' %>
+            <%= f.label :data_de_nascimento, "Data de nascimento"%>
+            <%= f.date_select :data_de_nascimento, {start_year: 1940}, :style => "width: 100px" %>
           </div>
           <div class="span5 offset1">
             <%= f.label :rg %>
@@ -131,9 +133,9 @@
           <div class="row-fluid">
             <div class="span6">
               <%= f.label :entrada_usp, "Entrada na USP" %>
-              <%= f.date_select :entrada_usp, {}, :style => "width: 100px" %>
+              <%= f.date_select :entrada_usp, {start_year: 2000, discard_day: true}, :style => "width: 100px" %>
               <%= f.label :saida_usp, "Data ou previsão de formatura"%>
-              <%= f.date_select :saida_usp, {}, :style => "width: 100px" %>
+              <%= f.date_select :saida_usp, {end_year: 2020, discard_day: true}, :style => "width: 100px" %>
             </div>
             <div class="span6">
               <%= f.label :curso %>
@@ -188,7 +190,7 @@
     $('.rg').mask('000.000.000-A', {reverse: true});
     $('.conta').mask('000.000-A', {reverse: true});
     $('.agencia').mask('0000-9');
-    $('.dinheiro').mask('R$ 000.000.000,00', {reverse: true});
+    $('.dinheiro').mask('000.00', {reverse: true});
     $('.cep').mask('00000-000');
     });
 </script>

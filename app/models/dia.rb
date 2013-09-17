@@ -31,9 +31,13 @@ class Dia < ActiveRecord::Base
   end
 
   def formata_horas
-    hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i
-    minuto = ((((saida - entrada) - read_attribute(:intervalo)) % 3600) / 60).to_i
-    hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
+    if (read_attribute(:entrada).blank? || read_attribute(:saida).blank?)
+      "0:00"
+    else
+      hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i
+      minuto = ((((saida - entrada) - read_attribute(:intervalo)) % 3600) / 60).to_i
+      hora.to_s + ":" + minuto.to_s.rjust(2, '0')
+    end
   end
 
   def formata_intervalo
@@ -52,7 +56,7 @@ class Dia < ActiveRecord::Base
 
   def horas_atividades_formato
     total_minutos_atividade = 0
-      self.atividades.each do |atividade|
+    self.atividades.each do |atividade|
       if atividade.aprovacao
         total_minutos_atividade = total_minutos_atividade + (atividade.minutos.nil? ? 0 : (atividade.minutos))
       end
@@ -69,6 +73,11 @@ class Dia < ActiveRecord::Base
       end
     end
     retorno/3600
+  end
+
+  def horas_atividades_todas
+    hh, mm = (atividades.sum(:duracao)/60).divmod(60)
+    hh.to_s+":"+("%02d"%mm.to_i).to_s
   end
 
   def tem_mensagem?

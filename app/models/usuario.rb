@@ -9,7 +9,7 @@ class Usuario < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
   attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
-  attr_accessible :role, :address_id, :formado, :status
+  attr_accessible :role, :address_id, :formado, :status, :data_de_nascimento
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy
@@ -54,7 +54,7 @@ class Usuario < ActiveRecord::Base
   end
 
   def contrato_vigente_em(data)
-    contrato = contratos.where("inicio < ? and fim > ?", data, data).first
+    contrato = contratos.where("inicio <= ? and fim >= ?", data, data).first
     contrato ||= contratos.last
   end
 

@@ -15,15 +15,11 @@ class Atividade < ActiveRecord::Base
   validates :usuario_id, :presence => true
   validates :horas, :exclusion => {:in => 0..1}
 
-#  def data
-#    Date.new(self.dia.mes.ano, self.dia.mes.numero, self.dia.numero)
-#  end
-
   def horas
     unless read_attribute(:duracao).blank?
-      Time.new(2000, 1, 1 ,0, 0, 0) + read_attribute(:duracao)
+      read_attribute(:duracao)/60
     else
-      Time.new(2000, 1, 1 ,0, 0, 0)
+      0
     end
   end
 
@@ -55,8 +51,17 @@ class Atividade < ActiveRecord::Base
       end
       retorno = retorno + aux_m.to_s
     end
-
     retorno
   end
-
+  
+  def cor_status
+    if self.aprovacao == true
+      "green-background"
+    elsif self.aprovacao == false
+      "red-background"
+    else
+      ""  
+    end
+  end  
+  
 end

@@ -11,8 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130903172053) do
-
+ActiveRecord::Schema.define(:version => 20130911200121) do
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -53,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20130903172053) do
     t.integer  "atividade_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.integer  "duracao"
   end
 
   create_table "conta", :force => true do |t|
@@ -93,7 +93,6 @@ ActiveRecord::Schema.define(:version => 20130903172053) do
     t.integer  "ano"
     t.integer  "usuario_id"
     t.float    "valor_hora"
-    t.integer  "horas_contratadas"
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "horas_trabalhadas", :default => 0
@@ -111,7 +110,7 @@ ActiveRecord::Schema.define(:version => 20130903172053) do
 
   create_table "telefones", :force => true do |t|
     t.integer  "ddd"
-    t.integer  "numero"
+    t.string   "numero"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -140,6 +139,7 @@ ActiveRecord::Schema.define(:version => 20130903172053) do
     t.string   "curso"
     t.boolean  "formado"
     t.boolean  "status"
+    t.date     "data_de_nascimento"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true

@@ -1,7 +1,7 @@
 require 'holidays'
 require 'holidays/br'
 class Mes < ActiveRecord::Base
-  attr_accessible :ano, :horas_contratadas, :numero, :usuario_id, :valor_hora, :id
+  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id
   has_many :atividades
   has_many :dias
   belongs_to :usuario
@@ -11,7 +11,7 @@ class Mes < ActiveRecord::Base
   end
 
   def dias_uteis_restantes
-    calcula_dias_uteis_restantes.to_s 
+    calcula_dias_uteis_restantes.to_s
   end
 
   def horas_trabalhadas
@@ -27,12 +27,16 @@ class Mes < ActiveRecord::Base
   end
 
   def horas_a_fazer_por_dia
-    dias = calcula_dias_uteis_restantes 
+    dias = calcula_dias_uteis_restantes
     if dias == 0
       string_hora(0)
     else
       string_hora(calcula_minutos_restantes / dias)
     end
+  end
+
+  def horas_contratadas
+     usuario.contrato_vigente_em(Date.new(ano, numero, 1)).hora_mes
   end
 
   private
