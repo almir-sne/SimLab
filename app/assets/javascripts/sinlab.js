@@ -53,12 +53,6 @@ function recalculaHoras() {
     $("#horas_do_dia").text(getTime(max_horas));
 }
 
-function correctCheck(id, id_2) {
-    if(document.getElementById(id).checked == true)
-        if(document.getElementById(id_2).checked == true)
-            document.getElementById(id_2).checked = false;
-}
-
 function getCards () {
     updateLoggedIn();
     $("#output").empty();

@@ -30,6 +30,7 @@
               <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
             <%end%>
             <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url, :class => "nav-links" %> </li>
+            <li> <%= link_to t('funcionalidade.validacao.pagamentos'), pagamentos_path, :class => "nav-links" %> </li>
           </ul>
         </div>
 
@@ -45,7 +46,7 @@
         </div>
 
         <div class="span5 top-user offset3" >
-          Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome + '!'%> </b>
+          Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
           <br/>
           <%= link_to "Alterar senha", edit_usuario_registration_path %>
           <br/>
