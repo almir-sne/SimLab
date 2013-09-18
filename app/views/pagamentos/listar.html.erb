@@ -5,34 +5,43 @@
 <div class="blue-line">  </div>
 
 
-<h3 class="blue-text">
-  <%= "#{@mes.usuario.nome} - #{t('date.month_names')[@mes.numero]} - #{@mes.ano}" %>
-</h3>
 
-<%= nested_form_for @mes, :url => :pagamentos, :method => :put, :validate => true,
+
+<%= nested_form_for @mes, :url => :create_or_update_pagamentos, :method => :post, :validate => true,
   :html => {"data-type" => :json} do |f| %>
-  <div class="container-fluid">
-    <%= f.fields_for :pagamentos, :allow_destroy => true do |p| %>
-      <div class="row-fluid">
-        <div class="span1">
-          <%= p.label :valor%>
-          <%= p.text_field :valor %>
-        </div>
-        <div class="span1">
-          <%= p.label :fonte %>
-          <%= p.text_field :fonte %>
-        </div>
-        <div class="span1">
-          <%= p.label :motivo %>
-          <%= p.text_field :motivo %>
-        </div>
-        <div class="span4">
-          <%= p.label :data %>
-          <%= p.date_select :data %>
-          <%= p.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
-        </div>
+  <div class="div_edit">
+
+    <div class="form-group">
+      <h3> <%= "#{@mes.usuario.nome} - #{t('date.month_names')[@mes.numero]} de #{@mes.ano}" %> </h3>
+      <%= hidden_field_tag :mes_id, @mes.id %>
+      <div class="container-fluid">
+        <%= f.fields_for :pagamentos, :allow_destroy => true do |p| %>
+          <div class="row-fluid">
+            <div class="span2">
+              <%= p.label :valor%>
+              <%= p.text_field :valor %>
+            </div>
+            <div class="span3">
+              <%= p.label :fonte %>
+              <%= p.text_field :fonte %>
+            </div>
+            <div class="span3">
+              <%= p.label :motivo %>
+              <%= p.text_field :motivo %>
+            </div>
+            <div class="span4">
+              <%= p.label :data %>
+              <%= p.date_select :data, {:use_short_month => true}, :class => "default-date" %>
+              <%= p.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
+            </div>
+          </div>
+        <% end %>
+        <%= f.link_to_add 'Novo pagamento', :pagamentos, :class => "btn default-button",
+          :style => "margin-bottom: 20px;"%>
       </div>
-    <% end %>
-    <%= f.link_to_add 'Novo pagamento', :pagamentos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+    </div>
+    <%= f.submit "Salvar", :class => "btn default-button", :style => "margin-left: 15px;"  %>
+    <%= link_to "Cancelar", meses_pagamentos_path(:user_id => @mes.usuario_id),
+      :class => "btn default-button", :style => "margin-left: 15px;" %>
   </div>
 <% end %>

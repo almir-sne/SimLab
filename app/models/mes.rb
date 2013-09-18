@@ -1,7 +1,7 @@
 require 'holidays'
 require 'holidays/br'
 class Mes < ActiveRecord::Base
-  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id
+  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id, :pagamentos_attributes
   has_many :atividades
   has_many :dias
   has_many :pagamentos, :dependent => :destroy
