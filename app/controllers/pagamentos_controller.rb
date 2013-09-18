@@ -11,8 +11,10 @@ class PagamentosController < ApplicationController
     else
       @usuario = current_usuario
     end
-    @meses =  Mes.where("usuario_id = ? and ano is not null and numero is not null and numero between 1 and 12",
+    @meses =  Mes.where("usuario_id = ? and ano is not null and numero between 1 and 12",
       @usuario.id).order('ano desc', 'numero desc')
+    @total = @meses.collect {|m| m.contrato.valor_hora * m.calcula_horas_trabalhadas}.sum
+    @media = @total/@meses.size
   end
 
   def listar

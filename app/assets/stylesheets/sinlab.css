@@ -139,7 +139,7 @@
 }
 
 .green-background {
-    background-color: #4DBD33;
+    background-color: #ACFF98;
     padding: 10px 10px;
 }
 
@@ -283,12 +283,12 @@
 }
 
 .modal {
-    height:500px;
+    height:510px;
 }
 
 .modal-body {
-    height: 100%;
-    max-height:100%;
+    height:90%;
+    max-height: 90%;
 }
 
 .form-group {
@@ -354,7 +354,7 @@
 }
 
 .nodrop {
-    background-color: white;
+    background-color: inherit;
     margin-bottom: 10px;
 }
 

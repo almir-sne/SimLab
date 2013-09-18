@@ -22,7 +22,7 @@ class Ability
       can [:read,:create], Dia
       can [:destroy,:update], Dia, :id => true, :id => user.id
       can :update,  [Usuario, Atividade],   :id => true, :id => user.id
-      can :meses, Pagamento, :user_id => user.id
+      can :meses, Pagamento
     end
 
 
