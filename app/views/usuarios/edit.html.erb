@@ -5,11 +5,9 @@
 
 <%= nested_form_for(@user,  :validate => true, :html => {"data-type" => :json}) do |f| %>
   <div class="div_edit">
-
     <div class="form-group">
       <h3> Dados Pessoais </h3>
       <div class="container-fluid">
-
         <div class="row-fluid">
           <div class="span6">
             <%= f.label :nome %>

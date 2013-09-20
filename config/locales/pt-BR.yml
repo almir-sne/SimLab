@@ -258,6 +258,7 @@ pt-BR:
   funcionalidade:
     validacao:
       atividade: "Validação de Atividades"
+      pagamentos: "Pagamentos"
     log:
       atividade: "Log de Atividades"
   prompt:

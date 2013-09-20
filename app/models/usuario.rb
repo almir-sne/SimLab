@@ -27,7 +27,7 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
     :uniqueness => true
 
-  has_many :mes
+  has_many :mes, :as => :meses
   has_many :dias
   has_many :atividades
 

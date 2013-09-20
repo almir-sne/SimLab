@@ -1,4 +1,13 @@
 SinLab::Application.routes.draw do
+ 
+  resources :pagamentos, :only => [:index] do
+    collection do
+      get :meses
+      get :listar
+      post :create_or_update
+    end
+  end
+
   #  get "home/index"
   resources :banco_de_horas, :only => [:index] do
     collection do
