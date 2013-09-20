@@ -26,9 +26,9 @@
     <tr>
       <td> <%= t("date.month_names")[m.numero] %>  </td>
       <td> <%= m.ano %> </td>
-      <td> <%= "R$ #{"%.2f" % m.contrato.valor_hora}" %> </td>
+      <td> <%= "R$ #{"%.2f" % m.contrato.try(:valor_hora).to_f}" %> </td>
       <td> <%= m.horas_trabalhadas_aprovadas %> </td>
-      <td> <%= "R$ #{"%.2f" % (m.contrato.valor_hora * m.calcula_horas_trabalhadas)}" %> </td>
+      <td> <%= "R$ #{"%.2f" % (m.contrato.try(:valor_hora).to_f * m.calcula_horas_trabalhadas)}" %> </td>
       <td> <%= "R$ #{"%.2f" % m.pagamentos.sum(:valor)}"  %> </td>
       <td> <%= link_to '<i class="icon-dollar"></i>'.html_safe, listar_pagamentos_path(:mes_id => m.id),
           :class => 'nohover', :title => "Incluir pagamentos"%> </td>
