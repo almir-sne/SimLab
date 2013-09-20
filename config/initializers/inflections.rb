@@ -63,5 +63,6 @@ ActiveSupport::Inflector.inflections do |inflect|
    
   # Irregulares
   inflect.irregular "país", "países"
+  inflect.irregular "mes", "meses"
 
 end
