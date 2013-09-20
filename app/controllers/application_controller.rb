@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   def block_inactive
     if current_user.present? and current_user.status == false
       sign_out current_user
-      flash[:error] = "Seu perfil foi bloqueado, caso esteja recebendo esta mensagem por engano entre em contato com os administradores"
+      flash[:error] = "Seu perfil está bloqueado. Caso esteja recebendo esta mensagem por engano entre em contato com os administradores"
       redirect_to new_usuario_session_path
     end
   end

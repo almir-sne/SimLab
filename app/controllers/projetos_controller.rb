@@ -45,6 +45,7 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
+    @usuarios = Usuario.order(:nome)
   end
 
   # POST /projetos
@@ -92,7 +93,7 @@ class ProjetosController < ApplicationController
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
     end
@@ -110,6 +111,4 @@ class ProjetosController < ApplicationController
       format.json { head :no_content }
     end
   end
-
-
 end

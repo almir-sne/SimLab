@@ -6,5 +6,6 @@ class Workon < ActiveRecord::Base
 
   validates_presence_of :projeto_id
   validates_presence_of :usuario_id
+  validates :usuario_id, :uniqueness => {:scope => :projeto_id}
 
 end
