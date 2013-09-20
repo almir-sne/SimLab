@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130918142423) do
+ActiveRecord::Schema.define(:version => 20130920190527) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -103,12 +103,12 @@ ActiveRecord::Schema.define(:version => 20130918142423) do
     t.integer  "mes_id"
     t.integer  "usuario_id"
     t.integer  "criador_id"
-    t.decimal  "valor",      :precision => 10, :scale => 0
+    t.decimal  "valor",      :precision => 7, :scale => 2
     t.date     "data"
-    t.integer  "fonte"
+    t.string   "fonte"
     t.string   "motivo"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
   end
 
   create_table "projetos", :force => true do |t|
