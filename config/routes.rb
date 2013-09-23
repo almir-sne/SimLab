@@ -24,13 +24,15 @@ SinLab::Application.routes.draw do
     get '/login' => 'devise/sessions#new'
     get '/logout' => 'devise/sessions#destroy'
   end
+
   resources :usuarios, :controller => "usuarios" do
     collection do
       post :custom_create
+      get :get_id_by_nome
     end
   end
 
-  resources :projetos
+  resources :projetos 
 
   resources :dias, :only => [:destroy, :create]
 
