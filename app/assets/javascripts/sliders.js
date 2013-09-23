@@ -115,18 +115,29 @@ function pad(str, max) {
 }
 
 function horasCartoesInvalidas() {
-    var ok = true;
+    var invalidos = false;
     $(".fields").each(function(i, e) {
-        var x = sumCardSliders($(e).find(".trello-dropover"));
-        var y = $(e).find(".hora_field")[0].value;
         if (sumCardSliders($(e).find(".trello-dropover")) > parseInt($(e).find(".hora_field")[0].value))
-            ok = false;
+            invalidos = true;
     });
-    return !ok;
+    return invalidos;
+}
+
+function projetosVazios() {
+    var invalidos = false;
+    $(".projeto-seletor").each(function(i, e) {
+        if ($(e).value == null)
+            invalidos = true;
+    });
+    return invalidos;
 }
 
 function validateSliders() {
-    if (pega_horas_dia() < 60) {
+    if (projetosVazios()) {
+        alert("Nenhum projeto selecionado");
+        return false;
+    }
+    else if (pega_horas_dia() < 60) {
         alert("É necessario registrar pelo menos 1 hora");
         return false;
     }

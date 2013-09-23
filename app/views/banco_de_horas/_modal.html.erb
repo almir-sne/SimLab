@@ -41,7 +41,7 @@
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-                {}, {:class=>"teste", :onchange => "filterCards(this)"}%>
+                {}, {:class=>"projeto-seletor", :onchange => "filterCards(this)"}%>
               <br/>
 
               <div class="slider">
