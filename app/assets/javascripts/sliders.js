@@ -110,17 +110,19 @@ function cardSlider(parent, name, time) {
     createSlider(div);
 }
 
-function pad (str, max) {
+function pad(str, max) {
     return str.length < max ? pad("0" + str, max) : str;
 }
 
-function checaHorasCartoes() {
+function horasCartoesInvalidas() {
     var ok = true;
-    $(".fields").each().each(function(i, e) {
-       if(sumCardSliders($(e).find(".trello-dropover")) == $ (e).find(".hora_field")[0].value)
-           ok = false;
+    $(".fields").each(function(i, e) {
+        var x = sumCardSliders($(e).find(".trello-dropover"));
+        var y = $(e).find(".hora_field")[0].value;
+        if (sumCardSliders($(e).find(".trello-dropover")) > parseInt($(e).find(".hora_field")[0].value))
+            ok = false;
     });
-    return ok;
+    return !ok;
 }
 
 function validateSliders() {
@@ -132,7 +134,9 @@ function validateSliders() {
         alert("Horas em atividades diferem das horas declaradas");
         return false;
     }
-    else if (checaHorasCartoes()) {
+    else if (horasCartoesInvalidas()) {
         alert("Horas em atividades diferem dos cartões");
+        return false;
     }
+    return true;
 }
