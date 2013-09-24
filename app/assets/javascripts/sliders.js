@@ -124,12 +124,12 @@ function horasCartoesInvalidas() {
 }
 
 function projetosVazios() {
-    var invalidos = false;
+    var vazios = false;
     $(".projeto-seletor").each(function(i, e) {
-        if ($(e).value == null)
-            invalidos = true;
+        if (e.value == null)
+            vazios = true;
     });
-    return invalidos;
+    return vazios;
 }
 
 function validateSliders() {
