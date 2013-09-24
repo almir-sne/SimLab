@@ -8,7 +8,6 @@ SinLab::Application.routes.draw do
     end
   end
 
-  #  get "home/index"
   resources :banco_de_horas, :only => [:index] do
     collection do
       get  :show_mes
@@ -16,6 +15,7 @@ SinLab::Application.routes.draw do
       get  :log_de_atividades
       post :mandar_validacao
       post :modal
+      post :ausencia
     end
   end
 
@@ -35,6 +35,8 @@ SinLab::Application.routes.draw do
   resources :projetos 
 
   resources :dias, :only => [:destroy, :create]
+  
+  resources :ausencias, :only => [:destroy, :create]
 
   resources :resumo do
     collection do

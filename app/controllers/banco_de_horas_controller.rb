@@ -8,6 +8,10 @@ class BancoDeHorasController < ApplicationController
     @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: {dias: @dias,  diames: @diasdomes}}
+    end
   end
 
   def modal
@@ -93,6 +97,18 @@ class BancoDeHorasController < ApplicationController
     @atividades = Atividade.where(:usuario_id => current_usuario, :aprovacao => [true, false]).
       paginate(:page => params[:page], :per_page => 30).order("updated_at DESC")
   end
+  
+  def ausencia
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
+    @ausencia = Ausencia.new
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
 
   private
   def lista_dias_no_mes(ano, mes)
@@ -135,5 +151,4 @@ class BancoDeHorasController < ApplicationController
       Projeto.where(:id => param_projetos .to_i)
     end
   end
-
 end
