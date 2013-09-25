@@ -6,8 +6,8 @@ class BancoDeHorasController < ApplicationController
     @month_num = params[:month].nil? ? Date.today.month : params[:month]
     @month = Mes.find_or_create_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
     @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
-    @dias = @month.dias
-    @dias.sort_by! { |d| d.numero  }
+    @dias = @month.dias.order(:numero)
+    @ausencias = @month.ausencias.order(:dia)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: {dias: @dias,  diames: @diasdomes}}

@@ -1,9 +1,11 @@
 
-function getCards () {
+function getCards() {
     updateLoggedIn();
     $("#output").empty();
-    Trello.members.get("me", function(member){
-        $("#fullName").text(member.fullName);
+    Trello.members.get("me", function(member) {
+        $(".fullName").each(function(i, e) {
+            $(e).text(member.fullName);
+        });
         var $cards = $("<div>").text("Carregando cartões...").appendTo("#output");
         Trello.get("members/me/cards", function(cards) {
             $cards.empty();
@@ -19,26 +21,26 @@ function getCards () {
             });
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
-        loadCards();
+        loadFormCards();
     });
 }
 
 function updateLoggedIn() {
     var isLoggedIn = Trello.authorized();
-    $("#loggedout").toggle(!isLoggedIn);
-    $("#loggedin").toggle(isLoggedIn);
+    $(".loggedout").toggle(!isLoggedIn);
+    $(".loggedin").toggle(isLoggedIn);
 }
 
 function loginTrello(callback) {
     Trello.authorize({
         type: "popup",
         success: callback
-    })
+    });
 }
 
 function checkTrello(callback) {
     Trello.authorize({
-        interactive:false,
+        interactive: false,
         success: callback
     });
 }
@@ -60,7 +62,7 @@ function dropCard(event) {
     while (target.className != "trello-dropover") {
         target = target.parentElement
     }
-    var name =  $(target.parentElement).find(".hora_field")[0].name.replace("horas", "trello") + "[" + data + "]"
+    var name = $(target.parentElement).find(".hora_field")[0].name.replace("horas", "trello") + "[" + data + "]"
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
             cartaoRepetido = true;
@@ -72,10 +74,10 @@ function dropCard(event) {
 }
 
 function dragCard(ev) {
-    ev.dataTransfer.setData("Text",ev.target.id);
+    ev.dataTransfer.setData("Text", ev.target.id);
 }
 
-function formatCardLink (card, name) {
+function formatCardLink(card, name) {
     var div = $("<div>");
     div.addClass("nodrop");
     $("<a>").attr({
@@ -93,12 +95,12 @@ function formatCardLink (card, name) {
     return div;
 }
 
-function loadCards() {
-    $(".card-placeholder").each(function (index, input) {
+function loadFormCards() {
+    $(".card-placeholder").each(function(index, input) {
         var parent = input.parentElement;
         var card_id = input.id
         var horas = $(parent.parentElement).find(".hora_field")[0]
-        var name =  horas.name.replace("horas", "trello") + "[" + card_id + "]"
+        var name = horas.name.replace("horas", "trello") + "[" + card_id + "]"
         Trello.get("/cards/" + card_id, function(card) {
             var div = $("<div>");
             div.addClass("nodrop");
@@ -121,23 +123,34 @@ function loadCards() {
     });
 }
 
-function loadCard2(card_id, id) {
-    var parent = $("#" + id)
-    Trello.get("/cards/" + card_id, function(card) {
-        var div = $("<div>");
-        div.addClass("nodrop");
-        div.appendTo(parent);
-        $("<a>").attr({
-            href: card.url,
-            target: "trello"
-        }).addClass("cardnaohover").text(card.name).appendTo(div);
+function loadSimpleCards() {
+    updateLoggedIn();
+    Trello.members.get("me", function(member) {
+        $(".fullName").each(function(i, e) {
+            $(e).text(member.fullName);
+        });
+        $(".card-placeholder").each(function(index, input) {
+            var parent = input.parentElement;
+            var card_id = input.id;
+            Trello.get("/cards/" + card_id, function(card) {
+                var div = $("<div>");
+                div.addClass("nodrop");
+                div.appendTo(parent);
+                $("<a>").attr({
+                    href: card.url,
+                }).addClass("cardnaohover").text(card.name).appendTo(div);
+                $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
+                $("<br/>").appendTo(div);
+                $(input).detach();
+            });
+        });
     });
 }
 
 function getBoards() {
     updateLoggedIn();
     $("#output").empty();
-    Trello.members.get("me", function(member){
+    Trello.members.get("me", function(member) {
         $("#fullName").text(member.fullName);
         var $boards = $("<div>").text("Carregando boards...").appendTo("#output");
         Trello.get("members/me/boards", function(boards) {
@@ -170,7 +183,7 @@ function getBoards() {
 
 function filterCards(selector) {
     if (typeof projetos_boards != 'undefined') {
-        if (projetos_boards[selector.value][0] !=  null) {
+        if (projetos_boards[selector.value][0] != null) {
             $(".filter").css("display", "none");
             $.each(projetos_boards[selector.value], function(ix, board) {
                 $("." + board).css("display", "inline-table");

@@ -48,7 +48,7 @@ function sumCardSliders(parent) {
 function getTime(val) {
     var hours = parseInt(val / 60);
     var minutes = pad(val % 60 + "", 2);
-    return hours + ":" + minutes + " horas";
+    return hours + ":" + minutes + " hora(s)";
 }
 
 function initializeSliders() {
@@ -124,12 +124,12 @@ function horasCartoesInvalidas() {
 }
 
 function projetosVazios() {
-    var invalidos = false;
+    var vazios = false;
     $(".projeto-seletor").each(function(i, e) {
-        if ($(e).value == null)
-            invalidos = true;
+        if (e.value == null || e.value == "")
+            vazios = true;
     });
-    return invalidos;
+    return vazios;
 }
 
 function validateSliders() {

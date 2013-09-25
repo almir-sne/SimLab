@@ -17,3 +17,13 @@ function pega_horas_atividade() {
     var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
     return(atividadeH *60 + atividadeM);
 }
+
+function toggleAusencia() {
+    $("#ausencias").show();
+    $("#meses").hide();
+}
+
+function toggleMeses() {
+    $("#meses").show();
+    $("#ausencias").hide();
+}

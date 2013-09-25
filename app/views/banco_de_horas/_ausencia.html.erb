@@ -2,25 +2,29 @@
   <%= form_for(@ausencia, :url => :ausencias, :method => :post) do |f| %>
     <%= hidden_field_tag :user_id, @user.id %>
     <%= hidden_field_tag :mes, @month.id %>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-          <%= f.label :dia %>
-          <%= f.select :dia, options_for_select(@diasdomes, ((@ausencia.dia.blank?)?
-                Time.now.in_time_zone('Brasilia').day : @ausencia.numero)), {}, :style => 'width: 55px;'%>
-          <%= f.label :horas %>
-          <%= f.text_field :horas%>
-        </div>
-        <div class="span5">
+    <div class="row-fluid">
+      <div class="span8">
+        <%= f.label :dia %>
+        <%= f.select :dia, options_for_select(@diasdomes, ((@ausencia.dia.blank?)?
+              Time.now.in_time_zone('Brasilia').day : @ausencia.numero)), {}, :style => 'width: 55px;'%>
+        <%= f.label :justificativa %>
+        <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
+
+        <div class="actions">
+          <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
+            Cancelar
+          </button>
+          <%= f.submit "Ok", :class => "btn default-button" %>
         </div>
       </div>
-    </div>
-    <div style="width: 100%">
-      <div class="actions" style="float: left; margin-left: 10px;">
-        <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
-          Cancelar
-        </button>
-        <%= f.submit "Ok", :class => "btn default-button" %>
+      <div class="span4">
+        <h4>Status </h4>
+        <% if @ausencia.abonada? %>
+        Ausencia foi abonada por: <%= @ausencia.avaliador.nome %> <br/>
+        <%= pluralize @ausencia.horas, 'hora será contada como trabalhada' %>
+        <% else %>
+          Não abonada
+        <% end %>
       </div>
     </div>
   <% end %>
