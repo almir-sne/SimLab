@@ -49,6 +49,9 @@ class ProjetosController < ApplicationController
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
         map{|filho| [filho.nome, filho.id]}
+    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+      sort{|a, b| a.nome <=> b.nome}.
+        map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.order(:nome)
   end
@@ -107,10 +110,13 @@ class ProjetosController < ApplicationController
           failure ||= !(subprojeto.update_attribute :super_projeto_id, @projeto.id)
         end
       end
+      @projeto.update_attribute :super_projeto_id, nil
+    else
+      @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
+    failure ||= !(@projeto.update_attributes params[:projeto])
     respond_to do |format|
-    debugger
-      if true
+      if !failure
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
