@@ -61,4 +61,11 @@ class UsuariosController < ApplicationController
     end
     redirect_to :back
   end
+  
+  def get_id_by_nome
+    #user = Usuario.where('nome LIKE ?', '%'+params[:name]+'%')
+    user = Usuario.find_by_nome(params[:name])
+    render json: user.id
+  end
+
 end

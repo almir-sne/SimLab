@@ -50,6 +50,7 @@ class ProjetosController < ApplicationController
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
         map{|filho| [filho.nome, filho.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
+    @usuarios = Usuario.order(:nome)
   end
 
   # POST /projetos
@@ -113,7 +114,7 @@ class ProjetosController < ApplicationController
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
-        format.html { render action: "edit", notice: I18n.t("projetos.update.failure") }
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
     end
@@ -131,6 +132,4 @@ class ProjetosController < ApplicationController
       format.json { head :no_content }
     end
   end
-
-
 end

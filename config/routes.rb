@@ -1,4 +1,13 @@
 SinLab::Application.routes.draw do
+ 
+  resources :pagamentos, :only => [:index] do
+    collection do
+      get :meses
+      get :listar
+      post :create_or_update
+    end
+  end
+
   #  get "home/index"
   resources :banco_de_horas, :only => [:index] do
     collection do
@@ -15,13 +24,15 @@ SinLab::Application.routes.draw do
     get '/login' => 'devise/sessions#new'
     get '/logout' => 'devise/sessions#destroy'
   end
+
   resources :usuarios, :controller => "usuarios" do
     collection do
       post :custom_create
+      get :get_id_by_nome
     end
   end
 
-  resources :projetos
+  resources :projetos 
 
   resources :dias, :only => [:destroy, :create]
 

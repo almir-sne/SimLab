@@ -238,7 +238,8 @@ pt-BR:
       failure: "Erro na atualização do projeto."
   banco_de_horas:
     create:
-      sucess: "Banco de horas criado com sucesso."
+      sucess: "Cadastro criado/atualizado com sucesso."
+      failure: "Erro na criação/atualização do cadastro."
     update:
       sucess: "Banco de horas atualizado com sucesso."
     validation:
@@ -258,6 +259,7 @@ pt-BR:
   funcionalidade:
     validacao:
       atividade: "Validação de Atividades"
+      pagamentos: "Pagamentos"
     log:
       atividade: "Log de Atividades"
   prompt:

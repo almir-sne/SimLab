@@ -1,8 +1,3 @@
-<script>
- checkTrello();
-</script>
-
-
 <div class="row-fluid" style="margin-left: 15px">
   <div class="span2 blue-text">
     <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, banco_de_horas_path(:year => @year.to_i - 1,
@@ -41,14 +36,14 @@
       <td><%= dia.intervalo.strftime("%H:%M") %></td>
       <td style="width: 60%; border: none">
         <% dia.atividades.each do |atividade| %>
-          <%= content_tag(:div, 'Observação: ' + atividade.observacao, id: 'atividade' + atividade.id.to_s, class: atividade.cor_status) %>
-           <% atividade.cartaos.each do |cartao| %>
-            <% id = 'atividade' + atividade.id.to_s %>
-            <%= javascript_tag "loadCard2(\"#{cartao.cartao_id}\", \"#{id}\")", :id => id %>
-          <% end %>
-          <br />
-          <!-- <div class="blue-background" style="width: <%= (dia.bar_width)%>"> -->
-          <!-- </div> -->
+          <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
+            Observação: <br/>
+            <%=  atividade.observacao%>
+            <br />
+            <% atividade.cartoes.each do |cartao| %>
+              <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+            <% end %>
+          </div>
         <% end %>
       </td>
       <td style="border: 22px solid #FFF" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
@@ -73,7 +68,7 @@
   <% end %>
   <tr style="border-top:thin solid; border-color:black">
     <td colspan=4>Total</td>
-    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas %></td>
+    <td></td>
     <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
   </tr>
 </table>

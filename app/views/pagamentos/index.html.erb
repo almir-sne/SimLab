@@ -1,0 +1,11 @@
+<div class="blue-text" style="margin-left: 30px">
+  Pagamentos
+</div>
+
+<div class="blue-line">  </div>
+
+<ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
+  <% @usuarios.each do |u| %>
+    <li> <%= link_to u.nome, meses_pagamentos_path(:user_id => u.id), :class => "nav-links" %> </li>
+  <% end %>
+</ul>

@@ -31,7 +31,7 @@ class Dia < ActiveRecord::Base
   end
 
   def formata_horas
-    if (entrada.nil? || saida.nil?)
+    if (read_attribute(:entrada).blank? || read_attribute(:saida).blank?)
       "0:00"
     else
       hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i

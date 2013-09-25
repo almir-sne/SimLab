@@ -1,11 +1,14 @@
 require 'holidays'
 require 'holidays/br'
 class Mes < ActiveRecord::Base
-  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id
+  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id, :pagamentos_attributes
   has_many :atividades
   has_many :dias
+  has_many :pagamentos, :dependent => :destroy
   belongs_to :usuario
 
+  accepts_nested_attributes_for :pagamentos, :allow_destroy => true
+  
   def tem_reprovacao?
     !self.atividades.where("aprovacao is false").blank?
   end
@@ -36,7 +39,15 @@ class Mes < ActiveRecord::Base
   end
 
   def horas_contratadas
-     usuario.contrato_vigente_em(Date.new(ano, numero, 1)).hora_mes
+     contrato.hora_mes
+  end
+  
+  def contrato
+    usuario.contrato_vigente_em(Date.new(ano, numero, 1))
+  end
+  
+  def calcula_horas_trabalhadas
+    calcula_minutos_trabalhados(true)/60
   end
 
   private
