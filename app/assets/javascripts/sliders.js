@@ -126,7 +126,7 @@ function horasCartoesInvalidas() {
 function projetosVazios() {
     var vazios = false;
     $(".projeto-seletor").each(function(i, e) {
-        if (e.value == null)
+        if (e.value == null || e.value == "")
             vazios = true;
     });
     return vazios;
