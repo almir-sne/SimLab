@@ -1,5 +1,5 @@
 class Projeto < ActiveRecord::Base
-  attr_accessible :data_de_inicio, :descricao, :nome, :workon_attributes, :super_projeto_id
+  attr_accessible :data_de_inicio, :descricao, :nome, :workon_attributes, :super_projeto_id, :sub_projetos_attributes
 
   validates :data_de_inicio, :presence => true
 
@@ -16,6 +16,7 @@ class Projeto < ActiveRecord::Base
   has_many :boards
   accepts_nested_attributes_for :workon, :allow_destroy => true
   accepts_nested_attributes_for :boards, :allow_destroy => true
+  accepts_nested_attributes_for :sub_projetos, :reject_if => lambda { |a| a[:content].blank? }
 
   def coordenadores
      self.usuarios.includes(:workon).where("workons.coordenador" => true) |

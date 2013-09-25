@@ -1,3 +1,4 @@
+<%= javascript_include_tag :defaults, "nested_form" %>
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
@@ -21,21 +22,42 @@
       </div>
     </div>
         <div class="form-group">
-      <h3> Projetos relacionados </h3>
+      <h3> Relacionamento de projetos </h3>
       <div class="container-fluid">
         <div class="row-fluid">
           <div class=" span6">
-            <%= f.label "Super-Projeto" %>
-            <%= f.radio_button :super_projeto, true%>
-            <%= f.label "quais:" %>
-            <%= f.text_field :nome, :style => "width: 70%"%>
+            <table>
+              <tr>
+                <th><%= f.label "Super-Projeto" %></th>
+                <th style="padding: 0px 20px;"><%= f.label "Sub-Projeto"%></th>
+              </tr>
+              <tr>
+                <td><%= radio_button_tag :super_projeto, true, @eh_super_projeto%></td>
+                <td style="padding: 0px 20px;"><%= radio_button_tag :super_projeto, false, !@eh_super_projeto%></td>
+              </tr>
+            </table>
           </div>
-          <div class="offset1 span5">
-            <%= f.label "Sub-Projetos" %>
-            <%= f.radio_button :super_projeto, false%>
-            <%= f.label "de:" %>
-            <%= f.text_field :nome, :style => "width: 70%"%>
-          </div>
+
+            <div id="filhos">
+              <table>
+                <tr>
+                  <th><%= f.label "filho?", :style => "margin-right: 20%"%></th>
+                  <th><%= f.label "projetos filhos" %>                     </th>
+                </tr>
+                <% @filhos_for_select.each_with_index do |sub, index| %>
+                  <tr>
+                    <td><%= check_box_tag "sub_projetos[#{index}[filho]" %>    </td>
+                    <td><%= select_tag "sub_projetos[#{index}[id]]", options_for_select(@filhos_for_select, @filhos_for_select[index])%></td>
+                  </tr>
+                <%end%>
+              </table>
+            </div>
+
+            <div class="offset1 span5" id="pai">
+              <%= f.label "projeto pai" %>
+              <%= f.select :super_projeto_id, options_for_select(Projeto.find_all_by_super_projeto_id(nil).sort{|a, b| a.nome <=> b.nome}.map{|proj| [proj.nome, proj.id]}), :style => "width: 70%"%>
+            </div>
+
         </div>
       </div>
     </div>
@@ -100,4 +122,30 @@
   }
   var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
   checkTrello(getBoards);
+
+  $(document).ready(function() {
+    if($("input[name='super_projeto']:checked").val() == "true")
+      mostraFilhos();
+    else
+      mostraPai();
+  })
+
+  $("#super_projeto_true").click(function(){
+    mostraFilhos();
+  });
+
+  $("#super_projeto_false").click(function(){
+    mostraPai();
+  });
+
+  function mostraPai(){
+    $("#filhos").hide(200);
+    $("#pai").show(200);
+  }
+
+  function mostraFilhos(){
+    $("#filhos").show(200);
+    $("#pai").hide(200);
+  }
+
 </script>

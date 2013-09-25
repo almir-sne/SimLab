@@ -46,6 +46,10 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
+    @filhos_for_select  = Projeto.all.sort{ |projeto|
+      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
+        map{|filho| [filho.nome, filho.id]}
+    @eh_super_projeto = @projeto.super_projeto.blank?
   end
 
   # POST /projetos
@@ -68,6 +72,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
     boards = @projeto.boards
+    #lidar com boards
     unless params[:trello].blank?
       params[:trello].each do |id|
         repetido = false
@@ -88,12 +93,27 @@ class ProjetosController < ApplicationController
     boards.each do |b|
       b.destroy
     end
+    #lidar com subprojetos
+    failure = false
+    if params[:super_projeto] == "true"
+      params[:projeto].except! :super_projeto_id
+      subprojetos = params[:sub_projetos]
+      subprojetos.each do |index, sub|
+        subprojeto = Projeto.find(sub["id"].to_i)
+        if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
+          failure ||= !(subprojeto.update_attribute :super_projeto_id, nil)
+        elsif !(sub["filho"].nil?)
+          failure ||= !(subprojeto.update_attribute :super_projeto_id, @projeto.id)
+        end
+      end
+    end
     respond_to do |format|
-      if @projeto.update_attributes(params[:projeto])
+    debugger
+      if true
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: "edit", notice: I18n.t("projetos.update.failure") }
         format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
     end
