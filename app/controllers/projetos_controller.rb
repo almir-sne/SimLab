@@ -62,7 +62,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.new(params[:projeto])
     if @projeto.save
-      redirect_to projetos_path, notice: I18n.t("projetos.create.sucess")
+      redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
       puts @projeto.errors
       flash[:errors] = I18n.t("projetos.create.failure")
@@ -117,7 +117,7 @@ class ProjetosController < ApplicationController
     failure ||= !(@projeto.update_attributes params[:projeto])
     respond_to do |format|
       if !failure
-        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
         format.json { head :no_content }
       else
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }

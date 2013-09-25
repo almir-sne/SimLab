@@ -51,7 +51,7 @@ class DiasController < ApplicationController
       end
     end
     if dia_success and atividades_success
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
+      flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
