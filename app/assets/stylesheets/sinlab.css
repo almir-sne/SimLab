@@ -217,12 +217,12 @@
     border-radius: 5px
 }
 
-#loggedout {
+.loggedout {
     text-align: center;
     font-size: 20px;
     padding-top: 30px;
 }
-#loggedin {
+.loggedin {
     display: none;
 }
 
@@ -271,7 +271,7 @@
 
 .cardnaohover:hover { 
     background-color: inherit;
-    color: inherit;
+    color: black;
     text-decoration: none;
 }
 

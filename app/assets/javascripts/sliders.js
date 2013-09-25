@@ -48,7 +48,7 @@ function sumCardSliders(parent) {
 function getTime(val) {
     var hours = parseInt(val / 60);
     var minutes = pad(val % 60 + "", 2);
-    return hours + ":" + minutes + " horas";
+    return hours + ":" + minutes + " hora(s)";
 }
 
 function initializeSliders() {

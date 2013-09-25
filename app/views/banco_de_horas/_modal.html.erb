@@ -60,7 +60,7 @@
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
                 &nbsp;Arraste cartões do Trello aqui.
 
-                <% atividade_form.object.cartaos.each do |cartao| %>
+                <% atividade_form.object.cartoes.each do |cartao| %>
                   <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
                 <% end %>
               </div>
@@ -71,13 +71,13 @@
         </div>
 
         <div class="span5">
-          <div id="loggedout">
+          <div class="loggedout">
             <a class="btn default-button" id="connectLink" onclick="loginTrello(getCards)"> Conectar ao Trello</a>
           </div>
 
-          <div id="loggedin">
+          <div class="loggedin">
             <div id="header">
-              Logado como <b id="fullName"></b>
+              Logado como <b class="fullName"></b>
               <br/>
               <a id="disconnect" onclick="logoutTrello()">Log Out</a>
             </div>
