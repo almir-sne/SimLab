@@ -55,7 +55,7 @@
 
             <div class="offset1 span5" id="pai">
               <%= f.label "projeto pai" %>
-              <%= f.select :super_projeto_id, options_for_select(@pais_for_select, [@projeto.super_projeto.nome, @projeto.super_projeto_id]), :style => "width: 70%"%>
+              <%= f.select :super_projeto_id, options_for_select(@pais_for_select, [@projeto.super_projeto.try(:nome), @projeto.super_projeto_id]), :style => "width: 70%"%>
             </div>
 
         </div>
