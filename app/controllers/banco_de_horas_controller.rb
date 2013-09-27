@@ -102,53 +102,14 @@ class BancoDeHorasController < ApplicationController
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
     @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
-    @ausencia = Ausencia.new
-    
+    if params[:id].nil?
+      @ausencia =  Ausencia.new
+    else
+      @ausencia =  Ausencia.find(params[:id])
+    end
     respond_to do |format|
       format.html
       format.js
-    end
-  end
-
-  private
-  def lista_dias_no_mes(ano, mes)
-    data_final = Date.new(ano, mes, 5).at_end_of_month.day
-    (1..data_final).to_a
-  end
-
-  def anos_selecionados(param_anos, hoje)
-    if param_anos.nil?
-      hoje.year
-    elsif param_anos == "-1"
-      [2012,2013,2014]
-    else
-      param_anos
-    end
-  end
-
-  def meses_selecionados(param_meses, hoje)
-    if param_meses.nil?
-      return hoje.month
-    elsif param_meses == "-1"
-      (1..12).to_a
-    else
-      param_meses
-    end
-  end
-
-  def usuarios_selecionados(param_usuarios)
-    if param_usuarios.nil? || param_usuarios == "-1"
-      Usuario.select(:id)
-    else
-      Usuario.where(:id => param_usuarios.to_i)
-    end
-  end
-
-  def projetos_selecionados(param_projetos)
-    if param_projetos.nil? || param_projetos == "-1"
-      Projeto.select(:id)
-    else
-      Projeto.where(:id => param_projetos .to_i)
     end
   end
 end

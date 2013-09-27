@@ -42,6 +42,9 @@
 
         <div class="span2 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
+            <%if can? :index, Ausencia %>
+              <li> <%=  link_to "Ausências", ausencias_path, :class => "nav-links"%> </li>
+            <% end %>
             <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
             <%if can? :see, Usuario%>
               <li> <%=  link_to "Usuários", usuarios_path(:status => "true"), :class => "nav-links"%> </li>

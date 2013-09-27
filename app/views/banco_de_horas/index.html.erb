@@ -17,12 +17,10 @@
 
 <div class="blue-line">  </div>
 
-<%= link_to "Ausências", "#", :onclick => "toggleAusencia()" %>
-<%= link_to "Meses", "#", :onclick => "toggleMeses()" %>
 <table class="list-table days-table" id="ausencias" style="display: none">
   <tr>
     <th>Dia</th>
-    <th>Justificativa </th>
+    <th style="width: 60%">Justificativa </th>
     <th>Abonada?</th>
     <th></th>
   </tr>
@@ -43,8 +41,23 @@
           <i class="icon-remove"></i>
         <% end %>
       </td>
+      <td>
+        <%= form_tag( { :controller => :banco_de_horas, :action => :ausencia, :id => ausencia.id },
+          {:remote => true, :method => :post, :class => "inline-form"} ) do %>
+          <%= hidden_field_tag :user_id, @user.id %>
+          <%= hidden_field_tag :mes, @month.id %>
+          <%= link_to_submit ' ', :class => 'icon-edit nohover', :style => "margin-right: 10px", :title => "Editar" %>
+        <% end %>
+        <%= link_to '<i class="icon-trash"> </i>'.html_safe,
+          ausencia_path(ausencia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+          :class => 'nohover', :title => "Excluir"%>
+      </td>
     </tr>
   <% end %>
+  <tr style="border-top:thin solid; border-color:black">
+    <td colspan=3>Horas totais de faltas abonadas </td>
+    <td><%= (@month.blank?)? "00:00" : @month.horas_ausencias_abonadas %></td>
+  </tr>
 </table>
 
 <table class="list-table days-table" id="meses">
@@ -76,8 +89,8 @@
           </div>
         <% end %>
       </td>
-      <td style="border: 22px solid #FFF" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
-        <%= dia.horas_atividades_formato + " h" %>
+      <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
+        <%= dia.horas_atividades_formato + "h" %>
       </td>
       <td style="width: 13%;">
         <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
@@ -97,39 +110,46 @@
     </tr>
   <% end %>
   <tr style="border-top:thin solid; border-color:black">
-    <td colspan=4>Total</td>
-    <td></td>
-    <td><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %></td>
+    <td colspan=5>Total incluindo faltas abonadas </td>
+    <td style="padding: 22px"><%= (@month.blank?)? "00:00" : @month.horas_trabalhadas_aprovadas %>h</td>
   </tr>
 </table>
 <br />
 <br />
-<div class="navbar-fixed-bottom toolbar">
-  <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
-    {:remote => true, :method => :post, :class => "inline-form"} ) do %>
-    <%= hidden_field_tag :user_id, @user.id %>
-    <%= hidden_field_tag :ano, @year %>
-    <%= hidden_field_tag :mes, @month.id %>
-    <%= link_to_submit 'Adicionar', :class => 'btn default-button'%>
-  <% end %>
-
-  <%= form_tag({ :controller => :banco_de_horas, :action => :ausencia, :id => nil },
-    {:remote => true, :method => :post, :class => "inline-form"}) do %>
-    <%= hidden_field_tag :user_id, @user.id %>
-    <%= hidden_field_tag :mes, @month.id %>
-    <%= submit_tag 'Registrar ausência', :class => 'btn default-button'%>
-  <% end %>
-
-  <%= link_to 'Voltar', :back, :class => "btn default-button"%>
-  <% m = Date.new(@year.to_i, @month.numero, 1) %>
-  <% today = Date.today %>
-  <% if m.month == today.month and m.year == today.year and !@month.blank?%>
-    <div style="float: right">
-      Resta(m) <b> <%= @month.horas_restantes %> </b> hora(s) de trabalho e
-      <b> <%= @month.dias_uteis_restantes %> </b> dia(s) útei(s) para concluir a meta do mês <br/>
-      Trabalhe <b> <%= @month.horas_a_fazer_por_dia %> </b> hora(s) por dia útil para comprir a meta
+<div class=" container-fluid navbar-fixed-bottom toolbar">
+  <div class="row-fluid">
+    <div class="span7">
+      <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
+        {:remote => true, :method => :post, :class => "inline-form"} ) do %>
+        <%= hidden_field_tag :user_id, @user.id %>
+        <%= hidden_field_tag :ano, @year %>
+        <%= hidden_field_tag :mes, @month.id %>
+        <%= link_to_submit 'Registrar atividades', :class => 'btn default-button'%>
+      <% end %>
+      <%= form_tag({ :controller => :banco_de_horas, :action => :ausencia, :id => nil },
+        {:remote => true, :method => :post, :class => "inline-form"}) do %>
+        <%= hidden_field_tag :user_id, @user.id %>
+        <%= hidden_field_tag :mes, @month.id %>
+        <%= submit_tag 'Registrar ausência', :class => 'btn default-button'%>
+      <% end %>
+      <%= link_to "Ver meses", "#", :onclick => "toggleMeses()", :class => 'btn default-button',
+        :id => "meses-button", :style => "display: none"%>
+      <%= link_to "Ver ausências", "#", :onclick => "toggleAusencia()", :class => 'btn default-button',
+        :id => "ausencias-button"%>
+      <%= link_to 'Voltar', :back, :class => "btn default-button"%>
     </div>
-  <% end %>
+    <div class="span5">
+      <% m = Date.new(@year.to_i, @month.numero, 1) %>
+      <% today = Date.today %>
+      <% if m.month == today.month and m.year == today.year and !@month.blank?%>
+        <div style="float: right">
+          Resta(m) <b> <%= @month.horas_restantes %> </b> hora(s) de trabalho e
+          <b> <%= @month.dias_uteis_restantes %> </b> dia(s) útei(s) para concluir a meta do mês <br/>
+          Trabalhe <b> <%= @month.horas_a_fazer_por_dia %> </b> hora(s) por dia útil para comprir a meta
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"

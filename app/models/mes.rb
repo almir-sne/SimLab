@@ -43,6 +43,10 @@ class Mes < ActiveRecord::Base
      contrato.hora_mes
   end
   
+  def horas_ausencias_abonadas
+    string_hora(self.ausencias.where(:abonada => true).sum(:horas)/60)
+  end
+
   def contrato
     usuario.contrato_vigente_em(Date.new(ano, numero, 1))
   end
@@ -54,9 +58,10 @@ class Mes < ActiveRecord::Base
   private
   def calcula_minutos_trabalhados(aprovados)
     if aprovados
-      return self.atividades.where(:aprovacao => true).sum(:duracao)/60
+      return self.atividades.where(:aprovacao => true).sum(:duracao)/60 +
+        self.ausencias.where(:abonada => true).sum(:horas)/60
     else
-      return self.atividades.sum(:duracao)/60
+      return self.atividades.sum(:duracao)/60 + self.ausencias.where(:abonada => true).sum(:horas)/60
     end
   end
 

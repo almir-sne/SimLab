@@ -13,17 +13,21 @@ function pega_horas_dia()
 }
 
 function pega_horas_atividade() {
-    var atividadeH =  parseInt($("#dia_atividades_attributes_0_horas_4i").val());
-    var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
-    return(atividadeH *60 + atividadeM);
+    var atividadeH = parseInt($("#dia_atividades_attributes_0_horas_4i").val());
+    var atividadeM = parseInt($("#dia_atividades_attributes_0_horas_5i").val());
+    return(atividadeH * 60 + atividadeM);
 }
 
 function toggleAusencia() {
     $("#ausencias").show();
+    $("#meses-button").show();
     $("#meses").hide();
+    $("#ausencias-button").hide();
 }
 
 function toggleMeses() {
     $("#meses").show();
+    $("#ausencias-button").show();
     $("#ausencias").hide();
+    $("#meses-button").hide();
 }

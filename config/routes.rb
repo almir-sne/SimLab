@@ -36,7 +36,11 @@ SinLab::Application.routes.draw do
 
   resources :dias, :only => [:destroy, :create]
   
-  resources :ausencias, :only => [:destroy, :create]
+  resources :ausencias, :only => [:index, :destroy, :create] do
+    collection do
+      post :validar
+    end
+  end
 
   resources :resumo do
     collection do

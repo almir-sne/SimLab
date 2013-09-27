@@ -12,7 +12,6 @@ function getCards() {
             $.each(cards, function(ix, card) {
                 $("<a>").attr({
                     href: card.url,
-                    target: "trello",
                     id: card.id,
                     draggable: true,
                     style: "width: 100%",
@@ -82,7 +81,6 @@ function formatCardLink(card, name) {
     div.addClass("nodrop");
     $("<a>").attr({
         href: card.attr("href"),
-        target: "trello"
     }).addClass("card").text(card.html()).appendTo(div);
     $("<input>").attr({
         type: "checkbox",
@@ -107,7 +105,6 @@ function loadFormCards() {
             div.appendTo(parent);
             $("<a>").attr({
                 href: card.url,
-                target: "trello"
             }).addClass("card").text(card.name).appendTo(div);
             $("<input>").attr({
                 type: "checkbox",
@@ -173,7 +170,6 @@ function getBoards() {
                     }).appendTo(div);
                     $("<a>").attr({
                         href: board.url,
-                        target: "trello"
                     }).addClass("card").text(board.name).appendTo(div);
                 }
             });
