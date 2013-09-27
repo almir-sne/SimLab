@@ -137,8 +137,9 @@ ActiveRecord::Schema.define(:version => 20130927205139) do
     t.text     "descricao"
     t.float    "valor"
     t.integer  "horas_totais"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "super_projeto_id"
   end
 
   create_table "telefones", :force => true do |t|

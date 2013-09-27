@@ -25,7 +25,7 @@ class BancoDeHorasController < ApplicationController
     else
       @dia =  Dia.find(params[:id])
     end
-    @projetos = @user.projetos(:order => :nome).collect {|p| [p.nome, p.id ] }
+    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
       format.html
@@ -89,7 +89,7 @@ class BancoDeHorasController < ApplicationController
         :avaliador_id => current_user.id
       )
     end
-    flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
+    flash[:notice] = I18n.t("banco_de_horas.validation.success")
     redirect_to :back
   end
 

@@ -13,7 +13,6 @@ class Atividade < ActiveRecord::Base
   validates :mes_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
-  validates :horas, :exclusion => {:in => 0..1}
 
   def horas
     unless read_attribute(:duracao).blank?
@@ -53,15 +52,15 @@ class Atividade < ActiveRecord::Base
     end
     retorno
   end
-  
+
   def cor_status
     if self.aprovacao == true
       "green-background"
     elsif self.aprovacao == false
       "red-background"
     else
-      ""  
+      ""
     end
-  end  
-  
+  end
+
 end
