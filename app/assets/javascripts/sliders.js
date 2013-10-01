@@ -1,6 +1,5 @@
 function recalculaHoras() {
-    var max_horas = pega_horas_dia();
-    updateAllSliders(max_horas);
+    updateAllSliders();
     $("#horas_do_dia").text(getTime(max_horas));
 }
 
@@ -79,7 +78,8 @@ function initSlider(div, time, max_time) {
     });
 }
 
-function updateAllSliders(maxtime) {
+function updateAllSliders() {
+    var maxtime = pega_horas_dia();
     $(".slider, .card-slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;

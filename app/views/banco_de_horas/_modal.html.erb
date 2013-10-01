@@ -61,7 +61,7 @@
                 &nbsp;Arraste cartões do Trello aqui.
 
                 <% atividade_form.object.cartoes.each do |cartao| %>
-                  <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+                  <input type="hidden" class="card-placeholder-form" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
                 <% end %>
               </div>
               <div class="grey-line"> </div>
@@ -104,5 +104,8 @@
   initializeSliders();
   $(document).on('nested:fieldAdded', function(event){
     createSlider(event.field.find('.slider'));
-  })
+  });
+  $(document).on('nested:fieldRemoved', function(event){
+    updateAllSliders();
+  });
 </script>
