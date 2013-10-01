@@ -132,6 +132,12 @@ function projetosVazios() {
     return vazios;
 }
 
+function diaVazio() {
+    var value = $("#dia_numero").val();
+    if (value == "" || value == null) return true;
+    else return false;
+}
+
 function validateSliders() {
     if (projetosVazios()) {
         alert("Nenhum projeto selecionado");
@@ -147,6 +153,10 @@ function validateSliders() {
     }
     else if (horasCartoesInvalidas()) {
         alert("Horas em atividades diferem dos cartões");
+        return false;
+    }
+    else if (diaVazio()) {
+        alert("Nenhum dia selecionado");
         return false;
     }
     return true;

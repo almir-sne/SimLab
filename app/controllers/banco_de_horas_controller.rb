@@ -18,7 +18,7 @@ class BancoDeHorasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
+    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
@@ -75,6 +75,8 @@ class BancoDeHorasController < ApplicationController
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
+    @aprovacoes  = [["Aprovações - Todas",-1],["Aprovadas",1],["Reprovadas",2],["Não Vistas",3]]
+    @aprovacao   = params[:aprovacao].blank? ? params[:aprovacao] = -1 : params[:aprovacao]
   end
 
   def mandar_validacao
