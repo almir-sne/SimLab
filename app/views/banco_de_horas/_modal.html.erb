@@ -41,7 +41,7 @@
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-                {}, {:class=>"projeto-seletor", :onchange => "filterCards(this)"}%>
+              {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); escondeProjetos()"}%>
               <br/>
 
               <div class="slider">
@@ -101,11 +101,15 @@
 
 
 <script>
-  initializeSliders();
-  $(document).on('nested:fieldAdded', function(event){
-    createSlider(event.field.find('.slider'));
-  });
-  $(document).on('nested:fieldRemoved', function(event){
-    updateAllSliders();
-  });
+          initializeSliders();
+          escondeProjetos();
+          updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+          $(document).on('nested:fieldAdded', function(event) {
+            createSlider(event.field.find('.slider'));
+            escondeProjetos();
+          });
+          $(document).on('nested:fieldRemoved', function(event) {
+            updateAllSliders();
+            escondeProjetos();
+          });
 </script>

@@ -31,3 +31,26 @@ function toggleMeses() {
     $("#ausencias").hide();
     $("#meses-button").hide();
 }
+
+function escondeProjetos() {
+    var seletores = $(".fields:visible > .projeto-seletor");
+    seletores.children().show();
+    seletores.each(function(i, e) {
+        seletores.each(function(j, f) {
+            if (e != f)
+                $($(f).find('[value=' + e.value + ']').hide());
+            if ($(f.selectedOptions).css('display') == 'none')
+                getFirstValid(f);
+        });
+    });
+}
+
+function getFirstValid(seletor) {
+    seletor.value = "";
+    $(seletor.children).each(function(i, e) {
+        if ($(e).css('display') != 'none') {
+            seletor.value = e.value;
+            return;
+        }
+    });
+}

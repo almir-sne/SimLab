@@ -1,6 +1,6 @@
 function recalculaHoras() {
     updateAllSliders();
-    $("#horas_do_dia").text(getTime(max_horas));
+    $("#horas_do_dia").text(getTime(pega_horas_dia()));
 }
 
 function slideTime(event, ui) {
@@ -125,7 +125,7 @@ function horasCartoesInvalidas() {
 
 function projetosVazios() {
     var vazios = false;
-    $(".projeto-seletor").each(function(i, e) {
+    $(".fields:visible > .projeto-seletor").each(function(i, e) {
         if (e.value == null || e.value == "")
             vazios = true;
     });
