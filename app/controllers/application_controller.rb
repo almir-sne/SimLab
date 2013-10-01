@@ -31,7 +31,34 @@ class ApplicationController < ActionController::Base
     data_final = Date.new(ano, mes, 5).at_end_of_month.day
     (1..data_final).to_a
   end
-
+  
+  def lista_dias_no_mes_limitado(ano, mes)
+    data_atual = Date.today
+    #monta a data minima
+    data_limite = data_atual - 4.days
+    #verificar se o mes atual está na data limite
+    if mes != data_limite.month and mes != data_atual.month
+      #fora do range
+      [].to_a
+    elsif mes == data_limite.month and mes != data_atual.month
+      #está perto do fim do mes da data limite
+      data_inicio = data_limite.day
+      data_fim = Date.new(ano, mes, 5).at_end_of_month.day
+      (data_inicio..data_fim).to_a
+    elsif mes == data_atual.month and mes != data_limite.month
+      #esta perto do inicio do mes da data atual
+      data_inicio = 1
+      data_fim = data_atual.day
+      (data_inicio..data_fim).to_a
+    else
+      #está no meio do mes
+      data_inicio = data_limite.day
+      data_fim = data_atual.day
+      (data_inicio..data_fim).to_a
+    end 
+    #data_final = Date.new(ano, mes, 5).at_end_of_month.day
+    #(1..data_final).to_a
+  end
   def anos_selecionados(param_anos, hoje)
     if param_anos.nil?
       hoje.year
