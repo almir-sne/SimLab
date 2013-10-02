@@ -34,14 +34,20 @@ function updateLoggedIn() {
 function loginTrello(callback) {
     Trello.authorize({
         type: "popup",
-        success: callback
+        success: callback,
+        name: "SimLab",
+        scope: {read: true, write: true, account: false},
+        expiration: "never"
     });
 }
 
 function checkTrello(callback) {
     Trello.authorize({
         interactive: false,
-        success: callback
+        success: callback,
+        name: "SimLab",
+        scope: {read: true, write: true, account: false},
+        expiration: "never"
     });
 }
 
