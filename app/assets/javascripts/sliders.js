@@ -30,7 +30,7 @@ function updateHorasAtividades(val, max, div) {
 
 function sumSliders() {
     var val = 0;
-    $(".slider > .hora_field").each(function(i, e) {
+    $(".fields:visible > .slider > .hora_field").each(function(i, e) {
         val += parseInt(e.value);
     });
     return val;
@@ -116,7 +116,7 @@ function pad(str, max) {
 
 function horasCartoesInvalidas() {
     var invalidos = false;
-    $(".fields").each(function(i, e) {
+    $(".fields:visible").each(function(i, e) {
         if (sumCardSliders($(e).find(".trello-dropover")) > parseInt($(e).find(".hora_field")[0].value))
             invalidos = true;
     });

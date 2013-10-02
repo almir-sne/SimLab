@@ -1,2 +1,15 @@
+$(document).on('nested:fieldAdded', function(event) {
+  createSlider(event.field.find('.slider'));
+  escondeProjetos();
+});
+$(document).on('nested:fieldRemoved', function(event) {
+  updateAllSliders();
+  escondeProjetos();
+});
 $("#primeiraprosanto").html("<%= escape_javascript(render(:partial => "modal")).html_safe %>");
 $('#primeiraprosanto').modal('show');
+initializeSliders();
+escondeProjetos();
+updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+$("#key").val(Trello.key)
+$("#token").val(Trello.token)

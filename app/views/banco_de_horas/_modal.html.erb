@@ -93,23 +93,10 @@
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
           Cancelar
         </button>
+        <%= hidden_field_tag :key  %>
+        <%= hidden_field_tag :token  %>
         <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
       </div>
     </div>
   <% end %>
 </div>
-
-
-<script>
-          initializeSliders();
-          escondeProjetos();
-          updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
-          $(document).on('nested:fieldAdded', function(event) {
-            createSlider(event.field.find('.slider'));
-            escondeProjetos();
-          });
-          $(document).on('nested:fieldRemoved', function(event) {
-            updateAllSliders();
-            escondeProjetos();
-          });
-</script>

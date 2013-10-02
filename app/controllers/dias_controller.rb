@@ -46,6 +46,7 @@ class DiasController < ApplicationController
               c.duracao = atividade_attr[:trello][k][:slider]
               c.save
             end
+            Cartao.update_on_trello(params[:key], params[:token], k)
           end
         end
       end
