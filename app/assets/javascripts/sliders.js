@@ -122,11 +122,12 @@ function horasCartoesInvalidas() {
     });
     return invalidos;
 }
-
+//essa função não faz sentido
+//rezende
 function projetosVazios() {
     var invalidos = false;
     $(".projeto-seletor").each(function(i, e) {
-        if ($(e).value == null)
+        if ($(e).val() == null)
             invalidos = true;
     });
     return invalidos;

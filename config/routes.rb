@@ -32,7 +32,15 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :projetos 
+  resources :projetos do
+    collection do
+      post :coordenadorform
+    end
+  end
+
+  resources :coordenacoes
+  
+  resources :workons
 
   resources :dias, :only => [:destroy, :create]
 
@@ -42,7 +50,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-   authenticated :usuario do
+  authenticated :usuario do
     root :to => 'banco_de_horas#show_mes'
   end
   root :to => "home#index"

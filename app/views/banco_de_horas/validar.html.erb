@@ -2,35 +2,38 @@
   <%= t("funcionalidade.validacao.atividade")%>
 </div>
 
-<div class="row-fluid" style="margin-left: 15px">
-  <div class="span3 blue-text">
-    <%= select_tag(:ano_select, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
-   </div>
-
-  <div class="span3 blue-text">
-    <%= select_tag(:mes_select, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
-  </div>
-  
-  <div class="span3 blue-text">
-    <%= select_tag(:dia_select, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
-   </div>
-
-
-</div>
-
-<div class="row-fluid">
-  <div class="span2">
-    <%= select_tag(:usuario_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3 blue-text">
+      <%= select_tag(:ano_select, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
     </div>
-  <div class="span2">
-    <%= select_tag(:projeto_select, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+
+    <div class="span3 blue-text">
+      <%= select_tag(:mes_select, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
+    </div>
+
+    <div class="span3 blue-text">
+      <%= select_tag(:dia_select, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
+    </div>
   </div>
-  <div class="span4">
-    <%= button_tag('Filtra', {:type => 'button', :id => 'filtra', :class => 'btn default-button'}) %>
+
+  <div class="row-fluid">
+    <div class="span2">
+      <%= select_tag(:usuario_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span2">
+      <%= select_tag(:projeto_select, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span2">
+      <%= select_tag(:aprovacao_select, options_for_select(@aprovacoes, @aprovacao), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span2">
+      <%= button_tag('Filtra', {:type => 'button', :id => 'filtra', :class => 'btn default-button'}) %>
+    </div>
+    <div class="span4" style="font-size:150%">
+      <b><%=@total_horas%> horas ainda não aprovadas </b>
+    </div >
   </div>
-  <div class="span4" style="font-size:150%">
-    <b><%=@total_horas%> horas ainda não aprovadas </b>
-  </div >
 </div>
 
 <div class="blue-line">  </div>
@@ -72,7 +75,7 @@
 <br />
 
 <script>
-  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val()});
+  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val() + "&aprovacao=" + $('#aprovacao_select').val()});
 
   $('#aprova_todas').click(function(){$('.aprovacao_radio').filter('[value=true]').prop('checked', true) });
 </script>

@@ -1,5 +1,5 @@
 class Workon < ActiveRecord::Base
-  attr_accessible :projeto_id, :usuario_id, :coordenador
+  attr_accessible :projeto_id, :usuario_id, :coordenacoes_attributes
 
   belongs_to :usuario
   belongs_to :projeto
@@ -8,5 +8,11 @@ class Workon < ActiveRecord::Base
   validates_presence_of :projeto_id
   validates_presence_of :usuario_id
   validates :usuario_id, :uniqueness => {:scope => :projeto_id}
+
+  accepts_nested_attributes_for :coordenacoes, :allow_destroy => true
+  
+  #def coordenadores
+    #Usuario.joins(:coordenacoes).where(coordenacoes: {workon_id: self.id }).collect {|u| [u.nome, u.id]}
+  #end
 
 end

@@ -13,16 +13,18 @@ class Usuario < ActiveRecord::Base
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
 
   has_one  :address, :dependent => :destroy
-  has_many :projetos, :through => :workon
-  has_many :workon
+  has_many :projetos, :through => :workons
+  has_many :workons
   has_many :telefones
   has_many :contas
   has_many :contratos
+  has_many :coordenacoes
 
   accepts_nested_attributes_for :address, :allow_destroy => true
   accepts_nested_attributes_for :telefones, :allow_destroy => true
   accepts_nested_attributes_for :contas, :allow_destroy => true
   accepts_nested_attributes_for :contratos, :allow_destroy => true
+  accepts_nested_attributes_for :coordenacoes, :allow_destroy => true
 
   validates :nome, :presence => true,
     :uniqueness => true
@@ -30,24 +32,35 @@ class Usuario < ActiveRecord::Base
   has_many :meses
   has_many :dias
   has_many :atividades
-
+  
   def projetos_coordenados
-    self.projetos.includes(:workon).where("workons.coordenador" => true)
+    Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
   end
+
+  #def projetos_coordenados
+    #self.projetos.includes(:workon).where("workons.coordenador" => true)
+  #end
 
   def equipe_coordenada
-    equipe(projetos_coordenados)
+    equipe_coordenada(projetos_coordenados)
   end
+  
+  def equipe_coordenada_por_projetos(projeto)
+  Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
+ end
 
-  def equipe(projetos)
-    coord = Array.new
-    projetos.each{ |p|
-      p.usuarios.each  { |u|
-        coord << u if (!coord.include? u)
-      }
-    }
-    coord.sort
-  end
+  #def equipe(projetos)
+    #jeito1
+    #coord = Array.new
+    #projetos.each{ |p|
+      #p.usuarios.each  { |u|
+        #coord << u if (!coord.include? u)
+      #}
+    #}
+    #coord.sort
+    #jeito2
+    #Usuario.joins(:workons).where(workons: {projeto_id: projetos}).group("id")
+  #end
 
   def horario_data(data)
     contrato_vigente_em(data).hora_mes
@@ -56,6 +69,21 @@ class Usuario < ActiveRecord::Base
   def contrato_vigente_em(data)
     contrato = contratos.where("inicio <= ? and fim >= ?", data, data).first
     contrato ||= contratos.last
+  end
+  
+  def monta_coordenacao_hash
+    hash = Hash.new
+    workons_coordenados = self.coordenacoes.map{|c| c.workon}
+    workons_coordenados.each do |w|
+      if (hash[w.projeto_id.to_i] == nil)
+        users = Array.new
+        users << w.usuario_id.to_i
+        hash[w.projeto_id.to_i] = users
+      else
+        hash[w.projeto_id.to_i] << w.usuario_id.to_i
+      end
+    end
+    return hash
   end
 
 end

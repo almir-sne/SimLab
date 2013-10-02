@@ -77,11 +77,11 @@ class Mes < ActiveRecord::Base
 
   def calcula_dias_uteis_restantes
     data = Date.today
+    final_do_mes = data.at_end_of_month
     dia_model = self.dias.where('numero = ?', data.day).first
     if dia_model
       data = data.next
     end
-    final_do_mes = data.at_end_of_month
     dias_uteis = 0
     d = data
     while (d != final_do_mes + 1.day)

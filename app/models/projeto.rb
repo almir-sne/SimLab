@@ -1,5 +1,5 @@
 class Projeto < ActiveRecord::Base
-  attr_accessible :data_de_inicio, :descricao, :nome, :workon_attributes
+  attr_accessible :data_de_inicio, :descricao, :nome, :workons_attributes
 
   validates :data_de_inicio, :presence => true
 
@@ -12,14 +12,14 @@ class Projeto < ActiveRecord::Base
 
   has_many :atividades
   has_many :usuarios,  :through => :workon
-  has_many :workon
+  has_many :workons
   has_many :boards
-  accepts_nested_attributes_for :workon, :allow_destroy => true
+  accepts_nested_attributes_for :workons, :allow_destroy => true
   accepts_nested_attributes_for :boards, :allow_destroy => true
 
-  def coordenadores
-    self.usuarios.includes(:workon).where("workons.coordenador" => true)
-  end
+  #def coordenadores
+    #self.usuarios.includes(:workon).where("workons.coordenador" => true)
+  #end
 
   def horas_totais
     atividades.where(:aprovacao => true).sum(:duracao)/3600

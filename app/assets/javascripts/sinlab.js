@@ -17,3 +17,37 @@ function pega_horas_atividade() {
     var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
     return(atividadeH *60 + atividadeM);
 }
+
+//@author rezende
+function autocomplete_source(ac_source) {
+  $('.typeahead').typeahead({
+    source: ac_source, 
+    minLength: 0, 
+    items: ac_source.length,
+    //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
+    matcher: function(item) {
+      if (this.query == "*") 
+        return true;
+      else
+        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+          return true;
+        }
+    }
+  });
+}
+
+/*
+function gera_coordenador_form(workon_id) {
+    //carregar a lista de coordenadores
+    $.ajax({
+      type: "POST",
+      url: "/projetos/coordenadorform", 
+        data: {wrkn_id: workon_id},
+        async: false,
+        success: function(result) {
+          $("#crd_form").html("<%= escape_javascript(render(:partial => 'banana')).html_safe %>");
+          $('#crd_form').modal('show');           
+        }
+    });  
+}
+*/

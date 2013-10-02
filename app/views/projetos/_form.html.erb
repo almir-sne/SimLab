@@ -1,4 +1,4 @@
-<%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
     <div class="form-group">
@@ -26,29 +26,31 @@
         <div class="row-fluid">
           <div class="span5">
             <h3> Equipe </h3>
-            <input type='text' data-provide="typeahead" class='typeahead' id='campo_novo_usuario'/>
-            <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workon, :class=>"nohover" %> 
+            <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
+            <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workons, :class=>"nohover" %>
             <table>
               <tr>
-                <th> Coodernador? </th>
                 <th style="padding: 0px 20px;"> Nome </th>
                 <th> Remover </th>
+                <th></th>
               </tr>
-                <%= f.fields_for :workon, :wrapper => false do |worker| %>
+              <%= f.fields_for :workons, :wrapper => false do |worker| %>
                 <tr>
-                  <td style="float: right"><%= worker.check_box :coordenador%> </td>
-                  <td style="padding: 0px 20px;">                 
-                    <%= worker.object.usuario.try(:nome) %>
+                  <td style="padding: 0px 20px;">
+                    <%= worker.object.try(:usuario).try(:nome) %>
                     <%= worker.hidden_field :usuario_id %>
                   </td>
                   <td style="margin-left: 10px">
                     <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
                   </td>
+                  <td>
+<%= link_to "Adicionar Coordenadores", edit_workon_path( Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id })
+%>
+                  </td>
                 </tr>
-                <% end %>               
+              <% end %>
               <tr id='novo_item'></tr>
-              </table>
-              
+            </table>
           </div>
           <div class="offset2 span3">
 
@@ -75,45 +77,39 @@
   </div>
 <% end %>
 
+
 <script>
-  var users = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>
+  $(document).ready(
+    function() {
+      autocomplete_source(<%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>);
+    }
+  );
   window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
-    //@author rezende, stein
-    var a = $(content).insertBefore($('#novo_item')); 
-    var tableData = a.children().eq(1);
-    var usuario_id_hidden_input = $(document.createElement('input'));
-    var new_random_id = a.children().eq(0).children().eq(1).attr('id').split('_')[3];
-    nome = ($('#campo_novo_usuario').val());
-    usuario_id_hidden_input.attr('id', 'projeto_workon_attributes_'+new_random_id+'_usuario_id');
-    usuario_id_hidden_input.attr('name', 'projeto[workon_attributes]['+new_random_id+'][usuario_id]');
-    usuario_id_hidden_input.attr('type', 'hidden');
-    $.ajax({
-      url: "<%= get_id_by_nome_usuarios_path %>", 
+    if (assoc == "coordenacoes") {
+      var a = $(content).insertBefore($('#novo_item_coordenador'));
+      return a;
+    }
+    else {
+      var a = $(content).insertBefore($('#novo_item'));
+      //@author rezende, stein
+      var tableData = a.children().eq(0);
+      var usuario_id_hidden_input = $(document.createElement('input'));
+      var new_random_id = a.children().eq(1).children().eq(0).attr('id').split('_')[3];
+      nome = ($('#autocomplete_field').val());
+      usuario_id_hidden_input.attr('id', 'projeto_workons_attributes_'+new_random_id+'_usuario_id');
+      usuario_id_hidden_input.attr('name', 'projeto[workons_attributes]['+new_random_id+'][usuario_id]');
+      usuario_id_hidden_input.attr('type', 'hidden');
+      $.ajax({
+        url: "<%= get_id_by_nome_usuarios_path %>",
         data: {name: nome}, 
         success: function(result) { 
-            usuario_id_hidden_input.attr('value', result);
+          usuario_id_hidden_input.attr('value', result);
         }
-    });
-    tableData.text(nome);
-    tableData.append(usuario_id_hidden_input);
-    return a; 
+      });
+      tableData.text(nome);
+      tableData.append(usuario_id_hidden_input);
+      return a;}
   }
   var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
   checkTrello(getBoards);
-    //@author rezende
-    $('.typeahead').typeahead({
-    source: users, 
-    minLength: 0, 
-    items: users.length,
-    //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
-    matcher: function(item) {
-      if (this.query == "*") 
-        return true;
-      else
-        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
-          return true;
-        }
-    }
-  });
-
 </script>

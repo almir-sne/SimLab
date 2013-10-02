@@ -111,4 +111,15 @@ class ProjetosController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def coordenadorform
+    @workon = Workon.find(params[:wrkn_id])
+    usuarios = Usuario.joins(:workons).where('usuarios.id != ? and workons.projeto_id = ?', @workon.usuario.id, @workon.projeto.id)
+    @user_list = usuarios.collect { |u| [u.nome, u.id]  }
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+  
 end
