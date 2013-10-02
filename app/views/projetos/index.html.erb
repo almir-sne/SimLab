@@ -16,7 +16,7 @@
       <div class="accordion-heading">
           <div class="row-fluid">
             <div class="span2">
-              <a data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome%>">
+              <a data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
                 <b>+</b>
               </a>
               <%if (super_e_subs[0].coordenadores.include? current_usuario) || (current_usuario.role == "admin")%>
@@ -36,7 +36,7 @@
             </div>
           </div>
       </div>
-      <div id="collapse<%=super_e_subs[0].nome%>" class="accordion-body collapse">
+      <div id="collapse<%=super_e_subs[0].nome.tr(' ','_')%>" class="accordion-body collapse">
         <%super_e_subs[1].each do |sub|%>
         <div class="row-fluid">
           <div class="accordion-inner">
