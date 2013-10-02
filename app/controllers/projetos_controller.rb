@@ -17,12 +17,20 @@ class ProjetosController < ApplicationController
       end
     elsif params["tipo"] == "sub_projetos"
       @tipo = "sub_projetos"
-      @projetos = current_usuario.projetos_coordenados.
-        select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      end
     elsif params["tipo"] == "super_projetos"
       @tipo = "super_projetos"
-      @projetos = current_usuario.projetos_coordenados.
-        select{|proj| proj.super_projeto.nil?}.map{|sup| [sup,[]]}
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| proj.super_projeto.nil?}.map{|sup| [sup,[]]}
+      end
     end
     @projeto = Projeto.new
 
