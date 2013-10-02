@@ -6,6 +6,7 @@ class ProjetosController < ApplicationController
   def index
     authorize! :read, Projeto
     if params["tipo"] == "TODOS" || params["tipo"].nil?
+      @tipo = "TODOS"
       if current_usuario.role == "admin"
         @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
           map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
@@ -14,10 +15,14 @@ class ProjetosController < ApplicationController
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
             map{|z| z.id})]}
       end
-    elsif params["tipo"] == "sub-projetos"
-      "alguma coisa"
-    elsif params["tipo"] == "super-projetos"
-      "alguma coisa"
+    elsif params["tipo"] == "sub_projetos"
+      @tipo = "sub_projetos"
+      @projetos = current_usuario.projetos_coordenados.
+        select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+    elsif params["tipo"] == "super_projetos"
+      @tipo = "super_projetos"
+      @projetos = current_usuario.projetos_coordenados.
+        select{|proj| proj.super_projeto.nil?}.map{|sup| [sup,[]]}
     end
     @projeto = Projeto.new
 
