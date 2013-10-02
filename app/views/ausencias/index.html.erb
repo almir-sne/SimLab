@@ -1,0 +1,71 @@
+<div class="blue-text" style="margin-left: 30px">
+  <%= t("funcionalidade.validacao.ausencia")%>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3 blue-text">
+      <%= select_tag(:ano_select, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
+    </div>
+
+    <div class="span3 blue-text">
+      <%= select_tag(:mes_select, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
+    </div>
+
+    <div class="span3 blue-text">
+      <%= select_tag(:dia_select, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span3">
+      <%= select_tag(:usuario_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span3">
+      <%= select_tag(:projeto_select, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span2">
+      <%= button_tag('Filtra', {:type => 'button', :id => 'filtra', :class => 'btn default-button'}) %>
+    </div>
+  </div>
+</div>
+<div class="blue-line">  </div>
+
+<%= form_tag(validar_ausencias_path) do %>
+  <div class="navbar-fixed-bottom toolbar">
+    <%= submit_tag "Salvar", :class => "btn default-button"%>
+  </div>
+  <table class="list-table">
+    <tr>
+      <th> Data       </th>
+      <th> Usuário    </th>
+      <th> Justificativa   </th>
+      <th> Horas abonadas     </th>
+      <th></th>
+      <th> Mensagem   </th>
+    </tr>
+
+    <% @ausencias.each do |ausencia| %>
+      <tr>
+        <%= hidden_field_tag "ausencias[#{ausencia.id}[id]]",ausencia.id                %>
+        <td><%= ausencia.data.strftime("%d/%m/%Y")                                        %></td>
+        <td><%= ausencia.usuario.nome                                                     %></td>
+        <td>
+          <%= ausencia.justificativa                                                       %>
+        </td>
+        <td><%= text_field_tag "ausencias[#{ausencia.id}[horas]]", ausencia.horas, :class => "horas" %></td>
+        <td style='text-align : right; width: 45px'>
+          a. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", true,(ausencia.abonada == true), {:class => 'aprovacao_radio'} %>
+          r. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", false,(ausencia.abonada == false),{:class => 'aprovacao_radio'} %> 
+        </td>
+        <td><%= text_field_tag "ausencias[#{ausencia.id}[mensagem]]", ausencia.mensagem %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<script>
+  $('#filtra').click(function() {
+    location.href = "/ausencias?mes=" + $('#mes_select').val() + "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val() + "&projeto_id=" + $('#projeto_select').val() + "&dia=" + $('#dia_select').val()
+  });
+</script>

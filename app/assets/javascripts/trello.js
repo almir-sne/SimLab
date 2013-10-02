@@ -12,8 +12,8 @@ function getCards() {
             $.each(cards, function(ix, card) {
                 $("<a>").attr({
                     href: card.url,
-                    target: "trello",
                     id: card.id,
+                    target: "_blank",
                     draggable: true,
                     style: "width: 100%",
                     ondragstart: "dragCard(event)"
@@ -34,14 +34,20 @@ function updateLoggedIn() {
 function loginTrello(callback) {
     Trello.authorize({
         type: "popup",
-        success: callback
+        success: callback,
+        name: "SimLab",
+        scope: {read: true, write: true, account: false},
+        expiration: "never"
     });
 }
 
 function checkTrello(callback) {
     Trello.authorize({
         interactive: false,
-        success: callback
+        success: callback,
+        name: "SimLab",
+        scope: {read: true, write: true, account: false},
+        expiration: "never"
     });
 }
 
@@ -82,7 +88,7 @@ function formatCardLink(card, name) {
     div.addClass("nodrop");
     $("<a>").attr({
         href: card.attr("href"),
-        target: "trello"
+        target: "_blank"
     }).addClass("card").text(card.html()).appendTo(div);
     $("<input>").attr({
         type: "checkbox",
@@ -96,18 +102,18 @@ function formatCardLink(card, name) {
 }
 
 function loadFormCards() {
-    $(".card-placeholder").each(function(index, input) {
+    $(".card-placeholder-form").each(function(index, input) {
         var parent = input.parentElement;
-        var card_id = input.id
-        var horas = $(parent.parentElement).find(".hora_field")[0]
-        var name = horas.name.replace("horas", "trello") + "[" + card_id + "]"
+        var card_id = input.id;
+        var horas = $(parent.parentElement).find(".hora_field")[0];
+        var name = horas.name.replace("horas", "trello") + "[" + card_id + "]";
         Trello.get("/cards/" + card_id, function(card) {
             var div = $("<div>");
             div.addClass("nodrop");
             div.appendTo(parent);
             $("<a>").attr({
                 href: card.url,
-                target: "trello"
+                target: "_blank"
             }).addClass("card").text(card.name).appendTo(div);
             $("<input>").attr({
                 type: "checkbox",
@@ -138,6 +144,7 @@ function loadSimpleCards() {
                 div.appendTo(parent);
                 $("<a>").attr({
                     href: card.url,
+                    target: "_blank"
                 }).addClass("cardnaohover").text(card.name).appendTo(div);
                 $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
                 $("<br/>").appendTo(div);
@@ -173,7 +180,7 @@ function getBoards() {
                     }).appendTo(div);
                     $("<a>").attr({
                         href: board.url,
-                        target: "trello"
+                        target: "_blank"
                     }).addClass("card").text(board.name).appendTo(div);
                 }
             });

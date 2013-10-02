@@ -1,7 +1,6 @@
 function recalculaHoras() {
-    var max_horas = pega_horas_dia();
-    updateAllSliders(max_horas);
-    $("#horas_do_dia").text(getTime(max_horas));
+    updateAllSliders();
+    $("#horas_do_dia").text(getTime(pega_horas_dia()));
 }
 
 function slideTime(event, ui) {
@@ -79,7 +78,8 @@ function initSlider(div, time, max_time) {
     });
 }
 
-function updateAllSliders(maxtime) {
+function updateAllSliders() {
+    var maxtime = pega_horas_dia();
     $(".slider, .card-slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;
@@ -125,11 +125,17 @@ function horasCartoesInvalidas() {
 
 function projetosVazios() {
     var vazios = false;
-    $(".projeto-seletor").each(function(i, e) {
+    $(".fields:visible > .projeto-seletor").each(function(i, e) {
         if (e.value == null || e.value == "")
             vazios = true;
     });
     return vazios;
+}
+
+function diaVazio() {
+    var value = $("#dia_numero").val();
+    if (value == "" || value == null) return true;
+    else return false;
 }
 
 function validateSliders() {
@@ -147,6 +153,10 @@ function validateSliders() {
     }
     else if (horasCartoesInvalidas()) {
         alert("Horas em atividades diferem dos cartões");
+        return false;
+    }
+    else if (diaVazio()) {
+        alert("Nenhum dia selecionado");
         return false;
     }
     return true;
