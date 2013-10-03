@@ -383,3 +383,11 @@
 .form-group input[type="text"] {
     width: 90%;
 }
+
+.pagination {
+    margin: 15px;
+}
+
+.pagination a:hover {
+    color: black;
+}

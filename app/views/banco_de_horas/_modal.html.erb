@@ -35,7 +35,7 @@
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
               <% unless atividade_form.object.mensagem.blank?  %>
                 <div class="red-background activity-message">
-                  <%= atividade_form.object.avaliador.nome %>: <br/>
+                  <%= atividade_form.object.avaliador.try(:nome) %>: <br/>
                   <%= atividade_form.object.mensagem %>
                 </div>
               <% end %>

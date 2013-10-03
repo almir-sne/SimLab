@@ -37,50 +37,53 @@
             <% else %>
               <li> <%= link_to "Meus Pagamentos", meses_pagamentos_path, :class => "nav-links" %> </li>
             <% end %>
-          </ul>
-        </div>
-
-        <div class="span2 dropdown">
-          <ul class="top-nav dropdown-menu" style="display: block; position: static;">
-            <%if can? :index, Ausencia %>
-              <li> <%=  link_to "Ausências", ausencias_path, :class => "nav-links"%> </li>
+            <% if can? :manage, Cartao %>
+              <li> <%= link_to "Estatisticas", cartoes_estatisticas_path, :class => "nav-links" %> </li>
             <% end %>
-            <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
-            <%if can? :see, Usuario%>
-              <li> <%=  link_to "Usuários", usuarios_path(:status => "true"), :class => "nav-links"%> </li>
-            <%else%>
-              <li> <%=  link_to "Meu Perfil", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
-            <%end%>
-          </ul>
-        </div>
-
-        <div class="span3 top-user offset1" >
-          Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
-          <br/>
-          <%= link_to "Alterar senha", edit_usuario_registration_path %>
-          <br/>
-          <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
-        </div>
-
-        <div class="span3">
-          <h4 style="margin: 0"> Trello </h4>
-          <div class="loggedout">
-            <a class="btn default-button" id="connectLink" onclick="loginTrello(loadSimpleCards)"> Conectar ao Trello</a>
+            </ul>
           </div>
 
-          <div class="loggedin">
-            <div id="header" style="border: none">
-              Logado como <b class="fullName"></b>
-              <br/>
-              <a id="disconnect" onclick="logoutTrello()">Log Out</a>
+          <div class="span2 dropdown">
+            <ul class="top-nav dropdown-menu" style="display: block; position: static;">
+              <%if can? :index, Ausencia %>
+                <li> <%=  link_to "Ausências", ausencias_path, :class => "nav-links"%> </li>
+              <% end %>
+              <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
+              <%if can? :see, Usuario%>
+                <li> <%=  link_to "Usuários", usuarios_path(:status => "true"), :class => "nav-links"%> </li>
+              <%else%>
+                <li> <%=  link_to "Meu Perfil", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
+              <%end%>
+            </ul>
+          </div>
+
+          <div class="span3 top-user offset1" >
+            Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
+            <br/>
+            <%= link_to "Alterar senha", edit_usuario_registration_path %>
+            <br/>
+            <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
+          </div>
+
+          <div class="span3">
+            <h4 style="margin: 0"> Trello </h4>
+            <div class="loggedout">
+              <a class="btn default-button" id="connectLink" onclick="loginTrello(loadSimpleCards)"> Conectar ao Trello</a>
+            </div>
+
+            <div class="loggedin">
+              <div id="header" style="border: none">
+                Logado como <b class="fullName"></b>
+                <br/>
+                <a id="disconnect" onclick="logoutTrello()">Log Out</a>
+              </div>
             </div>
           </div>
         </div>
+        <div class="messages">
+          <%= render 'layouts/messages'%>
+        </div>
+        <%= yield %>
       </div>
-      <div class="messages">
-        <%= render 'layouts/messages'%>
-      </div>
-      <%= yield %>
-    </div>
-  </body>
-</html>
+    </body>
+  </html>

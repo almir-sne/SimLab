@@ -1,5 +1,8 @@
 SinLab::Application.routes.draw do
  
+  get "cartoes/estatisticas"
+  get "cartoes/atividades"
+
   resources :pagamentos, :only => [:index] do
     collection do
       get :meses

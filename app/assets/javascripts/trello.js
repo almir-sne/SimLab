@@ -146,7 +146,8 @@ function loadSimpleCards() {
                     href: card.url,
                     target: "_blank"
                 }).addClass("cardnaohover").text(card.name).appendTo(div);
-                $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
+                if (input.value > 0)
+                    $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
                 $("<br/>").appendTo(div);
                 $(input).detach();
             });

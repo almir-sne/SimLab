@@ -8,6 +8,10 @@ class Cartao < ActiveRecord::Base
     Cartao.where(cartao_id: cid).sum(:duracao)/60
   end
   
+  def self.horas_trabalhadas_format(cid)
+    Time.at(horas_trabalhadas(cid) * 3600).utc.strftime("%H:%M")
+  end
+  
   def self.update_on_trello(key, token, id)
     data = get_trello_data(key, token, id)
     name = data["name"].sub(/[ ][(][0-9]+[)]/, "") +
