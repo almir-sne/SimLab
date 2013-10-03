@@ -10,6 +10,7 @@ class Ability
     elsif user.role == "diretor"
       can :manage, Projeto
       can :manage, Ausencia
+      can :manage, Cartao
       can [:create, :custom_create, :read ], Usuario
       can [:update, :see], Usuario, :id => true, :id => user.id
       unless user.projetos_coordenados.blank?
