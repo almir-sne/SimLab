@@ -4,7 +4,7 @@ class BancoDeHorasController < ApplicationController
     @year =      params[:year].nil?  ? Date.today.year  : params[:year]
     @user =      params[:user].nil?  ? current_user     : Usuario.find(params[:user])
     @month_num = params[:month].nil? ? Date.today.month : params[:month]
-    @month = Mes.find_or_initialize_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
+    @month = Mes.find_or_create_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
     @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
     @dias = @month.dias
     @dias.sort_by! { |d| d.numero  }
@@ -21,7 +21,7 @@ class BancoDeHorasController < ApplicationController
     else
       @dia =  Dia.find(params[:id])
     end
-    @projetos = @user.projetos(:order => :nome).collect {|p| [p.nome, p.id ] }
+    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
       format.html
@@ -85,7 +85,7 @@ class BancoDeHorasController < ApplicationController
         :avaliador_id => current_user.id
       )
     end
-    flash[:notice] = I18n.t("banco_de_horas.validation.sucess")
+    flash[:notice] = I18n.t("banco_de_horas.validation.success")
     redirect_to :back
   end
 

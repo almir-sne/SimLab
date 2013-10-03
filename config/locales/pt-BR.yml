@@ -231,33 +231,35 @@ pt-BR:
     previous: Anterior
   projetos:
     create:
-      sucess: "Projeto criado com sucesso."
+      success: "Projeto criado com sucesso."
       failure: "Erro na criação do projeto."
     update:
-      sucess: "Projeto atualizado com sucesso."
+      success: "Projeto atualizado com sucesso."
       failure: "Erro na atualização do projeto."
   banco_de_horas:
     create:
-      sucess: "Banco de horas criado com sucesso."
+      success: "Cadastro criado/atualizado com sucesso."
+      failure: "Erro na criação/atualização do cadastro."
     update:
-      sucess: "Banco de horas atualizado com sucesso."
+      success: "Banco de horas atualizado com sucesso."
     validation:
-      sucess: "Atividades validadas com sucesso."
+      success: "Atividades validadas com sucesso."
       failure: "Erro ao validar atividades."
   usuario:
     create:
       failure: "Não foi possível salvar o registro."
     delete:
-      sucess: "Usuario apagado com sucesso."
+      success: "Usuario apagado com sucesso."
   atividades:
     create:
-      sucess: "Atividade(s) criada(s) com sucesso!"
+      success: "Atividade(s) criada(s) com sucesso!"
     title: "Atividades"
   simlab:
     titulo: "SimLab"
   funcionalidade:
     validacao:
       atividade: "Validação de Atividades"
+      pagamentos: "Pagamentos"
     log:
       atividade: "Log de Atividades"
   prompt:

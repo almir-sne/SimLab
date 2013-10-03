@@ -8,11 +8,13 @@
     <%= javascript_include_tag "bootstrap" %>
     <script src="https://api.trello.com/1/client.js?key=98853929c4100832c39e0f3c505d0332"></script>
     <%= javascript_include_tag "sinlab" %>
+    <%= javascript_include_tag "sliders" %>
+    <%= javascript_include_tag "trello" %>
     <%= javascript_include_tag "jquery.mask.min.js" %>
     <%= javascript_include_tag "jquery-ui-1.10.3.custom.min" %>
     <%= csrf_meta_tags %>
   </head>
-  <body>
+  <body onload="checkTrello(loadSimpleCards);">
     <div style="padding: 10px 35px">
       <div class="row-fluid">
         <div class="span10"></div>
@@ -30,6 +32,11 @@
               <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
             <%end%>
             <li> <%= link_to 'Meu Banco de Horas', show_mes_banco_de_horas_url, :class => "nav-links" %> </li>
+            <% if can? :create_or_update, Pagamento %>
+              <li> <%= link_to "Pagamentos", pagamentos_path, :class => "nav-links" %> </li>
+            <% else %>
+              <li> <%= link_to "Meus Pagamentos", meses_pagamentos_path, :class => "nav-links" %> </li>
+            <% end %>
           </ul>
         </div>
 
@@ -44,12 +51,27 @@
           </ul>
         </div>
 
-        <div class="span5 top-user offset3" >
-          Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome + '!'%> </b>
+        <div class="span3 top-user offset1" >
+          Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
           <br/>
           <%= link_to "Alterar senha", edit_usuario_registration_path %>
           <br/>
           <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
+        </div>
+
+        <div class="span3">
+          <h4 style="margin: 0"> Trello </h4>
+          <div class="loggedout">
+            <a class="btn default-button" id="connectLink" onclick="loginTrello(loadSimpleCards)"> Conectar ao Trello</a>
+          </div>
+
+          <div class="loggedin">
+            <div id="header" style="border: none">
+              Logado como <b class="fullName"></b>
+              <br/>
+              <a id="disconnect" onclick="logoutTrello()">Log Out</a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="messages">

@@ -41,7 +41,7 @@
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-                {}, {:class=>"teste", :onchange => "filterCards(this)"}%>
+                {}, {:class=>"projeto-seletor", :onchange => "filterCards(this)"}%>
               <br/>
 
               <div class="slider">
@@ -60,7 +60,7 @@
               <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
                 &nbsp;Arraste cartões do Trello aqui.
 
-                <% atividade_form.object.cartaos.each do |cartao| %>
+                <% atividade_form.object.cartoes.each do |cartao| %>
                   <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
                 <% end %>
               </div>
@@ -71,13 +71,13 @@
         </div>
 
         <div class="span5">
-          <div id="loggedout">
+          <div class="loggedout">
             <a class="btn default-button" id="connectLink" onclick="loginTrello(getCards)"> Conectar ao Trello</a>
           </div>
 
-          <div id="loggedin">
+          <div class="loggedin">
             <div id="header">
-              Logado como <b id="fullName"></b>
+              Logado como <b class="fullName"></b>
               <br/>
               <a id="disconnect" onclick="logoutTrello()">Log Out</a>
             </div>
@@ -93,7 +93,7 @@
         <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
           Cancelar
         </button>
-        <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validate()" %>
+        <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
       </div>
     </div>
   <% end %>
@@ -103,7 +103,6 @@
 <script>
   initializeSliders();
   $(document).on('nested:fieldAdded', function(event){
-    // this field was just inserted into your form
     createSlider(event.field.find('.slider'));
   })
 </script>

@@ -1,3 +1,4 @@
+<%= javascript_include_tag :defaults, "nested_form" %>
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
@@ -20,47 +21,83 @@
         </div>
       </div>
     </div>
+        <div class="form-group">
+      <h3> Relacionamento de projetos </h3>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class=" span6">
+            <table>
+              <tr>
+                <th><%= f.label "Super-Projeto" %></th>
+                <th style="padding: 0px 20px;"><%= f.label "Sub-Projeto"%></th>
+              </tr>
+              <tr>
+                <td><%= radio_button_tag :super_projeto, true, @eh_super_projeto%></td>
+                <td style="padding: 0px 20px;"><%= radio_button_tag :super_projeto, false, !@eh_super_projeto%></td>
+              </tr>
+            </table>
+          </div>
+
+            <div id="filhos">
+              <table>
+                <tr>
+                  <th><%= f.label "filho?", :style => "margin-right: 20%"%></th>
+                  <th><%= f.label "projetos filhos" %>                     </th>
+                </tr>
+                <% @filhos_for_select.each_with_index do |sub, index| %>
+                  <tr>
+                    <td><%= check_box_tag "sub_projetos[#{index}[filho]", 1, !(@projeto.sub_projetos[index].nil?) %>    </td>
+                    <td><%=@filhos_for_select[index][0]%><%= hidden_field_tag "sub_projetos[#{index}[id]]", @filhos_for_select[index][1], :style => "margin-right: 50%"%></td>
+                  </tr>
+                <%end%>
+              </table>
+            </div>
+
+            <div class="offset1 span5" id="pai">
+              <%= f.label "projeto pai" %>
+              <%= f.select :super_projeto_id, options_for_select(@pais_for_select, [@projeto.super_projeto.nome, @projeto.super_projeto_id]), :style => "width: 70%"%>
+            </div>
+
+        </div>
+      </div>
+    </div>
     <div class="form-group">
 
       <div class="container-fluid">
         <div class="row-fluid">
           <div class="span5">
             <h3> Equipe </h3>
-            <% project_users = @projeto.usuarios.map{|user| [user.nome, user.id]}%>
+            <input type='text' data-provide="typeahead" class='typeahead' id='campo_novo_usuario'/>
+            <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workon, :class=>"nohover" %>
             <table>
               <tr>
                 <th> Coodernador? </th>
                 <th style="padding: 0px 20px;"> Nome </th>
                 <th> Remover </th>
               </tr>
-              <%= f.fields_for :workon, :wrapper => false do |worker| %>
+                <%= f.fields_for :workon, :wrapper => false do |worker| %>
                 <tr>
                   <td style="float: right"><%= worker.check_box :coordenador%> </td>
                   <td style="padding: 0px 20px;">
-                    <%= worker.select :usuario_id, options_for_select(acha_usuarios.unshift(project_users.shift)) %>
+                    <%= worker.object.usuario.try(:nome) %>
+                    <%= worker.hidden_field :usuario_id %>
                   </td>
                   <td style="margin-left: 10px">
                     <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
                   </td>
                 </tr>
-              <% end %>
-              <tr>
-                <th> <%= f.link_to_add "Adicionar pessoa", :workon %> </th>
-              </tr>
-            </table>
+                <% end %>
+              <tr id='novo_item'></tr>
+              </table>
+
           </div>
           <div class="offset2 span3">
 
             <h3> Boards do Trello </h3>
-            <div id="loggedout">
+            <div class="loggedout">
               <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
             </div>
-            <div id="loggedin">
-              <div id="header">
-                Logado como <b id="fullName"></b>
-                <br/>
-                <a id="disconnect" onclick="logoutTrello()">Log Out</a>
-              </div>
+            <div class="loggedin">
               <div id="output" class="panel-scrollable" style="height: 200px"></div>
             </div>
           </div>
@@ -75,10 +112,70 @@
 <% end %>
 
 <script>
+  var users = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>
   window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
-    var $tr = $(link).closest('tr');
-    return $(content).insertBefore($tr);
+    //@author rezende, stein
+    var a = $(content).insertBefore($('#novo_item'));
+    var tableData = a.children().eq(1);
+    var usuario_id_hidden_input = $(document.createElement('input'));
+    var new_random_id = a.children().eq(0).children().eq(1).attr('id').split('_')[3];
+    nome = ($('#campo_novo_usuario').val());
+    usuario_id_hidden_input.attr('id', 'projeto_workon_attributes_'+new_random_id+'_usuario_id');
+    usuario_id_hidden_input.attr('name', 'projeto[workon_attributes]['+new_random_id+'][usuario_id]');
+    usuario_id_hidden_input.attr('type', 'hidden');
+    $.ajax({
+      url: "<%= get_id_by_nome_usuarios_path %>",
+        data: {name: nome},
+        success: function(result) {
+            usuario_id_hidden_input.attr('value', result);
+        }
+    });
+    tableData.text(nome);
+    tableData.append(usuario_id_hidden_input);
+    return a;
   }
   var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
   checkTrello(getBoards);
+
+  $(document).ready(function() {
+    if($("input[name='super_projeto']:checked").val() == "true")
+      mostraFilhos();
+    else
+      mostraPai();
+  })
+
+  $("#super_projeto_true").click(function(){
+    mostraFilhos();
+  });
+
+  $("#super_projeto_false").click(function(){
+    mostraPai();
+  });
+
+  function mostraPai(){
+    $("#filhos").hide(200);
+    $("#pai").show(200);
+  }
+
+  function mostraFilhos(){
+    $("#filhos").show(200);
+    $("#pai").hide(200);
+  }
+
+    //@author rezende
+    $('.typeahead').typeahead({
+    source: users,
+    minLength: 0,
+    items: users.length,
+    //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
+    matcher: function(item) {
+      if (this.query == "*")
+        return true;
+      else
+        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+          return true;
+        }
+    }
+  });
+
 </script>

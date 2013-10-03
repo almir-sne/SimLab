@@ -7,13 +7,12 @@ class Atividade < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
-  has_many :cartaos, :dependent => :destroy
+  has_many :cartoes, :dependent => :destroy
 
   validates :dia_id, :presence => true
   validates :mes_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
-  validates :horas, :exclusion => {:in => 0..1}
 
   def horas
     unless read_attribute(:duracao).blank?
@@ -53,15 +52,15 @@ class Atividade < ActiveRecord::Base
     end
     retorno
   end
-  
+
   def cor_status
     if self.aprovacao == true
       "green-background"
     elsif self.aprovacao == false
       "red-background"
     else
-      ""  
+      ""
     end
-  end  
-  
+  end
+
 end

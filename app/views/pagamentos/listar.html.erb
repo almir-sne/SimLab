@@ -1,0 +1,11 @@
+<div class="blue-text" style="margin-left: 30px">
+  Pagamentos
+</div>
+
+<div class="blue-line">  </div>
+
+<% if can? :create_or_update, Pagamento %>
+  <%= render :partial => "edit" %>
+<% else %>
+  <%= render :partial => "show" %>
+<% end %>

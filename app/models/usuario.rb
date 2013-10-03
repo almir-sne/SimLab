@@ -27,12 +27,13 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
     :uniqueness => true
 
-  has_many :mes
+  has_many :meses
   has_many :dias
   has_many :atividades
 
   def projetos_coordenados
-    self.projetos.includes(:workon).where("workons.coordenador" => true)
+    projetos = self.projetos.includes(:workon).where("workons.coordenador" => true)
+    projetos.map{|z|  z.sub_projetos.empty? ? z : [z, z.sub_projetos] }.flatten.uniq
   end
 
   def equipe_coordenada
@@ -42,9 +43,7 @@ class Usuario < ActiveRecord::Base
   def equipe(projetos)
     coord = Array.new
     projetos.each{ |p|
-      p.usuarios.each  { |u|
-        coord << u if (!coord.include? u)
-      }
+      p.usuarios.each  { |u| coord = coord | [u] }
     }
     coord.sort
   end

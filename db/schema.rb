@@ -11,7 +11,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130911200121) do
+ActiveRecord::Schema.define(:version => 20130920211709) do
+
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -47,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20130911200121) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "cartaos", :force => true do |t|
+  create_table "cartoes", :force => true do |t|
     t.string   "cartao_id"
     t.integer  "atividade_id"
     t.datetime "created_at",   :null => false
@@ -55,7 +56,7 @@ ActiveRecord::Schema.define(:version => 20130911200121) do
     t.integer  "duracao"
   end
 
-  create_table "conta", :force => true do |t|
+  create_table "contas", :force => true do |t|
     t.string   "agencia"
     t.string   "banco"
     t.string   "numero"
@@ -77,7 +78,14 @@ ActiveRecord::Schema.define(:version => 20130911200121) do
     t.datetime "updated_at",                                :null => false
   end
 
-  create_table "dia", :force => true do |t|
+  create_table "coordenacoes", :force => true do |t|
+    t.integer  "usuario_id"
+    t.integer  "workon_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "dias", :force => true do |t|
     t.integer  "numero"
     t.datetime "entrada"
     t.datetime "saida"
@@ -88,7 +96,7 @@ ActiveRecord::Schema.define(:version => 20130911200121) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "mes", :force => true do |t|
+  create_table "meses", :force => true do |t|
     t.integer  "numero"
     t.integer  "ano"
     t.integer  "usuario_id"
@@ -98,14 +106,27 @@ ActiveRecord::Schema.define(:version => 20130911200121) do
     t.integer  "horas_trabalhadas", :default => 0
   end
 
+  create_table "pagamentos", :force => true do |t|
+    t.integer  "mes_id"
+    t.integer  "usuario_id"
+    t.integer  "criador_id"
+    t.decimal  "valor",      :precision => 7, :scale => 2
+    t.date     "data"
+    t.string   "fonte"
+    t.string   "motivo"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+  end
+
   create_table "projetos", :force => true do |t|
     t.string   "nome"
     t.date     "data_de_inicio"
     t.text     "descricao"
     t.float    "valor"
     t.integer  "horas_totais"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "super_projeto_id"
   end
 
   create_table "telefones", :force => true do |t|

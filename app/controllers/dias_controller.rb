@@ -38,7 +38,7 @@ class DiasController < ApplicationController
             c = Cartao.where(:atividade_id => atividade.id, :cartao_id => k).last
             if c.blank? and atividade_attr[:trello][k][:check]
               c = Cartao.new(:atividade_id => atividade.id, :cartao_id => k,
-                :duracao => atividade_attr[:trello][k][:slider])
+                :duracao => atividade_attr[:trello][k][:slider].to_i)
               c.save
             elsif !c.blank? and !atividade_attr[:trello][k][:check]
               c.destroy
@@ -51,7 +51,7 @@ class DiasController < ApplicationController
       end
     end
     if dia_success and atividades_success
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
+      flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
