@@ -1,37 +1,68 @@
 <div class="blue-text" style="margin-left: 30px">
   Projetos
+  <%= select_tag "tipo", options_for_select(["super_projetos", "sub_projetos", "TODOS"], @tipo), :style => "float:right; margin-right: 10px" %>
 </div>
-
 <div class="blue-line">  </div>
-
-<table class="list-table">
-  <tr>
-    <th>Nome do projeto </th>
-    <th>Data de início  </th>
-    <th>Horas totais    </th>
-    <th>Valor           </th>
-    <th>Descrição       </th>
-    <th></th>
-  </tr>
-  <% @projetos.each do |projeto| %>
-    <tr>
-      <td><% if projeto.super_projeto.nil?%>
-        <%= link_to projeto.nome, edit_projeto_path(projeto) %>
-      <%else%>
-        <%=projeto.super_projeto.nome%> - <%= link_to projeto.nome, edit_projeto_path(projeto) %>
-      <%end%></td>
-      <td><%= projeto.data_de_inicio                           %></td>
-      <td><%= projeto.horas_totais                             %></td>
-      <td><%= projeto.valor                                    %></td>
-      <td><%= projeto.descricao                                %></td>
-      <td><%= link_to '<i class="icon-trash"> </i>'.html_safe, projeto_path(projeto.id),
-          :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
-          :class => 'nohover', :title => "Excluir"%> </td>
-    </tr>
-  <% end %>
-</table>
+<div class="row-fluid">
+  <div class="span2 "><h5>Nome do projeto</h5></div>
+  <div class="span2"><h5>Data de início</h5></div>
+  <div class="span2"><h5>Horas Totais</h5></div>
+  <div class="span2"><h5>Valor</h5></div>
+  <div class="span4"><h5>Descrição</h5></div>
+</div>
+<div class="accordion" id="accordion2">
+  <%@projetos.each do |super_e_subs| %>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+          <div class="row-fluid">
+            <div class="span2">
+              <a data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
+                <b>+</b>
+              </a>
+              <%if (super_e_subs[0].coordenadores.include? current_usuario) || (current_usuario.role == "admin")%>
+                <%= link_to super_e_subs[0].nome, edit_projeto_path(super_e_subs[0])%>
+              <%else%>
+                <%= super_e_subs[0].nome%>
+              <%end%>
+            </div>
+            <div class="span2"><%=super_e_subs[0].data_de_inicio%></div>
+            <div class="span2"><%=super_e_subs[0].horas_totais%></div>
+            <div class="span2"><%=super_e_subs[0].valor%></div>
+            <div class="span4">
+              <%=super_e_subs[0].descricao%>
+              <%= link_to '<i class="icon-trash"> </i>'.html_safe, projeto_path(super_e_subs[0].id),
+                :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+                :class => 'nohover', :title => "Excluir", :style => "right:3%; position:absolute"%>
+            </div>
+          </div>
+      </div>
+      <div id="collapse<%=super_e_subs[0].nome.tr(' ','_')%>" class="accordion-body collapse">
+        <%super_e_subs[1].each do |sub|%>
+        <div class="row-fluid">
+          <div class="accordion-inner">
+            <div class="span2">&nbsp<%= link_to sub.nome, edit_projeto_path(sub)%></div>
+            <div class="span2"><%=sub.data_de_inicio%></div>
+            <div class="span2"><%=sub.horas_totais%></div>
+            <div class="span2"><%=sub.valor%></div>
+            <div class="span4">
+              <%=sub.descricao%>
+              <%= link_to '<i class="icon-trash"> </i>'.html_safe, projeto_path(sub.id),
+                :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+                :class => 'nohover', :title => "Excluir", :style => "right:1.2%; position:absolute"%>
+            </div>
+          </div>
+        </div>
+        <%end%>
+      </div>
+    </div>
+  <%end%>
+</div>
 
 <%= link_to "Adicionar", "#new-projeto-modal", :class => "btn default-button",
   :style => "margin: 15px;", "data-toggle" => "modal", :role => "button" %>
 
 <%= render :partial => "modal"%>
+
+<script>
+  $('#tipo').bind('change', function() { location.href = "<%= projetos_path %>" + "?tipo=" + $(this).val() });
+</script>

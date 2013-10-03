@@ -41,7 +41,7 @@
               <% end %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-                {}, {:class=>"projeto-seletor", :onchange => "filterCards(this)"}%>
+              {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); escondeProjetos()"}%>
               <br/>
 
               <div class="slider">
@@ -61,7 +61,7 @@
                 &nbsp;Arraste cartões do Trello aqui.
 
                 <% atividade_form.object.cartoes.each do |cartao| %>
-                  <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+                  <input type="hidden" class="card-placeholder-form" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
                 <% end %>
               </div>
               <div class="grey-line"> </div>
@@ -101,8 +101,15 @@
 
 
 <script>
-  initializeSliders();
-  $(document).on('nested:fieldAdded', function(event){
-    createSlider(event.field.find('.slider'));
-  })
+          initializeSliders();
+          escondeProjetos();
+          updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+          $(document).on('nested:fieldAdded', function(event) {
+            createSlider(event.field.find('.slider'));
+            escondeProjetos();
+          });
+          $(document).on('nested:fieldRemoved', function(event) {
+            updateAllSliders();
+            escondeProjetos();
+          });
 </script>

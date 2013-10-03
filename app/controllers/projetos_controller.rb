@@ -5,11 +5,32 @@ class ProjetosController < ApplicationController
   # GET /projetos.json
   def index
     authorize! :read, Projeto
-    if current_usuario.role == "admin"
-      @projetos = Projeto.where(:super_projeto_id => nil).order(:nome)
-      @projetos = @projetos.map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}.flatten
-    else
-      @projetos = current_usuario.projetos_coordenados.sort{|a,b| a.nome <=> b.nome}
+    if params["tipo"] == "TODOS" || params["tipo"].nil?
+      @tipo = "TODOS"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
+          map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
+      else
+        @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
+          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
+            map{|z| z.id})]}
+      end
+    elsif params["tipo"] == "sub_projetos"
+      @tipo = "sub_projetos"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      end
+    elsif params["tipo"] == "super_projetos"
+      @tipo = "super_projetos"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| proj.super_projeto.nil?}.map{|sup| [sup,[]]}
+      end
     end
     @projeto = Projeto.new
 
@@ -44,7 +65,7 @@ class ProjetosController < ApplicationController
 
   # GET /projetos/1/edit
   def edit
-    authorize! :create, Projeto
+    authorize! :edit, Projeto
     @projeto = Projeto.find(params[:id])
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.

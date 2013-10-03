@@ -260,8 +260,13 @@ pt-BR:
     validacao:
       atividade: "Validação de Atividades"
       pagamentos: "Pagamentos"
+      ausencia: "Ausências Registradas"
     log:
       atividade: "Log de Atividades"
   prompt:
     exclusao:
       confirmacao: "Deseja excluir o registro?"
+  ausencia:
+    validation:
+      sucess: "Ausencias validadas"
+      

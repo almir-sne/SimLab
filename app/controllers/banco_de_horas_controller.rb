@@ -6,15 +6,19 @@ class BancoDeHorasController < ApplicationController
     @month_num = params[:month].nil? ? Date.today.month : params[:month]
     @month = Mes.find_or_create_by_ano_and_numero_and_usuario_id @year, @month_num, @user.id
     @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
-    @dias = @month.dias
-    @dias.sort_by! { |d| d.numero  }
+    @dias = @month.dias.order(:numero)
+    @ausencias = @month.ausencias.order(:dia)
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: {dias: @dias,  diames: @diasdomes}}
+    end
   end
 
   def modal
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
+    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
@@ -71,6 +75,8 @@ class BancoDeHorasController < ApplicationController
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
+    @aprovacoes  = [["Aprovações - Todas",-1],["Aprovadas",1],["Reprovadas",2],["Não Vistas",3]]
+    @aprovacao   = params[:aprovacao].blank? ? params[:aprovacao] = -1 : params[:aprovacao]
   end
 
   def mandar_validacao
@@ -93,47 +99,19 @@ class BancoDeHorasController < ApplicationController
     @atividades = Atividade.where(:usuario_id => current_usuario, :aprovacao => [true, false]).
       paginate(:page => params[:page], :per_page => 30).order("updated_at DESC")
   end
-
-  private
-  def lista_dias_no_mes(ano, mes)
-    data_final = Date.new(ano, mes, 5).at_end_of_month.day
-    (1..data_final).to_a
-  end
-
-  def anos_selecionados(param_anos, hoje)
-    if param_anos.nil?
-      hoje.year
-    elsif param_anos == "-1"
-      [2012,2013,2014]
+  
+  def ausencia
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
+    if params[:id].nil?
+      @ausencia =  Ausencia.new
     else
-      param_anos
+      @ausencia =  Ausencia.find(params[:id])
+    end
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
-
-  def meses_selecionados(param_meses, hoje)
-    if param_meses.nil?
-      return hoje.month
-    elsif param_meses == "-1"
-      (1..12).to_a
-    else
-      param_meses
-    end
-  end
-
-  def usuarios_selecionados(param_usuarios)
-    if param_usuarios.nil? || param_usuarios == "-1"
-      Usuario.select(:id)
-    else
-      Usuario.where(:id => param_usuarios.to_i)
-    end
-  end
-
-  def projetos_selecionados(param_projetos)
-    if param_projetos.nil? || param_projetos == "-1"
-      Projeto.select(:id)
-    else
-      Projeto.where(:id => param_projetos .to_i)
-    end
-  end
-
 end

@@ -9,7 +9,7 @@ class Dia < ActiveRecord::Base
 
   attr_accessible :atividades_attributes
 
-  validates :numero, :uniqueness => {:scope => :mes_id}
+  validates :numero, :uniqueness => {:scope => :mes_id}, :presence => true
   validates :mes_id, :presence => true
   validates :usuario_id, :presence => true
   #  validate :validar_horas

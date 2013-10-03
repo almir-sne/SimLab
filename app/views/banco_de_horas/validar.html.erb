@@ -18,11 +18,14 @@
   </div>
 
   <div class="row-fluid">
-    <div class="span3">
+    <div class="span2">
       <%= select_tag(:usuario_select, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
     </div>
-    <div class="span3">
+    <div class="span2">
       <%= select_tag(:projeto_select, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+    </div>
+    <div class="span2">
+      <%= select_tag(:aprovacao_select, options_for_select(@aprovacoes, @aprovacao), {:class => 'menu_select'}) %>
     </div>
     <div class="span2">
       <%= button_tag('Filtra', {:type => 'button', :id => 'filtra', :class => 'btn default-button'}) %>
@@ -77,7 +80,7 @@
 
 <script>
   $('#filtra').click(function() {
-    location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() + "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val() + "&projeto_id=" + $('#projeto_select').val() + "&dia=" + $('#dia_select').val()
+    location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() + "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val() + "&projeto_id=" + $('#projeto_select').val() + "&dia=" + $('#dia_select').val() + "&aprovacao=" + $('#aprovacao_select').val()
   });
   $('#aprova_todas').click(function() {
     $('.aprovacao_radio').filter('[value=true]').prop('checked', true)
