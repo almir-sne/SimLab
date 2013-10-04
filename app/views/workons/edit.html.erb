@@ -1,0 +1,75 @@
+<div class="blue-text" style="margin-left: 30px">
+ Cadastro de Coordenadores
+</div>
+<div class="blue-line">  </div>
+
+<div class="div_edit">
+  <div class="form-group">
+    <h3> Coordenadores  de <%= @workon.usuario.nome %> no projeto <%= @workon.projeto.nome %> </h3> 
+    <div class="container-fluid">
+      <div class="span6">
+<%= nested_form_for(@workon, :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
+  <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :coordenacoes, :class=>"nohover" %>
+  <table>
+  <tr>
+    <th style="padding: 0px 20px;"> Nome </th>
+    <th> Remover </th>
+  </tr>
+  <%= f.fields_for :coordenacoes, :wrapper => false do |c| %>
+    <tr>
+      <td style="padding: 0px 20px;">
+        <%= c.object.try(:usuario).try(:nome) %>  
+        <%= c.hidden_field :usuario_id %>
+      </td>
+      <td style="margin-left: 10px">
+        <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+      </td>
+    </tr>
+  <% end %>
+  <tr id='novo_item'></tr>
+  </table>
+  <div class="actions">
+      <%= f.submit "Salvar", :class => "btn default-button"%>
+      <%= link_to "Voltar", "/projetos/"+@workon.projeto.id.to_s+"/edit/", :class => "btn default-button" %>
+  </div>
+  
+<% end %>
+</div></div></div></div></div>
+<script>
+  $(document).ready(
+    function() {
+      autocomplete_source(<%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>);
+    }
+  );
+  window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
+    var a = $(content).insertBefore($('#novo_item'));
+    //@author rezende, stein
+    //vou comentar linha por linha para poder refatorar depois
+    //'td' que será adicionado, depende apenas do novo_item
+    var tableData = a.children().eq(0);
+    //criando um input para ser colocado na nova linha, depende de se se quer um input
+    var usuario_id_hidden_input = $(document.createElement('input'));
+    //talvez o indice do id seja sempre o mesmo
+    var new_random_id = a.children().eq(1).children().eq(0).attr('id').split('_')[3];
+    nome = ($('#autocomplete_field').val());
+    //depende do model pai (workon) e do model filho (coordenacoes)
+    //também depende de quais fields se quer
+    usuario_id_hidden_input.attr('id', 'workon_coordenacoes_attributes_'+new_random_id+'_usuario_id');
+    usuario_id_hidden_input.attr('name', 'workon[coordenacoes_attributes]['+new_random_id+'][usuario_id]');
+    usuario_id_hidden_input.attr('type', 'hidden');
+    //é necessário achar o id do novo usuário
+    //pode ser refatorado sem ajax, talvez
+    $.ajax({
+      url: "<%= get_id_by_nome_usuarios_path %>",
+      data: {name: nome}, 
+      success: function(result) { 
+        usuario_id_hidden_input.attr('value', result);
+      }
+    });
+    //dar append nas coisas
+    tableData.text(nome);
+    tableData.append(usuario_id_hidden_input);
+    return a;
+  }
+</script>

@@ -62,3 +62,6 @@ gem 'will_paginate', '~> 3.0'
 
 # To use debugger
   gem 'debugger'
+
+# Awesome Print
+  gem "awesome_print", "~> 1.2.0"
