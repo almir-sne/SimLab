@@ -1,5 +1,8 @@
 SinLab::Application.routes.draw do
  
+  get "cartoes/estatisticas"
+  get "cartoes/atividades"
+
   resources :pagamentos, :only => [:index] do
     collection do
       get :meses
@@ -8,7 +11,6 @@ SinLab::Application.routes.draw do
     end
   end
 
-  #  get "home/index"
   resources :banco_de_horas, :only => [:index] do
     collection do
       get  :show_mes
@@ -16,6 +18,7 @@ SinLab::Application.routes.draw do
       get  :log_de_atividades
       post :mandar_validacao
       post :modal
+      post :ausencia
     end
   end
 
@@ -43,6 +46,12 @@ SinLab::Application.routes.draw do
   resources :workons
 
   resources :dias, :only => [:destroy, :create]
+  
+  resources :ausencias, :only => [:index, :destroy, :create] do
+    collection do
+      post :validar
+    end
+  end
 
   resources :resumo do
     collection do

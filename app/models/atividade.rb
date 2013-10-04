@@ -7,13 +7,12 @@ class Atividade < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
-  has_many :cartaos, :dependent => :destroy
+  has_many :cartoes, :dependent => :destroy
 
   validates :dia_id, :presence => true
   validates :mes_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
-  validates :horas, :exclusion => {:in => 0..1}
 
   def horas
     unless read_attribute(:duracao).blank?
@@ -33,35 +32,17 @@ class Atividade < ActiveRecord::Base
   end
 
   def formata_duracao
-    aux_h = 0
-    aux_m = 0
-    retorno = "0:0"
-    if !duracao.nil?
-      aux_h = (duracao / 3600).to_i
-
-      aux_m = ((duracao%3600)/60).to_i
-
-      retorno = aux_h.to_s + ":"
-      if aux_h < 10
-        retorno = "0" + retorno
-      end
-
-      if aux_m < 10
-        retorno = retorno + "0"
-      end
-      retorno = retorno + aux_m.to_s
-    end
-    retorno
+    Time.at(duracao).utc.strftime("%H:%M")
   end
-  
+
   def cor_status
     if self.aprovacao == true
       "green-background"
     elsif self.aprovacao == false
       "red-background"
     else
-      ""  
+      ""
     end
-  end  
-  
+  end
+
 end

@@ -32,22 +32,44 @@ function autocomplete_source(ac_source) {
         if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
           return true;
         }
+      return false
     }
   });
 }
 
-/*
-function gera_coordenador_form(workon_id) {
-    //carregar a lista de coordenadores
-    $.ajax({
-      type: "POST",
-      url: "/projetos/coordenadorform", 
-        data: {wrkn_id: workon_id},
-        async: false,
-        success: function(result) {
-          $("#crd_form").html("<%= escape_javascript(render(:partial => 'banana')).html_safe %>");
-          $('#crd_form').modal('show');           
-        }
-    });  
+function toggleAusencia() {
+    $("#ausencias").show();
+    $("#meses-button").show();
+    $("#meses").hide();
+    $("#ausencias-button").hide();
 }
-*/
+
+function toggleMeses() {
+    $("#meses").show();
+    $("#ausencias-button").show();
+    $("#ausencias").hide();
+    $("#meses-button").hide();
+}
+
+function escondeProjetos() {
+    var seletores = $(".fields:visible > .projeto-seletor");
+    seletores.children().show();
+    seletores.each(function(i, e) {
+        seletores.each(function(j, f) {
+            if (e != f)
+                $($(f).find('[value=' + e.value + ']').hide());
+            if ($(f.selectedOptions).css('display') == 'none')
+                getFirstValid(f);
+        });
+    });
+}
+
+function getFirstValid(seletor) {
+    seletor.value = "";
+    $(seletor.children).each(function(i, e) {
+        if ($(e).css('display') != 'none') {
+            seletor.value = e.value;
+            return;
+        }
+    });
+}

@@ -35,7 +35,6 @@
     </div >
   </div>
 </div>
-
 <div class="blue-line">  </div>
 
 <%= form_tag(mandar_validacao_banco_de_horas_path) do %>
@@ -60,10 +59,15 @@
         <td><%= atividade.data.strftime("%d/%m/%Y")                                        %></td>
         <td><%= atividade.usuario.nome                                                     %></td>
         <td><%= atividade.projeto.nome                                                     %></td>
-        <td><%= atividade.observacao                                                       %></td>
+        <td>
+          <%= atividade.observacao                                                       %> <br/>
+          <% atividade.cartoes.each do |cartao| %>
+            <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+          <% end %>
+        </td>
         <td><%= atividade.formata_duracao                                                  %></td>
         <td style='text-align : right; width: 45px'>
-          a. <%= radio_button_tag "atividades[#{atividade.id}[aprovacao]]", true,(atividade.aprovacao == true), {:class => 'aprovacao_radio'} %> <br />
+          a. <%= radio_button_tag "atividades[#{atividade.id}[aprovacao]]", true,(atividade.aprovacao == true), {:class => 'aprovacao_radio'} %>
           r. <%= radio_button_tag "atividades[#{atividade.id}[aprovacao]]", false,(atividade.aprovacao == false),{:class => 'aprovacao_radio'} %> 
         </td>
         <td><%= text_field_tag "atividades[#{atividade.id}[mensagem]]", atividade.mensagem %></td>
@@ -74,8 +78,11 @@
 <br />
 <br />
 
-<script>
-  $('#filtra').click(function() { location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() +  "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val()+"&projeto_id="+ $('#projeto_select').val()+ "&dia=" + $('#dia_select').val() + "&aprovacao=" + $('#aprovacao_select').val()});
-
-  $('#aprova_todas').click(function(){$('.aprovacao_radio').filter('[value=true]').prop('checked', true) });
+<script type="javascript">
+  $('#filtra').click(function() {
+    location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() + "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val() + "&projeto_id=" + $('#projeto_select').val() + "&dia=" + $('#dia_select').val() + "&aprovacao=" + $('#aprovacao_select').val()
+  });
+  $('#aprova_todas').click(function() {
+    $('.aprovacao_radio').filter('[value=true]').prop('checked', true)
+  });
 </script>

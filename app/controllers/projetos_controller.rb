@@ -5,10 +5,32 @@ class ProjetosController < ApplicationController
   # GET /projetos.json
   def index
     authorize! :read, Projeto
-    if current_usuario.role == "admin"
-      @projetos = Projeto.all(:order => :nome)
-    else
-      @projetos = current_usuario.projetos_coordenados.all(:order => :nome)
+    if params["tipo"] == "TODOS" || params["tipo"].nil?
+      @tipo = "TODOS"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
+          map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
+      else
+        @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
+          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
+            map{|z| z.id})]}
+      end
+    elsif params["tipo"] == "sub_projetos"
+      @tipo = "sub_projetos"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| !proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      end
+    elsif params["tipo"] == "super_projetos"
+      @tipo = "super_projetos"
+      if current_usuario.role == "admin"
+        @projetos = Projeto.all.select{|proj| proj.super_projeto.nil?}.map{|sub| [sub,[]]}
+      else
+        @projetos = current_usuario.projetos_coordenados.
+          select{|proj| proj.super_projeto.nil?}.map{|sup| [sup,[]]}
+      end
     end
     @projeto = Projeto.new
 
@@ -43,8 +65,15 @@ class ProjetosController < ApplicationController
 
   # GET /projetos/1/edit
   def edit
-    authorize! :create, Projeto
+    authorize! :edit, Projeto
     @projeto = Projeto.find(params[:id])
+    @filhos_for_select  = Projeto.all.sort{ |projeto|
+      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
+        map{|filho| [filho.nome, filho.id]}
+    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+      sort{|a, b| a.nome <=> b.nome}.
+        map{|proj| [proj.nome, proj.id]}
+    @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.order(:nome)
   end
 
@@ -54,7 +83,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.new(params[:projeto])
     if @projeto.save
-      redirect_to projetos_path, notice: I18n.t("projetos.create.sucess")
+      redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
       puts @projeto.errors
       flash[:errors] = I18n.t("projetos.create.failure")
@@ -68,6 +97,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
     boards = @projeto.boards
+    #lidar com boards
     unless params[:trello].blank?
       params[:trello].each do |id|
         repetido = false
@@ -88,9 +118,27 @@ class ProjetosController < ApplicationController
     boards.each do |b|
       b.destroy
     end
+    #lidar com subprojetos
+    failure = false
+    if params[:super_projeto] == "true"
+      params[:projeto].except! :super_projeto_id
+      subprojetos = params[:sub_projetos]
+      subprojetos.each do |index, sub|
+        subprojeto = Projeto.find(sub["id"].to_i)
+        if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
+          failure ||= !(subprojeto.update_attribute :super_projeto_id, nil)
+        elsif !(sub["filho"].nil?)
+          failure ||= !(subprojeto.update_attribute :super_projeto_id, @projeto.id)
+        end
+      end
+      @projeto.update_attribute :super_projeto_id, nil
+    else
+      @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
+    end
+    failure ||= !(@projeto.update_attributes params[:projeto])
     respond_to do |format|
-      if @projeto.update_attributes(params[:projeto])
-        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.sucess") }
+      if !failure
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
         format.json { head :no_content }
       else
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }

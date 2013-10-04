@@ -6,9 +6,11 @@ class Ability
 
     if user.role == "admin"
       can :manage, :all
-      can :see, :banco_de_horas
+      can :manage, :banco_de_horas
     elsif user.role == "diretor"
       can :manage, Projeto
+      can :manage, Ausencia
+      can :manage, Cartao
       can [:create, :custom_create, :read ], Usuario
       can [:update, :see], Usuario, :id => true, :id => user.id
       unless user.projetos_coordenados.blank?
@@ -23,6 +25,7 @@ class Ability
       can [:destroy,:update], Dia, :id => true, :id => user.id
       can :update,  [Usuario, Atividade],   :id => true, :id => user.id
       can [:meses, :listar], Pagamento
+      can [:destroy, :create], Ausencia
     end
 
 

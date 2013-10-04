@@ -46,12 +46,13 @@ class DiasController < ApplicationController
               c.duracao = atividade_attr[:trello][k][:slider]
               c.save
             end
+            Cartao.update_on_trello(params[:key], params[:token], k)
           end
         end
       end
     end
     if dia_success and atividades_success
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
+      flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end

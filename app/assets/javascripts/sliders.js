@@ -1,7 +1,6 @@
 function recalculaHoras() {
-    var max_horas = pega_horas_dia();
-    updateAllSliders(max_horas);
-    $("#horas_do_dia").text(getTime(max_horas));
+    updateAllSliders();
+    $("#horas_do_dia").text(getTime(pega_horas_dia()));
 }
 
 function slideTime(event, ui) {
@@ -31,7 +30,7 @@ function updateHorasAtividades(val, max, div) {
 
 function sumSliders() {
     var val = 0;
-    $(".slider > .hora_field").each(function(i, e) {
+    $(".fields:visible > .slider > .hora_field").each(function(i, e) {
         val += parseInt(e.value);
     });
     return val;
@@ -48,7 +47,7 @@ function sumCardSliders(parent) {
 function getTime(val) {
     var hours = parseInt(val / 60);
     var minutes = pad(val % 60 + "", 2);
-    return hours + ":" + minutes + " horas";
+    return hours + ":" + minutes + " hora(s)";
 }
 
 function initializeSliders() {
@@ -79,7 +78,8 @@ function initSlider(div, time, max_time) {
     });
 }
 
-function updateAllSliders(maxtime) {
+function updateAllSliders() {
+    var maxtime = pega_horas_dia();
     $(".slider, .card-slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;
@@ -116,7 +116,7 @@ function pad(str, max) {
 
 function horasCartoesInvalidas() {
     var invalidos = false;
-    $(".fields").each(function(i, e) {
+    $(".fields:visible").each(function(i, e) {
         if (sumCardSliders($(e).find(".trello-dropover")) > parseInt($(e).find(".hora_field")[0].value))
             invalidos = true;
     });
@@ -125,12 +125,18 @@ function horasCartoesInvalidas() {
 //essa função não faz sentido
 //rezende
 function projetosVazios() {
-    var invalidos = false;
-    $(".projeto-seletor").each(function(i, e) {
-        if ($(e).val() == null)
-            invalidos = true;
+    var vazios = false;
+    $(".fields:visible > .projeto-seletor").each(function(i, e) {
+        if (e.value == null || e.value == "")
+            vazios = true;
     });
-    return invalidos;
+    return vazios;
+}
+
+function diaVazio() {
+    var value = $("#dia_numero").val();
+    if (value == "" || value == null) return true;
+    else return false;
 }
 
 function validateSliders() {
@@ -148,6 +154,10 @@ function validateSliders() {
     }
     else if (horasCartoesInvalidas()) {
         alert("Horas em atividades diferem dos cartões");
+        return false;
+    }
+    else if (diaVazio()) {
+        alert("Nenhum dia selecionado");
         return false;
     }
     return true;

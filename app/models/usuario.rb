@@ -35,6 +35,8 @@ class Usuario < ActiveRecord::Base
   
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
+    #projetos = self.projetos.includes(:workon).where("workons.coordenador" => true)
+    #projetos.map{|z|  z.sub_projetos.empty? ? z : [z, z.sub_projetos] }.flatten.uniq
   end
 
   #def projetos_coordenados
@@ -48,19 +50,6 @@ class Usuario < ActiveRecord::Base
   def equipe_coordenada_por_projetos(projeto)
   Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
  end
-
-  #def equipe(projetos)
-    #jeito1
-    #coord = Array.new
-    #projetos.each{ |p|
-      #p.usuarios.each  { |u|
-        #coord << u if (!coord.include? u)
-      #}
-    #}
-    #coord.sort
-    #jeito2
-    #Usuario.joins(:workons).where(workons: {projeto_id: projetos}).group("id")
-  #end
 
   def horario_data(data)
     contrato_vigente_em(data).hora_mes

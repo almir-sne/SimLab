@@ -1,0 +1,40 @@
+<div class="blue-text" style="margin-left: 30px">
+  Atividades de cartão do Trello
+</div>
+
+<div class="blue-line">  </div>
+
+<div class="form-group" style="padding: 15px">
+  <h4> Cartão </h4>
+  <input type="hidden" class="card-placeholder" id="<%= @cartao_id %>">
+</div>
+
+
+<table class="list-table">
+  <tr>
+    <th> Data       </th>
+    <th> Usuário    </th>
+    <th> Projeto    </th>
+    <th> Detalhes   </th>
+    <th> Horas      </th>
+    <th> Aprovado?  </th>
+    <th> Mensagem   </th>
+  </tr>
+
+  <% @atividades.each do |atividade| %>
+    <tr>
+      <td><%= atividade.data.strftime("%d/%m/%Y")                                        %></td>
+      <td><%= atividade.usuario.nome                                                     %></td>
+      <td><%= atividade.projeto.nome                                                     %></td>
+      <td>
+        <%= atividade.observacao                                                       %> <br/>
+        <% atividade.cartoes.each do |cartao| %>
+          <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+        <% end %>
+      </td>
+      <td><%= atividade.formata_duracao                                                  %></td>
+      <td> <%= atividade.aprovacao? ? "Sim" : "Não"%>      </td>
+      <td><%= atividade.mensagem %></td>
+    </tr>
+  <% end %>
+</table>
