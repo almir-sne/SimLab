@@ -10,6 +10,10 @@ SinLab::Application.routes.draw do
       post :create_or_update
     end
   end
+  
+  namespace :android do
+      resources :tokens,:only => [:create, :destroy]
+  end
 
   resources :banco_de_horas, :only => [:index] do
     collection do
