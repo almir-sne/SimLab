@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
       :usuario_id => usuarios,
       :projeto_id => projetos,
       :dia => {:numero => dias}
-    )
+    ).order('numero asc')
     return atividades
   end
 

@@ -65,6 +65,15 @@ class DiasController < ApplicationController
     redirect_to :back
   end
 
+  def editar_por_data
+    dia = Dia.joins(:mes).where(:numero => params[:dia], :usuario_id => params[:usuario_id], :mes => {:numero => params[:mes], :ano => params[:ano]}).first
+    if (!dia.nil?) 
+      redirect_to edit_dia_path(dia.id)
+    else 
+      redirect_to new_dia_path
+    end
+  end
+  
   private
 
   def convert_date(hash, date_symbol_or_string)

@@ -33,6 +33,14 @@ class BancoDeHorasController < ApplicationController
     end
   end
 
+  #def show_mes2
+    #@year = params[:ano].nil? ? Date.today.year : params[:ano]
+    #@user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
+    #mes_num = params[:mes].nil? ? Date.today.month : Usuario.find(params[:mes])
+    #@mes_model = Mes.find_by_ano_and_usuario_id_and_numero @year, @user.id, mes_num
+    #@inicio_do_mes = Date.new(@mes_model.ano, mes_num, 1) 
+  #end
+  
   def show_mes
     @year = params[:year].nil? ? Date.today.year : params[:year]
     @user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
@@ -46,32 +54,32 @@ class BancoDeHorasController < ApplicationController
     authorize! :update, :validations
     #filtrar as atividades
     hoje = Date.today
-    meses_id = Mes.find_all_by_numero_and_ano(meses_selecionados(params[:mes], hoje), anos_selecionados(params[:ano], hoje)).collect{|month|  month.id }
-    dias_selecionados  = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
+    meses_id = Mes.find_all_by_numero_and_ano(meses_selecionados(params[:mes_select], hoje), anos_selecionados(params[:ano_select], hoje)).collect{|month|  month.id }
+    dias_selecionados  = (params[:dia_select].nil? || params[:dia_select] == "-1") ? (1..31).to_a : params[:dia_select]
     if current_usuario.role == "admin"
       equipe = Usuario.select("nome, id").all(:order => "nome")
       projetos = Projeto.select("nome, id").all(:order => "nome")
-      @atividades = seleciona_atividades(equipe.collect{|e| e.id}, projetos.collect{|p| p.id}, aprovacoes_selecionadas(params[:aprovacao]), dias_selecionados, meses_id)
+      @atividades = seleciona_atividades(usuarios_selecionados(params[:usuario_select]), projetos_selecionados(params[:projeto_select]), aprovacoes_selecionadas(params[:aprovacao_select]), dias_selecionados, meses_id)
     else
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada_por_projetos(projetos)
-      @atividades = monta_atividades(params[:usuario_id], params[:projeto_id], params[:aprovacao], meses_id, dias_selecionados)
+      @atividades = monta_atividades(params[:usuario_select], params[:projeto_select], params[:aprovacao_select], meses_id, dias_selecionados)
     end
     #popular os combobox
     soma  = @atividades.collect{|atividade| atividade.duracao}.sum
     @total_horas = soma.nil? ? 0 : (soma/3600).round(2)
-    @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
+    @usuario     = params[:usuario_select].blank? ? params[:usuario_select] = -1 : params[:usuario_select]
     @usuarios    = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
-    @projeto     = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
+    @projeto     = params[:projeto_select].blank? ? params[:projeto_select] = -1 : params[:projeto_select]
     @projetos    = [["Projetos - Todos", -1]] + projetos.collect { |p| [p.nome, p.id]  }
-    @dia         = params[:dia].blank? ? params[:dia] = -1 : params[:dia]
+    @dia         = params[:dia_select].blank? ? params[:dia_select] = -1 : params[:dia_select]
     @dias        = [["Dias - Todos", -1]] + (1..31).to_a
-    @ano         = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano]
+    @ano         = params[:ano_select].blank? ? params[:ano_select] = hoje.year : params[:ano_select]
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
-    @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
+    @mes         = params[:mes_select].blank? ? params[:mes_select] = hoje.month : params[:mes_select]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
     @aprovacoes  = [["Aprovações - Todas",-1],["Aprovadas",1],["Reprovadas",2],["Não Vistas",3]]
-    @aprovacao   = params[:aprovacao].blank? ? params[:aprovacao] = -1 : params[:aprovacao]
+    @aprovacao   = params[:aprovacao_select].blank? ? params[:aprovacao_select] = -1 : params[:aprovacao_select]
   end
 
   def mandar_validacao

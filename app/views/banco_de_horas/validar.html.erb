@@ -1,7 +1,7 @@
 <div class="blue-text" style="margin-left: 30px">
   <%= t("funcionalidade.validacao.atividade")%>
 </div>
-
+<%= form_tag validar_banco_de_horas_path, {method: :get} do %>
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3 blue-text">
@@ -28,13 +28,15 @@
       <%= select_tag(:aprovacao_select, options_for_select(@aprovacoes, @aprovacao), {:class => 'menu_select'}) %>
     </div>
     <div class="span2">
-      <%= button_tag('Filtra', {:type => 'button', :id => 'filtra', :class => 'btn default-button'}) %>
+      <%= submit_tag('Filtra', {:class => 'btn default-button'}) %>
+
     </div>
     <div class="span4" style="font-size:150%">
       <b><%=@total_horas%> horas ainda não aprovadas </b>
     </div >
   </div>
 </div>
+<% end %>
 <div class="blue-line">  </div>
 
 <%= form_tag(mandar_validacao_banco_de_horas_path) do %>
@@ -79,9 +81,6 @@
 <br />
 
 <script type="javascript">
-  $('#filtra').click(function() {
-    location.href = "/banco_de_horas/validar?mes=" + $('#mes_select').val() + "&ano=" + $('#ano_select').val() + "&usuario_id=" + $('#usuario_select').val() + "&projeto_id=" + $('#projeto_select').val() + "&dia=" + $('#dia_select').val() + "&aprovacao=" + $('#aprovacao_select').val()
-  });
   $('#aprova_todas').click(function() {
     $('.aprovacao_radio').filter('[value=true]').prop('checked', true)
   });

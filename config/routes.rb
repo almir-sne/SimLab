@@ -45,7 +45,11 @@ SinLab::Application.routes.draw do
   
   resources :workons
 
-  resources :dias, :only => [:destroy, :create]
+  resources :dias do
+    collection do
+      get :editar_por_data
+    end
+  end
   
   resources :ausencias, :only => [:index, :destroy, :create] do
     collection do
