@@ -14,7 +14,7 @@ class BancoDeHorasController < ApplicationController
     end
   end
 
-  def modal
+  def nova_atividade
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
@@ -28,8 +28,8 @@ class BancoDeHorasController < ApplicationController
     @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
-      format.html
       format.js
+      format.html
     end
   end
 
