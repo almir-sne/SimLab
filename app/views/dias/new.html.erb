@@ -29,6 +29,7 @@
           var projetos_boards = <%= @projetos_boards %>
           checkTrello(getCards);
         </script>
+        <div class="panel-scrollable" style="height: 600px; padding-bottom: 10px">
           <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
             <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
               :class=>"nohover", :style => "float: right; margin-right: 10px" %>
@@ -66,6 +67,8 @@
             <div class="grey-line"> </div>
           <% end %>
           <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button"%>
+      </div>
+          <br></br><br></br>
       </div>
       <div class="span5">
         <div class="loggedin">

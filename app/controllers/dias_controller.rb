@@ -1,6 +1,25 @@
 class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
+  def new
+    @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
+    if params[:id].nil?
+      @dia =  Dia.new
+      @dia.atividades.build
+    else
+      @dia =  Dia.find(params[:id])
+    end
+    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
+    respond_to do |format|
+      format.js
+      format.html
+    end
+  end
+
   def create
     dia = Dia.find_by_id(params[:dia_id])
     if dia.blank?

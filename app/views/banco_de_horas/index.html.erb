@@ -93,7 +93,7 @@
         <%= dia.horas_atividades_formato + "h" %>
       </td>
       <td style="width: 13%;">
-         <%= link_to ' ', nova_atividade_banco_de_horas_path(:user_id => @user.id, :ano => @year, :mes => @month.id, :id => dia.id), :class => 'icon-edit nohover'%>
+         <%= link_to ' ', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id, :id => dia.id), :class => 'icon-edit nohover'%>
 
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
           dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
@@ -115,7 +115,7 @@
   <div class="row-fluid">
     <div class="span7">
 
-      <%= link_to 'Registrar atividades', nova_atividade_banco_de_horas_path(:user_id => @user.id, :ano => @year, :mes => @month.id), :class => 'btn default-button'%>
+      <%= link_to 'Registrar atividades', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id), :class => 'btn default-button'%>
 
       <%= form_tag({ :controller => :banco_de_horas, :action => :ausencia, :id => nil },
         {:remote => true, :method => :post, :class => "inline-form"}) do %>
