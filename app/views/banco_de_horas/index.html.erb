@@ -93,13 +93,8 @@
         <%= dia.horas_atividades_formato + "h" %>
       </td>
       <td style="width: 13%;">
-        <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => dia.id },
-          {:remote => true, :method => :post, :class => "inline-form"} ) do %>
-          <%= hidden_field_tag :user_id, @user.id %>
-          <%= hidden_field_tag :ano, @year %>
-          <%= hidden_field_tag :mes, @month.id %>
-          <%= link_to_submit ' ', :class => 'icon-edit nohover', :style => "margin-right: 10px", :title => "Editar" %>
-        <% end %>
+         <%= link_to ' ', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id, :id => dia.id), :class => 'icon-edit nohover'%>
+
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
           dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
           :class => 'nohover', :title => "Excluir"%>
@@ -119,13 +114,9 @@
 <div class=" container-fluid navbar-fixed-bottom toolbar">
   <div class="row-fluid">
     <div class="span7">
-      <%= form_tag( { :controller => :banco_de_horas, :action => :modal, :id => nil },
-        {:remote => true, :method => :post, :class => "inline-form"} ) do %>
-        <%= hidden_field_tag :user_id, @user.id %>
-        <%= hidden_field_tag :ano, @year %>
-        <%= hidden_field_tag :mes, @month.id %>
-        <%= link_to_submit 'Registrar atividades', :class => 'btn default-button'%>
-      <% end %>
+
+      <%= link_to 'Registrar atividades', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id), :class => 'btn default-button'%>
+
       <%= form_tag({ :controller => :banco_de_horas, :action => :ausencia, :id => nil },
         {:remote => true, :method => :post, :class => "inline-form"}) do %>
         <%= hidden_field_tag :user_id, @user.id %>
@@ -152,9 +143,6 @@
   </div>
 </div>
 
-<div id="primeiraprosanto" class="modal hide fade" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true" style="width: 80%; margin-left: -40%">
-</div>
 
 <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px">

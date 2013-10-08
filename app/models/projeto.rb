@@ -12,7 +12,7 @@ class Projeto < ActiveRecord::Base
   has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id", :dependent => :nullify
   has_many :atividades
   has_many :usuarios,  :through => :workon
-  has_many :workons
+  has_many :workons, :dependent => :destroy
   has_many :boards
   accepts_nested_attributes_for :workons, :allow_destroy => true
   accepts_nested_attributes_for :boards, :allow_destroy => true
