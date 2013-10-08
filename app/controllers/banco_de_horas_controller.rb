@@ -14,7 +14,7 @@ class BancoDeHorasController < ApplicationController
     end
   end
 
-  def modal
+  def nova_atividade
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])

@@ -16,8 +16,8 @@ SinLab::Application.routes.draw do
       get  :show_mes
       get  :validar
       get  :log_de_atividades
+      get  :nova_atividade
       post :mandar_validacao
-      post :modal
       post :ausencia
     end
   end
