@@ -9,7 +9,7 @@ class Android::TokensController  < ApplicationController
         render :status=>406, :json=>{:message=>"Request precisa ser em json"}
         return
        end
-      if email.blank? or password.blank?
+      if email.nil? or password.nil?
         render :status=>400,
               :json=>{:message=>"The request must contain the user email and password."}
         return

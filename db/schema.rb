@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130927205139) do
+ActiveRecord::Schema.define(:version => 20131007191654) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(:version => 20130927205139) do
     t.boolean  "formado"
     t.boolean  "status"
     t.date     "data_de_nascimento"
+    t.string   "authentication_token"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
