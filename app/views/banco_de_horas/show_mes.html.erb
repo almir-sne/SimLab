@@ -1,31 +1,34 @@
 <div class="blue-text">
-  <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, show_mes_banco_de_horas_url(:year => @year.to_i - 1) %>
+  <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, show_mes_banco_de_horas_url(:ano => @year.to_i - 1) %>
   <%= @year %>
-  <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, show_mes_banco_de_horas_url(:year => @year.to_i + 1) %>
+  <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, show_mes_banco_de_horas_url(:ano => @year.to_i + 1) %>
 </div>
-
-<% if can? :see, :banco_de_horas %>
-  <%= select_tag(:menu_select, options_for_select(@usuarios, @user.id), :prompt => "escolha um usuario") %>
-<%end%>
 
 <div class="blue-line">  </div>
 
 <table style="width: 100%">
+
   <tr>
-    <% (1..12).each do |mes| %>
-      <td class="month-table">
-        <%= link_to "#{t("date.month_names")[mes]} <br/> <br/>\n <b> #{(@meses[mes].blank?)? "00:00" :
-        @meses[mes].horas_trabalhadas_aprovadas} / #{(@meses[mes].blank?)? @user.horario_data(
-        Date.new(@year.to_i, mes, 1)) : @meses[mes].horas_contratadas}</b>".html_safe,
-          banco_de_horas_url(:year => @year, :user => @user.id, :month => mes),
-          :class => (!@meses[mes].blank? and  @meses[mes].tem_reprovacao?) ? "month-link red-link" : "month-link blue-link" %>
-      </td>
-      <% if mes == 6 %>
-      </tr>
-      <tr>
-      <% end %>
+    <% t("date.abbr_day_names").each do |p| %>
+      <th><%= p %></th>
     <% end %>
   </tr>
+  <% comeco = Date.new(2013,06,01) %>
+  <% fim = comeco.end_of_month %>
+  <tr>
+  <% dia_da_semana = 0 %>
+  <% while comeco.wday != dia_da_semana %>
+    <% dia_da_semana = dia_da_semana + 1 %>
+    <td></td>
+  <% end %>
+  <% (comeco..fim).each do |dia| %>
+    <td><%= link_to (dia.day.to_s+"/"+dia.month.to_s).to_s, editar_por_data_dias_path(:dia=> dia.day, :mes => dia.month, :ano => dia.year, :usuario_id => current_usuario.id) %></td>
+    <% if dia.wday == 6 %>
+      </tr><tr>
+    <% end %>
+  <% end %>
+  </tr>
+  
 </table>
 
 <script>
