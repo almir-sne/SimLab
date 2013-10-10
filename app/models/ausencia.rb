@@ -17,12 +17,15 @@ class Ausencia < ActiveRecord::Base
   end
   
   def horas
+    Time.at(segundos).utc.strftime("%H:%M")
+  end
+  
+  def segundos
     if read_attribute(:horas).nil?
       h = usuario.horario_data(data)/20 * 3600
     else
       h = read_attribute(:horas)
     end
-    Time.at(h).utc.strftime("%H:%M")
   end
   
   def abonada?
