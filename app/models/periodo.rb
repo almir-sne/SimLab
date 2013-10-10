@@ -1,6 +1,6 @@
 require 'holidays'
 require 'holidays/br'
-class Mes < ActiveRecord::Base
+class Periodo
   attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id, :pagamentos_attributes
   has_many :atividades
   has_many :dias
@@ -10,20 +10,20 @@ class Mes < ActiveRecord::Base
 
   accepts_nested_attributes_for :pagamentos, :allow_destroy => true
   
-  def tem_reprovacao?
-    !self.atividades.where("aprovacao is false").blank?
+  def tem_reprovacao?(inicio, fim, usuario_id)
+    !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
 
-  def dias_uteis_restantes
-    calcula_dias_uteis_restantes.to_s
+  def dias_uteis_restantes(fim)
+    calcula_dias_uteis_restantes(fim).to_s
   end
 
-  def horas_trabalhadas
-    string_hora(calcula_minutos_trabalhados(false))
+  def horas_trabalhadas(inicio, fim, usuario_id)
+    string_hora(calcula_minutos_trabalhados(false, inicio, fim, usuario_id))
   end
 
-  def horas_trabalhadas_aprovadas
-    string_hora(calcula_minutos_trabalhados(true))
+  def horas_trabalhadas_aprovadas(inicio, fim, usuario_id)
+    string_hora(calcula_minutos_trabalhados(true, inicio, fim, usuario_id))
   end
 
   def horas_restantes
@@ -56,42 +56,37 @@ class Mes < ActiveRecord::Base
   end
 
   private
-  def calcula_minutos_trabalhados(aprovados)
+  def calcula_minutos_trabalhados(aprovados, inicio, fim, usuario_id)
     if aprovados
-      return self.atividades.where(:aprovacao => true).sum(:duracao)/60 +
-        self.ausencias.where(:abonada => true).sum(:horas)/60
+      return Atividade.where(aprovacao: true, data: inicio..fim, usuario_id: usuario_id).sum(:duracao)/60 +
+       Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60
     else
-      return self.atividades.sum(:duracao)/60 + self.ausencias.where(:abonada => true).sum(:horas)/60
+      return Atividade.where(usuario_id: usuario_id, data: inicio..fim).sum(:duracao)/60 +Ausencia.where(:abonada => true).sum(:horas)/60
     end
   end
 
-  def calcula_minutos_restantes
-    minutos_ausencias = self.ausencias.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
-    horario = self.horas_contratadas.blank? ? 0 : self.horas_contratadas
+  def calcula_minutos_restantes(fim, usuario_id)
+    minutos_ausencias = Ausencia.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
+    horario = Usuario.find(usuario_id).contrato_vigente_em(Date.today).hora_mes
     min_totais = horario*60
-    min_trabalhados = calcula_minutos_trabalhados(false)
+    min_trabalhados = calcula_minutos_trabalhados(false, Date.today, fim, usuario_id)
     return min_totais - min_trabalhados - minutos_ausencias
   end
 
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
   def string_hora(minutos)
-    hh, mm = (minutos).divmod(60)
-    if (hh < 0)
-      hh = mm = 0
-    end
-    return ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
+    Time.at(minutos * 60).utc.strftime("%H:%M")
   end
 
-  def calcula_dias_uteis_restantes
+  def calcula_dias_uteis_restantes(fim)
     data = Date.today
-    final_do_mes = data.at_end_of_month
     dia_model = self.dias.where('numero = ?', data.day).first
     if dia_model
       data = data.next
     end
     dias_uteis = 0
     d = data
-    while (d != final_do_mes + 1.day)
+    while (d != fim + 1.day)
       if (!d.sunday? and !d.saturday? and !d.holiday?('br'))
         dias_uteis+= 1
       end
