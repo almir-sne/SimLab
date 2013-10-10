@@ -1,5 +1,6 @@
 SinLab::Application.routes.draw do
 
+  post "cartoes/atualizar_cartoes"
   get "cartoes/estatisticas"
   get "cartoes/atividades"
 

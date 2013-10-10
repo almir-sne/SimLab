@@ -33,7 +33,22 @@
 <% end %>
 <div class="blue-line">  </div>
 
-<%= will_paginate @stats, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span9">
+      <%= will_paginate @stats, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
+    </div>
+
+    <div class="span3" style="padding: 15px;">
+      <%= form_tag cartoes_atualizar_cartoes_path  do %>
+        <%= hidden_field_tag :key  %>
+        <%= hidden_field_tag :token  %>
+        <%= submit_tag 'Sincronizar horas do Trello', :confirm =>
+          "Esta operação pode demorar, pois depende do Trello, continuar?", :class => 'btn default-button' %>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <table  class="list-table">
   <tr>
