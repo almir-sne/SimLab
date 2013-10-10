@@ -6,7 +6,7 @@ class AusenciasController < ApplicationController
     ausencia.destroy
     redirect_to :back
   end
-  
+
   def create
     ausencia = Ausencia.find_by_id(params[:dia_id])
     if ausencia.blank?
@@ -16,14 +16,14 @@ class AusenciasController < ApplicationController
     ausencia.usuario_id = params[:user_id]
     ausencia.mes_id = params[:mes]
     if ausencia.save
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
+      flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
     redirect_to banco_de_horas_path(:month => ausencia.mes.numero,
       :year => ausencia.mes.ano, :user => ausencia.usuario.id)
   end
-  
+
   def index
     authorize! :update, :validations
     #filtrar as ausencias
@@ -55,7 +55,7 @@ class AusenciasController < ApplicationController
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
   end
-  
+
   def validar
     ausencias = params[:ausencias]
     ausencias.each do |id, a|
@@ -65,10 +65,10 @@ class AusenciasController < ApplicationController
       ausencia.update_attribute(:avaliador_id, current_user.id)
       ausencia.update_attribute(:horas, a[:horas])
     end
-    flash[:notice] = I18n.t("ausencia.validation.sucess")
+    flash[:notice] = I18n.t("ausencia.validation.success")
     redirect_to ausencias_path
   end
-  
+
    def ausencia
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])

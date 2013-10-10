@@ -1,6 +1,6 @@
 class PagamentosController < ApplicationController
   load_and_authorize_resource
-  
+
   def index
     @usuarios = Usuario.order(:nome)
   end
@@ -18,10 +18,20 @@ class PagamentosController < ApplicationController
     @media = @total/@meses.size unless @meses.blank?
   end
 
+  def periodos
+    if can? :manage, Pagamento
+      @usuario = Usuario.find params[:user_id]
+    else
+      @usuario = current_usuario
+    end
+    @periodos = Contrato.where(usuario_id == @usario.id).periodos
+  end
+
+
   def listar
     @mes = Mes.find params[:mes_id]
   end
-  
+
   def create_or_update
     @mes = Mes.find params[:mes_id]
     if @mes.update_attributes(params[:mes])

@@ -9,7 +9,7 @@ class Mes < ActiveRecord::Base
   belongs_to :usuario
 
   accepts_nested_attributes_for :pagamentos, :allow_destroy => true
-  
+
   def tem_reprovacao?
     !self.atividades.where("aprovacao is false").blank?
   end
@@ -42,7 +42,7 @@ class Mes < ActiveRecord::Base
   def horas_contratadas
      contrato.hora_mes
   end
-  
+
   def horas_ausencias_abonadas
     string_hora(self.ausencias.where(:abonada => true).sum(:horas)/60)
   end
@@ -50,7 +50,7 @@ class Mes < ActiveRecord::Base
   def contrato
     usuario.contrato_vigente_em(Date.new(ano, numero, 1))
   end
-  
+
   def calcula_horas_trabalhadas
     calcula_minutos_trabalhados(true)/60
   end

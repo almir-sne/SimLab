@@ -14,4 +14,16 @@ class Contrato < ActiveRecord::Base
     inicio_periodo .. fim_periodo
   end
 
+  def periodos
+    resposta = Array.new
+    i=0
+    periodo = periodo_vigente(inicio + i.month)
+    while periodo.last > periodo.first do
+      resposta << periodo
+      i += 1
+      periodo = periodo_vigente(inicio + i.month)
+    end
+    resposta
+  end
+
 end
