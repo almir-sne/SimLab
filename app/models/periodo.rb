@@ -1,23 +1,17 @@
 require 'holidays'
 require 'holidays/br'
 class Periodo
-  attr_accessible :ano, :numero, :usuario_id, :valor_hora, :id, :pagamentos_attributes
-  has_many :atividades
-  has_many :dias
-  has_many :ausencias
-  has_many :pagamentos, :dependent => :destroy
-  belongs_to :usuario
-
-  accepts_nested_attributes_for :pagamentos, :allow_destroy => true
   
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
-
-  def dias_uteis_restantes(fim)
-    calcula_dias_uteis_restantes(fim).to_s
+  
+  #supondo que isso só seja chamado para o periodo atual
+  def dias_uteis_restantes(usuario, fim)
+    calcula_dias_uteis_restantes(usuario, fim).to_s
   end
 
+  #horas trabalhadas num dado período
   def horas_trabalhadas(inicio, fim, usuario_id)
     string_hora(calcula_minutos_trabalhados(false, inicio, fim, usuario_id))
   end
@@ -26,7 +20,8 @@ class Periodo
     string_hora(calcula_minutos_trabalhados(true, inicio, fim, usuario_id))
   end
 
-  def horas_restantes
+  #horas que faltam trabalhar
+  def horas_restantes(inicio, fim, usuario)
     string_hora(calcula_minutos_restantes)
   end
 
@@ -44,7 +39,7 @@ class Periodo
   end
   
   def horas_ausencias_abonadas
-    string_hora(self.ausencias.where(:abonada => true).sum(:horas)/60)
+    string_hora(Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60)
   end
 
   def contrato
@@ -65,11 +60,12 @@ class Periodo
     end
   end
 
-  def calcula_minutos_restantes(fim, usuario_id)
-    minutos_ausencias = Ausencia.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
-    horario = Usuario.find(usuario_id).contrato_vigente_em(Date.today).hora_mes
+  def calcula_minutos_restantes(inicio, fim, usuario_id)
+    hoje = Date.today
+    minutos_ausencias = Ausencia.where(abonada: [false,nil]).collect{|a| a.segundos}.sum/60
+    horario_mensal = Usuario.find(usuario_id).contrato_vigente_em(hoje).hora_mes
     min_totais = horario*60
-    min_trabalhados = calcula_minutos_trabalhados(false, Date.today, fim, usuario_id)
+    min_trabalhados = calcula_minutos_trabalhados(false, inicio, fim, usuario_id)
     return min_totais - min_trabalhados - minutos_ausencias
   end
 
@@ -77,13 +73,15 @@ class Periodo
   def string_hora(minutos)
     Time.at(minutos * 60).utc.strftime("%H:%M")
   end
-
-  def calcula_dias_uteis_restantes(fim)
+  
+  #pode ser ateh o fim do contrato ou do fim do mes
+  def calcula_dias_uteis_restantes(fim, usuario_id)
     data = Date.today
-    dia_model = self.dias.where('numero = ?', data.day).first
-    if dia_model
-      data = data.next
-    end
+    #checa se há alguma atividade cadastrada hoje
+    #dia_model = self.dias.where('numero = ?', data.day).first
+    #if dia_model
+      #data = data.next
+    #end
     dias_uteis = 0
     d = data
     while (d != fim + 1.day)
