@@ -42,7 +42,7 @@
         <% end %>
       </td>
       <td>
-        <%= form_tag( { :controller => :banco_de_horas, :action => :ausencia, :id => ausencia.id },
+        <%= form_tag( { :controller => :ausencias, :action => :ausencia, :id => ausencia.id },
           {:remote => true, :method => :post, :class => "inline-form"} ) do %>
           <%= hidden_field_tag :user_id, @user.id %>
           <%= hidden_field_tag :mes, @month.id %>
@@ -117,7 +117,7 @@
 
       <%= link_to 'Registrar atividades', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id), :class => 'btn default-button'%>
 
-      <%= form_tag({ :controller => :banco_de_horas, :action => :ausencia, :id => nil },
+      <%= form_tag({ :controller => :ausencias, :action => :ausencia, :id => nil },
         {:remote => true, :method => :post, :class => "inline-form"}) do %>
         <%= hidden_field_tag :user_id, @user.id %>
         <%= hidden_field_tag :mes, @month.id %>

@@ -25,6 +25,10 @@ class CartoesController < ApplicationController
       }}.paginate(:page => params[:page], :per_page => 30)
   end
   
+  def atualizar_cartoes
+    Cartao.group(:cartao_id).order("cartoes.updated_at desc").pluck(:cartao_id).each { |c| Cartao.update_on_trello(params[:key], params[:token], c) }
+  end
+  
   def atividades
     cartoes = Cartao.where(cartao_id: params[:cartao_id])
     @atividades = cartoes.collect{|cartao| cartao.atividade}

@@ -66,10 +66,11 @@ class Mes < ActiveRecord::Base
   end
 
   def calcula_minutos_restantes
+    minutos_ausencias = self.ausencias.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
     horario = self.horas_contratadas.blank? ? 0 : self.horas_contratadas
     min_totais = horario*60
     min_trabalhados = calcula_minutos_trabalhados(false)
-    return min_totais - min_trabalhados
+    return min_totais - min_trabalhados - minutos_ausencias
   end
 
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
