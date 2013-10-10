@@ -4,6 +4,11 @@ class Cartao < ActiveRecord::Base
   
   validates :atividade_id, :presence => true
   
+  scope :ano, lambda { |value| where(['extract(year from cartoes.updated_at) = ?', value]) if value > 0 }
+  scope :mes, lambda { |value| where(['extract(month from cartoes.updated_at) = ?', value]) if value > 0 }
+  scope :dia, lambda { |value| where(['extract(day from cartoes.updated_at) = ?', value]) if value > 0 }
+  scope :atividade, lambda { |value| where({atividade: value}) unless value.blank? }
+
   def self.horas_trabalhadas(cid)
     Cartao.where(cartao_id: cid).sum(:duracao)/60
   end

@@ -68,4 +68,19 @@ class AusenciasController < ApplicationController
     flash[:notice] = I18n.t("ausencia.validation.sucess")
     redirect_to ausencias_path
   end
+  
+   def ausencia
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
+    if params[:id].nil?
+      @ausencia =  Ausencia.new
+    else
+      @ausencia =  Ausencia.find(params[:id])
+    end
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
 end
