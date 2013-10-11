@@ -27,6 +27,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
+  def dias_no_periodo(inicio, fim)
+    (inicio..fim).collect{|d| d.day}
+  end
+  
   def lista_dias_no_mes(ano, mes)
     data_final = Date.new(ano, mes, 5).at_end_of_month.day
     (1..data_final).to_a
@@ -134,12 +139,12 @@ class ApplicationController < ActionController::Base
         end
         atividades = seleciona_atividades(usuarios_ids, projetos_ids, param_aprovacoes, dias_selecionados, meses_id)
       else
-       coord_hash.each do |key, array|
-         if atividades.nil?
-           atividades = seleciona_atividades(array, key, param_aprovacoes, dias_selecionados, meses_id)
-         else
-           atividades = atividades + seleciona_atividades(array, key, param_aprovacoes, dias_selecionados, meses_id)
-         end
+        coord_hash.each do |key, array|
+          if atividades.nil?
+            atividades = seleciona_atividades(array, key, param_aprovacoes, dias_selecionados, meses_id)
+          else
+            atividades = atividades + seleciona_atividades(array, key, param_aprovacoes, dias_selecionados, meses_id)
+          end
         end
       end
     end

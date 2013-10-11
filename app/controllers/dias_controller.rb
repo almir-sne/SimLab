@@ -93,6 +93,25 @@ class DiasController < ApplicationController
     end
   end
   
+  def index
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @usuario =  Usuario.find(params[:usuario]) || current_user
+    @dias_periodo = dias_no_periodo(@inicio, @fim)
+    @dias = Dia.por_periodo(@inicio, @fim, @usuario.id)
+    @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+  
+  def periodos
+    @ano = params[:ano] || Date.today.year
+    @usuario = params[:usuario] || current_user
+    @usuarios = Usuario.order(:nome)
+    @periodos = (1..12).collect{|m| {inicio: Date.new(2013, m, 1), fim: Date.new(2013, m, 1).at_end_of_month}}
+  end
+  
   private
 
   def convert_date(hash, date_symbol_or_string)

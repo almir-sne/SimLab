@@ -13,8 +13,8 @@ class AusenciasController < ApplicationController
       ausencia = Ausencia.new
     end
     ausencia.update_attributes(params[:ausencia])
-    ausencia.usuario_id = params[:user_id]
-    ausencia.mes_id = params[:mes]
+    ausencia.usuario_id = params[:usuario_id]
+    ausencia.data = Date.parse params[:data]
     if ausencia.save
       flash[:notice] = I18n.t("banco_de_horas.create.sucess")
     else
@@ -70,9 +70,10 @@ class AusenciasController < ApplicationController
   end
   
    def ausencia
-    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
-    @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
+    @usuario = Usuario.where(id: params[:usuario_id]) || current_user
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @dias_periodo = dias_no_periodo(@inicio, @fim)
     if params[:id].nil?
       @ausencia =  Ausencia.new
     else

@@ -1,14 +1,18 @@
 require 'holidays'
 require 'holidays/br'
-class Periodo
-  
+module DiasHelper
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
   
+  def periodo_link(inicio, fim, usuario_id)
+    "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
+      "<b> #{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} / #{horas_contratadas(inicio, usuario_id)} </b>"
+  end
+  
   #supondo que isso só seja chamado para o periodo atual
-  def dias_uteis_restantes(usuario, fim)
-    calcula_dias_uteis_restantes(usuario, fim).to_s
+  def dias_uteis_restantes(fim)
+    calcula_dias_uteis_restantes(fim).to_s
   end
 
   #horas trabalhadas num dado período
@@ -22,39 +26,35 @@ class Periodo
 
   #horas que faltam trabalhar
   def horas_restantes(inicio, fim, usuario)
-    string_hora(calcula_minutos_restantes)
+    string_hora(calcula_minutos_restantes(inicio, fim, usuario))
   end
 
-  def horas_a_fazer_por_dia
+  def horas_a_fazer_por_dia(inicio, fim, usuario_id)
     dias = calcula_dias_uteis_restantes
     if dias == 0
       string_hora(0)
     else
-      string_hora(calcula_minutos_restantes / dias)
+      string_hora(calcula_minutos_restantes(inicio, fim, usuario_id) / dias)
     end
   end
 
-  def horas_contratadas
-     contrato.hora_mes
-  end
-  
-  def horas_ausencias_abonadas
+  def horas_ausencias_abonadas(inicio, fim, usuario_id)
     string_hora(Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60)
   end
 
-  def contrato
-    usuario.contrato_vigente_em(Date.new(ano, numero, 1))
+  def horas_contratadas(data, usuario_id)
+    Usuario.find(usuario_id).horario_data(data)
   end
   
-  def calcula_horas_trabalhadas
-    calcula_minutos_trabalhados(true)/60
+  def calcula_horas_trabalhadas(inicio, fim, usuario_id)
+    calcula_minutos_trabalhados(true, inicio, fim, usuario_id)/60
   end
 
   private
   def calcula_minutos_trabalhados(aprovados, inicio, fim, usuario_id)
     if aprovados
       return Atividade.where(aprovacao: true, data: inicio..fim, usuario_id: usuario_id).sum(:duracao)/60 +
-       Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60
+        Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60
     else
       return Atividade.where(usuario_id: usuario_id, data: inicio..fim).sum(:duracao)/60 +Ausencia.where(:abonada => true).sum(:horas)/60
     end
@@ -71,16 +71,20 @@ class Periodo
 
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
   def string_hora(minutos)
-    Time.at(minutos * 60).utc.strftime("%H:%M")
+    hh, mm = (minutos).divmod(60)
+    if (hh < 0)
+      hh = mm = 0
+    end
+    return ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end
   
   #pode ser ateh o fim do contrato ou do fim do mes
-  def calcula_dias_uteis_restantes(fim, usuario_id)
+  def calcula_dias_uteis_restantes(fim)
     data = Date.today
     #checa se há alguma atividade cadastrada hoje
     #dia_model = self.dias.where('numero = ?', data.day).first
     #if dia_model
-      #data = data.next
+    #data = data.next
     #end
     dias_uteis = 0
     d = data

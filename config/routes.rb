@@ -47,6 +47,7 @@ SinLab::Application.routes.draw do
   resources :dias do
     collection do
       get :editar_por_data
+      get :periodos
     end
   end
 

@@ -7,8 +7,8 @@ class Ausencia < ActiveRecord::Base
   
   validates :dia, :uniqueness => {:scope => :mes_id}
   
-  def data
-    Date.new(mes.ano, mes.numero, dia)
+  def self.por_periodo(inicio, fim, usuario_id)
+    Ausencia.where(usuario_id: usuario_id, data: inicio..fim)
   end
   
   def horas=(val)

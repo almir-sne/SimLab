@@ -14,6 +14,10 @@ class Dia < ActiveRecord::Base
   validates :usuario_id, :presence => true
   #  validate :validar_horas
 
+  def self.por_periodo(inicio, fim, usuario_id)
+    Dia.where(usuario_id: usuario_id, data: inicio..fim)
+  end
+  
   def entrada
     read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).utc
   end
