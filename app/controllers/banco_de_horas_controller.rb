@@ -18,7 +18,11 @@ class BancoDeHorasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
+    if current_user.role == "admin"
+      @diasdomes = lista_dias_no_mes(params[:ano].to_i, @month.numero)
+    else
+      @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
+    end
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
