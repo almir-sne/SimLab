@@ -134,7 +134,7 @@ function projetosVazios() {
 }
 
 function diaVazio() {
-    var value = $("#dia_numero").val();
+    var value = $("#dia_data").val();
     if (value == "" || value == null) return true;
     else return false;
 }

@@ -133,7 +133,7 @@
         <div style="float: right">
           Resta(m) <b> <%= horas_restantes(@inicio, @fim, @usuario.id) %> </b> hora(s) de trabalho e
           <b> <%= dias_uteis_restantes(@fim) %> </b> dia(s) útei(s) para concluir a meta do mês <br/>
-          Trabalhe <b> <%= horas_a_fazer_por_dia %> </b> hora(s) por dia útil para comprir a meta
+          Trabalhe <b> <%= horas_a_fazer_por_dia(@inicio, @fim, @usuario.id) %> </b> hora(s) por dia útil para comprir a meta
         </div>
       <% end %>
     </div>

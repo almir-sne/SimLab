@@ -1,8 +1,7 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :observacao, :mes_id, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
+  attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
   attr_accessible :aprovado, :reprovado, :duracao, :data
 
-  belongs_to :mes
   belongs_to :dia
   belongs_to :projeto
   belongs_to :usuario
@@ -10,7 +9,6 @@ class Atividade < ActiveRecord::Base
   has_many :cartoes, :dependent => :destroy
 
   validates :dia_id, :presence => true
-  validates :mes_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
 

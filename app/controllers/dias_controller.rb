@@ -2,17 +2,26 @@ class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
   def new
-    @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
-    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
-    @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @usuario =  Usuario.find_by_id(params[:usuario_id]) || current_user
+    #if current_user.role == 'admin'
+    @dias_editaveis = (@inicio..@fim).to_a
+    # else
+    #   t =  Date.today
+    #   @dias_editaveis = ([@inicio, t - 4].max..[t, @fim].min).to_a
+    #end
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
     else
       @dia =  Dia.find(params[:id])
+      if @dia.blank?
+        @dia =  Dia.new
+        @dia.atividades.build
+      end
     end
-    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
     respond_to do |format|
       format.js
@@ -21,17 +30,20 @@ class DiasController < ApplicationController
   end
 
   def create
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @usuario = Usuario.find_by_id(params[:usuario_id]) || current_user
+    
     dia = Dia.find_by_id(params[:dia_id])
     if dia.blank?
       dia = Dia.new
     end
     dia_success = dia.update_attributes(
-      :numero => params[:dia][:numero],
+      :data => Date.parse(params[:dia][:data]),
       :entrada => convert_date(params[:dia], "entrada"),
       :saida => convert_date(params[:dia], "saida"),
       :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
-      :mes_id => params[:mes],
-      :usuario_id => params[:user_id]
+      :usuario_id => @usuario.id
     )
     atividades_success = true
     params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
@@ -47,8 +59,7 @@ class DiasController < ApplicationController
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
           :dia_id => dia.id,
-          :mes_id => params[:mes],
-          :usuario_id => params[:user_id],
+          :usuario_id => @usuario.id,
           :aprovacao => nil,
           :data => dia.data
         )
@@ -75,7 +86,7 @@ class DiasController < ApplicationController
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
-    redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
+    redirect_to dias_path(inicio: @inicio.to_formatted_s, fim: @fim.to_formatted_s, usuario: @usuario.id)
   end
 
   def destroy
@@ -96,7 +107,7 @@ class DiasController < ApplicationController
   def index
     @inicio = Date.parse params[:inicio]
     @fim = Date.parse params[:fim]
-    @usuario =  Usuario.find(params[:usuario]) || current_user
+    @usuario =  Usuario.find_by_id(params[:usuario]) || current_user
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)

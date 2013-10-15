@@ -1,16 +1,14 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id
+  attr_accessible :entrada, :intervalo, :numero, :saida, :usuario_id, :data
 
   belongs_to :usuario
-  belongs_to :mes
   has_many :atividades, :dependent => :destroy
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
 
   attr_accessible :atividades_attributes
 
-  validates :numero, :uniqueness => {:scope => :mes_id}, :presence => true
-  validates :mes_id, :presence => true
+  validates :data, :uniqueness => {:scope => :usuario_id}, :presence => true
   validates :usuario_id, :presence => true
   #  validate :validar_horas
 
@@ -106,10 +104,6 @@ class Dia < ActiveRecord::Base
     else
       Time.new(2000, 1, 1 ,0, 0, 0)
     end
-  end
-
-  def data
-    Date.new(mes.ano, mes.numero, numero)
   end
 
   private
