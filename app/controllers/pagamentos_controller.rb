@@ -24,8 +24,11 @@ class PagamentosController < ApplicationController
     else
       @usuario = current_usuario
     end
-    @periodos = Contrato.where(usuario_id == @usario.id).periodos
-  end
+    contratos = Contrato.where(:usuario_id => @usuario.id)
+    periodos  = contratos.map{|contrato| [contrato, contrato.periodos]}
+    @periodos = periodos.flatten.reject{|x| x.class == Contrato}
+    @total    = contratos.map{|c| c.try(:valor_hora).to_f * c.atividades.select(:duracao).sum}.sum
+  end                                                                        #FIXME
 
 
   def listar

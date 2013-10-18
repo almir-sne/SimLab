@@ -14,6 +14,14 @@ class Contrato < ActiveRecord::Base
     inicio_periodo .. fim_periodo
   end
 
+  def atividades_no_periodo(periodo)
+    Atividade.where(:usuario_id => usuario_id).where{(data >= periodo.first) & (data < periodo.last)}
+  end
+
+  def atividades
+    Atividade.where{(data >= my{self.inicio}) & (data < my{self.fim})}
+  end
+
   def periodos
     resposta = Array.new
     i=0
