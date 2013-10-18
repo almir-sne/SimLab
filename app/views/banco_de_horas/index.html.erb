@@ -115,7 +115,7 @@
   <div class="row-fluid">
     <div class="span7">
 
-      <%= link_to 'Registrar atividades', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month.id), :class => 'btn default-button'%>
+      <%= link_to 'Registrar atividades', new_dia_path(:user_id => @user.id, :ano => @year, :mes => @month_num), :class => 'btn default-button'%>
 
       <%= form_tag({ :controller => :ausencias, :action => :ausencia, :id => nil },
         {:remote => true, :method => :post, :class => "inline-form"}) do %>

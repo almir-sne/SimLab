@@ -1,6 +1,7 @@
 class Dia < ActiveRecord::Base
   attr_accessible :entrada, :intervalo, :numero, :saida, :usuario_id, :data
-
+  
+  belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
 
