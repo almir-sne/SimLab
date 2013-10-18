@@ -66,11 +66,11 @@ class Mes < ActiveRecord::Base
   end
 
   def calcula_minutos_restantes
-    minutos_ausencias = self.ausencias.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
+    minutos_abonados = self.ausencias.where(:abonada => true).collect{|a| a.segundos}.sum/60
     horario = self.horas_contratadas.blank? ? 0 : self.horas_contratadas
     min_totais = horario*60
     min_trabalhados = calcula_minutos_trabalhados(false)
-    return min_totais - min_trabalhados - minutos_ausencias
+    return min_totais - min_trabalhados - minutos_abonados
   end
 
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
@@ -86,18 +86,18 @@ class Mes < ActiveRecord::Base
     data = Date.today
     final_do_mes = data.at_end_of_month
     dia_model = self.dias.where('numero = ?', data.day).first
-    if dia_model
+    if !dia_model.nil? && !dia_model.atividades.blank?
       data = data.next
     end
     dias_uteis = 0
     d = data
     while (d != final_do_mes + 1.day)
       if (!d.sunday? and !d.saturday? and !d.holiday?('br'))
-        dias_uteis+= 1
+        dias_uteis += 1
       end
       d = d.next
     end
-    return dias_uteis
+    return dias_uteis - Ausencia.joins(:mes).where('dia > ? and meses.numero = ?',data.day, data.month).count
   end
 
 end
