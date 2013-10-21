@@ -4,7 +4,8 @@ class AddDeviseColumnsToUsuario < ActiveRecord::Migration
       u.string :authentication_token
     end
   end
-  def self.down
-    u.remove :authentication_token
+
+  def down
+    remove_column :usuarios, :authentication_token
   end
 end

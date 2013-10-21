@@ -10,7 +10,8 @@ class Android::MesesController < ApplicationController
   end
 
   def index
-    @meses = Mes.where(:usuario_id => params[:usuario], :ano => params[:ano])
+    usuario = Usuario.where(authentication_token: params[:auth_token]).last
+    @meses = Mes.where(:usuario_id => usuario.id, :ano => params[:ano])
     respond_with({
         meses: @meses.as_json(:only => [:id, :numero], :methods => [:tem_reprovacao?, :horas_trabalhadas_aprovadas])
       })
