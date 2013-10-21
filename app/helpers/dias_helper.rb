@@ -11,8 +11,8 @@ module DiasHelper
   end
   
   #supondo que isso só seja chamado para o periodo atual
-  def dias_uteis_restantes(fim)
-    calcula_dias_uteis_restantes(fim).to_s
+  def dias_uteis_restantes(fim, usuario_id)
+    calcula_dias_uteis_restantes(fim, usuario_id).to_s
   end
 
   #horas trabalhadas num dado período
@@ -79,8 +79,11 @@ module DiasHelper
   end
   
   #pode ser ateh o fim do contrato ou do fim do mes
-  def calcula_dias_uteis_restantes(fim)
+  def calcula_dias_uteis_restantes(fim, usuario_id)
     data = Date.today
+    if !Atividade.find_by_data_and_usuario_id(data, current_usuario).nil?
+      data = data.next
+    end
     #checa se há alguma atividade cadastrada hoje
     #dia_model = self.dias.where('numero = ?', data.day).first
     #if dia_model
@@ -94,7 +97,7 @@ module DiasHelper
       end
       d = d.next
     end
-    return dias_uteis
+    return dias_uteis - Ausencia.where
   end
 
 end
