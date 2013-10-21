@@ -1,7 +1,5 @@
 SinLab::Application.routes.draw do
- 
-
-
+  post "cartoes/atualizar_cartoes"
   get "cartoes/estatisticas"
   get "cartoes/atividades"
 
@@ -25,8 +23,6 @@ SinLab::Application.routes.draw do
       get  :validar
       get  :log_de_atividades
       post :mandar_validacao
-      post :modal
-      post :ausencia
     end
   end
 
@@ -50,14 +46,19 @@ SinLab::Application.routes.draw do
   end
 
   resources :coordenacoes
-  
+
   resources :workons
 
-  resources :dias, :only => [:destroy, :create]
-  
+  resources :dias do
+    collection do
+      get :editar_por_data
+    end
+  end
+
   resources :ausencias, :only => [:index, :destroy, :create] do
     collection do
       post :validar
+      post :ausencia
     end
   end
 

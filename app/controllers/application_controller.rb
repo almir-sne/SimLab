@@ -32,6 +32,14 @@ class ApplicationController < ActionController::Base
     (1..data_final).to_a
   end
   
+  def lista_dias_no_mes_edit(dia)
+    if dia.nil?
+      [].to_a
+    else
+      dia
+    end
+  end
+  
   def lista_dias_no_mes_limitado(ano, mes)
     data_atual = Date.today
     #monta a data minima
@@ -160,7 +168,7 @@ class ApplicationController < ActionController::Base
       :usuario_id => usuarios,
       :projeto_id => projetos,
       :dia => {:numero => dias}
-    )
+    ).order('numero asc')
     return atividades
   end
 

@@ -22,6 +22,7 @@ function getCards() {
             filterCards(document.getElementById('dia_atividades_attributes_0_projeto_id'));
         });
         loadFormCards();
+        getToken();
     });
 }
 
@@ -66,14 +67,14 @@ function dropCard(event) {
     var cartaoRepetido = false;
     var target = event.target;
     while (target.className != "trello-dropover") {
-        target = target.parentElement
+        target = target.parentElement;
     }
-    var name = $(target.parentElement).find(".hora_field")[0].name.replace("horas", "trello") + "[" + data + "]"
+    var name = $(target.parentElement).find(".hora_field")[0].name.replace("horas", "trello") + "[" + data + "]";
     $.each(target.children, function(index, pps) {
         if (data == pps.childNodes[1].value) {
             cartaoRepetido = true;
         }
-    })
+    });
     if (cartaoRepetido == false) {
         formatCardLink($("#" + data), name).appendTo(target);
     }
@@ -124,7 +125,7 @@ function loadFormCards() {
             }).appendTo(div);
             cardSlider(div, name, input.value);
             $(input).detach();
-            updateHorasAtividades(sumCardSliders(parent), horas.value, $(parent.parentElement).find("#horas_cartao"))
+            updateHorasAtividades(sumCardSliders(parent), horas.value, $(parent.parentElement).find("#horas_cartao"));
         });
     });
 }
@@ -152,6 +153,7 @@ function loadSimpleCards() {
                 $(input).detach();
             });
         });
+        getToken();
     });
 }
 
@@ -200,4 +202,9 @@ function filterCards(selector) {
         else
             $(".filter").css("display", "inline-table");
     }
+}
+
+function getToken() {
+    $("#key").val(Trello.key);
+    $("#token").val(Trello.token);
 }

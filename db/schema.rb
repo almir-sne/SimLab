@@ -12,6 +12,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20131011192517) do
+
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -81,14 +82,15 @@ ActiveRecord::Schema.define(:version => 20131011192517) do
   create_table "contratos", :force => true do |t|
     t.date     "inicio"
     t.date     "fim"
-    t.decimal  "valor_hora",  :precision => 5, :scale => 2
+    t.decimal  "valor_hora",                      :precision => 5, :scale => 2
     t.integer  "hora_mes"
     t.integer  "usuario_id"
     t.string   "tipo"
     t.string   "contratante"
     t.string   "funcao"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+    t.integer  "dia_inicio_periodo", :limit => 1
   end
 
   create_table "coordenacoes", :force => true do |t|

@@ -1,0 +1,104 @@
+ <div class="blue-line" style="margin: 20px 10px">  </div>
+
+<%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
+  <%= hidden_field_tag :user_id, @user.id %>
+  <%= hidden_field_tag :ano, @year %>
+  <%= hidden_field_tag :mes, @month.id %>
+  <%= hidden_field_tag :dia_id, @dia.id %>
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span2">
+        <%= f.label :dia %>
+        <%= f.select :numero, options_for_select(@diasdomes, ((@dia.numero.blank?)? Time.now.in_time_zone('Brasilia').day : @dia.numero)), {}, :style => 'width: 55px;'%>
+        <%= f.label :entrada %>
+        <%= f.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
+        <%= f.label :saida %>
+        <%= f.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
+        <%= f.label :intervalo %>
+        <%= f.time_select :intervalo, {minute_step: 5} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
+        Total de horas
+        <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
+        <br/>
+        Horas em atividades
+        <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
+      </div>
+      <div class="span5">
+        <h3>Atividades</h3>
+        <script>
+          var projetos_boards = <%= @projetos_boards %>
+          checkTrello(getCards);
+        </script>
+        <div class="panel-scrollable" style="height: 600px; padding-bottom: 10px">
+          <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
+            <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+              :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+            <% unless atividade_form.object.mensagem.blank?  %>
+              <div class="red-background activity-message">
+                <%= atividade_form.object.avaliador.try(:nome) %>: <br/>
+                <%= atividade_form.object.mensagem %>
+              </div>
+            <% end %>
+            <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+            <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+            {}, {:class=>"projeto-seletor", :onclick => "filterCards(this); escondeProjetos()"}%>
+            <br/>
+
+            <div class="slider">
+              <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
+              <%= atividade_form.hidden_field :horas, :style => 'width: 55px;', :class => 'hora_field'%>
+              <div id="time"> </div>
+              <div id="slider"> </div>
+            </div>
+            <%= atividade_form.label :observacao, "Observação" %>
+            <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
+            <br/>
+            Horas dos cartões
+            <div style="display: inline" id="horas_cartao"> 00:00 </div>
+            <br/>
+            <br/>
+            <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
+              &nbsp;Arraste cartões do Trello aqui.
+
+              <% atividade_form.object.cartoes.each do |cartao| %>
+                <input type="hidden" class="card-placeholder-form" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+              <% end %>
+            </div>
+            <div class="grey-line"> </div>
+          <% end %>
+          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button"%>
+      </div>
+          <br></br><br></br>
+      </div>
+      <div class="span5">
+        <div class="loggedin">
+          <div id="output" ></div>
+          <br></br><br></br>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar-fixed-bottom toolbar">
+  <div style="width: 100%">
+    <div class="actions" style="float: left; margin-left: 10px;">
+      <%= link_to 'Cancelar', banco_de_horas_path(:month => @month.numero, :year => @year), :class => "btn default-button"%>
+      <%= hidden_field_tag :key  %>
+      <%= hidden_field_tag :token  %>
+      <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
+    </div>
+    </div>
+  </div>
+<% end %>
+<script>
+$(document).on('nested:fieldAdded', function(event) {
+  createSlider(event.field.find('.slider'));
+  escondeProjetos();
+});
+$(document).on('nested:fieldRemoved', function(event) {
+  updateAllSliders();
+  escondeProjetos();
+});
+initializeSliders();
+escondeProjetos();
+updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+</script>

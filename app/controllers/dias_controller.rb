@@ -1,6 +1,25 @@
 class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
+  def new
+    @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
+    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
+    @month = Mes.find(params[:mes])
+    @diasdomes = (1..(Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day)).to_a
+    if params[:id].nil?
+      @dia =  Dia.new
+      @dia.atividades.build
+    else
+      @dia =  Dia.find(params[:id])
+    end
+    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
+    respond_to do |format|
+      format.js
+      format.html
+    end
+  end
+
   def create
     dia = Dia.find_by_id(params[:dia_id])
     if dia.blank?
@@ -65,6 +84,15 @@ class DiasController < ApplicationController
     redirect_to :back
   end
 
+  def editar_por_data
+    dia = Dia.joins(:mes).where(:numero => params[:dia], :usuario_id => params[:usuario_id], :mes => {:numero => params[:mes], :ano => params[:ano]}).first
+    if (!dia.nil?) 
+      redirect_to edit_dia_path(dia.id)
+    else 
+      redirect_to new_dia_path
+    end
+  end
+  
   private
 
   def convert_date(hash, date_symbol_or_string)
