@@ -13,8 +13,11 @@ SinLab::Application.routes.draw do
   
   namespace :android do
       resources :tokens,:only => [:create, :destroy]
-      match 'meses/:id/dias' => "meses#dias"
-      get "meses/index"
+      get 'api/dias'
+      get 'api/atividades'
+      get 'api/projetos'
+      get "api/meses"
+      post 'api/dias_update'
   end
 
   resources :banco_de_horas, :only => [:index] do

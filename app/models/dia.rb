@@ -107,6 +107,18 @@ class Dia < ActiveRecord::Base
   def data
     Date.new(mes.ano, mes.numero, numero)
   end
+  
+  def entradafmt
+    entrada.strftime("%H:%M")
+  end
+
+  def saidafmt
+    saida.strftime("%H:%M")
+  end
+  
+  def intervalofmt
+    intervalo.strftime("%H:%M")
+  end
 
   private
   def validar_horas
