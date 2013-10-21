@@ -68,6 +68,7 @@ class ApplicationController < ActionController::Base
     #(1..data_final).to_a
   end
 
+  #talvez nao esteja mais sendo usada
   def anos_selecionados(param_anos, hoje)
     if param_anos.nil?
       hoje.year
@@ -78,6 +79,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #talvez nao esteja mais sendo usada
   def meses_selecionados(param_meses, hoje)
     if param_meses.nil?
       return hoje.month
@@ -88,6 +90,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #talvez nao esteja mais sendo usada
   def usuarios_selecionados(param_usuarios)
     if param_usuarios.nil? || param_usuarios == "-1"
       Usuario.select(:id)
@@ -96,6 +99,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #talvez nao esteja mais sendo usada
   def projetos_selecionados(param_projetos)
     if param_projetos.nil? || param_projetos == "-1"
       Projeto.select(:id)
