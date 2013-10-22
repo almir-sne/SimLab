@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131011192517) do
+ActiveRecord::Schema.define(:version => 20131022161603) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(:version => 20131011192517) do
     t.text     "mensagem"
     t.integer  "avaliador_id"
     t.date     "data"
+    t.string   "cartao_id"
   end
 
   create_table "ausencias", :force => true do |t|
@@ -177,6 +178,7 @@ ActiveRecord::Schema.define(:version => 20131011192517) do
     t.boolean  "formado"
     t.boolean  "status"
     t.date     "data_de_nascimento"
+    t.string   "authentication_token"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
