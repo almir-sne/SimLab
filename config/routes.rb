@@ -1,8 +1,7 @@
 SinLab::Application.routes.draw do
-
-  post "cartoes/atualizar_cartoes"
-  get "cartoes/estatisticas"
-  get "cartoes/atividades"
+  get "atividade/cartoes"
+  match "atividade/cartoes/listar_atividades" => "atividade#listar_atividades"
+  post "atividade/atualizar_cartoes"
 
   resources :pagamentos, :only => [:index] do
     collection do

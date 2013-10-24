@@ -15,7 +15,7 @@
     <th> Data       </th>
     <th> Usuário    </th>
     <th> Projeto    </th>
-    <th> Detalhes   </th>
+    <th> Observações   </th>
     <th> Horas      </th>
     <th> Aprovado?  </th>
     <th> Mensagem   </th>
@@ -28,9 +28,6 @@
       <td><%= atividade.projeto.nome                                                     %></td>
       <td>
         <%= atividade.observacao                                                       %> <br/>
-        <% atividade.cartoes.each do |cartao| %>
-          <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
-        <% end %>
       </td>
       <td><%= atividade.formata_duracao                                                  %></td>
       <td> <%= atividade.aprovacao? ? "Sim" : "Não"%>      </td>

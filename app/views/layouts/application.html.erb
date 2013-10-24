@@ -38,7 +38,7 @@
               <li> <%= link_to "Meus Pagamentos", meses_pagamentos_path, :class => "nav-links" %> </li>
             <% end %>
             <% if can? :manage, Cartao %>
-              <li> <%= link_to "Estatisticas", cartoes_estatisticas_path, :class => "nav-links" %> </li>
+              <li> <%= link_to "Estatisticas", atividade_cartoes_path, :class => "nav-links" %> </li>
             <% end %>
             </ul>
           </div>
