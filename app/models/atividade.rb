@@ -60,8 +60,8 @@ class Atividade < ActiveRecord::Base
   def self.update_on_trello(key, token, id)
     data = get_trello_data(key, token, id)
     unless (data == :error)
-      regex = /[ ][(][0-9]+[.]?[0-9]+[)]$/
-      horas_remoto = data["name"].match(regex).to_s.match(/[0-9]+[.]?[0-9]+/).to_s
+      regex = /[ ][(]\d+[.]?\d*[)]$/
+      horas_remoto = data["name"].match(regex).to_s.match(/\d+[.]?\d*+/).to_s
       horas_local = "%.1f" % Atividade.horas_trabalhadas(id)
       unless (horas_remoto == horas_local)
         name = "#{data["name"].sub(regex, "")} (#{horas_local})"
