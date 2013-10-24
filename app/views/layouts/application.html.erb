@@ -27,7 +27,7 @@
         <div class="span2 dropdown">
           <ul class="top-nav dropdown-menu" style="display: block; position: static;">
             <%if can? :update, :validations%>
-              <li> <%= link_to t('funcionalidade.validacao.atividade'), validar_banco_de_horas_path, :class => "nav-links" %> </li>
+              <li> <%= link_to t('funcionalidade.validacao.atividade'), validar_atividades_path, :class => "nav-links" %> </li>
             <%else%>
               <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
             <%end%>
@@ -38,7 +38,7 @@
               <li> <%= link_to "Meus Pagamentos", meses_pagamentos_path, :class => "nav-links" %> </li>
             <% end %>
             <% if can? :manage, Cartao %>
-              <li> <%= link_to "Estatisticas", atividade_cartoes_path, :class => "nav-links" %> </li>
+              <li> <%= link_to "Estatisticas", cartoes_atividades_path, :class => "nav-links" %> </li>
             <% end %>
             </ul>
           </div>

@@ -7,6 +7,13 @@ class Atividade < ActiveRecord::Base
   scope :dia, lambda { |value| where(['extract(day from atividades.data) = ?', value]) if value > 0 }
   scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
+  scope :aprovacao, lambda {|value|
+    if value == 3
+      where('aprovacao is null')
+    elsif value == 0 or value == 1
+      where(['aprovacao = ?', value])
+    end
+  }
 
   belongs_to :dia
   belongs_to :projeto

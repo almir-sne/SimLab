@@ -1,7 +1,14 @@
 SinLab::Application.routes.draw do
-  get "atividade/cartoes"
-  match "atividade/cartoes/listar_atividades" => "atividade#listar_atividades"
-  post "atividade/atualizar_cartoes"
+  
+  resources :atividades, :only => [] do
+    collection do
+      get  :validar
+      post :mandar_validacao
+      get :cartoes
+      post :atualizar_cartoes
+      match "cartoes/listar" => "atividade#listar_atividades"
+    end
+  end
 
   resources :pagamentos, :only => [:index] do
     collection do
@@ -14,9 +21,7 @@ SinLab::Application.routes.draw do
   resources :banco_de_horas, :only => [:index] do
     collection do
       get  :show_mes
-      get  :validar
       get  :log_de_atividades
-      post :mandar_validacao
     end
   end
 
