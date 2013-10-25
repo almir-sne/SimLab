@@ -272,7 +272,7 @@ pt-BR:
   contrato:
     dia_inicio_periodo:
       nil: "Há contratos sem período definido!"
-  Pagamento:
+  pagamento:
     create:
       success: "Pagamento adicionado com sucesso!"
       failure: "Não foi possivel adicionar o Pagamento"
