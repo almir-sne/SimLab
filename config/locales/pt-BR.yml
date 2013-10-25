@@ -269,4 +269,13 @@ pt-BR:
   ausencia:
     validation:
       sucess: "Ausencias validadas"
-      
+  contrato:
+    dia_inicio_periodo:
+      nil: "Há contratos sem período definido!"
+  Pagamento:
+    create:
+      success: "Pagamento adicionado com sucesso!"
+      failure: "Não foi possivel adicionar o Pagamento"
+    delete:
+      success: "Pagamento Apagado com sucesso!"
+      failure: "Não foi possivel apagar o Pagamento"

@@ -3,4 +3,6 @@ class Pagamento < ActiveRecord::Base
   belongs_to :mes
   belongs_to :usuario
   belongs_to :criador, :class_name => "Usuario"
+
+  scope :periodos, lambda { |range| where(data: range)}
 end

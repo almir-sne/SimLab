@@ -19,7 +19,7 @@ class Contrato < ActiveRecord::Base
   end
 
   def atividades
-    Atividade.where{(data >= my{self.inicio}) & (data < my{self.fim})}
+    Atividade.where(data: (inicio .. fim), usuario_id: usuario_id)
   end
 
   def periodos

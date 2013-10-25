@@ -6,6 +6,6 @@
 
 <ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
   <% @usuarios.each do |u| %>
-    <li> <%= link_to u.nome, meses_pagamentos_path(:user_id => u.id), :class => "nav-links" %> </li>
+    <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
   <% end %>
 </ul>
