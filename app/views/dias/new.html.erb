@@ -41,7 +41,7 @@
             <% end %>
             <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
             <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-            {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); escondeProjetos()"}%>
+            {}, {:class=>"projeto-seletor", :onclick => "filterCards(this); escondeProjetos()"}%>
             <br/>
 
             <div class="slider">
@@ -73,6 +73,7 @@
       <div class="span5">
         <div class="loggedin">
           <div id="output" ></div>
+          <br></br><br></br>
         </div>
       </div>
     </div>

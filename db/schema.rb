@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(:version => 20131008192621) do
     t.boolean  "formado"
     t.boolean  "status"
     t.date     "data_de_nascimento"
+    t.string   "authentication_token"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true

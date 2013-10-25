@@ -5,7 +5,7 @@ class DiasController < ApplicationController
     @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
     @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
     @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes_limitado(params[:ano].to_i, @month.numero)
+    @diasdomes = (1..(Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day)).to_a
     if params[:id].nil?
       @dia =  Dia.new
       @dia.atividades.build
