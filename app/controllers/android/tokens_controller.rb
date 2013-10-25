@@ -1,15 +1,15 @@
 class Android::TokensController  < ApplicationController
-    skip_before_filter :verify_authenticity_token
+    skip_before_filter :verify_authenticity_token, :only => :create
     respond_to :json
     
     def create
       email = params[:email]
       password = params[:password]
       if request.format != :json
-        render :status=>406, :json=>{:message=>"Request precisa ser em json"}
+        render :status=>406, :json=>{:message=>"Request must be json"}
         return
        end
-      if email.blank? or password.blank?
+      if email.nil? or password.nil?
         render :status=>400,
               :json=>{:message=>"The request must contain the user email and password."}
         return
