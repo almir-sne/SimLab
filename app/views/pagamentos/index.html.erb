@@ -4,8 +4,19 @@
 
 <div class="blue-line">  </div>
 
-<ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
-  <% @usuarios.each do |u| %>
-    <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
-  <% end %>
+<ul class="nav nav-tabs">
+  <li><a href="#usuarios" data-toggle="tab">Usuários</a></li>
+  <li><a href="#tudo" data-toggle="tab">TUDO</a></li>
 </ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="usuarios">
+    <ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
+      <% @usuarios.each do |u| %>
+        <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="tab-pane" id="tudo">
+
+  </div>
+</div>

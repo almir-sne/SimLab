@@ -15,9 +15,11 @@ class PagamentosController < ApplicationController
     if contratos.all?{|contrato| contrato.dia_inicio_periodo.nil?}
       return redirect_to :back, alert: I18n.t("contrato.dia_inicio_periodo.nil")
     end
-    @periodos = contratos.map{|contrato| [contrato, contrato.periodos]}
-    @total    = Pagamento.where(usuario_id: @usuario.id).sum :valor
-    @media    = @periodos.blank? ? 0 : @total / @periodos.flatten.reject{|x| x.class == Contrato}.size
+    @pagamento  = Pagamento.new
+    @periodos   = contratos.map{|contrato| [contrato, contrato.periodos]}
+    @pagamentos = Pagamento.where(usuario_id: @usuario.id)
+    @total      = @pagamentos.sum :valor
+    @media      = @periodos.blank? ? 0 : @total / @periodos.flatten.reject{|x| x.class == Contrato}.size
   end
 
   def listar

@@ -30,15 +30,16 @@
 </table>
 
 <% if can? :create_or_update, Pagamento %>
-  <div id="botao" class="btn default-button" onclick="mostraForm()">Novo Pagamento</div>
-  <%= link_to 'Voltar', periodos_pagamentos_path(usuario_id: @usuario.id), :class => "btn default-button"%>
+  <p><div id="botao" class="btn default-button" onclick="mostraForm()">Novo Pagamento</div></p>
   <div id="form" style="display:none">
     <%= form_for @pagamento, :validate => true,
     :html => {"data-type" => :json} do |p| %>
       <div class="container-fluid">
       <%= p.hidden_field :usuario_id, :value => @usuario.id%>
+      <%= p.hidden_field :motivo, :value => "salario"%>
+      <%= p.hidden_field :data, :value => @periodo.last%>
         <div class="row-fluid">
-          <div class="span2">
+          <div class="span3">
             <%= p.label :valor%>
             <%= p.text_field :valor %>
           </div>
@@ -46,20 +47,16 @@
             <%= p.label :fonte %>
             <%= p.text_field :fonte %>
           </div>
-          <div class="span3">
-            <%= p.label :motivo %>
-            <%= p.text_field :motivo %>
-          </div>
-          <div class="span4">
-            <%= p.label :data %>
-            <%= p.date_select :data, {:use_short_month => true}, :class => "default-date" %>
-          </div>
         </div>
       </div>
     <%= p.submit "Salvar", :class => "btn default-button", :style => "margin-left: 15px;"  %>
     <%end%>
   </div>
 <% end %>
+
+<div class="navbar-fixed-bottom toolbar">
+  <%= link_to 'Voltar', periodos_pagamentos_path(usuario_id: @usuario.id), :class => "btn default-button"%>
+</div>
 
 <script>
   function mostraForm(){
