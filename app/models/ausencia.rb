@@ -1,11 +1,10 @@
   class Ausencia < ActiveRecord::Base
-  attr_accessible :abonada, :avaliador_id, :horas, :dia, :justificativa, :mensagem, :mes_id, :usuario_id, :data
+  attr_accessible :abonada, :avaliador_id, :horas, :mes, :justificativa, :mensagem, :mes_id, 
+  :dia_id
   
   belongs_to :dia
-  belongs_to :usuario
+  belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"
-  
-  validates :data, :uniqueness => {:scope => :usuario_id}
   
   def self.por_periodo(inicio, fim, usuario_id)
     Ausencia.where(usuario_id: usuario_id, data: inicio..fim)
