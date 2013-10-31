@@ -5,24 +5,17 @@ class DiasController < ApplicationController
     @inicio = Date.parse params[:inicio]
     @fim = Date.parse params[:fim]
     @usuario =  Usuario.find_by_id(params[:usuario_id]) || current_user
-    #if current_user.role == 'admin'
     @dias_editaveis = (@inicio..@fim).to_a
-    # else
-    #   t =  Date.today
-    #   @dias_editaveis = ([@inicio, t - 4].max..[t, @fim].min).to_a
-    #end
     if params[:id].nil?
       @dia =  Dia.new
-      @dia.atividades.build
     else
       @dia =  Dia.find(params[:id])
       if @dia.blank?
         @dia =  Dia.new
-        @dia.atividades.build
       end
     end
     @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
-    @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
+    @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     respond_to do |format|
       format.js
       format.html
@@ -61,24 +54,10 @@ class DiasController < ApplicationController
           :dia_id => dia.id,
           :usuario_id => @usuario.id,
           :aprovacao => nil,
-          :data => dia.data
+          :data => dia.data,
+          :cartao_id => atividade_attr["cartao_id"]
         )
-        unless atividade_attr[:trello].blank?
-          atividade_attr[:trello].each_key do |k|
-            c = Cartao.where(:atividade_id => atividade.id, :cartao_id => k).last
-            if c.blank? and atividade_attr[:trello][k][:check]
-              c = Cartao.new(:atividade_id => atividade.id, :cartao_id => k,
-                :duracao => atividade_attr[:trello][k][:slider].to_i)
-              c.save
-            elsif !c.blank? and !atividade_attr[:trello][k][:check]
-              c.destroy
-            elsif !c.blank? and atividade_attr[:trello][k][:check]
-              c.duracao = atividade_attr[:trello][k][:slider]
-              c.save
-            end
-            Cartao.update_on_trello(params[:key], params[:token], k)
-          end
-        end
+        Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
       end
     end
     if dia_success and atividades_success

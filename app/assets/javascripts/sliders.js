@@ -8,15 +8,7 @@ function slideTime(event, ui) {
             getTime(ui.value)
             );
     $(event.target).parent().find(".hora_field")[0].value = ui.value;
-    if (event.target.parentElement.className == "slider") {
         updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"))
-    }
-
-    else {
-        var parent = $(event.target).parents('div[class^="trello"]');
-        updateHorasAtividades(sumCardSliders(parent), parent.parent().find(".hora_field")[0].value,
-                $(parent.parent().find("#horas_cartao")[0]));
-    }
 }
 
 function updateHorasAtividades(val, max, div) {
@@ -31,14 +23,6 @@ function updateHorasAtividades(val, max, div) {
 function sumSliders() {
     var val = 0;
     $(".fields:visible > .slider > .hora_field").each(function(i, e) {
-        val += parseInt(e.value);
-    });
-    return val;
-}
-
-function sumCardSliders(parent) {
-    var val = 0;
-    $(parent).find(".hora_field").each(function(i, e) {
         val += parseInt(e.value);
     });
     return val;
@@ -80,7 +64,7 @@ function initSlider(div, time, max_time) {
 
 function updateAllSliders() {
     var maxtime = pega_horas_dia();
-    $(".slider, .card-slider").each(function(i, e) {
+    $(".slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;
             initTime($(e).find("#time"), maxtime);
@@ -90,38 +74,10 @@ function updateAllSliders() {
     });
 }
 
-
-function cardSlider(parent, name, time) {
-    var div = $("<div>");
-    div.addClass("card-slider");
-    $("<div>").attr({
-        id: "slider"
-    }).appendTo(div);
-    $("<div>").attr({
-        id: "time"
-    }).appendTo(div);
-    $("<input>").attr({
-        type: "text",
-        name: name + "[slider]",
-        value: time,
-        style: "display: none"
-    }).addClass("hora_field").appendTo(div);
-    div.appendTo(parent);
-    createSlider(div);
-}
-
 function pad(str, max) {
     return str.length < max ? pad("0" + str, max) : str;
 }
 
-function horasCartoesInvalidas() {
-    var invalidos = false;
-    $(".fields:visible").each(function(i, e) {
-        if (sumCardSliders($(e).find(".trello-dropover")) > parseInt($(e).find(".hora_field")[0].value))
-            invalidos = true;
-    });
-    return invalidos;
-}
 //essa função não faz sentido
 //rezende
 function projetosVazios() {
@@ -150,10 +106,6 @@ function validateSliders() {
     }
     else if (pega_horas_dia() != sumSliders()) {
         alert("Horas em atividades diferem das horas declaradas");
-        return false;
-    }
-    else if (horasCartoesInvalidas()) {
-        alert("Horas em atividades diferem dos cartões");
         return false;
     }
     else if (diaVazio()) {

@@ -18,6 +18,7 @@
         <%= f.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
         <%= f.label :intervalo %>
         <%= f.time_select :intervalo, {minute_step: 5} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
+        <br/>
         Total de horas
         <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
         <br/>
@@ -25,12 +26,11 @@
         <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
       </div>
       <div class="span5">
-        <h3>Atividades</h3>
-        <script>
-          var projetos_boards = <%= @projetos_boards %>
-          checkTrello(getCards);
-        </script>
-        <div class="panel-scrollable" style="height: 600px; padding-bottom: 10px">
+        <h3 id="atividades-title">Atividades</h3>
+        <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
+          &nbsp;Arraste cartões do Trello aqui.
+        </div>
+        <div class="panel-scrollable" id="atividade-panel">
           <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
             <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
               :class=>"nohover", :style => "float: right; margin-right: 10px" %>
@@ -42,43 +42,49 @@
             <% end %>
             <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
             <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-            {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); escondeProjetos()"}%>
+            {}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
             <br/>
 
             <div class="slider">
               <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
-              <%= atividade_form.hidden_field :horas, :style => 'width: 55px;', :class => 'hora_field'%>
+              <%= atividade_form.hidden_field :horas, :class => 'hora_field'%>
               <div id="time"> </div>
               <div id="slider"> </div>
             </div>
-            <%= atividade_form.label :observacao, "Observação" %>
-            <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px;" %>
-            <br/>
-            Horas dos cartões
-            <div style="display: inline" id="horas_cartao"> 00:00 </div>
-            <br/>
-            <br/>
-            <div class="trello-dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
-              &nbsp;Arraste cartões do Trello aqui.
-
-              <% atividade_form.object.cartoes.each do |cartao| %>
-                <input type="hidden" class="card-placeholder-form" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
-              <% end %>
-            </div>
+            <%= atividade_form.hidden_field :cartao_id, :class => 'cartao_field'%>
+            <%= button_tag('Observação', {:type => 'button', :id => 'inserir_observ', :style => "margin: 20px 0px" ,:class => 'btn default-button', :onclick => 'toggleObservacao(this)'}) %>
+            <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
             <div class="grey-line"> </div>
           <% end %>
-          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button"%>
+          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
+            :style => "display: none", :id => "nova_atividade" %>
         </div>
-        <br></br><br></br>
       </div>
       <div class="span5">
         <div class="loggedin">
-          <div id="output" ></div>
+          <a id="collapse-button" data-toggle="collapse" data-target="#boards">
+            Boards do Trello
+          </a>
+          <div class="container-fluid collapse in" id="boards">
+            <div class="row-fluid">
+              <% @projetos_boards.each_with_index do |board, index| %>
+                <div class="span4">
+                  <%= check_box_tag board[0], board, false, onclick: "filterCards(this)"  %>
+                  <%= hidden_field_tag :board_id, board[0], :class => "board-placeholder" %>
+                </div>
+                <% if (index + 1) % 3 == 0%>
+                </div>
+                <div class="row-fluid">
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div class="panel-scrollable" id="output" ></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="navbar-fixed-bottom toolbar">
+  <div id="lower-bar" class="navbar-fixed-bottom toolbar">
     <div style="width: 100%">
       <div class="actions" style="float: left; margin-left: 10px;">
         <%= link_to 'Cancelar', dias_path(inicio: @inicio.to_formatted_s, fim: @fim.to_formatted_s, usuario: @usuario.id), :class => "btn default-button"%>
@@ -90,15 +96,20 @@
   </div>
 <% end %>
 <script>
-        $(document).on('nested:fieldAdded', function(event) {
-          createSlider(event.field.find('.slider'));
-          escondeProjetos();
-        });
-        $(document).on('nested:fieldRemoved', function(event) {
-          updateAllSliders();
-          escondeProjetos();
-        });
-        initializeSliders();
-        escondeProjetos();
-        updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+          checkTrello(getCards);
+          $(document).on('nested:fieldAdded', function(event) {
+            createSlider(event.field.find('.slider'));
+          });
+          $(document).on('nested:fieldRemoved', function(event) {
+            updateAllSliders();
+          });
+          $('#boards').on('hidden', function() {
+            ajustaAltura();
+          });
+          $('#boards').on('shown', function() {
+            ajustaAltura();
+          });
+          initializeSliders();
+          updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+          ajustaAltura();
 </script>

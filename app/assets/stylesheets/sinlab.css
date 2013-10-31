@@ -237,7 +237,7 @@
 }
 
 #output {
-    padding: 4px;
+    padding: 10px;
 }
 
 .card {
@@ -279,7 +279,7 @@
     background-color: #eee;
     border-radius: 10px;
     padding: 10px;
-    width: 85%;
+    margin-bottom: 20px;
 }
 
 .modal {
@@ -342,17 +342,6 @@
     padding: 5px;
 }
 
-.card-slider > #slider {
-    width: 60%;
-    margin-left: 5px;
-    display: inline-block;
-}
-
-.card-slider > #time {
-    display: inline-block;
-    float: right;
-}
-
 .nodrop {
     background-color: inherit;
     margin-bottom: 10px;
@@ -371,9 +360,9 @@
 }
 
 .typeahead {
-  max-height: 200px;
-  overflow-y: auto;
-  overflow-x: hidden;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .default-date {
@@ -389,5 +378,24 @@
 }
 
 .pagination a:hover {
+    color: black;
+}
+
+#boards {
+    background-color: #EEE;
+    border-radius: 0px 10px 10px 10px;
+    padding: 0 10px;
+    margin: 0px 10px 10px 10px;
+}
+
+#collapse-button {
+    padding: 5px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 10px;
+}
+
+#collapse-button:hover {
+    cursor: pointer;
     color: black;
 }

@@ -14,6 +14,7 @@ class Usuario < ActiveRecord::Base
 
   has_one  :address, :dependent => :destroy
   has_many :projetos, :through => :workons
+  has_many :boards, :through => :projetos
   has_many :workons, :dependent => :destroy
   has_many :telefones
   has_many :contas
