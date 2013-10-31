@@ -6,22 +6,26 @@ class AusenciasController < ApplicationController
     ausencia.destroy
     redirect_to :back
   end
+   
+  def new
+    @usuario_id = params[:usuario_id]
+    @data = params[:data]
+    dia = Dia.find_or_create_by_usuario_id_and_data(params[:usuario_id], params[:data])
+    @dia_id = dia.id
+  end
   
   def create
-    ausencia = Ausencia.find_by_id(params[:dia_id])
-    if ausencia.blank?
-      ausencia = Ausencia.new
-    end
-    ausencia.update_attributes(params[:ausencia])
+    ausencia = Ausencia.find_or_initialize_by_data(params[:data])
     ausencia.usuario_id = params[:usuario_id]
     ausencia.data = Date.parse params[:data]
+    ausencia.dia_id = params[:dia_id]]
+    ausencia.update_attributes(params[:ausencia])
     if ausencia.save
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
+      flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
-    redirect_to banco_de_horas_path(:month => ausencia.mes.numero,
-      :year => ausencia.mes.ano, :user => ausencia.usuario.id)
+    redirect_to periodos_dias_path
   end
   
   def index

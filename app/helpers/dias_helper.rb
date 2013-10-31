@@ -30,7 +30,7 @@ module DiasHelper
   end
 
   def horas_a_fazer_por_dia(inicio, fim, usuario_id)
-    dias = calcula_dias_uteis_restantes(fim)
+    dias = calcula_dias_uteis_restantes(fim, usuario_id)
     if dias == 0
       string_hora(0)
     else
@@ -62,7 +62,7 @@ module DiasHelper
 
   def calcula_minutos_restantes(inicio, fim, usuario_id)
     hoje = Date.today
-    minutos_ausencias = Ausencia.where(abonada: [false,nil]).collect{|a| a.segundos}.sum/60
+    minutos_ausencias = Ausencia.where(abonada: [true]).collect{|a| a.segundos}.sum/60
     horario_mensal = Usuario.find(usuario_id).contrato_vigente_em(hoje).hora_mes
     min_totais = horario_mensal*60
     min_trabalhados = calcula_minutos_trabalhados(false, inicio, fim, usuario_id)
@@ -97,7 +97,8 @@ module DiasHelper
       end
       d = d.next
     end
-    return dias_uteis - Ausencia.where
+    #precisa checar as ausencias futuras
+    return dias_uteis
   end
 
 end

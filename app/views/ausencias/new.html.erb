@@ -1,0 +1,17 @@
+<div class="blue-line" style="margin: 20px 10px">  </div>
+
+<%= form_for(@ausencia, :url => :ausencias, :method => :post) do |f| %>
+  <%= hidden_field_tag :usuario_id, @usuario_id %>
+  <%= hidden_field_tag :data, @data %>
+  <%= hidden_field_tag :dia_id, @dia_id %>
+  <div class="row-fluid">
+      <div class="span12">
+        <%= f.label :justificativa %>
+        <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
+        <div class="actions">
+          <%= f.submit "Ok", :class => "btn default-button" %>
+        </div>
+      </div>
+    </div>
+<% end %>
+

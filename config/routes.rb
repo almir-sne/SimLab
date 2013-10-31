@@ -51,7 +51,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :ausencias, :only => [:index, :destroy, :create] do
+  resources :ausencias, :only => [:index, :destroy, :create, :new] do
     collection do
       post :validar
       post :ausencia

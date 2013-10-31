@@ -37,20 +37,6 @@ function autocomplete_source(ac_source) {
   });
 }
 
-function toggleAusencia() {
-    $("#ausencias").show();
-    $("#meses-button").show();
-    $("#meses").hide();
-    $("#ausencias-button").hide();
-}
-
-function toggleMeses() {
-    $("#meses").show();
-    $("#ausencias-button").show();
-    $("#ausencias").hide();
-    $("#meses-button").hide();
-}
-
 function escondeProjetos() {
     var seletores = $(".fields:visible > .projeto-seletor");
     seletores.children().show();

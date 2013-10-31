@@ -3,15 +3,11 @@
 <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
   <%= hidden_field_tag :inicio, @inicio %>
   <%= hidden_field_tag :fim, @fim %>
-  <%= hidden_field_tag :usuario_id, @usuario.id %>
   <%= hidden_field_tag :dia_id, @dia.id %>
 
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span2">
-        <%= f.label :dia %>
-        <%= f.select :data, options_for_select(@dias_editaveis.collect{|d| [d.strftime("%d/%m"), d]},
-          ((@dia.data.blank?)? Time.now.in_time_zone('Brasilia').to_date : @dia.data)), {}, :style => 'width: 100px;'%>
         <%= f.label :entrada %>
         <%= f.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>
         <%= f.label :saida %>
@@ -81,7 +77,7 @@
   <div class="navbar-fixed-bottom toolbar">
     <div style="width: 100%">
       <div class="actions" style="float: left; margin-left: 10px;">
-        <%= link_to 'Cancelar', dias_path(inicio: @inicio.to_formatted_s, fim: @fim.to_formatted_s, usuario: @usuario.id), :class => "btn default-button"%>
+        <!-- xi -->
         <%= hidden_field_tag :key  %>
         <%= hidden_field_tag :token  %>
         <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>

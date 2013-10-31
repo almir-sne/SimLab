@@ -1,27 +1,5 @@
 pt-BR:
   date:
-    abbr_day_names:
-    - dom
-    - seg
-    - ter
-    - qua
-    - qui
-    - sex
-    - sáb
-    abbr_month_names:
-    -
-    - Jan
-    - Fev
-    - Mar
-    - Abr
-    - Mai
-    - Jun
-    - Jul
-    - Ago
-    - Set
-    - Out
-    - Nov
-    - Dez
     day_names:
     - Domingo
     - Segunda
@@ -30,10 +8,22 @@ pt-BR:
     - Quinta
     - Sexta
     - Sábado
-    formats:
-      default: ! '%d/%m/%Y'
-      long: ! '%d de %B de %Y'
-      short: ! '%d de %B'
+    abbr_day_names:
+    - dom
+    - seg
+    - ter
+    - qua
+    - qui
+    - sex
+    - sáb
+    abbr_day_names_cap:
+    - Dom
+    - Seg
+    - Ter
+    - Qua
+    - Qui
+    - Sex
+    - Sáb
     month_names:
     -
     - Janeiro
@@ -48,6 +38,24 @@ pt-BR:
     - Outubro
     - Novembro
     - Dezembro
+    abbr_month_names:
+    -
+    - jan
+    - fev
+    - mar
+    - abr
+    - mai
+    - jun
+    - jul
+    - ago
+    - set
+    - out
+    - nov
+    - dez
+    formats:
+      default: ! '%d/%m/%Y'
+      long: ! '%d de %B de %Y'
+      short: ! '%d de %B'
     order:
     - :day
     - :month
