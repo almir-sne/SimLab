@@ -72,8 +72,8 @@
   </tr>
   <% @dias.each do |dia| %>
     <tr>
-      <td style="width: 11%"><%= "#{dia.numero.to_s}  (#{t("date.abbr_day_names")[Date.new(@year.to_i,
-        @month.numero, dia.numero).wday]})"%></td>
+      <td style="width: 11%"><%= "#{dia.data.day.to_s}  (#{t("date.abbr_day_names")[Date.new(@year.to_i,
+        @month.numero, dia.data.day).wday]})"%></td>
       <td><%= dia.entrada.strftime("%H:%M") %></td>
       <td><%= dia.saida.strftime("%H:%M") %></td>
       <td><%= dia.intervalo.strftime("%H:%M") %></td>
