@@ -107,6 +107,10 @@ class Dia < ActiveRecord::Base
     end
   end
 
+  def self.por_dia(dias)
+    where('extract(day from data) = ?', dias)
+  end
+
   private
   def validar_horas
     if( saida - entrada - read_attribute(:intervalo)) <= 0

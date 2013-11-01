@@ -18,7 +18,7 @@
       <% @ausencias.each do |ausencia| %>
         <tr>
           <td style="width: 11%">
-            <%= "#{ausencia.data.day}  (#{t("date.abbr_day_names")[ausencia.data.wday]})"%>
+            <%= "#{ausencia.dia.data.day}  (#{t("date.abbr_day_names")[ausencia.dia.data.wday]})"%>
           </td>
           <td>
             <%= ausencia.justificativa %>
@@ -49,7 +49,6 @@
     </table>
   </div>
 
-  
   <div class="tab-pane active" id="periodos">
     <table class="day-table" style="width: 100%">
       <tr>
@@ -160,4 +159,3 @@
     }
 );
 </script>
-

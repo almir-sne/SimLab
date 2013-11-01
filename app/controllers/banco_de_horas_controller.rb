@@ -32,14 +32,6 @@ class BancoDeHorasController < ApplicationController
       format.html
     end
   end
-
-  #def show_mes2
-    #@year = params[:ano].nil? ? Date.today.year : params[:ano]
-    #@user = params[:user_id].nil? ? current_user : Usuario.find(params[:user_id])
-    #mes_num = params[:mes].nil? ? Date.today.month : Usuario.find(params[:mes])
-    #@mes_model = Mes.find_by_ano_and_usuario_id_and_numero @year, @user.id, mes_num
-    #@inicio_do_mes = Date.new(@mes_model.ano, mes_num, 1) 
-  #end
   
   def show_mes
     @year = params[:year].nil? ? Date.today.year : params[:year]

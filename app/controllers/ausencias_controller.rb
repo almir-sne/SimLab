@@ -10,15 +10,11 @@ class AusenciasController < ApplicationController
   def new
     @usuario_id = params[:usuario_id]
     @data = params[:data]
-    dia = Dia.find_or_create_by_usuario_id_and_data(params[:usuario_id], params[:data])
-    @dia_id = dia.id
   end
   
   def create
-    ausencia = Ausencia.find_or_initialize_by_data(params[:data])
-    ausencia.usuario_id = params[:usuario_id]
-    ausencia.data = Date.parse params[:data]
-    ausencia.dia_id = params[:dia_id]]
+    ausencia = Ausencia.new
+    ausencia.dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), params[:usuario_id].to_i)
     ausencia.update_attributes(params[:ausencia])
     if ausencia.save
       flash[:notice] = I18n.t("banco_de_horas.create.success")

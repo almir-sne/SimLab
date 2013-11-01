@@ -1,13 +1,13 @@
   class Ausencia < ActiveRecord::Base
-  attr_accessible :abonada, :avaliador_id, :horas, :mes, :justificativa, :mensagem, :mes_id, 
-  :dia_id
+  attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem, :mes_id, 
+  :dia_id, :dia
   
   belongs_to :dia
   belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"
   
   def self.por_periodo(inicio, fim, usuario_id)
-    Ausencia.where(usuario_id: usuario_id, data: inicio..fim)
+    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id})
   end
   
   def horas=(val)
@@ -21,7 +21,7 @@
   
   def segundos
     if read_attribute(:horas).nil?
-      h = usuario.horario_data(data)/20 * 3600
+      h = dia.usuario.horario_data(dia.data)/20 * 3600
     else
       h = read_attribute(:horas)
     end

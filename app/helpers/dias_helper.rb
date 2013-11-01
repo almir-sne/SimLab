@@ -39,7 +39,7 @@ module DiasHelper
   end
 
   def horas_ausencias_abonadas(inicio, fim, usuario_id)
-    string_hora(Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60)
+    string_hora(Ausencia.joins(:dia).where(abonada: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:horas)/60)
   end
 
   def horas_contratadas(data, usuario_id)
@@ -53,10 +53,10 @@ module DiasHelper
   private
   def calcula_minutos_trabalhados(aprovados, inicio, fim, usuario_id)
     if aprovados
-      return Atividade.where(aprovacao: true, data: inicio..fim, usuario_id: usuario_id).sum(:duracao)/60 +
-        Ausencia.where(abonada: true, data: inicio..fim, usuario_id: usuario_id).sum(:horas)/60
+      return Atividade.joins(:dia).where(aprovacao: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:duracao)/60 +
+        Ausencia.joins(:dia).where(abonada: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:horas)/60
     else
-      return Atividade.where(usuario_id: usuario_id, data: inicio..fim).sum(:duracao)/60 +Ausencia.where(:abonada => true).sum(:horas)/60
+      return Atividade.joins(:dia).where(dia: {usuario_id: usuario_id, data: inicio..fim}).sum(:duracao)/60 + Ausencia.where(:abonada => true).sum(:horas)/60
     end
   end
 
