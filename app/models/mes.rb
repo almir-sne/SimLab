@@ -86,7 +86,7 @@ class Mes < ActiveRecord::Base
     data = Date.today
     final_do_mes = data.at_end_of_month
     dia_model = self.dias.where('numero = ?', data.day).first
-    if dia_model
+    if !dia_model.nil? && !dia_model.atividades.blank?
       data = data.next
     end
     dias_uteis = 0
@@ -97,7 +97,7 @@ class Mes < ActiveRecord::Base
       end
       d = d.next
     end
-    return dias_uteis
+    return dias_uteis - Ausencia.joins(:mes).where('dia > ? and meses.numero = ?', data.day, data.month).count
   end
 
 end

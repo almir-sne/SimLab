@@ -10,12 +10,12 @@
 
 <div class="blue-line">  </div>
 
-<table style="width: 100%">
+<table class="month-table" style="width: 100%">
   <tr>
     <% @periodos.each_with_index do |p, i| %>
-      <td class="month-table">
+      <td>
         <%= link_to periodo_link(p[:inicio], p[:fim], @usuario.id).html_safe,
-            dias_path(inicio: p[:inicio].to_formatted_s, fim: p[:fim].to_formatted_s, usuario: @usuario.id),
+            dias_path(inicio: p[:inicio].to_formatted_s, fim: p[:fim].to_formatted_s, usuario_id: @usuario.id),
           :class => "month-link blue-link" %>
       </td>
       <% if (i + 1) % 6 == 0 %>

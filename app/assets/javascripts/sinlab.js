@@ -73,3 +73,4 @@ function ajustaAltura() {
     $("#atividade-panel").height(height1);
     $("#output").animate({height: height2}, 400);
 }
+

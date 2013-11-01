@@ -1,6 +1,7 @@
 class Dia < ActiveRecord::Base
   attr_accessible :entrada, :intervalo, :numero, :saida, :usuario_id, :data
-
+  
+  belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
 
@@ -104,6 +105,10 @@ class Dia < ActiveRecord::Base
     else
       Time.new(2000, 1, 1 ,0, 0, 0)
     end
+  end
+
+  def self.por_dia(dias)
+    where('extract(day from data) = ?', dias)
   end
 
   private
