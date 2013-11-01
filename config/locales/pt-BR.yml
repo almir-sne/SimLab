@@ -279,3 +279,5 @@ pt-BR:
     delete:
       success: "Pagamento Apagado com sucesso!"
       failure: "Não foi possivel apagar o Pagamento"
+  will_paginate:
+    page_gap: "..."

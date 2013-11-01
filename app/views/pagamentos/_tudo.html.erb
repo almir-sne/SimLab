@@ -3,14 +3,14 @@
     <th> Data   </th>
     <th> Fonte  </th>
     <th> Motivo </th>
-    <th> Data   </th>
+    <th> Valor  </th>
   </tr>
   <% @pagamentos.each do |pagamento| %>
       <tr>
-        <td><%= pagamento.data.to_s(:rfc822)   %></td>
-        <td><%= pagamento.fonte                %></td>
-        <td><%= pagamento.motivo               %></td>
-        <td><%= pagamento.valor                %></td>
+        <td><%= pagamento.data.to_s(:rfc822) %></td>
+        <td><%= pagamento.fonte              %></td>
+        <td><%= pagamento.motivo             %></td>
+        <td><%= pagamento.valor              %></td>
       </tr>
   <% end %>
 </table>
