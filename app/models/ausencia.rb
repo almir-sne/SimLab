@@ -2,6 +2,19 @@
   attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem, :mes_id, 
   :dia_id, :dia
   
+  scope :data, lambda { |ano, mes, dia| Ausencia.ano(ano).mes(mes).dia(dia) }
+  scope :ano, lambda { |value| joins(:dia).where(['extract(year from data) = ?', value]) if value > 0 }
+  scope :mes, lambda { |value| joins(:dia).where(['extract(month from data) = ?', value]) if value > 0 }
+  scope :dia, lambda { |value| joins(:dia).where(['extract(day from data) = ?', value]) if value > 0 }
+  scope :usuario, lambda { |value| joins(:dia).where(['usuario_id = ?', value]) if value > 0 }
+  scope :aprovacao, lambda {|value|
+    if value == 3
+      where('aprovacao is null')
+    elsif value == 0 or value == 1
+      where(['aprovacao = ?', value])
+    end
+  }
+
   belongs_to :dia
   belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"

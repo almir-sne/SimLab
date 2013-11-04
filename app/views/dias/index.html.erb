@@ -65,12 +65,16 @@
         <% (@inicio..@fim).each do |dia| %>
           <td>
             <div class="dropdown toggle">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
                 <i class="icon-collapse"></i>
               </a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "day-link blue-link" %>
-                <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "day-link blue-link" %>
+              <% if dia.wday == 6 %>
+                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <% else %>
+                <ul class="dropdown-menu pull-left" role="menu" aria-labelledby="dLabel">
+              <% end %>
+                <li><%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => current_usuario.id) %></li>
+                <li><%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => current_usuario.id) %></li>
               </ul>
             </div>
             <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "day-link blue-link" %>
@@ -143,21 +147,21 @@
 </div>
 
 <script>
-  var url = "/banco_de_horas/show_mes?user_id="
-  $('#menu_select').bind('change', function() { location.href = url + $(this).val() });
-  $(".month-table").height($(".month-table").width() + 20)
+var url = "/banco_de_horas/show_mes?user_id="
+$('#menu_select').bind('change', function() { location.href = url + $(this).val() });
+$(".month-table").height($(".month-table").width() + 20)
 
-  $('#myTab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-  })
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
 
-  $(".day-table td").hover(
-    function() {
-      $(this).children().eq(0).show();
-    },
-    function() {
-      $(this).children().eq(0).hide();
-    }
+$(".day-table td").hover(
+  function() {
+    $(this).children().eq(0).show();
+  },
+  function() {
+    $(this).children().eq(0).hide();
+  }
 );
 </script>

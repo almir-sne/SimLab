@@ -25,6 +25,7 @@ class Atividade < ActiveRecord::Base
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
 
+
   def horas
     unless read_attribute(:duracao).blank?
       read_attribute(:duracao)/60
