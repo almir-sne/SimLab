@@ -73,7 +73,7 @@
                 <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "submenu day-link blue-link" %>
               </ul>
             </div>
-            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "day-link blue-link" %>
+            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => tem_reprovacaonodia?(dia,@usuario.id) ? "day-link red-link" : "day-link blue-link"%>
           </td>
           <% if dia.wday == 6 %>
           </tr><tr>
