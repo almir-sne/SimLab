@@ -107,8 +107,8 @@ class Dia < ActiveRecord::Base
     end
   end
 
-  def self.por_dia(dias)
-    where('extract(day from data) = ?', dias)
+  def tem_atividades?
+    return 
   end
 
   private

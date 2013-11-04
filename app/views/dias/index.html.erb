@@ -95,6 +95,7 @@
         <th></th>
       </tr>
       <% @dias.each do |dia| %>
+        <% if !dia.atividades.blank? %>
         <tr>
           <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
           <td><%= dia.entrada.strftime("%H:%M") %></td>
@@ -127,6 +128,7 @@
             <% end %>
           </td>
         </tr>
+        <% end %>
       <% end %>
       <tr style="border-top:thin solid; border-color:black">
         <td colspan=5>Total incluindo faltas abonadas </td>

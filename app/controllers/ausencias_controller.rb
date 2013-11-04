@@ -16,12 +16,13 @@ class AusenciasController < ApplicationController
     ausencia = Ausencia.new
     ausencia.dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), params[:usuario_id].to_i)
     ausencia.update_attributes(params[:ausencia])
+    data = ausencia.dia.data
     if ausencia.save
       flash[:notice] = I18n.t("banco_de_horas.create.success")
     else
       flash[:error] = I18n.t("banco_de_horas.create.failure")
     end
-    redirect_to periodos_dias_path
+    redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
   end
   
   def index

@@ -2,8 +2,9 @@ class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
   def new
-    @dia = Dia.find_or_create_by_data_and_usuario_id(params[:data], params[:usuario_id])
-    @usuario =  @dia.usuario
+    @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], params[:usuario_id])
+    @usuario = Usuario.find(params[:usuario_id])
+    @data = params[:data]
     @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     respond_to do |format|
@@ -13,7 +14,11 @@ class DiasController < ApplicationController
   end
 
   def create
-    dia = Dia.find(params[:dia_id])
+    if params[:dia_id].blank?
+      dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
+    else
+      dia = Dia.find(params[:dia_id])
+    end
     dia_success = dia.update_attributes(
       :entrada => convert_date(params[:dia], "entrada"),
       :saida => convert_date(params[:dia], "saida"),
@@ -35,8 +40,8 @@ class DiasController < ApplicationController
           :dia_id => dia.id,
           :usuario_id => dia.usuario.id,
           :aprovacao => nil,
-          :data => dia.data,
-          :cartao_id => atividade_attr["cartao_id"]
+          :cartao_id => atividade_attr["cartao_id"],
+          :data => dia.data
         )
         Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
       end

@@ -1,9 +1,9 @@
 <div class="blue-line" style="margin: 20px 10px">  </div>
 
 <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
-  <%= hidden_field_tag :inicio, @inicio %>
-  <%= hidden_field_tag :fim, @fim %>
+  <%= hidden_field_tag :data, @data %>
   <%= hidden_field_tag :dia_id, @dia.id %>
+  <%= hidden_field_tag :usuario_id, @usuario.id %>
 
   <div class="container-fluid">
     <div class="row-fluid">
