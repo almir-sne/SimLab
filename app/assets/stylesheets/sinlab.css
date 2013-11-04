@@ -437,7 +437,17 @@
     margin: 10px;
 }
 
-#collapse-button:hover {
+#collapse-button:hover, .nav-tabs>li>a:hover {
     cursor: pointer;
     color: black;
+}
+
+ul .submenu {
+    background-color: inherit;
+    color: #000;
+}
+
+.dropdown-menu {
+    padding: 0;
+    border: none;
 }
