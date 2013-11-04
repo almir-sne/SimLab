@@ -5,6 +5,10 @@ module DiasHelper
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
   
+  def tem_reprovacaonodia?(dia, usuario_id)
+    !Atividade.where(aprovacao: false, data: dia, usuario_id: usuario_id).blank?
+  end
+  
   def periodo_link(inicio, fim, usuario_id)
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
       "<b> #{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} / #{horas_contratadas(inicio, usuario_id)} </b>"
