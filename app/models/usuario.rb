@@ -4,7 +4,7 @@ class Usuario < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-    :recoverable, :rememberable, :trackable, :validatable 
+    :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
@@ -12,6 +12,7 @@ class Usuario < ActiveRecord::Base
   attr_accessible :role, :address_id, :formado, :status, :data_de_nascimento
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
   attr_accessible :numero_usp, :login_trello
+  attr_accessible :anexos_attributes
 
   has_one  :address, :dependent => :destroy
   has_many :projetos, :through => :workons
@@ -22,12 +23,14 @@ class Usuario < ActiveRecord::Base
   has_many :contratos
   has_many :coordenacoes
   has_many :ausencias, :through => :dias
+  has_many :anexos
 
-  accepts_nested_attributes_for :address, :allow_destroy => true
-  accepts_nested_attributes_for :telefones, :allow_destroy => true
-  accepts_nested_attributes_for :contas, :allow_destroy => true
-  accepts_nested_attributes_for :contratos, :allow_destroy => true
+  accepts_nested_attributes_for :address,      :allow_destroy => true
+  accepts_nested_attributes_for :telefones,    :allow_destroy => true
+  accepts_nested_attributes_for :contas,       :allow_destroy => true
+  accepts_nested_attributes_for :contratos,    :allow_destroy => true
   accepts_nested_attributes_for :coordenacoes, :allow_destroy => true
+  accepts_nested_attributes_for :anexos,       :allow_destroy => true
 
   validates :nome, :presence => true,
     :uniqueness => true
@@ -35,7 +38,7 @@ class Usuario < ActiveRecord::Base
   has_many :meses
   has_many :dias
   has_many :atividades
-  
+
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
     #projetos = self.projetos.includes(:workon).where("workons.coordenador" => true)
@@ -49,7 +52,7 @@ class Usuario < ActiveRecord::Base
   def equipe_coordenada
     equipe_coordenada(projetos_coordenados)
   end
-  
+
   def equipe_coordenada_por_projetos(projeto)
     Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
  end
@@ -62,7 +65,7 @@ class Usuario < ActiveRecord::Base
     contrato = contratos.where("inicio <= ? and fim >= ?", data, data).first
     contrato ||= contratos.last
   end
-  
+
   def monta_coordenacao_hash
     hash = Hash.new
     workons_coordenados = self.coordenacoes.map{|c| c.workon}
@@ -77,7 +80,7 @@ class Usuario < ActiveRecord::Base
     end
     return hash
   end
-  
+
   def contrato_atual
    self.contratos.order(:fim).last
   end

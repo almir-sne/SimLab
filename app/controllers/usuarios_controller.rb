@@ -36,9 +36,10 @@ class UsuariosController < ApplicationController
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
     @user.telefones.build if @user.telefones.blank?
-    @user.contas.build if @user.contas.blank?
-    @user.create_address if @user.address.blank?
+    @user.contas.build    if @user.contas.blank?
+    @user.create_address  if @user.address.blank?
     @user.contratos.build if @user.contratos.blank?
+    @user.anexos.build    if @user.anexos.blank?
   end
 
   def update
