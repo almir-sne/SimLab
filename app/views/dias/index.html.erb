@@ -8,7 +8,7 @@
 
 <div class="tab-content">
   <div class="tab-pane" id="ausencias_tab">
-     <table class="list-table days-table" id="ausencias">
+    <table class="list-table days-table" id="ausencias">
       <tr>
         <th>Dia</th>
         <th style="width: 60%">Justificativa </th>
@@ -65,15 +65,15 @@
         <% (@inicio..@fim).each do |dia| %>
           <td>
             <div class="dropdown toggle">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
                 <i class="icon-collapse"></i>
               </a>
-              <ul class="dropdown-menu pull-left" role="menu" aria-labelledby="dLabel">
+              <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
                 <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "submenu day-link blue-link" %>
                 <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "submenu day-link blue-link" %>
               </ul>
             </div>
-            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "day-link blue-link" %>
+            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => tem_reprovacaonodia?(dia,@usuario.id) ? "day-link red-link" : "day-link blue-link"%>
           </td>
           <% if dia.wday == 6 %>
           </tr><tr>
@@ -96,38 +96,38 @@
       </tr>
       <% @dias.each do |dia| %>
         <% if !dia.atividades.blank? %>
-        <tr>
-          <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
-          <td><%= dia.entrada.strftime("%H:%M") %></td>
-          <td><%= dia.saida.strftime("%H:%M") %></td>
-          <td><%= dia.intervalo.strftime("%H:%M") %></td>
-          <td style="width: 60%; border: none">
-            <% dia.atividades.each do |atividade| %>
-              <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
-                Observação: <br/>
-                <%=  atividade.observacao%>
-                <br />
-                <% atividade.cartoes.each do |cartao| %>
-                  <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
-                <% end %>
-              </div>
-            <% end %>
-          </td>
-          <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
-            <%= dia.horas_atividades_formato + "h" %>
-          </td>
-          <td style="width: 13%;">
-            <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, inicio: @inicio.to_formatted_s,
-              fim: @fim.to_formatted_s, id: dia.id), :class => 'icon-edit nohover'%>
+          <tr>
+            <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
+            <td><%= dia.entrada.strftime("%H:%M") %></td>
+            <td><%= dia.saida.strftime("%H:%M") %></td>
+            <td><%= dia.intervalo.strftime("%H:%M") %></td>
+            <td style="width: 60%; border: none">
+              <% dia.atividades.each do |atividade| %>
+                <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
+                  Observação: <br/>
+                  <%=  atividade.observacao%>
+                  <br />
+                  <% atividade.cartoes.each do |cartao| %>
+                    <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
+                  <% end %>
+                </div>
+              <% end %>
+            </td>
+            <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
+              <%= dia.horas_atividades_formato + "h" %>
+            </td>
+            <td style="width: 13%;">
+              <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, inicio: @inicio.to_formatted_s,
+                fim: @fim.to_formatted_s, id: dia.id), :class => 'icon-edit nohover'%>
 
-            <%= link_to '<i class="icon-trash"> </i>'.html_safe,
-              dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
-              :class => 'nohover', :title => "Excluir"%>
-            <% if dia.tem_reprovacao? %>
-              <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
-            <% end %>
-          </td>
-        </tr>
+              <%= link_to '<i class="icon-trash"> </i>'.html_safe,
+                dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+                :class => 'nohover', :title => "Excluir"%>
+              <% if dia.tem_reprovacao? %>
+                <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
+              <% end %>
+            </td>
+          </tr>
         <% end %>
       <% end %>
       <tr style="border-top:thin solid; border-color:black">
@@ -139,25 +139,27 @@
     <br />
     <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>
   </div>
-  
+
 </div>
 
 <script>
   var url = "/banco_de_horas/show_mes?user_id="
-  $('#menu_select').bind('change', function() { location.href = url + $(this).val() });
+  $('#menu_select').bind('change', function() {
+    location.href = url + $(this).val()
+  });
   $(".month-table").height($(".month-table").width() + 20)
 
-  $('#myTab a').click(function (e) {
+  $('#myTab a').click(function(e) {
     e.preventDefault();
     $(this).tab('show');
   })
 
   $(".day-table td").hover(
-    function() {
-      $(this).children().eq(0).show();
-    },
-    function() {
-      $(this).children().eq(0).hide();
-    }
-);
+          function() {
+            $(this).children().eq(0).show();
+          },
+          function() {
+            $(this).children().eq(0).hide();
+          }
+  );
 </script>

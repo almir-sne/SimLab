@@ -60,8 +60,8 @@
       <tr <%= "class=red-background" if atividade.aprovacao == false                       %> >
         <%= hidden_field_tag "atividades[#{atividade.id}[id]]",atividade.id                %>
         <td><%= atividade.data.strftime("%d/%m/%Y")                                        %></td>
-        <td><%= atividade.usuario.nome                                                     %></td>
-        <td><%= atividade.projeto.nome                                                     %></td>
+        <td><%= atividade.try(:usuario).try(:nome)                                                     %></td>
+        <td><%= atividade.try(:projeto).try(:nome)                                                     %></td>
         <td>
           <%= atividade.observacao                                                       %> <br/>
           <% if atividade.cartao_id %>

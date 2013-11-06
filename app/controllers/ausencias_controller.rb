@@ -29,14 +29,6 @@ class AusenciasController < ApplicationController
     authorize! :update, :validations
     #filtrar as ausencias
     hoje = Date.today
-    meses_id = Mes.find_all_by_numero_and_ano(meses_selecionados(params[:mes], hoje), anos_selecionados(params[:ano], hoje)).collect{|month| month.id }
-    dias_selecionados  = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
-    @ausencias = @ausencias.where(
-      :abonada => nil,
-      :mes_id => meses_id,
-      :usuario_id => usuarios_selecionados(params[:usuario_id]),
-      :dia => dias_selecionados
-    )
     #popular os combobox
     if current_usuario.role == "admin"
       equipe = Usuario.all(:order => "nome")
@@ -55,6 +47,7 @@ class AusenciasController < ApplicationController
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
+    @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil])
   end
   
   def validar
