@@ -74,3 +74,9 @@ function ajustaAltura() {
     $("#output").animate({height: height2}, 400);
 }
 
+function toggleCollapse(obj) {
+    if (obj.children[0].className == "icon-chevron-sign-right")
+        obj.children[0].className = "icon-chevron-sign-down";
+    else
+        obj.children[0].className = "icon-chevron-sign-right"
+}

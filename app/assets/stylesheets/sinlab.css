@@ -451,3 +451,11 @@ ul .submenu {
     padding: 0;
     border: none;
 }
+
+#projetos .projetos-header {
+    padding-top: 10px
+}
+
+#projetos .projetos-body {
+    padding-top: 10px
+}

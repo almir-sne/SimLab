@@ -4,14 +4,30 @@
   <%= hidden_field_tag :usuario_id, @usuario_id %>
   <%= hidden_field_tag :data, @data %>
   <%= hidden_field_tag :dia_id, @dia_id %>
-  <div class="row-fluid">
-      <div class="span12">
+  <div class="container-fluid"> 
+    <div class="row-fluid">
+      <div class="span6">
         <%= f.label :justificativa %>
         <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
         <div class="actions">
           <%= f.submit "Ok", :class => "btn default-button" %>
         </div>
       </div>
-    </div>
-<% end %>
 
+      <div class="span6">
+        <h4>Status </h4>
+        <% if @ausencia.abonada? %>
+          Ausencia foi marcada como falta abonada por:<br/>
+          <%= @ausencia.avaliador.nome %> <br/>
+          <%= "#{@ausencia.horas} horas serão contadas como trabalhadas" %>
+        <% else %>
+          Falta justificada
+        <% end %>
+        <% unless @ausencia.mensagem.blank? %>
+          <h4> Mensagem </h4>
+          <%= @ausencia.mensagem %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

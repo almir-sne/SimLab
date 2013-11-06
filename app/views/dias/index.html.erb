@@ -68,7 +68,7 @@
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="icon-collapse"></i>
               </a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <ul class="dropdown-menu pull-left" role="menu" aria-labelledby="dLabel">
                 <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "submenu day-link blue-link" %>
                 <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => current_usuario.id), :class => "submenu day-link blue-link" %>
               </ul>
