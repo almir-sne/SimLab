@@ -11,6 +11,7 @@ class Usuario < ActiveRecord::Base
   attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
   attr_accessible :role, :address_id, :formado, :status, :data_de_nascimento
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
+  attr_accessible :numero_usp, :login_trello
 
   has_one  :address, :dependent => :destroy
   has_many :projetos, :through => :workons
