@@ -11,7 +11,7 @@ class AusenciasController < ApplicationController
     @usuario_id = params[:usuario_id]
     @data = params[:data]
   end
-  
+
   def create
     ausencia = Ausencia.new
     ausencia.dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), params[:usuario_id].to_i)
@@ -24,7 +24,7 @@ class AusenciasController < ApplicationController
     end
     redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
   end
-  
+
   def index
     authorize! :update, :validations
     #filtrar as ausencias
@@ -49,7 +49,7 @@ class AusenciasController < ApplicationController
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
     @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil])
   end
-  
+
   def validar
     ausencias = params[:ausencias]
     ausencias.each do |id, a|
@@ -59,10 +59,10 @@ class AusenciasController < ApplicationController
       ausencia.update_attribute(:avaliador_id, current_user.id)
       ausencia.update_attribute(:horas, a[:horas])
     end
-    flash[:notice] = I18n.t("ausencia.validation.sucess")
+    flash[:notice] = I18n.t("ausencia.validation.success")
     redirect_to ausencias_path
   end
-  
+
    def ausencia
     @usuario = Usuario.where(id: params[:usuario_id]) || current_user
     @inicio = Date.parse params[:inicio]

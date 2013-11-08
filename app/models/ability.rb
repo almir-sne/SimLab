@@ -20,12 +20,12 @@ class Ability
       unless user.projetos_coordenados.blank?
         can :update, :validations
       end
-      can :read,    Usuario
-      can [:read,:create], Dia
-      can [:destroy,:update], Dia, :id => true, :id => user.id
-      can :update,  [Usuario, Atividade],   :id => true, :id => user.id
-      can [:meses, :listar], Pagamento
-      can [:destroy, :create], Ausencia
+      can :read,                Usuario
+      can [:read,:create],      Dia
+      can [:destroy,:update],   Dia, :id => true, :id => user.id
+      can :update,              [Usuario, Atividade],   :id => true, :id => user.id
+      can [:periodos, :listar], Pagamento
+      can [:destroy, :create],  Ausencia
     end
 
 

@@ -10,12 +10,22 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :pagamentos, :only => [:index] do
+  post "cartoes/atualizar_cartoes"
+  get "cartoes/estatisticas"
+  get "cartoes/atividades"
+
+
+  resources :pagamentos do
     collection do
-      get :meses
-      get :listar
-      post :create_or_update
+      get  :periodos
+      get  :listar
     end
+  end
+  
+  namespace :android do
+      resources :tokens,:only => [:create, :destroy]
+      match 'meses/:id/dias' => "meses#dias"
+      get "meses/index"
   end
 
   resources :banco_de_horas, :only => [:index] do

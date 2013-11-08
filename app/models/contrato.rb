@@ -14,4 +14,24 @@ class Contrato < ActiveRecord::Base
     inicio_periodo .. fim_periodo
   end
 
+  def atividades_no_periodo(periodo)
+    Atividade.where(:usuario_id => usuario_id).where{(data >= periodo.first) & (data < periodo.last)}
+  end
+
+  def atividades
+    Atividade.where(data: (inicio .. fim), usuario_id: usuario_id)
+  end
+
+  def periodos
+    resposta = Array.new
+    i=0
+    periodo = periodo_vigente(inicio + i.month)
+    while periodo.last > periodo.first do
+      resposta << periodo
+      i += 1
+      periodo = periodo_vigente(inicio + i.month)
+    end
+    resposta
+  end
+
 end

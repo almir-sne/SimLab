@@ -5,8 +5,8 @@ module DiasHelper
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
   
-  def tem_reprovacaonodia?(dia, usuario_id)
-    !Atividade.where(aprovacao: false, data: dia, usuario_id: usuario_id).blank?
+  def tem_reprovacao_no_dia?(data, usuario_id)
+    !Atividade.where(aprovacao: false, data: data, usuario_id: usuario_id).blank?
   end
   
   def periodo_link(inicio, fim, usuario_id)

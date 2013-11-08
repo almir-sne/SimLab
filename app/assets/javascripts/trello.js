@@ -125,6 +125,7 @@ function loadSimpleCards() {
                 $(input).detach();
             });
         });
+        getToken();
     });
 }
 

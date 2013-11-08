@@ -9,7 +9,7 @@ class Mes < ActiveRecord::Base
   belongs_to :usuario
 
   accepts_nested_attributes_for :pagamentos, :allow_destroy => true
-  
+
   def tem_reprovacao?
     !self.atividades.where("aprovacao is false").blank?
   end
@@ -42,7 +42,7 @@ class Mes < ActiveRecord::Base
   def horas_contratadas
      contrato.hora_mes
   end
-  
+
   def horas_ausencias_abonadas
     string_hora(self.ausencias.where(:abonada => true).sum(:horas)/60)
   end
@@ -50,7 +50,7 @@ class Mes < ActiveRecord::Base
   def contrato
     usuario.contrato_vigente_em(Date.new(ano, numero, 1))
   end
-  
+
   def calcula_horas_trabalhadas
     calcula_minutos_trabalhados(true)/60
   end
@@ -66,11 +66,11 @@ class Mes < ActiveRecord::Base
   end
 
   def calcula_minutos_restantes
-    minutos_ausencias = self.ausencias.where(:abonada => [false,nil]).collect{|a| a.segundos}.sum/60
+    minutos_abonados = self.ausencias.where(:abonada => true).collect{|a| a.segundos}.sum/60
     horario = self.horas_contratadas.blank? ? 0 : self.horas_contratadas
     min_totais = horario*60
     min_trabalhados = calcula_minutos_trabalhados(false)
-    return min_totais - min_trabalhados - minutos_ausencias
+    return min_totais - min_trabalhados - minutos_abonados
   end
 
   #  Recebe o total de minutos e devolve uma string no formato hh:mm
@@ -93,7 +93,7 @@ class Mes < ActiveRecord::Base
     d = data
     while (d != final_do_mes + 1.day)
       if (!d.sunday? and !d.saturday? and !d.holiday?('br'))
-        dias_uteis+= 1
+        dias_uteis += 1
       end
       d = d.next
     end

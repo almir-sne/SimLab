@@ -1,0 +1,36 @@
+<h4 style="margin-left: 20px">
+      Total recebido: <b> R$ <%= "%.2f" % @total %> </b> <br/>
+      Media por periodo: <b> R$ <%= "%.2f" % @media %> </b>
+</h4>
+
+<table  class="list-table">
+  <tr>
+    <th> Periodo              </th>
+    <th> Valor da hora        </th>
+    <th> Horas trabalhadas    </th>
+    <th> Valor a ser recebido </th>
+    <th> Total pago           </th>
+    <th></th>
+  </tr>
+  <% @periodos.each do |contrato, periodo| %>
+    <% periodo.each do |p| %>
+      <tr>
+        <% v_hora = contrato.try(:valor_hora).to_f %>
+        <% horas = Atividade.periodo(p).where(usuario_id: @usuario.id, aprovacao: true).sum(:duracao) / 3600 %>
+        <td><%= p.first.to_s(:rfc822)  + " . . . . " + p.last.to_s(:rfc822) %></td>
+        <td><%= "R$ #{"%.2f" % v_hora }"                                    %></td>
+        <td><%=  horas                                                      %></td>
+        <td><%= "R$ #{"%.2f" % (v_hora * horas)}"                           %></td>
+        <td><%= "R$ #{"%.2f" % Pagamento.periodos(p).where(usuario_id: @usuario.id, motivo: 'salario').sum(:valor)}"  %> </td>
+        <td><%= link_to '<i class="icon-dollar"></i> Adicionar Salário'.html_safe,
+          listar_pagamentos_path(
+            :inicio => p.first,
+            :fim => p.last,
+            :usuario_id => @usuario.id
+          ),
+          :class => 'nohover', :title => "Incluir pagamentos"
+        %> </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>

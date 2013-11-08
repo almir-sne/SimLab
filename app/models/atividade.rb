@@ -21,6 +21,8 @@ class Atividade < ActiveRecord::Base
   belongs_to :avaliador, :class_name => "Usuario"
   has_many :cartoes, :dependent => :destroy
 
+  scope :periodo, lambda { |range| where(data: range)}
+
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
