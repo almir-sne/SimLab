@@ -1,7 +1,7 @@
 class UpdateColumnDataOnAusencias < ActiveRecord::Migration
   def up
     Ausencia.all.each do |a|
-        a.data = Date.new(a.mes.ano, a.mes.numero, a.dia)
+        a.data = Date.new(a.mes.ano, a.mes.numero, a[:dia])
         a.save
     end
   end
