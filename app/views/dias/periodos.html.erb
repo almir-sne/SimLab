@@ -27,7 +27,7 @@
 </table>
 
 <script>
-var url = <%= periodos_dias_path %> ;
-$('#menu_select').bind('change', function() { location.href = url + $(this).val() });
+var url = '<%= periodos_dias_path %>';
+$('#menu_select').bind('change', function() { location.href = url + '?usuario_id=' + $(this).val() });
 $(".month-table").height($(".month-table").width() + 20);
 </script>
