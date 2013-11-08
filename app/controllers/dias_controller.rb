@@ -70,9 +70,13 @@ class DiasController < ApplicationController
   end
   
   def index
+    if params[:usuario_id].nil?
+      @usuario = current_user
+    else
+      @usuario = Usuario.find(params[:usuario_id])
+    end
     @inicio = Date.parse params[:inicio]
     @fim = Date.parse params[:fim]
-    @usuario =  Usuario.find_by_id(params[:usuario]) || current_user
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
@@ -82,8 +86,12 @@ class DiasController < ApplicationController
   end
   
   def periodos
+    if params[:usuario_id].nil?
+      @usuario = current_user
+    else
+      @usuario = Usuario.find(params[:usuario_id])
+    end
     @ano = params[:ano] || Date.today.year
-    @usuario = params[:usuario] || current_user
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @periodos = (1..12).collect{|m| {inicio: Date.new(2013, m, 1), fim: Date.new(2013, m, 1).at_end_of_month}}
   end
