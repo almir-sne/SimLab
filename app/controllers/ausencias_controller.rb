@@ -18,9 +18,9 @@ class AusenciasController < ApplicationController
     ausencia.update_attributes(params[:ausencia])
     data = ausencia.dia.data
     if ausencia.save
-      flash[:notice] = I18n.t("banco_de_horas.create.success")
+      flash[:notice] = I18n.t("ausencias.create.success")
     else
-      flash[:error] = I18n.t("banco_de_horas.create.failure")
+      flash[:error] = I18n.t("ausencias.create.failure")
     end
     redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
   end

@@ -70,7 +70,7 @@ class AtividadesController < ApplicationController
         :avaliador_id => current_user.id
       )
     end
-    flash[:notice] = I18n.t("banco_de_horas.validation.success")
+    flash[:notice] = I18n.t("atividades.validation.success")
     redirect_to :back
   end
 end

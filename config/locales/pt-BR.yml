@@ -235,8 +235,8 @@ pt-BR:
       all: "Você não está autorizado a acessar esse recurso"
   messages:
     logged_in: "Logado como %{email}. Esse não é você?"
-    next: Próximo
-    previous: Anterior
+    next: 'Próximo'
+    previous: 'Anterior'
   projetos:
     create:
       success: "Projeto criado com sucesso."
@@ -244,24 +244,31 @@ pt-BR:
     update:
       success: "Projeto atualizado com sucesso."
       failure: "Erro na atualização do projeto."
-  banco_de_horas:
+  atividades:
     create:
-      success: "Cadastro criado/atualizado com sucesso."
+      success: "Atividade(s) criada(s) com sucesso!"
       failure: "Erro na criação/atualização do cadastro."
     update:
       success: "Banco de horas atualizado com sucesso."
     validation:
       success: "Atividades validadas com sucesso."
       failure: "Erro ao validar atividades."
+    title: "Atividades"
+  ausencias:
+    create:
+      success: "Ausência cadastrada com sucesso."
+      failure: "Erro na no cadastro da ausência."
+    update:
+      success: "Dados da ausência foram atualizados com sucesso."
+    validation:
+      success: "Ausência(s) validadas com sucesso."
+      failure: "Erro ao validar ausências."
+    title: "Ausências"
   usuario:
     create:
       failure: "Não foi possível salvar o registro."
     delete:
       success: "Usuario apagado com sucesso."
-  atividades:
-    create:
-      success: "Atividade(s) criada(s) com sucesso!"
-    title: "Atividades"
   simlab:
     titulo: "SimLab"
   funcionalidade:
