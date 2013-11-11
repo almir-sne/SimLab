@@ -107,9 +107,7 @@
                   Observação: <br/>
                   <%=  atividade.observacao%>
                   <br />
-                  <% atividade.cartoes.each do |cartao| %>
-                    <input type="hidden" class="card-placeholder" id="<%= cartao.cartao_id %>" value="<%= cartao.duracao %>"></input>
-                  <% end %>
+                  <input type="hidden" class="card-placeholder" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
                 </div>
               <% end %>
             </td>

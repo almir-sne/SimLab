@@ -6,7 +6,7 @@ SinLab::Application.routes.draw do
       post :mandar_validacao
       get :cartoes
       post :atualizar_cartoes
-      match "cartoes/listar" => "atividade#listar_atividades"
+      match "cartoes/listar" => "atividades#listar_atividades"
     end
   end
 
