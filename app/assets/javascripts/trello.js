@@ -67,7 +67,7 @@ function dropCard(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var cartaoRepetido = false;
-    $(".cartao_field").each(function(index, pps) {
+    $(".fields:visible > .cartao_field").each(function(index, pps) {
         if (data == pps.value) {
             cartaoRepetido = true;
         }
