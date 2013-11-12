@@ -31,6 +31,7 @@ class DiasController < ApplicationController
         atividade = Atividade.new
       end
       if atividade_attr["_destroy"] == "1" and !atividade.blank?
+        
         atividade.destroy()
       else
         atividades_success = atividades_success and atividade.update_attributes(
@@ -43,8 +44,8 @@ class DiasController < ApplicationController
           :cartao_id => atividade_attr["cartao_id"],
           :data => dia.data
         )
-        Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
       end
+      Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
     end
     if dia_success and atividades_success
       flash[:notice] = I18n.t("banco_de_horas.create.success")
