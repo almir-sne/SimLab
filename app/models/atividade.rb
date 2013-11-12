@@ -2,6 +2,7 @@ class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
   attr_accessible :duracao, :data, :cartao_id
   
+  scope :periodo, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
   scope :mes, lambda { |value| where(['extract(month from atividades.data) = ?', value]) if value > 0 }
   scope :dia, lambda { |value| where(['extract(day from atividades.data) = ?', value]) if value > 0 }
@@ -21,7 +22,6 @@ class Atividade < ActiveRecord::Base
   belongs_to :avaliador, :class_name => "Usuario"
   has_many :cartoes, :dependent => :destroy
 
-  scope :periodo, lambda { |range| where(data: range)}
 
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true

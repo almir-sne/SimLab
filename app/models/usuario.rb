@@ -76,5 +76,9 @@ class Usuario < ActiveRecord::Base
     end
     return hash
   end
+  
+  def contrato_atual
+   self.contratos.order(:fim).last
+  end
 
 end

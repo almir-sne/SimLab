@@ -47,11 +47,12 @@ class DiasController < ApplicationController
       end
     end
     if dia_success and atividades_success
-      flash[:notice] = I18n.t("banco_de_horas.create.success")
+      flash[:notice] = I18n.t("atividades.create.success")
     else
-      flash[:error] = I18n.t("banco_de_horas.create.failure")
+      flash[:error] = I18n.t("atividades.create.failure")
     end
-    redirect_to dias_path(inicio: dia.data.beginning_of_month.to_formatted_s, fim: dia.data.end_of_month.to_formatted_s, usuario: dia.usuario.id)
+    periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
+    redirect_to dias_path(inicio: periodo.first.to_formatted_s, fim: periodo.last.to_formatted_s, usuario: dia.usuario.id)
   end
 
   def destroy
@@ -93,7 +94,9 @@ class DiasController < ApplicationController
     end
     @ano = params[:ano] || Date.today.year
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-    @periodos = (1..12).collect{|m| {inicio: Date.new(2013, m, 1), fim: Date.new(2013, m, 1).at_end_of_month}}
+    @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
+    contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+    @periodos = contrato.periodos_por_ano(@ano.to_i)
   end
   
   private

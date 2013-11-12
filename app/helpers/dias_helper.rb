@@ -9,9 +9,14 @@ module DiasHelper
     !Atividade.where(aprovacao: false, data: data, usuario_id: usuario_id).blank?
   end
   
-  def periodo_link(inicio, fim, usuario_id)
+  def periodo_link(inicio, fim, usuario_id, formato, mes = 0)
+    if formato == "p"
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
-      "<b> #{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} / #{horas_contratadas(inicio, usuario_id)} </b>"
+      "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)}</b>"
+    elsif formato = "m"
+      "<b> #{t('date.month_names')[mes]} <br/> <br/> </b>" +
+    "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
+    end
   end
   
   #supondo que isso só seja chamado para o periodo atual

@@ -2,12 +2,16 @@ class Contrato < ActiveRecord::Base
   attr_accessible :contratante, :fim, :funcao, :hora_mes, :inicio, :tipo, :usuario_id, :valor_hora, :dia_inicio_periodo
 
   def periodo_vigente(data)
-    if data.day < dia_inicio_periodo
-      inicio_periodo = (data.change(day: dia_inicio_periodo) - 1.month)
-      fim_periodo = data.change(day: dia_inicio_periodo) - 1.day
+    dia_inicio_local = self.dia_inicio_periodo
+    if dia_inicio_local.blank?
+      dia_inicio_local = 1
+    end
+    if data.day < dia_inicio_local
+      inicio_periodo = data.change(day: dia_inicio_local) - 1.month
+      fim_periodo = data.change(day: dia_inicio_local) - 1.day
     else
-      inicio_periodo = (data.change(day: dia_inicio_periodo))
-      fim_periodo = data.change(day: dia_inicio_periodo) - 1.day + 1.month
+      inicio_periodo = data.change(day: dia_inicio_local)
+      fim_periodo = data.change(day: dia_inicio_local) - 1.day + 1.month
     end
     inicio_periodo = inicio if inicio_periodo < inicio
     fim_periodo = fim if fim_periodo > fim
@@ -24,12 +28,29 @@ class Contrato < ActiveRecord::Base
 
   def periodos
     resposta = Array.new
-    i=0
+    i = 0
     periodo = periodo_vigente(inicio + i.month)
     while periodo.last > periodo.first do
       resposta << periodo
       i += 1
       periodo = periodo_vigente(inicio + i.month)
+    end
+    resposta
+  end
+
+  def periodos_por_ano(ano)
+    resposta = Array.new
+    i = 0
+    periodo = periodo_vigente(self.inicio + i.month)
+    while periodo.last > periodo.first do
+      if periodo.first.year == ano or periodo.last.year == ano
+        resposta << periodo
+      end
+      i += 1
+      periodo = periodo_vigente(self.inicio + i.month)
+      if (periodo.first.year > ano)
+        break
+      end
     end
     resposta
   end
