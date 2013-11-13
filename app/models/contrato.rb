@@ -11,7 +11,7 @@ class Contrato < ActiveRecord::Base
       fim_periodo = data.change(day: dia_inicio_local) - 1.day
     else
       inicio_periodo = data.change(day: dia_inicio_local)
-      fim_periodo = data.change(day: dia_inicio_local) - 1.day + 1.month
+      fim_periodo = data.change(day: dia_inicio_local) + 1.month - 1.day
     end
     inicio_periodo = inicio if inicio_periodo < inicio
     fim_periodo = fim if fim_periodo > fim
