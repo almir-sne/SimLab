@@ -227,8 +227,6 @@ pt-BR:
         remember_me: "Lembre-se de mim"
       projeto:
         descricao: "Descrição"
-      banco_de_horas:
-        observacao: "Observações"
 
   unauthorized:
     manage:
