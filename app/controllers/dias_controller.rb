@@ -82,6 +82,7 @@ class DiasController < ApplicationController
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @today = Date.today
     respond_to do |format|
       format.html # index.html.erb
     end
