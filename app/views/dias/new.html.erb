@@ -48,7 +48,7 @@
               <div id="slider"> </div>
             </div>
             <%= atividade_form.hidden_field :cartao_id, :class => 'cartao_field'%>
-            <%= button_tag('Observação', {:type => 'button', :id => 'inserir_observ', :style => "margin: 20px 0px" ,:class => 'btn default-button', :onclick => 'toggleObservacao(this)'}) %>
+            <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ', :style => "margin: 20px 0px" , :onclick => 'toggleObservacao(this)'}) %>
             <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
             <div class="grey-line"> </div>
           <% end %>

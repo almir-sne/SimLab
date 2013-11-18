@@ -349,6 +349,14 @@
     width: 85%
 }
 
+.gray-link {
+    background-color: #666666;
+}
+
+.gray-link:hover {
+    background-color: #444444 !important;
+}
+
 .red-link {
     background-color: #CC0000;
 }

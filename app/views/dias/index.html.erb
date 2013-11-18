@@ -73,7 +73,9 @@
                 <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
               </ul>
             </div>
-            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => @usuario.id), :class => tem_reprovacao_no_dia?(dia,@usuario.id) ? "day-link red-link" : "day-link blue-link" %>
+            <%= link_to dia.strftime("%d/%b"), new_dia_path(:data=> dia, :usuario_id => @usuario.id),
+              :class => tem_ausencia_no_dia?(dia,@usuario.id) ? "day-link gray-link" :
+              (tem_reprovacao_no_dia?(dia,@usuario.id) ? "day-link red-link" : "day-link blue-link") %> 
             <% unless @dias[dia].blank? %>
               <% @dias[dia][0].atividades.each do |atividade| %>
                 <input type="hidden" class="card-abrev" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
