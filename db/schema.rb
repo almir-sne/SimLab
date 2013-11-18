@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131114193113) do
+ActiveRecord::Schema.define(:version => 20131118164642) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(:version => 20131114193113) do
     t.float    "duracao"
     t.integer  "usuario_id"
     t.text     "observacao"
-    t.integer  "mes_id"
     t.integer  "dia_id"
     t.boolean  "aprovacao"
     t.datetime "created_at",   :null => false
@@ -112,7 +111,6 @@ ActiveRecord::Schema.define(:version => 20131114193113) do
     t.datetime "saida"
     t.float    "intervalo"
     t.integer  "usuario_id"
-    t.integer  "mes_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
@@ -129,7 +127,6 @@ ActiveRecord::Schema.define(:version => 20131114193113) do
   end
 
   create_table "pagamentos", :force => true do |t|
-    t.integer  "mes_id"
     t.integer  "usuario_id"
     t.integer  "criador_id"
     t.decimal  "valor",      :precision => 7, :scale => 2
