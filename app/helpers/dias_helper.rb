@@ -2,7 +2,7 @@ require 'holidays'
 require 'holidays/br'
 module DiasHelper
 
-  def monta_dia_link(data, equipe, aba = "ausencia_equipe")
+  def monta_dia_link(aba, data, usuario_id, equipe)
     string = "<div class='panel-scrollable' style='height: 100px'>" + data.strftime("%d/%b")
     if aba == "ausencia_equipe" and !data.saturday? and !data.sunday? and !data.holiday?('br')
       equipe.each do |pessoa|
@@ -13,11 +13,16 @@ module DiasHelper
           string += ("<br/>" + pessoa.nome)
         end
       end
-      elsif aba == "periodos"
-        #coloca o código aqui do negocio cinza aqui
-    end  
-    string += "</div>"
-    string.html_safe
+      string += "</div>"
+      link_to(string.html_safe, new_dia_path(:data=> data, :usuario_id => usuario_id), :class => "day-link blue-link")
+    elsif aba == "periodos"
+      ausencia_no_dia = tem_ausencia_no_dia?(data, usuario_id)
+      if ausencia_no_dia
+        string += "<br/> Ausência Registrada"
+      end
+      string += "</div>"
+      link_to(string.html_safe, new_dia_path(:data=> data, :usuario_id => usuario_id), :class => ausencia_no_dia ? "day-link gray-link" : (tem_reprovacao_no_dia?(data, usuario_id) ? "day-link red-link" : "day-link blue-link"))
+    end
   end
 
   def tem_reprovacao?(inicio, fim, usuario_id)
