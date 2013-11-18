@@ -28,6 +28,14 @@ module DiasHelper
     !Atividade.where(aprovacao: false, data: data, usuario_id: usuario_id).blank?
   end
   
+  def tem_ausencia?(inicio, fim, usuario_id)
+    !Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).blank?
+  end
+  
+  def tem_ausencia_no_dia?(data, usuario_id)
+    !Ausencia.joins(:dia).where(dia: {data: data, usuario_id: usuario_id}).blank?
+  end
+  
   def periodo_link(inicio, fim, usuario_id, formato, mes = 0)
     if formato == "p"
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +

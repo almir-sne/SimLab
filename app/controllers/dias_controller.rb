@@ -84,6 +84,7 @@ class DiasController < ApplicationController
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
     @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos}).group(:id).order(:nome)
     @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
+    @today = Date.today
     respond_to do |format|
       format.html # index.html.erb
     end

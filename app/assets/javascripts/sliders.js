@@ -1,5 +1,5 @@
 function recalculaHoras() {
-    updateAllSliders();
+    // updateAllSliders();
     $("#horas_do_dia").text(getTime(pega_horas_dia()));
 }
 
@@ -42,7 +42,7 @@ function initializeSliders() {
 
 function createSlider(sliderParent) {
     var time = sliderParent.find(".hora_field")[0].value
-    initSlider(sliderParent.find('#slider'), time, pega_horas_dia());
+    initSlider(sliderParent.find('#slider'), time, 720);
     initTime(sliderParent.find('#time'), time);
 }
 
@@ -92,18 +92,6 @@ function projetosVazios() {
 function validateSliders() {
     if (projetosVazios()) {
         alert("Nenhum projeto selecionado");
-        return false;
-    }
-    else if (pega_horas_dia() < 60) {
-        alert("É necessario registrar pelo menos 1 hora");
-        return false;
-    }
-    else if (pega_horas_dia() != sumSliders()) {
-        alert("Horas em atividades diferem das horas declaradas");
-        return false;
-    }
-    else if (horasCartoesInvalidas()) {
-        alert("Horas em atividades diferem dos cartões");
         return false;
     }
     return true;
