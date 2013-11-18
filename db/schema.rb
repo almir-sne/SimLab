@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131031175126) do
+ActiveRecord::Schema.define(:version => 20131108203445) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -175,6 +175,8 @@ ActiveRecord::Schema.define(:version => 20131031175126) do
     t.boolean  "status"
     t.date     "data_de_nascimento"
     t.string   "authentication_token"
+    t.integer  "numero_usp"
+    t.string   "login_trello"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true

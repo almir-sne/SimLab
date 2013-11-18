@@ -76,14 +76,11 @@
 }
 
 .day-table td {
-    margin: 5px !important;
     height: 100px;
     font-size: 15px;
     font-family: Arial,Helvetica,sans-serif;
     color: white;
-    vertical-align: top;
     border: 5px white solid;
-    width: 5%;
 }
 
 .day-table a {
@@ -222,7 +219,7 @@
 }
 
 .day-link {
-    width: 98%;
+    width: 96%;
     display: block;
     height: 100%;
     padding: 2%;
@@ -466,4 +463,8 @@ ul .submenu {
 
 #projetos .projetos-body {
     padding-top: 10px
+}
+
+.day-table td.today {
+    border: 6px solid #FF00CC;
 }
