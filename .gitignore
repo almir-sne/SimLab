@@ -52,3 +52,4 @@ nbproject
 Gemfile.lock
 tmp.sql
 /public/assets
+/config/database.yml
