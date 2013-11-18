@@ -25,7 +25,7 @@
         <td>
           <%= link_to periodo_link(m[:inicio], m[:fim], @usuario.id, 'm', m[:inicio].month).html_safe,
               dias_path(inicio: m[:inicio].to_formatted_s, fim: m[:fim].to_formatted_s, usuario_id: @usuario.id),
-            :class => tem_reprovacao?(m[:inicio],m[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link" %>
+            :class => tem_ausencia?(m[:inicio],m[:fim],@usuario.id) ? "month-link gray-link" : (tem_reprovacao?(m[:inicio],m[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
         </td>
         <% if (i + 1) % 6 == 0 %>
         </tr>
@@ -43,7 +43,7 @@
         <td>
           <%= link_to periodo_link(p.first, p.last, @usuario.id, 'p').html_safe,
               dias_path(inicio: p.first.to_formatted_s, fim: p.last.to_formatted_s, usuario_id: @usuario.id),
-            :class => tem_reprovacao?(p.first,p.last,@usuario.id) ? "month-link red-link" : "month-link blue-link" %>
+            :class => tem_ausencia?(p.first,p.last,@usuario.id) ? "month-link gray-link" : (tem_reprovacao?(p.first,p.last,@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
         </td>
         <% if (i + 1) % 6 == 0 %>
         </tr>
