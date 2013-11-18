@@ -21,6 +21,7 @@ class Usuario < ActiveRecord::Base
   has_many :contas
   has_many :contratos
   has_many :coordenacoes
+  has_many :ausencias, :through => :dias
 
   accepts_nested_attributes_for :address, :allow_destroy => true
   accepts_nested_attributes_for :telefones, :allow_destroy => true
@@ -50,7 +51,7 @@ class Usuario < ActiveRecord::Base
   end
   
   def equipe_coordenada_por_projetos(projeto)
-  Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
+    Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
  end
 
   def horario_data(data)

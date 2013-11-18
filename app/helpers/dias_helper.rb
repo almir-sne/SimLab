@@ -1,6 +1,25 @@
 require 'holidays'
 require 'holidays/br'
 module DiasHelper
+
+  def monta_dia_link(data, equipe, aba = "ausencia_equipe")
+    string = "<div class='panel-scrollable' style='height: 100px'>" + data.strftime("%d/%b")
+    if aba == "ausencia_equipe" and !data.saturday? and !data.sunday? and !data.holiday?('br')
+      equipe.each do |pessoa|
+        ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)
+        if !ausencia_do_usuario_no_dia.blank? 
+          string += ("<br/><b>" + pessoa.nome + "</b>")
+        elsif data < Date.today and Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?
+          string += ("<br/>" + pessoa.nome)
+        end
+      end
+      elsif aba == "periodos"
+        #coloca o código aqui do negocio cinza aqui
+    end  
+    string += "</div>"
+    string.html_safe
+  end
+
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end

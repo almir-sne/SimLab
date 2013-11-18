@@ -4,6 +4,7 @@ class Dia < ActiveRecord::Base
   belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
+  has_many :ausencias
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
 

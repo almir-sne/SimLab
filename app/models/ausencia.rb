@@ -1,6 +1,7 @@
   class Ausencia < ActiveRecord::Base
-  attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem, 
-  :dia_id, :dia, :mes, :usuario_id
+
+  attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem,
+  :dia_id, :dia, :mes
   
   scope :data, lambda { |ano, mes, dia| Ausencia.ano(ano).mes(mes).dia(dia) }
   scope :ano, lambda { |value| joins(:dia).where(['extract(year from data) = ?', value]) if value > 0 }
