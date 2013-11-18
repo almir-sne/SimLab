@@ -127,6 +127,29 @@ function loadSimpleCards() {
         });
         getToken();
         loadBoards();
+        loadAbrevCards();
+    });
+}
+
+function loadAbrevCards() {
+    $(".card-abrev").each(function(index, input) {
+        var parent = input.parentElement;
+        var card_id = input.id;
+        Trello.get("/cards/" + card_id, function(card) {
+            var div = $(parent).find(".day-link");
+            var text = getTime(input.value).replace(" hora(s)", " - ");
+            if (card.name.length > 10)
+                text += card.name.substr(0, 10) + "...";
+            else
+                text += card.name;
+            $("<br/>").appendTo(div);
+            $("<a>").attr({
+                href: card.url,
+                target: "_blank",
+                title: card.name
+            }).text(text).appendTo(div);
+            $(input).detach();
+        });
     });
 }
 

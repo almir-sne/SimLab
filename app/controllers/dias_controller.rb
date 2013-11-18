@@ -80,7 +80,7 @@ class DiasController < ApplicationController
     @inicio = Date.parse params[:inicio]
     @fim = Date.parse params[:fim]
     @dias_periodo = dias_no_periodo(@inicio, @fim)
-    @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data)
+    @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
     @today = Date.today
     respond_to do |format|
