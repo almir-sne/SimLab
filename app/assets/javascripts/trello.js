@@ -126,6 +126,7 @@ function loadSimpleCards() {
             });
         });
         getToken();
+        loadBoards();
     });
 }
 
