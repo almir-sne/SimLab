@@ -154,7 +154,69 @@ function loadSimpleCards() {
             });
         });
         getToken();
+        loadBoards();
+        loadAbrevCards();
+        loadBoardLinks();
     });
+}
+
+function loadAbrevCards() {
+    $(".card-abrev").each(function(index, input) {
+        var parent = input.parentElement;
+        var card_id = input.id;
+        Trello.get("/cards/" + card_id, function(card) {
+            var div = $(parent).find(".day-link");
+            var text = getTime(input.value).replace(" hora(s)", " - ");
+            if (card.name.length > 10)
+                text += card.name.substr(0, 10) + "...";
+            else
+                text += card.name;
+            $("<br/>").appendTo(div);
+            $("<a>").attr({
+                href: card.url,
+                target: "_blank",
+                title: card.name
+            }).text(text).appendTo(div);
+            $(input).detach();
+        });
+    });
+}
+
+function loadBoards() {
+    $(".board-placeholder").each(function(index, input) {
+        var board_id = input.value;
+        Trello.get("/boards/" + board_id, function(board) {
+            $(input).after(board.name);
+            $(input).detach();
+        });
+    });
+}
+
+function loadBoardLinks() {
+    $(".board-link").each(function(index, link) {
+        var board_id = $(link).html().trim();
+        Trello.get("/boards/" + board_id, function(board) {
+            $(link).html(board.name);
+        });
+        if ($("#cartoes-table").length > 0) {
+            Trello.get("/boards/" + board_id + "/cards", function(cards) {
+                $(cards).each(function(ix, card) {
+                    var tr = $("<tr>").attr({
+                        style: "display: inherit"
+                    }).addClass("filter " + card.idBoard);
+                    var td = $("<td>");
+                    $("<a>").attr({
+                        href: card.url,
+                        id: card.id,
+                        target: "_blank"
+                    }).text(card.name).appendTo(td);
+                    td.appendTo(tr);
+                    tr.appendTo($("#cartoes-table"));
+                });
+            });
+        }
+    });
+
 }
 
 function getBoards() {

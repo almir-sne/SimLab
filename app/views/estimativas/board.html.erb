@@ -1,0 +1,24 @@
+<div class="blue-text" style="margin-left: 30px">
+  Planning Porco
+</div>
+
+<div class="blue-line" style="margin: 10px 10px">  </div>
+
+<div class="loggedin">
+  <h1 class="board-link" style="margin-left: 30px"> <%= @board %>  </h1>
+
+  <table id="cartoes-table" class="list-table">
+    <tr>
+      <th> Cartão </th>
+      <th> Estimativa </th>
+      <th> Rodada </th>
+      <th> Resultado </th>
+    </tr>
+  </table>
+</div>
+
+<%= select_tag :estimativa, options_for_select([["Estimar", nil], ["0.0", 0.0], ["0.5", 0.5],
+    ["1.0", 1.0], ["3.0", 3.0]]) %>
+<div class="loggedout">
+  Conecte ao Trello para continuar.
+</div>

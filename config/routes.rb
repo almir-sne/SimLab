@@ -1,4 +1,21 @@
 SinLab::Application.routes.draw do
+  resources :estimativas, :only => [:index] do
+    collection do
+      match 'board/:board_id' => "estimativas#board", :as => :board
+      get :cartao
+      post :estimar
+    end
+  end
+
+  resources :atividades, :only => [] do
+    collection do
+      get  :validar
+      post :mandar_validacao
+      get :cartoes
+      post :atualizar_cartoes
+      match "cartoes/listar" => "atividades#listar_atividades"
+    end
+  end
 
   post "cartoes/atualizar_cartoes"
   get "cartoes/estatisticas"
@@ -10,6 +27,12 @@ SinLab::Application.routes.draw do
       get :listar
       post :create_or_update
     end
+  end
+  
+  namespace :android do
+    resources :tokens,:only => [:create, :destroy]
+    match 'meses/:id/dias' => "meses#dias"
+    get "meses/index"
   end
 
   resources :banco_de_horas, :only => [:index] do

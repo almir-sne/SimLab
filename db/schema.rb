@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131008192621) do
+ActiveRecord::Schema.define(:version => 20131119163959) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -39,19 +39,18 @@ ActiveRecord::Schema.define(:version => 20131008192621) do
     t.text     "mensagem"
     t.integer  "avaliador_id"
     t.date     "data"
+    t.string   "cartao_id"
   end
 
   create_table "ausencias", :force => true do |t|
-    t.integer  "usuario_id"
-    t.integer  "mes_id"
     t.string   "justificativa"
     t.boolean  "abonada"
     t.string   "mensagem"
     t.integer  "avaliador_id"
     t.float    "horas"
-    t.integer  "dia"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "dia_id"
   end
 
   create_table "boards", :force => true do |t|
@@ -100,12 +99,21 @@ ActiveRecord::Schema.define(:version => 20131008192621) do
   end
 
   create_table "dias", :force => true do |t|
-    t.integer  "numero"
     t.datetime "entrada"
     t.datetime "saida"
     t.float    "intervalo"
     t.integer  "usuario_id"
     t.integer  "mes_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.date     "data"
+  end
+
+  create_table "estimativas", :force => true do |t|
+    t.integer  "cartao_id"
+    t.integer  "usuario_id"
+    t.float    "estimativa"
+    t.integer  "rodada"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -176,6 +184,8 @@ ActiveRecord::Schema.define(:version => 20131008192621) do
     t.boolean  "status"
     t.date     "data_de_nascimento"
     t.string   "authentication_token"
+    t.integer  "numero_usp"
+    t.string   "login_trello"
   end
 
   add_index "usuarios", ["email"], :name => "index_usuarios_on_email", :unique => true
