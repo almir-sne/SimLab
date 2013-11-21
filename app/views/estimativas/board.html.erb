@@ -3,23 +3,11 @@
 </div>
 
 <div class="blue-line" style="margin: 10px 10px">  </div>
-
 <div class="loggedin" id="list-div" style="margin-left: 30px">
-  <h1 id="selected-board"> <%= @board %>  </h1>
-
-  <%#*<table id="cartoes-table" class="list-table">%>
-    <%#*<tr>%>
-      <%#*<th> Cartão </th>%>
-      <%#*<th> Estimativa </th>%>
-      <%#*<th> Rodada </th>%>
-      <%#*<th> Resultado </th>%>
-    <%#*</tr>%>
-  <%#*</table>%>
+  <h1 id="selected-board"> </h1>
+  <input type="hidden" value="<%= @board %>" name="board" id="board"/>
 </div>
 
-<%= select_tag :estimativa, options_for_select([["Estimar", nil], ["0.0", 0], ["0.5", 0.5],
-    ["1", 1], ["2", 2], ["3", 3], ["5", 5], ["8", 8], ["13", 13], ["20", 20], ["40", 40],
-    ["infinito", -2], ["?", "-1"]]), :style => "display: none" %>
 <div class="loggedout">
   Conecte ao Trello para continuar.
 </div>

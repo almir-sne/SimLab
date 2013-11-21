@@ -11,7 +11,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131119163959) do
+ActiveRecord::Schema.define(:version => 20131121184332) do
+
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -23,15 +24,6 @@ ActiveRecord::Schema.define(:version => 20131119163959) do
     t.integer  "usuario_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "anexos", :force => true do |t|
-    t.string   "nome"
-    t.string   "tipo"
-    t.string   "arquivo"
-    t.integer  "usuario_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
   create_table "atividades", :force => true do |t|
@@ -68,11 +60,11 @@ ActiveRecord::Schema.define(:version => 20131119163959) do
   end
 
   create_table "cartoes", :force => true do |t|
-    t.string   "cartao_id"
-    t.integer  "atividade_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.integer  "duracao"
+    t.float    "estimativa"
+    t.integer  "rodada"
+    t.string   "trello_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "contas", :force => true do |t|
@@ -118,7 +110,7 @@ ActiveRecord::Schema.define(:version => 20131119163959) do
   create_table "estimativas", :force => true do |t|
     t.integer  "cartao_id"
     t.integer  "usuario_id"
-    t.float    "estimativa"
+    t.float    "valor"
     t.integer  "rodada"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false

@@ -165,40 +165,6 @@ function loadBoards() {
     });
 }
 
-function loadAbrevCards() {
-    $(".card-abrev").each(function(index, input) {
-        var parent = input.parentElement;
-        var card_id = input.id;
-        Trello.get("/cards/" + card_id, function(card) {
-            var div = $(parent).find(".day-link");
-            var text = getTime(input.value).replace(" hora(s)", " - ");
-            if (card.name.length > 10)
-                text += card.name.substr(0, 10) + "...";
-            else
-                text += card.name;
-            $("<br/>").appendTo(div);
-            $("<a>").attr({
-                href: card.url,
-                target: "_blank",
-                title: card.name
-            }).text(text).appendTo(div);
-            $(input).detach();
-        });
-    });
-}
-
-function loadBoards() {
-    $(".board-placeholder").each(function(index, input) {
-        var board_id = input.value;
-        Trello.get("/boards/" + board_id, function(board) {
-            $(input).after(board.name);
-            $(input).detach();
-        });
-    });
-}
-
-
-
 function loadBoardLinks() {
     $(".board-link").each(function(index, link) {
         var board_id = $(link).html().trim();
@@ -209,15 +175,15 @@ function loadBoardLinks() {
 }
 
 function loadBoardLists() {
-    if ($("#selected-board").length > 0) {
-        var board_id = $("#selected-board").html().trim();
+    if ($("#board").length > 0) {
+        var board_id = $("#board").val();
         var listDiv = $("#list-div");
         Trello.get("/boards/" + board_id, function(board) {
             $("#selected-board").html(board.name);
         });
         Trello.get("/boards/" + board_id + "/lists?cards=open&card_fields=name,url&fields=name", function(lists) {
             $(lists).each(function(ix, list) {
-                var h3 = $("<h3>").attr({
+                $("<h3>").attr({
                     "data-toggle": "collapse",
                     "data-target": "#list_" + ix,
                     style: "cursor: pointer"
@@ -228,8 +194,7 @@ function loadBoardLists() {
                 var table = $("<table>").addClass("list-table").appendTo(collapse);
                 var header = $("<tr>");
                 $("<th>").html("Cartão").appendTo(header);
-                $("<th>").html("Estimativa").appendTo(header);
-                $("<th>").html("Mais detalhes").appendTo(header);
+                $("<th>").html("Estimativas").appendTo(header);
                 header.appendTo(table);
                 $(list.cards).each(function(i, card) {
                     var tr = $("<tr>");
@@ -241,14 +206,18 @@ function loadBoardLists() {
                     }).text(card.name).appendTo(td);
                     td.appendTo(tr);
                     td = $("<td>");
-                    var select = $("#estimativa").clone();
-                    select.attr({
-                        id: "estimativa_" + card.id,
-                        name: "estimativa[" + card.id + "]",
-                        style: "display: inherit"
-                    }).appendTo(td);
+//                    var select = $("#estimativa").clone();
+//                    select.attr({
+//                        id: "estimativas_" + card.id,
+//                        name: "estimativas[" + card.id + "]",
+//                        style: "display: inherit"
+//                    }).appendTo(td);
+//                    td.appendTo(tr);
+                    $("<a>").attr({
+                        href: "/estimativas/cartao/" + card.id,
+                        target: "_blank"
+                    }).text("Estimar").appendTo(td);
                     td.appendTo(tr);
-                    $("<td>").appendTo(tr);
                     tr.appendTo(table);
                 });
             });

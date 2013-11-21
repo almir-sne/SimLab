@@ -1,9 +1,8 @@
 SinLab::Application.routes.draw do
-  resources :estimativas, :only => [:index] do
+  resources :estimativas, :only => [:index, :create] do
     collection do
       match 'board/:board_id' => "estimativas#board", :as => :board
-      get :cartao
-      post :estimar
+      match 'cartao/:cartao_id' => "estimativas#cartao", :as => :cartao
     end
   end
   

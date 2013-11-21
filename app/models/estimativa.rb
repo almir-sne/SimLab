@@ -1,3 +1,3 @@
 class Estimativa < ActiveRecord::Base
-  attr_accessible :cartao_id, :estimativa, :rodada, :usuario_id
+  attr_accessible :cartao_id, :valor, :rodada, :usuario_id
 end
