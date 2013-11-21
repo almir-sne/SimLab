@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   helper_method :javascript_include_view_js
-  helper_method :javascript_include_view_js_parsable
   
   def layout_by_resource
     if devise_controller?
@@ -14,8 +13,8 @@ class ApplicationController < ActionController::Base
   end
   
   def javascript_include_view_js
-    if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js.erb"
-      return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.erb" type="text/javascript"></script>'
+    if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js"
+      return "/assets/" + params[:controller] + "/" + params[:action]
     end
   end
   
