@@ -8,8 +8,10 @@ class AusenciasController < ApplicationController
   end
    
   def new
+    #arrumar permissões? dá pra cadastrar ausência de outra pessoa desse jeito
     @usuario_id = params[:usuario_id]
     @data = params[:data]
+    @tipo = params[:tipo]
   end
 
   def create
@@ -22,13 +24,13 @@ class AusenciasController < ApplicationController
     else
       flash[:error] = I18n.t("ausencias.create.failure")
     end
-    redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
+    redirect_to dias_path(data: params[:data], tipo: params[:tipo])
   end
 
   def index
     authorize! :update, :validations
     #filtrar as ausencias
-    hoje = Date.today
+    hoje = Date.today 
     #popular os combobox
     if current_usuario.role == "admin"
       equipe = Usuario.all(:order => "nome")

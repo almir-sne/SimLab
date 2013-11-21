@@ -24,7 +24,7 @@
       <% @meses.each_with_index do |m, i| %>
         <td>
           <%= link_to periodo_link(m[:inicio], m[:fim], @usuario.id, 'm', m[:inicio].month).html_safe,
-              dias_path(inicio: m[:inicio].to_formatted_s, fim: m[:fim].to_formatted_s, usuario_id: @usuario.id),
+              dias_path(inicio: m[:inicio].to_formatted_s, fim: m[:fim].to_formatted_s, usuario_id: @usuario.id, tipo: 'm'),
             :class => (tem_reprovacao?(m[:inicio],m[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
         </td>
         <% if (i + 1) % 6 == 0 %>
@@ -37,12 +37,12 @@
   </div>
 
   <div class="tab-pane active" id="periodos">
-  <table class="month-table" style="width: 100%">
+  <table class="month-table" styl ="width: 100%">
     <tr>
       <% @periodos.each_with_index do |p, i| %>
         <td>
           <%= link_to periodo_link(p.first, p.last, @usuario.id, 'p').html_safe,
-              dias_path(inicio: p.first.to_formatted_s, fim: p.last.to_formatted_s, usuario_id: @usuario.id),
+              dias_path(inicio: p.first.to_formatted_s, fim: p.last.to_formatted_s, usuario_id: @usuario.id, tipo: 'p'),
             :class => (tem_reprovacao?(p.first,p.last,@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
         </td>
         <% if (i + 1) % 6 == 0 %>
