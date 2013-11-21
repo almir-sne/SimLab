@@ -19,6 +19,7 @@ class Usuario < ActiveRecord::Base
   has_many :contas
   has_many :contratos
   has_many :coordenacoes
+  has_many :boards, :through => :projetos
 
   accepts_nested_attributes_for :address, :allow_destroy => true
   accepts_nested_attributes_for :telefones, :allow_destroy => true

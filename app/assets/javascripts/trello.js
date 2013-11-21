@@ -157,6 +157,7 @@ function loadSimpleCards() {
         loadBoards();
         loadAbrevCards();
         loadBoardLinks();
+        loadBoardLists();
     });
 }
 
@@ -192,18 +193,42 @@ function loadBoards() {
     });
 }
 
+
+
 function loadBoardLinks() {
     $(".board-link").each(function(index, link) {
         var board_id = $(link).html().trim();
         Trello.get("/boards/" + board_id, function(board) {
             $(link).html(board.name);
         });
-        if ($("#cartoes-table").length > 0) {
-            Trello.get("/boards/" + board_id + "/cards", function(cards) {
-                $(cards).each(function(ix, card) {
-                    var tr = $("<tr>").attr({
-                        style: "display: inherit"
-                    }).addClass("filter " + card.idBoard);
+    });
+}
+
+function loadBoardLists() {
+    if ($("#selected-board").length > 0) {
+        var board_id = $("#selected-board").html().trim();
+        var listDiv = $("#list-div");
+        Trello.get("/boards/" + board_id, function(board) {
+            $("#selected-board").html(board.name);
+        });
+        Trello.get("/boards/" + board_id + "/lists?cards=open&card_fields=name,url&fields=name", function(lists) {
+            $(lists).each(function(ix, list) {
+                var h3 = $("<h3>").attr({
+                    "data-toggle": "collapse",
+                    "data-target": "#list_" + ix,
+                    style: "cursor: pointer"
+                }).html(list.name).appendTo(listDiv);
+                var collapse = $("<div>").attr({
+                    id: "list_" + ix
+                }).addClass("collapse").appendTo(listDiv);
+                var table = $("<table>").addClass("list-table").appendTo(collapse);
+                var header = $("<tr>");
+                $("<th>").html("Cartão").appendTo(header);
+                $("<th>").html("Estimativa").appendTo(header);
+                $("<th>").html("Mais detalhes").appendTo(header);
+                header.appendTo(table);
+                $(list.cards).each(function(i, card) {
+                    var tr = $("<tr>");
                     var td = $("<td>");
                     $("<a>").attr({
                         href: card.url,
@@ -211,12 +236,20 @@ function loadBoardLinks() {
                         target: "_blank"
                     }).text(card.name).appendTo(td);
                     td.appendTo(tr);
-                    tr.appendTo($("#cartoes-table"));
+                    td = $("<td>");
+                    var select = $("#estimativa").clone();
+                    select.attr({
+                        id: "estimativa_" + card.id,
+                        name: "estimativa[" + card.id + "]",
+                        style: "display: inherit"
+                    }).appendTo(td);
+                    td.appendTo(tr);
+                    $("<td>").appendTo(tr);
+                    tr.appendTo(table);
                 });
             });
-        }
-    });
-
+        });
+    }
 }
 
 function getBoards() {
