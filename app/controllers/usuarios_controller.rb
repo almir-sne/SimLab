@@ -45,6 +45,13 @@ class UsuariosController < ApplicationController
   def update
     authorize! :update, Usuario
     @user = Usuario.find(params[:id])
+=begin # caso seja blob
+    if params[:usuario][:anexos_attributes][:blob]
+      anexos = params[:usuario][:anexos_attributes]
+      salva_anexos @user, anexos
+      params[:usuario].except! :anexos_attributes
+    end
+=end
     if @user.update_attributes(params[:usuario])
       flash[:notice] = "Usuário atualizado com sucesso"
       redirect_to edit_usuario_path(@user)
@@ -68,5 +75,32 @@ class UsuariosController < ApplicationController
     user = Usuario.find_by_nome(params[:name])
     render json: user.id
   end
+=begin  #caso seja blob
+  def show_anexo
+    anexo = Anexo.find params[:id]
+    send_data(anexo.arquivo_blob, :type => anexo.content_type, :filename => anexo.filename, :disposition => 'download')
+  end
 
+  private
+    def salva_anexos(usuario, anexos)
+      anexos.each do |num, anexo|
+        file = Anexo.find_or_initialize_by_id(anexo[:id])
+        if anexo[:_destroy] == "True"
+          file.destroy
+        else
+        debugger
+        input = anexo[:arquivo] unless anexo[:arquivo].nil?
+        file.nome         = anexo[:nome]
+        file.tipo         = anexo[:tipo]
+        file.data         = anexo[:data]
+        file.usuario_id   = usuario.id
+        file.filename     = input.original_filename
+        file.content_type = input.content_type.chomp
+        file.size         = input.size
+        file.arquivo_blob = input.read
+        file.save
+        end
+      end
+    end
+=end
 end

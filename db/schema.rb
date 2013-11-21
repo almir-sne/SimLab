@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20131118164642) do
     t.string   "tipo"
     t.string   "arquivo"
     t.integer  "usuario_id"
+    t.date     "data"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

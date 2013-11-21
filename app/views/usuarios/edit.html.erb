@@ -157,6 +157,7 @@
         <h3>Anexos</h3>
         <div class="container-fluid">
           <%= f.fields_for :anexos, :allow_destroy => true do |file| %>
+            <%= file.hidden_field :data, :value => Date.today %>
             <div class="row-fluid">
               <div class="span3">
                   <%= file.label :nome %>
@@ -164,21 +165,33 @@
               </div>
               <div class="span3">
                 <%= file.label :tipo %>
-                <%= file.text_field :tipo %>
+                <%= file.select :tipo, options_for_select(["RG", "CPF", "Carteirinha USP",
+                  "Comprovante de residência", "Atestado de matrícula", "Outros"], file.object.tipo)  %>
               </div>
-              <div class="span4">
+              <div class="span3">
                 <%= file.label :arquivo %>
                 <%= file.file_field :arquivo %>
               </div>
+             <!--
+             <div class="span1">
+                 file.label "Blob?" %>
+                 file.check_box :blob%>
+              </div>
+             -->
               <div class="span1">
-                <%= link_to "ver", file.object.arquivo_url %>
+                <% unless file.object.arquivo_url.nil? %>
+                  <%= link_to file.object.arquivo_url.split("/").last, file.object.arquivo_url %>
+                <% end %>
+                <!--
+                 link_to url_for(:controller => "usuarios", :action => "show_anexo", :id => file.object.id) %>
+                -->
               </div>
               <div class="span1">
                 <%= file.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
               </div>
-            <%end%>
+            </div>
+          <%end%>
           <%= f.link_to_add 'Adicionar anexo', :anexos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-          </div>
         </div>
       </div>
 
