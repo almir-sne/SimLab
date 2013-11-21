@@ -1,0 +1,31 @@
+<div class="blue-text" style="margin-left: 30px">
+  Pagamentos
+</div>
+
+<div class="blue-line">  </div>
+
+<h3 class="blue-text"> <%= @usuario.nome %>  </h3>
+
+<ul class="nav nav-tabs">
+  <li><a href="#salario" data-toggle="tab">Salário</a></li>
+  <li><a href="#tudo" data-toggle="tab">TUDO</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="salario">
+    <%= render "salario"%>
+  </div>
+  <div class="tab-pane" id="tudo">
+    <%= render "tudo"%>
+  </div>
+</div>
+<br></br><br></br>
+
+<div class="navbar-fixed-bottom toolbar">
+  <%= link_to 'Voltar', :back, :class => "btn default-button"%>
+  <% if can? :manage, Pagamento %>
+    <%= link_to "Novo Pagamento", "#new-pagamento-modal", :class => "btn default-button",
+     "data-toggle" => "modal", :role => "button", :style => "float: right; margin-right: 10px" %>
+  <%end%>
+</div>
+<%= render :partial => "modal"%>

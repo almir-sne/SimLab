@@ -1,14 +1,28 @@
-class Ausencia < ActiveRecord::Base
-  attr_accessible :abonada, :avaliador_id, :dia, :horas, :justificativa, :mensagem, :mes_id, :usuario_id
+  class Ausencia < ActiveRecord::Base
+
+  attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem,
+  :dia_id, :dia, :mes
   
-  belongs_to :mes
+  scope :data, lambda { |ano, mes, dia| Ausencia.ano(ano).mes(mes).dia(dia) }
+  scope :ano, lambda { |value| joins(:dia).where(['extract(year from data) = ?', value]) if value > 0 }
+  scope :mes, lambda { |value| joins(:dia).where(['extract(month from data) = ?', value]) if value > 0 }
+  scope :dia, lambda { |value| joins(:dia).where(['extract(day from data) = ?', value]) if value > 0 }
+  scope :usuario, lambda { |value| joins(:dia).where(['usuario_id = ?', value]) if value > 0 }
+  scope :aprovacao, lambda {|value|
+    if value == 3
+      where('aprovacao is null')
+    elsif value == 0 or value == 1
+      where(['aprovacao = ?', value])
+    end
+  }
+
   belongs_to :usuario
+  belongs_to :dia
+  belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"
   
-  validates :dia, :uniqueness => {:scope => :mes_id}
-  
-  def data
-    Date.new(mes.ano, mes.numero, dia)
+  def self.por_periodo(inicio, fim, usuario_id)
+    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id})
   end
   
   def horas=(val)
@@ -22,7 +36,7 @@ class Ausencia < ActiveRecord::Base
   
   def segundos
     if read_attribute(:horas).nil?
-      h = usuario.horario_data(data)/20 * 3600
+      h = dia.usuario.horario_data(dia.data)/20 * 3600
     else
       h = read_attribute(:horas)
     end

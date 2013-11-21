@@ -1,0 +1,207 @@
+<div class="blue-line">  </div>
+<br />
+<ul class="nav nav-tabs fix-color" id="myTab">
+  <li class="active"><a href="#periodos">Calendário</a></li>
+  <li><a href="#atividades">Atividades</a></li>
+  <li><a href="#ausencias_tab">Ausências</a></li>
+  <li><a href="#ausencias_equipe">Ausências da Equipe</a></li>
+</ul>
+
+<div class="tab-content">
+
+  <div class="tab-pane" id="ausencias_tab">
+    <table class="list-table days-table" id="ausencias">
+      <tr>
+        <th>Dia</th>
+        <th style="width: 60%">Justificativa </th>
+        <th>Abonada?</th>
+        <th></th>
+      </tr>
+      <% @ausencias.each do |ausencia| %>
+        <tr>
+          <td style="width: 11%">
+            <%= "#{ausencia.dia.data.day}  (#{t("date.abbr_day_names")[ausencia.dia.data.wday]})"%>
+          </td>
+          <td>
+            <%= ausencia.justificativa %>
+          </td>
+          <td>
+            <% if ausencia.abonada? %>
+              <i class="icon-ok"></i>
+            <% else %>
+              <i class="icon-remove"></i>
+            <% end %>
+          </td>
+          <td>
+            <%= form_tag( { :controller => :ausencias, :action => :ausencia, :id => ausencia.id },
+              {:remote => true, :method => :post, :class => "inline-form"} ) do %>
+              <%= hidden_field_tag :usuario_id, @usuario.id %>
+              <%= link_to_submit ' ', :class => 'icon-edit nohover', :style => "margin-right: 10px", :title => "Editar" %>
+            <% end %>
+            <%= link_to '<i class="icon-trash"> </i>'.html_safe,
+              ausencia_path(ausencia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+              :class => 'nohover', :title => "Excluir"%>
+          </td>
+        </tr>
+      <% end %>
+      <tr style="border-top:thin solid; border-color:black">
+        <td colspan=3>Horas totais de faltas abonadas </td>
+        <td><%= horas_ausencias_abonadas(@inicio, @fim, @usuario.id) %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="tab-pane active" id="periodos">
+    <table class="day-table day-calendario" style="width: 100%">
+      <tr>
+        <% t("date.abbr_day_names").each do |p| %>
+          <th><%= p %></th>
+        <% end %>
+      </tr>
+      <tr>
+        <% dia_da_semana = 0 %>
+        <% while @inicio.wday != dia_da_semana %>
+          <% dia_da_semana = dia_da_semana + 1 %>
+          <td></td>
+        <% end %> 
+        <% (@inicio..@fim).each do |dia| %>
+          <td class="<%= 'today' if dia == @today %>">
+            <div class="dropdown toggle">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
+                <i class="icon-collapse"></i>
+              </a>
+              <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+                <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> dia, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+              </ul>
+            </div>
+            <%= monta_dia_link("periodos", dia, @usuario.id, @equipe) %>
+            <% unless @dias[dia].blank? %>
+              <% @dias[dia][0].atividades.each do |atividade| %>
+                <input type="hidden" class="card-abrev" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
+              <% end %>
+            <% end %>
+          </td>
+          <% if dia.wday == 6 %>
+          </tr><tr>
+          <% end %>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+
+  <div class="tab-pane" id="ausencias_equipe">
+      <table class="day-table" style="width: 100%">
+        <tr>
+          <% t("date.abbr_day_names").each do |p| %>
+            <th><%= p %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% dia_da_semana = 0 %>
+          <% while @inicio.wday != dia_da_semana %>
+            <% dia_da_semana = dia_da_semana + 1 %>
+            <td></td>
+          <% end %> 
+          <% (@inicio..@fim).each do |data| %>
+            <td>
+              <div class="dropdown toggle">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
+                  <i class="icon-collapse"></i>
+                </a>
+                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                  <%= link_to "Atividades...", new_dia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+                  <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+                </ul>
+              </div>
+              <%= monta_dia_link("ausencia_equipe", data, @usuario.id, @equipe) %>
+            </td>
+            <% if data.wday == 6 %>
+            </tr><tr>
+            <% end %>
+          <% end %>
+        </tr>
+      </table>
+    </div>
+
+ <div class="tab-pane" id="atividades">
+    <table class="list-table days-table" id="meses">
+      <tr>
+        <th>Dia</th>
+        <th>Entrada</th>
+        <th>Saída</th>
+        <th>Intervalo</th>
+        <th style="padding-left: 25px;"><%= t('atividades.title') %></th>
+        <th>Horas Aprovadas</th>
+        <th></th>
+      </tr>
+      <% @dias.values.flatten.each do |dia| %>
+        <% if !dia.atividades.blank? %>
+          <tr>
+            <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
+            <td><%= dia.entrada.strftime("%H:%M") %></td>
+            <td><%= dia.saida.strftime("%H:%M") %></td>
+            <td><%= dia.intervalo.strftime("%H:%M") %></td>
+            <td style="width: 60%; border: none">
+              <% dia.atividades.each do |atividade| %>
+                <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
+                  Observação: <br/>
+                  <%=  atividade.observacao%>
+                  <br />
+                  <input type="hidden" class="card-placeholder" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
+                </div>
+              <% end %>
+            </td>
+            <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
+              <%= dia.horas_atividades_formato + "h" %>
+            </td>
+            <td style="width: 13%;">
+              <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, inicio: @inicio.to_formatted_s,
+                fim: @fim.to_formatted_s, id: dia.id), :class => 'icon-edit nohover'%>
+
+              <%= link_to '<i class="icon-trash"> </i>'.html_safe,
+                dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+                :class => 'nohover', :title => "Excluir"%>
+              <% if dia.tem_reprovacao? %>
+                <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr style="border-top:thin solid; border-color:black">
+        <td colspan=5>Total incluindo faltas abonadas </td>
+        <td style="padding: 22px"><%= horas_trabalhadas_aprovadas(@inicio, @fim, @usuario.id) %>h</td>
+      </tr>
+    </table>
+    <br />
+    <br />
+    <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>
+  </div>
+
+</div>
+
+<script>
+  var url = "/banco_de_horas/show_mes?user_id="
+  $('#menu_select').bind('change', function() {
+    location.href = url + $(this).val()
+  });
+  $(".month-table").height($(".month-table").width() + 20)
+
+  $('#myTab a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  })
+
+  $(".day-calendario td").hover(
+          function() {
+            $(this).children().eq(0).show();
+          },
+          function() {
+            $(this).children().eq(0).hide();
+          }
+  );
+  $("a.day-link").on("dragstart", function(e) {
+         return false;
+  });
+</script>

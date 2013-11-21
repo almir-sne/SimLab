@@ -6,7 +6,7 @@ SinLab::Application.routes.draw do
       post :estimar
     end
   end
-
+  
   resources :atividades, :only => [] do
     collection do
       get  :validar
@@ -21,11 +21,11 @@ SinLab::Application.routes.draw do
   get "cartoes/estatisticas"
   get "cartoes/atividades"
 
-  resources :pagamentos, :only => [:index] do
+
+  resources :pagamentos do
     collection do
-      get :meses
-      get :listar
-      post :create_or_update
+      get  :periodos
+      get  :listar
     end
   end
   
@@ -38,9 +38,7 @@ SinLab::Application.routes.draw do
   resources :banco_de_horas, :only => [:index] do
     collection do
       get  :show_mes
-      get  :validar
       get  :log_de_atividades
-      post :mandar_validacao
     end
   end
 
@@ -70,10 +68,11 @@ SinLab::Application.routes.draw do
   resources :dias do
     collection do
       get :editar_por_data
+      get :periodos
     end
   end
 
-  resources :ausencias, :only => [:index, :destroy, :create] do
+  resources :ausencias, :only => [:index, :destroy, :create, :new] do
     collection do
       post :validar
       post :ausencia
@@ -87,7 +86,7 @@ SinLab::Application.routes.draw do
   end
 
   authenticated :usuario do
-    root :to => 'banco_de_horas#show_mes'
+    root :to => 'dias#periodos'
   end
   root :to => "home#index"
   # The priority is based upon order of creation:

@@ -20,7 +20,7 @@ feature "Atividades" do
       select "00", :from => "dia_atividades_attributes_0_horas_5i"
       fill_in "dia_atividades_attributes_0_observacao", :with => "Apenas uma observacao!"
       click_button "Ok"
-      page.should have_content(I18n.t("banco_de_horas.create.sucess"))
+      page.should have_content(I18n.t("atividades.create.sucess"))
 	  end
 
 #	  it "sobre novas" do

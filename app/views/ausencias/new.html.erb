@@ -1,22 +1,19 @@
-<div class="modal-body">
-  <%= form_for(@ausencia, :url => :ausencias, :method => :post) do |f| %>
-    <%= hidden_field_tag :user_id, @user.id %>
-    <%= hidden_field_tag :mes, @month.id %>
+<div class="blue-line" style="margin: 20px 10px">  </div>
+
+<%= form_for(@ausencia, :url => :ausencias, :method => :post) do |f| %>
+  <%= hidden_field_tag :usuario_id, @usuario_id %>
+  <%= hidden_field_tag :data, @data %>
+  <%= hidden_field_tag :dia_id, @dia_id %>
+  <div class="container-fluid"> 
     <div class="row-fluid">
       <div class="span6">
-        <%= f.label :dia %>
-        <%= f.select :dia, options_for_select(@diasdomes, ((@ausencia.dia.blank?)?
-              Time.now.in_time_zone('Brasilia').day : @ausencia.dia)), {}, :style => 'width: 55px;'%>
         <%= f.label :justificativa %>
         <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
-
         <div class="actions">
-          <button class="btn default-button" data-dismiss="modal" aria-hidden="true">
-            Cancelar
-          </button>
           <%= f.submit "Ok", :class => "btn default-button" %>
         </div>
       </div>
+
       <div class="span6">
         <h4>Status </h4>
         <% if @ausencia.abonada? %>
@@ -32,5 +29,5 @@
         <% end %>
       </div>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>

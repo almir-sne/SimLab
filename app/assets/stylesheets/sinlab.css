@@ -54,7 +54,7 @@
     text-align: center;
 }
 
-.month-table {
+.month-table td {
     margin: 5px !important;
     height: 200px;
     font-size: 25px;
@@ -73,6 +73,38 @@
 .month-table a:hover {
     color: inherit;
     background-color: inherit;
+}
+
+.day-table td {
+    height: 100px;
+    font-size: 15px;
+    font-family: Arial,Helvetica,sans-serif;
+    color: white;
+    border: 5px white solid;
+}
+
+.day-table a {
+    color: inherit;
+}
+
+.day-table .toggle {
+    float: right;
+    padding: 6%;
+    display: none;
+}
+
+.day-table a:hover {
+    color: inherit;
+    background-color: inherit;
+}
+
+.day-table th {
+    font-size: 20px;
+    font-family: Arial,Helvetica,sans-serif;
+    width: 5%;
+    background-color: gainsboro;
+    padding: 5px;
+    border: 5px solid white;
 }
 
 .blue-line {
@@ -175,18 +207,25 @@
     padding: 0;
 }
 
-.days-table td {
-    border: none;
-}
-
 .month-link {
     width: 100%;
     display: block;
     height: 100%;
-    padding-top: 30%;
+    padding: 30% 0;
 }
 
 .month-link:hover {
+    text-decoration: none
+}
+
+.day-link {
+    width: 96%;
+    display: block;
+    height: 100%;
+    padding: 2%;
+}
+
+.day-link:hover {
     text-decoration: none
 }
 
@@ -237,7 +276,7 @@
 }
 
 #output {
-    padding: 4px;
+    padding: 10px;
 }
 
 .card {
@@ -279,7 +318,7 @@
     background-color: #eee;
     border-radius: 10px;
     padding: 10px;
-    width: 85%;
+    margin-bottom: 20px;
 }
 
 .modal {
@@ -308,6 +347,14 @@
     border-radius: 10px;
     margin-bottom: 10px;
     width: 85%
+}
+
+.gray-link {
+    background-color: #666666;
+}
+
+.gray-link:hover {
+    background-color: #444444 !important;
 }
 
 .red-link {
@@ -342,17 +389,6 @@
     padding: 5px;
 }
 
-.card-slider > #slider {
-    width: 60%;
-    margin-left: 5px;
-    display: inline-block;
-}
-
-.card-slider > #time {
-    display: inline-block;
-    float: right;
-}
-
 .nodrop {
     background-color: inherit;
     margin-bottom: 10px;
@@ -371,9 +407,9 @@
 }
 
 .typeahead {
-  max-height: 200px;
-  overflow-y: auto;
-  overflow-x: hidden;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .default-date {
@@ -390,4 +426,45 @@
 
 .pagination a:hover {
     color: black;
+}
+
+#boards {
+    background-color: #EEE;
+    border-radius: 0px 10px 10px 10px;
+    padding: 0 10px;
+    margin: 0px 10px 10px 10px;
+}
+
+#collapse-button {
+    padding: 5px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 10px;
+}
+
+#collapse-button:hover, .nav-tabs>li>a:hover {
+    cursor: pointer;
+    color: black;
+}
+
+ul .submenu {
+    background-color: inherit;
+    color: #000;
+}
+
+.dropdown-menu {
+    padding: 0;
+    border: none;
+}
+
+#projetos .projetos-header {
+    padding-top: 10px
+}
+
+#projetos .projetos-body {
+    padding-top: 10px
+}
+
+.day-table td.today {
+    border: 6px solid #FF00CC;
 }

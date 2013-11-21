@@ -10,7 +10,7 @@ class Ability
     elsif user.role == "diretor"
       can :manage, Projeto
       can :manage, Ausencia
-      can :manage, Cartao
+      can :manage, Atividade
       can [:create, :custom_create, :read ], Usuario
       can [:update, :see], Usuario, :id => true, :id => user.id
       unless user.projetos_coordenados.blank?
@@ -20,12 +20,12 @@ class Ability
       unless user.projetos_coordenados.blank?
         can :update, :validations
       end
-      can :read,    Usuario
-      can [:read,:create], Dia
-      can [:destroy,:update], Dia, :id => true, :id => user.id
-      can :update,  [Usuario, Atividade],   :id => true, :id => user.id
-      can [:meses, :listar], Pagamento
-      can [:destroy, :create, :ausencia], Ausencia
+      can :read,                Usuario
+      can [:read,:create],      Dia
+      can [:destroy,:update],   Dia, :id => true, :id => user.id
+      can :update,              [Usuario, Atividade],   :id => true, :id => user.id
+      can [:periodos, :listar], Pagamento
+      can [:destroy, :create],  Ausencia
     end
 
 

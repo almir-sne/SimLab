@@ -45,7 +45,7 @@ module DiasHelper
     if formato == "p"
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
       "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)}</b>"
-    elsif formato == "m"
+    elsif formato = "m"
       "<b> #{t('date.month_names')[mes]} <br/> <br/> </b>" +
     "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
     end

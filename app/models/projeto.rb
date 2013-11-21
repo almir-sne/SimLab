@@ -11,7 +11,7 @@ class Projeto < ActiveRecord::Base
   belongs_to :super_projeto, :class_name => "Projeto"
   has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id", :dependent => :nullify
   has_many :atividades
-  has_many :usuarios,  :through => :workon
+  has_many :usuarios,  :through => :workons
   has_many :workons, :dependent => :destroy
   has_many :boards
   accepts_nested_attributes_for :workons, :allow_destroy => true
@@ -26,7 +26,6 @@ class Projeto < ActiveRecord::Base
      #self.usuarios.includes(:workon).where("workons.coordenador" => true) |
        #(super_projeto.nil? ? [] : super_projeto.try(:usuarios).includes(:workon).where("workons.coordenador" => true))
   #end
-
 
   def horas_totais
     if sub_projetos.blank?
@@ -44,5 +43,9 @@ class Projeto < ActiveRecord::Base
     else
       sub_projetos.map{ |proj| proj.valor }.sum
     end
+  end
+  
+  def equipe
+  
   end
 end

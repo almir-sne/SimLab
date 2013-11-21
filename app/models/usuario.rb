@@ -4,22 +4,24 @@ class Usuario < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable 
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nome
   attr_accessible :entrada_usp, :saida_usp, :cpf, :contratos_attributes
   attr_accessible :role, :address_id, :formado, :status, :data_de_nascimento
   attr_accessible :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso
+  attr_accessible :numero_usp, :login_trello
 
   has_one  :address, :dependent => :destroy
   has_many :projetos, :through => :workons
+  has_many :boards, :through => :projetos
   has_many :workons, :dependent => :destroy
   has_many :telefones
   has_many :contas
   has_many :contratos
   has_many :coordenacoes
-  has_many :boards, :through => :projetos
+  has_many :ausencias, :through => :dias
 
   accepts_nested_attributes_for :address, :allow_destroy => true
   accepts_nested_attributes_for :telefones, :allow_destroy => true
@@ -49,7 +51,7 @@ class Usuario < ActiveRecord::Base
   end
   
   def equipe_coordenada_por_projetos(projeto)
-  Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
+    Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
  end
 
   def horario_data(data)
@@ -74,6 +76,10 @@ class Usuario < ActiveRecord::Base
       end
     end
     return hash
+  end
+  
+  def contrato_atual
+   self.contratos.order(:fim).last
   end
 
 end

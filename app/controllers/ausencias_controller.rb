@@ -6,36 +6,29 @@ class AusenciasController < ApplicationController
     ausencia.destroy
     redirect_to :back
   end
-  
-  def create
-    ausencia = Ausencia.find_by_id(params[:dia_id])
-    if ausencia.blank?
-      ausencia = Ausencia.new
-    end
-    ausencia.update_attributes(params[:ausencia])
-    ausencia.usuario_id = params[:user_id]
-    ausencia.mes_id = params[:mes]
-    if ausencia.save
-      flash[:notice] = I18n.t("banco_de_horas.create.sucess")
-    else
-      flash[:error] = I18n.t("banco_de_horas.create.failure")
-    end
-    redirect_to banco_de_horas_path(:month => ausencia.mes.numero,
-      :year => ausencia.mes.ano, :user => ausencia.usuario.id)
+   
+  def new
+    @usuario_id = params[:usuario_id]
+    @data = params[:data]
   end
-  
+
+  def create
+    ausencia = Ausencia.new
+    ausencia.dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), params[:usuario_id].to_i)
+    ausencia.update_attributes(params[:ausencia])
+    data = ausencia.dia.data
+    if ausencia.save
+      flash[:notice] = I18n.t("ausencias.create.success")
+    else
+      flash[:error] = I18n.t("ausencias.create.failure")
+    end
+    redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
+  end
+
   def index
     authorize! :update, :validations
     #filtrar as ausencias
     hoje = Date.today
-    meses_id = Mes.find_all_by_numero_and_ano(meses_selecionados(params[:mes], hoje), anos_selecionados(params[:ano], hoje)).collect{|month| month.id }
-    dias_selecionados  = (params[:dia].nil? || params[:dia] == "-1") ? (1..31).to_a : params[:dia]
-    @ausencias = @ausencias.where(
-      :abonada => nil,
-      :mes_id => meses_id,
-      :usuario_id => usuarios_selecionados(params[:usuario_id]),
-      :dia => dias_selecionados
-    )
     #popular os combobox
     if current_usuario.role == "admin"
       equipe = Usuario.all(:order => "nome")
@@ -54,8 +47,9 @@ class AusenciasController < ApplicationController
     @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
+    @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil])
   end
-  
+
   def validar
     ausencias = params[:ausencias]
     ausencias.each do |id, a|
@@ -65,14 +59,15 @@ class AusenciasController < ApplicationController
       ausencia.update_attribute(:avaliador_id, current_user.id)
       ausencia.update_attribute(:horas, a[:horas])
     end
-    flash[:notice] = I18n.t("ausencia.validation.sucess")
+    flash[:notice] = I18n.t("ausencia.validation.success")
     redirect_to ausencias_path
   end
-  
+
    def ausencia
-    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
-    @month = Mes.find(params[:mes])
-    @diasdomes = lista_dias_no_mes(@month.ano, @month.numero)
+    @usuario = Usuario.where(id: params[:usuario_id]) || current_user
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @dias_periodo = dias_no_periodo(@inicio, @fim)
     if params[:id].nil?
       @ausencia =  Ausencia.new
     else

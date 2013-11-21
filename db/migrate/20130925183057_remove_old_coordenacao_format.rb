@@ -3,8 +3,6 @@ class RemoveOldCoordenacaoFormat < ActiveRecord::Migration
    remove_column :workons, :coordenador
   end
   
-  #TODO: arrumar migration
-
   def down
     add_column :workons, :coordenador, :boolean, :default => false
     Coordenacao.all.each do |c|

@@ -1,27 +1,5 @@
 pt-BR:
   date:
-    abbr_day_names:
-    - dom
-    - seg
-    - ter
-    - qua
-    - qui
-    - sex
-    - sáb
-    abbr_month_names:
-    -
-    - Jan
-    - Fev
-    - Mar
-    - Abr
-    - Mai
-    - Jun
-    - Jul
-    - Ago
-    - Set
-    - Out
-    - Nov
-    - Dez
     day_names:
     - Domingo
     - Segunda
@@ -30,10 +8,22 @@ pt-BR:
     - Quinta
     - Sexta
     - Sábado
-    formats:
-      default: ! '%d/%m/%Y'
-      long: ! '%d de %B de %Y'
-      short: ! '%d de %B'
+    abbr_day_names:
+    - dom
+    - seg
+    - ter
+    - qua
+    - qui
+    - sex
+    - sáb
+    abbr_day_names_cap:
+    - Dom
+    - Seg
+    - Ter
+    - Qua
+    - Qui
+    - Sex
+    - Sáb
     month_names:
     -
     - Janeiro
@@ -48,6 +38,24 @@ pt-BR:
     - Outubro
     - Novembro
     - Dezembro
+    abbr_month_names:
+    -
+    - jan
+    - fev
+    - mar
+    - abr
+    - mai
+    - jun
+    - jul
+    - ago
+    - set
+    - out
+    - nov
+    - dez
+    formats:
+      default: ! '%d/%m/%Y'
+      long: ! '%d de %B de %Y'
+      short: ! '%d de %B'
     order:
     - :day
     - :month
@@ -219,16 +227,14 @@ pt-BR:
         remember_me: "Lembre-se de mim"
       projeto:
         descricao: "Descrição"
-      banco_de_horas:
-        observacao: "Observações"
 
   unauthorized:
     manage:
       all: "Você não está autorizado a acessar esse recurso"
   messages:
     logged_in: "Logado como %{email}. Esse não é você?"
-    next: Próximo
-    previous: Anterior
+    next: 'Próximo'
+    previous: 'Anterior'
   projetos:
     create:
       success: "Projeto criado com sucesso."
@@ -236,24 +242,31 @@ pt-BR:
     update:
       success: "Projeto atualizado com sucesso."
       failure: "Erro na atualização do projeto."
-  banco_de_horas:
+  atividades:
     create:
-      success: "Cadastro criado/atualizado com sucesso."
+      success: "Atividade(s) criada(s) com sucesso!"
       failure: "Erro na criação/atualização do cadastro."
     update:
       success: "Banco de horas atualizado com sucesso."
     validation:
       success: "Atividades validadas com sucesso."
       failure: "Erro ao validar atividades."
+    title: "Atividades"
+  ausencias:
+    create:
+      success: "Ausência cadastrada com sucesso."
+      failure: "Erro na no cadastro da ausência."
+    update:
+      success: "Dados da ausência foram atualizados com sucesso."
+    validation:
+      success: "Ausência(s) validadas com sucesso."
+      failure: "Erro ao validar ausências."
+    title: "Ausências"
   usuario:
     create:
       failure: "Não foi possível salvar o registro."
     delete:
       success: "Usuario apagado com sucesso."
-  atividades:
-    create:
-      success: "Atividade(s) criada(s) com sucesso!"
-    title: "Atividades"
   simlab:
     titulo: "SimLab"
   funcionalidade:
@@ -269,4 +282,15 @@ pt-BR:
   ausencia:
     validation:
       sucess: "Ausencias validadas"
-      
+  contrato:
+    dia_inicio_periodo:
+      nil: "Há contratos sem período definido!"
+  pagamento:
+    create:
+      success: "Pagamento adicionado com sucesso!"
+      failure: "Não foi possivel adicionar o Pagamento"
+    delete:
+      success: "Pagamento Apagado com sucesso!"
+      failure: "Não foi possivel apagar o Pagamento"
+  will_paginate:
+    page_gap: "..."

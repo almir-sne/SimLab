@@ -2,18 +2,11 @@ class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
   def new
-    @year = params[:ano].nil?  ? Date.today.year  : params[:ano]
-    @user = params[:user_id].nil?  ? current_user : Usuario.find(params[:user_id])
-    @month = Mes.find(params[:mes])
-    @diasdomes = (1..(Date.new(params[:ano].to_i, @month.numero, 5).at_end_of_month.day)).to_a
-    if params[:id].nil?
-      @dia =  Dia.new
-      @dia.atividades.build
-    else
-      @dia =  Dia.find(params[:id])
-    end
-    @projetos = @user.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
-    @projetos_boards = Projeto.all.to_a.each_with_object({}){ |c,h| h[c.id] = c.boards.collect {|c| c.board_id }}.to_json.html_safe
+    @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], params[:usuario_id])
+    @usuario = Usuario.find(params[:usuario_id])
+    @data = params[:data]
+    @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     respond_to do |format|
       format.js
       format.html
@@ -21,17 +14,15 @@ class DiasController < ApplicationController
   end
 
   def create
-    dia = Dia.find_by_id(params[:dia_id])
-    if dia.blank?
-      dia = Dia.new
+    if params[:dia_id].blank?
+      dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
+    else
+      dia = Dia.find(params[:dia_id])
     end
     dia_success = dia.update_attributes(
-      :numero => params[:dia][:numero],
       :entrada => convert_date(params[:dia], "entrada"),
       :saida => convert_date(params[:dia], "saida"),
       :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
-      :mes_id => params[:mes],
-      :usuario_id => params[:user_id]
     )
     atividades_success = true
     params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
@@ -40,6 +31,7 @@ class DiasController < ApplicationController
         atividade = Atividade.new
       end
       if atividade_attr["_destroy"] == "1" and !atividade.blank?
+        
         atividade.destroy()
       else
         atividades_success = atividades_success and atividade.update_attributes(
@@ -47,35 +39,21 @@ class DiasController < ApplicationController
           :observacao => atividade_attr["observacao"],
           :projeto_id => atividade_attr["projeto_id"],
           :dia_id => dia.id,
-          :mes_id => params[:mes],
-          :usuario_id => params[:user_id],
+          :usuario_id => dia.usuario.id,
           :aprovacao => nil,
+          :cartao_id => atividade_attr["cartao_id"],
           :data => dia.data
         )
-        unless atividade_attr[:trello].blank?
-          atividade_attr[:trello].each_key do |k|
-            c = Cartao.where(:atividade_id => atividade.id, :cartao_id => k).last
-            if c.blank? and atividade_attr[:trello][k][:check]
-              c = Cartao.new(:atividade_id => atividade.id, :cartao_id => k,
-                :duracao => atividade_attr[:trello][k][:slider].to_i)
-              c.save
-            elsif !c.blank? and !atividade_attr[:trello][k][:check]
-              c.destroy
-            elsif !c.blank? and atividade_attr[:trello][k][:check]
-              c.duracao = atividade_attr[:trello][k][:slider]
-              c.save
-            end
-            Cartao.update_on_trello(params[:key], params[:token], k)
-          end
-        end
       end
+      Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
     end
     if dia_success and atividades_success
-      flash[:notice] = I18n.t("banco_de_horas.create.success")
+      flash[:notice] = I18n.t("atividades.create.success")
     else
-      flash[:error] = I18n.t("banco_de_horas.create.failure")
+      flash[:error] = I18n.t("atividades.create.failure")
     end
-    redirect_to banco_de_horas_path(:month => Mes.find(params[:mes]).numero, :year => params[:ano], :user => params[:user_id])
+    periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
+    redirect_to dias_path(inicio: periodo.first.to_formatted_s, fim: periodo.last.to_formatted_s, usuario: dia.usuario.id)
   end
 
   def destroy
@@ -85,12 +63,44 @@ class DiasController < ApplicationController
   end
 
   def editar_por_data
-    dia = Dia.joins(:mes).where(:numero => params[:dia], :usuario_id => params[:usuario_id], :mes => {:numero => params[:mes], :ano => params[:ano]}).first
+    dia = Dia.find_by_data_and_usuario_id(params[:data], params[:usuario_id])
     if (!dia.nil?) 
       redirect_to edit_dia_path(dia.id)
     else 
       redirect_to new_dia_path
     end
+  end
+  
+  def index
+    if params[:usuario_id].nil?
+      @usuario = current_user
+    else
+      @usuario = Usuario.find(params[:usuario_id])
+    end
+    @inicio = Date.parse params[:inicio]
+    @fim = Date.parse params[:fim]
+    @dias_periodo = dias_no_periodo(@inicio, @fim)
+    @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+    @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos}).group(:id).order(:nome)
+    @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
+    @today = Date.today
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+  
+  def periodos
+    if params[:usuario_id].nil?
+      @usuario = current_user
+    else
+      @usuario = Usuario.find(params[:usuario_id])
+    end
+    @ano = params[:ano] || Date.today.year
+    @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
+    contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+    @periodos = contrato.periodos_por_ano(@ano.to_i)
   end
   
   private

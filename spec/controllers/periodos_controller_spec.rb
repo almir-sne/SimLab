@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe CartoesController do
+describe PeriodosController do
 
-  describe "GET 'estatisticas'" do
+  describe "GET 'index'" do
     it "returns http success" do
-      get 'estatisticas'
+      get 'index'
       response.should be_success
     end
   end

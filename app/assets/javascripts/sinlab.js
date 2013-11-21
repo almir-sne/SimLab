@@ -13,28 +13,28 @@ function pega_horas_dia()
 }
 
 function pega_horas_atividade() {
-    var atividadeH =  parseInt($("#dia_atividades_attributes_0_horas_4i").val());
-    var atividadeM =  parseInt($("#dia_atividades_attributes_0_horas_5i").val());
-    return(atividadeH *60 + atividadeM);
+    var atividadeH = parseInt($("#dia_atividades_attributes_0_horas_4i").val());
+    var atividadeM = parseInt($("#dia_atividades_attributes_0_horas_5i").val());
+    return(atividadeH * 60 + atividadeM);
 }
 
 //@author rezende
 function autocomplete_source(ac_source) {
-  $('.typeahead').typeahead({
-    source: ac_source, 
-    minLength: 0, 
-    items: ac_source.length,
-    //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
-    matcher: function(item) {
-      if (this.query == "*") 
-        return true;
-      else
-        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
-          return true;
+    $('.typeahead').typeahead({
+        source: ac_source,
+        minLength: 0,
+        items: ac_source.length,
+        //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
+        matcher: function(item) {
+            if (this.query == "*")
+                return true;
+            else
+            if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+                return true;
+            }
+            return false;
         }
-      return false
-    }
-  });
+    });
 }
 
 function toggleAusencia() {
@@ -51,19 +51,6 @@ function toggleMeses() {
     $("#meses-button").hide();
 }
 
-function escondeProjetos() {
-    var seletores = $(".fields:visible > .projeto-seletor");
-    seletores.children().show();
-    seletores.each(function(i, e) {
-        seletores.each(function(j, f) {
-            if (e != f)
-                $($(f).find('[value=' + e.value + ']').hide());
-            if ($(f.selectedOptions).css('display') == 'none')
-                getFirstValid(f);
-        });
-    });
-}
-
 function getFirstValid(seletor) {
     seletor.value = "";
     $(seletor.children).each(function(i, e) {
@@ -72,4 +59,24 @@ function getFirstValid(seletor) {
             return;
         }
     });
+}
+
+function toggleObservacao(obj) {
+    $(obj).next().toggle();
+}
+
+function ajustaAltura() {
+    var height1 = $(window).height() - $("#atividades-title").height() -
+            $("#dropover").height() - $("#upper-bar").height() - 170;
+    var height2 = $(window).height() - $("#upper-bar").height() - $("#boards").height()
+            - $("#collapse-button").height() - 150;
+    $("#atividade-panel").height(height1);
+    $("#output").animate({height: height2}, 400);
+}
+
+function toggleCollapse(obj) {
+    if (obj.children[0].className == "icon-chevron-sign-right")
+        obj.children[0].className = "icon-chevron-sign-down";
+    else
+        obj.children[0].className = "icon-chevron-sign-right"
 }

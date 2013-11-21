@@ -1,19 +1,23 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :entrada, :intervalo, :mes_id, :numero, :saida, :usuario_id
-
-  belongs_to :usuario
+  attr_accessible :entrada, :intervalo, :numero, :saida, :usuario_id, :data
+  
   belongs_to :mes
+  belongs_to :usuario
   has_many :atividades, :dependent => :destroy
+  has_many :ausencias
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
 
   attr_accessible :atividades_attributes
 
-  validates :numero, :uniqueness => {:scope => :mes_id}, :presence => true
-  validates :mes_id, :presence => true
+  validates :data, :uniqueness => {:scope => :usuario_id}, :presence => true
   validates :usuario_id, :presence => true
   #  validate :validar_horas
 
+  def self.por_periodo(inicio, fim, usuario_id)
+    Dia.where(usuario_id: usuario_id, data: inicio..fim)
+  end
+  
   def entrada
     read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).utc
   end
@@ -104,8 +108,8 @@ class Dia < ActiveRecord::Base
     end
   end
 
-  def data
-    Date.new(mes.ano, mes.numero, numero)
+  def tem_atividades?
+    return 
   end
 
   private

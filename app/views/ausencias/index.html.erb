@@ -48,8 +48,8 @@
     <% @ausencias.each do |ausencia| %>
       <tr>
         <%= hidden_field_tag "ausencias[#{ausencia.id}[id]]",ausencia.id                %>
-        <td><%= ausencia.data.strftime("%d/%m/%Y")                                        %></td>
-        <td><%= ausencia.usuario.nome                                                     %></td>
+        <td><%= ausencia.dia.data.strftime("%d/%m/%Y")                                        %></td>
+        <td><%= ausencia.dia.usuario.nome                                                     %></td>
         <td>
           <%= ausencia.justificativa                                                       %>
         </td>

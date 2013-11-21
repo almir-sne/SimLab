@@ -1,0 +1,66 @@
+<div class="blue-text">
+  <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, periodos_dias_path(:ano => @ano.to_i - 1, :usuario_id => @usuario.id) %>
+  <%= @ano %>
+  <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, periodos_dias_path(:ano => @ano.to_i + 1, :usuario_id => @usuario.id) %>
+</div>
+
+<% if can? :see, :banco_de_horas %>
+  <%= select_tag(:menu_select, options_for_select(@usuarios, @usuario.id), :prompt => "Escolha um usuario") %>
+<%end%>
+
+<ul class="nav nav-tabs fix-color" id="myTab">  
+  <li class="active"><a href="#periodos">Periodos</a></li>
+  <li><a href="#meses">Meses</a></li>
+
+</ul>
+
+<div class="blue-line">  </div>
+
+<div class="tab-content">
+
+ <div class="tab-pane" id="meses">
+  <table class="month-table" style="width: 100%">
+    <tr>
+      <% @meses.each_with_index do |m, i| %>
+        <td>
+          <%= link_to periodo_link(m[:inicio], m[:fim], @usuario.id, 'm', m[:inicio].month).html_safe,
+              dias_path(inicio: m[:inicio].to_formatted_s, fim: m[:fim].to_formatted_s, usuario_id: @usuario.id),
+            :class => (tem_reprovacao?(m[:inicio],m[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
+        </td>
+        <% if (i + 1) % 6 == 0 %>
+        </tr>
+        <tr>
+        <% end %>
+      <% end %>
+     </tr>
+   </table>
+  </div>
+
+  <div class="tab-pane active" id="periodos">
+  <table class="month-table" style="width: 100%">
+    <tr>
+      <% @periodos.each_with_index do |p, i| %>
+        <td>
+          <%= link_to periodo_link(p.first, p.last, @usuario.id, 'p').html_safe,
+              dias_path(inicio: p.first.to_formatted_s, fim: p.last.to_formatted_s, usuario_id: @usuario.id),
+            :class => (tem_reprovacao?(p.first,p.last,@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
+        </td>
+        <% if (i + 1) % 6 == 0 %>
+        </tr>
+        <tr>
+        <% end %>
+      <% end %>
+     </tr>
+ </table>  
+ </div>
+</div>
+
+
+<script>
+var url = '<%= periodos_dias_path %>';
+$('#menu_select').bind('change', function() { location.href = url + '?usuario_id=' + $(this).val() });
+$('#myTab a').click(function(e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
+</script>
