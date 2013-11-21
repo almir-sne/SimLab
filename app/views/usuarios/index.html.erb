@@ -39,5 +39,5 @@
 <%end%>
 
 <script>
-  $('#status').bind('change', function() { location.href = "<%= usuarios_path %>" + "?status=" + $(this).val() });
+   var usuariopath = <%= usuarios_path %>;
 </script>

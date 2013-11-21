@@ -101,6 +101,7 @@ class DiasController < ApplicationController
     @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
     @periodos = contrato.periodos_por_ano(@ano.to_i)
+    @today = Date.today
   end
   
   private

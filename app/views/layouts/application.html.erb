@@ -12,6 +12,7 @@
     <%= javascript_include_tag "trello" %>
     <%= javascript_include_tag "jquery.mask.min.js" %>
     <%= javascript_include_tag "jquery-ui-1.10.3.custom.min" %>
+    <%= raw javascript_include_view_js %>
     <%= csrf_meta_tags %>
   </head>
   <body onload="checkTrello(loadSimpleCards);">

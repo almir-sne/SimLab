@@ -67,11 +67,5 @@
 <%= render :partial => "modal"%>
 
 <script>
-  $('#tipo').bind('change', function() {
-    location.href = "<%= projetos_path %>" + "?tipo=" + $(this).val()
-  });
-
-  $('.collapse-link').on('hidden', function() {
-   console.log("Vai tomate cru");
-  });
+  var projpath = <%= projetos_path %>;
 </script>
