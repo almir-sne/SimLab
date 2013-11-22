@@ -72,19 +72,40 @@ class DiasController < ApplicationController
   end
   
   def index
+    @today = Date.today
+    if params[:data].nil?
+      data = @today
+    else
+      data = Date.parse params[:data]
+    end
     if params[:usuario_id].nil?
       @usuario = current_user
     else
       @usuario = Usuario.find(params[:usuario_id])
     end
-    @inicio = Date.parse params[:inicio]
-    @fim = Date.parse params[:fim]
+    if params[:tipo].blank?
+      @tipo = 'p'
+    else
+      @tipo = params[:tipo]
+    end
+    if params[:inicio].nil? or params[:fim].nil?
+      if @tipo == 'p' 
+        periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
+        @inicio = periodo.first
+        @fim = periodo.last
+      elsif @tipo == 'm'
+        @inicio = data.beginning_of_month
+        @fim = data.end_of_month
+      end
+    else
+      @inicio = Date.parse params[:inicio]
+      @fim = Date.parse params[:fim]
+    end
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
     @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos}).group(:id).order(:nome)
     @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
-    @today = Date.today
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -101,6 +122,7 @@ class DiasController < ApplicationController
     @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
     @periodos = contrato.periodos_por_ano(@ano.to_i)
+    @today = Date.today
   end
   
   private

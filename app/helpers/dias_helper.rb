@@ -4,13 +4,15 @@ module DiasHelper
 
   def monta_dia_link(aba, data, usuario_id, equipe)
     string = "<div class='panel-scrollable' style='height: 100px'>" + data.strftime("%d/%b")
-    if aba == "ausencia_equipe" and !data.saturday? and !data.sunday? and !data.holiday?('br')
-      equipe.each do |pessoa|
-        ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)
-        if !ausencia_do_usuario_no_dia.blank? 
-          string += ("<br/><b>" + pessoa.nome + "</b>")
-        elsif data < Date.today and Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?
-          string += ("<br/>" + pessoa.nome)
+    if aba == "ausencia_equipe"
+      if !data.saturday? and !data.sunday? and !data.holiday?('br')
+        equipe.each do |pessoa|
+          ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)
+          if !ausencia_do_usuario_no_dia.blank? 
+            string += ("<br/><b>" + pessoa.nome + "</b>")
+          elsif data < Date.today and Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?
+            string += ("<br/>" + pessoa.nome)
+          end
         end
       end
       string += "</div>"
@@ -45,7 +47,7 @@ module DiasHelper
     if formato == "p"
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
       "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)}</b>"
-    elsif formato = "m"
+    elsif formato == "m"
       "<b> #{t('date.month_names')[mes]} <br/> <br/> </b>" +
     "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
     end

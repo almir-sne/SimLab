@@ -468,3 +468,9 @@ ul .submenu {
 .day-table td.today {
     border: 6px solid #FF00CC;
 }
+
+.month-table td.today {
+    border-collapse: separate;
+    border: 16px solid #FF00CC;
+}
+
