@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131121184332) do
+ActiveRecord::Schema.define(:version => 20131122125023) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -63,8 +63,9 @@ ActiveRecord::Schema.define(:version => 20131121184332) do
     t.float    "estimativa"
     t.integer  "rodada"
     t.string   "trello_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "estimado",   :default => false
   end
 
   create_table "contas", :force => true do |t|

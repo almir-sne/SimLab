@@ -15,8 +15,7 @@ class EstimativasController < ApplicationController
     end
     @estimativa = Estimativa.find_or_create_by_cartao_id_and_usuario_id_and_rodada(
       @cartao.id, current_usuario.id, @cartao.rodada)
-    debugger
-    @estimativas = Estimativa.where(cartao_id: @cartao.id)
+    @rodadas = @cartao.estimativas.group_by(&:rodada)
   end
   
   def create
@@ -25,6 +24,29 @@ class EstimativasController < ApplicationController
       cartao.id, current_user.id, cartao.rodada)
     estimativa.valor = params[:estimativa]
     estimativa.save
+    redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
+  end
+  
+  def fechar_rodada
+    cartao = Cartao.where(trello_id: params[:cartao_id]).first
+    cartao.estimado = true
+    cartao.save
+    redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
+  end
+  
+  def nova_rodada
+    cartao = Cartao.where(trello_id: params[:cartao_id]).first
+    cartao.estimado = false
+    cartao.rodada += 1
+    cartao.save
+    redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
+  end
+  
+  def concluir
+    cartao = Cartao.where(trello_id: params[:cartao_id]).first
+    cartao.estimado = true
+    cartao.estimativa = params[:estimativa_final]
+    cartao.save
     redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
   end
 end
