@@ -112,4 +112,9 @@
   </div>
 <% end %>
 
+<script>
+  var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
+  var u = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>;
+  var url = "<%= get_id_by_nome_usuarios_path %>";
+</script>
 
