@@ -1,7 +1,8 @@
 <div id="new-pagamento-modal" class="modal hide fade" tabindex="-1" role="dialog"
-  aria-labelledby="myModalLabel" aria-hidden="true" style="width:66%; height:110px; margin-left:-33%; ">
+  aria-labelledby="myModalLabel" aria-hidden="true" style="width:90%; height:110px; margin-left:-45%; ">
 
-  <%= form_for(@pagamento, :url => pagamentos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <%= form_for(@pagamento, :url => pagamentos_path, :validate => true,
+    :html => {"data-type" => :json, :multipart => true}) do |f| %>
     <%= f.hidden_field :usuario_id, :value => @usuario.id%>
     <div class="container-fluid">
       <div class="row-fluid">
@@ -9,17 +10,21 @@
           <%= f.label :data       %>
           <%= f.date_select :data, {}, :style => "width: 32%" %>
         </div>
-        <div class="span3">
+        <div class="span2">
           <%= f.label :motivo      %>
           <%= f.text_field :motivo %>
         </div>
-        <div class="span3">
+        <div class="span2">
           <%= f.label :fonte      %>
           <%= f.text_field :fonte %>
         </div>
-        <div class="span3">
+        <div class="span2">
           <%= f.label :valor        %>
           <%= f.number_field :valor %>
+        </div>
+        <div class="span3">
+          <%= f.label "Comprovante"%>
+          <%= file_field_tag "comprovante" %>
         </div>
       </div>
     <%= f.submit "Salvar", :class => "btn default-button"%>

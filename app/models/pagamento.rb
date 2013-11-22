@@ -3,6 +3,7 @@ class Pagamento < ActiveRecord::Base
   belongs_to :mes
   belongs_to :usuario
   belongs_to :criador, :class_name => "Usuario"
+  has_one    :anexo
 
   scope :periodos, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from pagamentos.data) = ?', value]) if value > 0 }

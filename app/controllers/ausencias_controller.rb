@@ -6,7 +6,7 @@ class AusenciasController < ApplicationController
     ausencia.destroy
     redirect_to :back
   end
-   
+
   def new
     @usuario_id = params[:usuario_id]
     @data = params[:data]
@@ -21,6 +21,15 @@ class AusenciasController < ApplicationController
       flash[:notice] = I18n.t("ausencias.create.success")
     else
       flash[:error] = I18n.t("ausencias.create.failure")
+    end
+    unless params[:anexo].nil?
+      Anexo.new(
+        :arquivo => params[:anexo],
+        :tipo => "atestado",
+        :data => params[:data],
+        :usuario_id => params[:usuario_id],
+        :ausencia_id => ausencia.id
+      ).save
     end
     redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
   end
@@ -37,16 +46,16 @@ class AusenciasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe(projetos)
     end
-    @usuario     = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
-    @usuarios    = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
-    @projeto     = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
-    @projetos    = [["Projetos - Todos", -1]] + projetos.collect { |p| [p.nome, p.id]  }
-    @dia         = params[:dia].blank? ? params[:dia] = -1 : params[:dia]
-    @dias        = [["Dias - Todos", -1]] + (1..31).to_a
-    @ano         = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano]
-    @anos        = [["Anos - Todos", -1]] + (2012..2014).to_a
-    @mes         = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
-    @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
+    @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
+    @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
+    @projeto   = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
+    @projetos  = [["Projetos - Todos", -1]] + projetos.collect { |p| [p.nome, p.id]  }
+    @dia       = params[:dia].blank? ? params[:dia] = -1 : params[:dia]
+    @dias      = [["Dias - Todos", -1]] + (1..31).to_a
+    @ano       = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano]
+    @anos      = [["Anos - Todos", -1]] + (2012..2014).to_a
+    @mes       = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
+    @meses     = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
     @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil])
   end
 
@@ -63,7 +72,7 @@ class AusenciasController < ApplicationController
     redirect_to ausencias_path
   end
 
-   def ausencia
+  def ausencia
     @usuario = Usuario.where(id: params[:usuario_id]) || current_user
     @inicio = Date.parse params[:inicio]
     @fim = Date.parse params[:fim]

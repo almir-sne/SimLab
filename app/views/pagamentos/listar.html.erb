@@ -18,13 +18,14 @@
   </tr>
   <% @pagamentos.each do |p| %>
     <tr>
-      <td> <%= "R$ #{"%.2f"}" % p.valor %> </td>
-      <td> <%= p.fonte %> </td>
-      <td> <%= p.motivo %> </td>
-      <td> <%= p.data.strftime("%d/%m/%Y") %> </td>
-      <th><%= link_to '<i class="icon-trash"> </i>'.html_safe, pagamento_path(p.id),
+      <td> <%= "R$ #{"%.2f"}" % p[0].valor %> </td>
+      <td> <%= p[0].fonte %> </td>
+      <td> <%= p[0].motivo %> </td>
+      <td> <%= p[0].data.strftime("%d/%m/%Y") %> </td>
+      <td> <%= link_to File.basename(p[1].arquivo.url), "/uploads/#{p[1].id}/#{File.basename(p[1].arquivo.url)}" unless p[1].nil? %> </td>
+      <td><%= link_to '<i class="icon-trash"> </i>'.html_safe, pagamento_path(p[0].id),
           :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
-          :class => 'nohover', :title => "Excluir"%></th>
+          :class => 'nohover', :title => "Excluir"%></td>
     </tr>
   <% end %>
 </table>
@@ -33,7 +34,7 @@
   <p><div id="botao" class="btn default-button" onclick="mostraForm()">Novo Pagamento</div></p>
   <div id="form" style="display:none">
     <%= form_for @pagamento, :validate => true,
-    :html => {"data-type" => :json} do |p| %>
+    :html => {"data-type" => :json, :multipart => true} do |p| %>
       <div class="container-fluid">
       <%= p.hidden_field :usuario_id, :value => @usuario.id%>
       <%= p.hidden_field :motivo, :value => "salario"%>
@@ -46,6 +47,10 @@
           <div class="span3">
             <%= p.label :fonte %>
             <%= p.text_field :fonte %>
+          </div>
+          <div class="span3">
+            <%= p.label "Comprovante"%>
+            <%= file_field_tag "comprovante" %>
           </div>
         </div>
       </div>

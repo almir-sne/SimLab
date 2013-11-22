@@ -1,5 +1,5 @@
 SinLab::Application.routes.draw do
-  
+
   resources :atividades, :only => [] do
     collection do
       get  :validar
@@ -21,7 +21,7 @@ SinLab::Application.routes.draw do
       get  :listar
     end
   end
-  
+
   namespace :android do
       resources :tokens,:only => [:create, :destroy]
       match 'meses/:id/dias' => "meses#dias"
@@ -77,6 +77,8 @@ SinLab::Application.routes.draw do
       get :horas_por_mes_por_pessoa
     end
   end
+
+  match "/uploads/:id/:basename.:extension", :controller => "anexos", :action => "download", :conditions => { :method => :get }
 
   authenticated :usuario do
     root :to => 'dias#periodos'

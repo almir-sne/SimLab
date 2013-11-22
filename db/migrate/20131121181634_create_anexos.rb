@@ -5,7 +5,9 @@ class CreateAnexos < ActiveRecord::Migration
       t.string  :tipo
       t.string  :arquivo
       t.integer :usuario_id
+      t.integer :pagamento_id
       t.date    :data
+      t.timestamps
 =begin
       t.binary  :arquivo_blob, :limit => 20.megabyte
       t.string  :filename
@@ -13,7 +15,6 @@ class CreateAnexos < ActiveRecord::Migration
       t.integer :size
       t.boolean :blob
 =end
-      t.timestamps
     end
   end
 end

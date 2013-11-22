@@ -20,6 +20,7 @@ class Ability
       unless user.projetos_coordenados.blank?
         can :update, :validations
       end
+      can :download,            Anexo, :usuario_id => user.id
       can :read,                Usuario
       can [:read,:create],      Dia
       can [:destroy,:update],   Dia, :id => true, :id => user.id

@@ -42,6 +42,7 @@ class PagamentosController < ApplicationController
     end
     @periodo    = params[:inicio].to_date .. params[:fim].to_date
     @pagamentos = Pagamento.periodos(@periodo).where(usuario_id: params[:usuario_id])
+    @pagamentos = @pagamentos.map{|pag| [pag, Anexo.where(:pagamento_id => pag.id).first]}
     @pagamento  = Pagamento.new
   end
 
@@ -52,7 +53,22 @@ class PagamentosController < ApplicationController
     else
       flash[:alert] = I18n.t("pagamento.create.failure")
     end
+    unless params[:comprovante].nil?
+      Anexo.new(
+        :arquivo => params[:comprovante],
+        :tipo => "holerite",
+        :data => params[:pagamento][:data],
+        :usuario_id => params[:pagamento][:usuario_id],
+        :pagamento_id => pagamento.id
+      ).save
+    end
     redirect_to :back
+  end
+
+  def download
+    anexo = Anexo.find params[:id]
+    path = "/#{anexo.arquivo}"
+    send_file path, :x_sendfile=>true
   end
 
   def destroy

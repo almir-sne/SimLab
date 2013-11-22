@@ -40,6 +40,7 @@
       <th> Data       </th>
       <th> Usuário    </th>
       <th> Justificativa   </th>
+      <th> Anexo </th>
       <th> Horas abonadas     </th>
       <th></th>
       <th> Mensagem   </th>
@@ -53,10 +54,14 @@
         <td>
           <%= ausencia.justificativa                                                       %>
         </td>
+        <td> <%= link_to(
+          File.basename(ausencia.anexo.arquivo.url),
+          "/uploads/#{ausencia.anexo.id}/#{File.basename(ausencia.anexo.arquivo.url)}"
+          ) unless ausencia.anexo.nil? %> </td>
         <td><%= text_field_tag "ausencias[#{ausencia.id}[horas]]", ausencia.horas, :class => "horas" %></td>
         <td style='text-align : right; width: 45px'>
           a. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", true,(ausencia.abonada == true), {:class => 'aprovacao_radio'} %>
-          r. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", false,(ausencia.abonada == false),{:class => 'aprovacao_radio'} %> 
+          r. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", false,(ausencia.abonada == false),{:class => 'aprovacao_radio'} %>
         </td>
         <td><%= text_field_tag "ausencias[#{ausencia.id}[mensagem]]", ausencia.mensagem %></td>
       </tr>

@@ -22,7 +22,7 @@
         <td><%=  horas                                                      %></td>
         <td><%= "R$ #{"%.2f" % (v_hora * horas)}"                           %></td>
         <td><%= "R$ #{"%.2f" % Pagamento.periodos(p).where(usuario_id: @usuario.id, motivo: 'salario').sum(:valor)}"  %> </td>
-        <td><%= link_to '<i class="icon-dollar"></i> Adicionar Salário'.html_safe,
+        <td><%= link_to '<i class="icon-dollar"></i> Ver Salário'.html_safe,
           listar_pagamentos_path(
             :inicio => p.first,
             :fim => p.last,
