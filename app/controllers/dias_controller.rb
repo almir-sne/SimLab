@@ -31,9 +31,9 @@ class DiasController < ApplicationController
         atividade = Atividade.new
       end
       if atividade_attr["_destroy"] == "1" and !atividade.blank?
-        
         atividade.destroy()
       else
+        c = Cartao.find_or_create_by_trello_id(atividade_attr["cartao_id"])
         atividades_success = atividades_success and atividade.update_attributes(
           :duracao => atividade_attr["horas"].to_i * 60,
           :observacao => atividade_attr["observacao"],
@@ -41,7 +41,7 @@ class DiasController < ApplicationController
           :dia_id => dia.id,
           :usuario_id => dia.usuario.id,
           :aprovacao => nil,
-          :cartao_id => atividade_attr["cartao_id"],
+          :cartao_id => c.id,
           :data => dia.data
         )
       end

@@ -3,6 +3,7 @@ class Cartao < ActiveRecord::Base
   validates :trello_id, :uniqueness => true, :presence => true
   
   has_many :estimativas
+  has_many :atividades
   
   def rodada_concluida?(rodada)
     if rodada < self.rodada
