@@ -138,18 +138,18 @@ function loadAbrevCards() {
         var parent = input.parentElement;
         var card_id = input.id;
         Trello.get("/cards/" + card_id, function(card) {
-            var div = $(parent).find(".day-link");
+//            var div = $(parent)
             var text = getTime(input.value).replace(" hora(s)", " - ");
             if (card.name.length > 10)
                 text += card.name.substr(0, 10) + "...";
             else
                 text += card.name;
-            $("<br/>").appendTo(div);
+            $("<br/>").appendTo(parent);
             $("<a>").attr({
                 href: card.url,
                 target: "_blank",
                 title: card.name
-            }).text(text).appendTo(div);
+            }).text(text).appendTo(parent);
             $(input).detach();
         });
     });
@@ -169,7 +169,7 @@ function loadBoardLinks() {
     $(".board-link").each(function(index, link) {
         var board_id = $(link).html().trim();
         Trello.get("/boards/" + board_id, function(board) {
-            $(link).html(board.name);
+            $(link).html(board.name).show();
         });
     });
 }

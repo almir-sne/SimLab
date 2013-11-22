@@ -34,14 +34,14 @@ class Cartao < ActiveRecord::Base
   end
   
   def minimo(rodada)
-    self.estimativas.where("valor > 0 and rodada = ?", rodada).minimum(:valor)
+    self.estimativas.where("valor >= 0 and rodada = ?", rodada).minimum(:valor)
   end
   
   def maximo(rodada)
     unless self.estimativas.where(valor: -2.0, rodada: rodada).blank?
       "Infinito"
     else
-      self.estimativas.where("valor > 0 and rodada = ?", rodada).maximum(:valor)
+      self.estimativas.where("valor >= 0 and rodada = ?", rodada).maximum(:valor)
     end
   end
 end

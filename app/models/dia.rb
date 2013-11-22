@@ -19,11 +19,11 @@ class Dia < ActiveRecord::Base
   end
   
   def entrada
-    read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).utc
+    read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).in_time_zone('Brasilia')
   end
 
   def saida
-    read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).utc
+    read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).in_time_zone('Brasilia')
   end
 
   def horas

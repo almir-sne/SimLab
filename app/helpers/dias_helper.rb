@@ -1,32 +1,6 @@
 require 'holidays'
 require 'holidays/br'
 module DiasHelper
-
-  def monta_dia_link(aba, data, usuario_id, equipe)
-    string = "<div class='panel-scrollable' style='height: 100px'>" + data.strftime("%d/%b")
-    if aba == "ausencia_equipe"
-      if !data.saturday? and !data.sunday? and !data.holiday?('br')
-        equipe.each do |pessoa|
-          ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)
-          if !ausencia_do_usuario_no_dia.blank? 
-            string += ("<br/><b>" + pessoa.nome + "</b>")
-          elsif data < Date.today and Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?
-            string += ("<br/>" + pessoa.nome)
-          end
-        end
-      end
-      string += "</div>"
-      link_to(string.html_safe, new_dia_path(:data=> data, :usuario_id => usuario_id), :class => "day-link blue-link")
-    elsif aba == "periodos"
-      ausencia_no_dia = tem_ausencia_no_dia?(data, usuario_id)
-      if ausencia_no_dia
-        string += "<br/> Ausência Registrada"
-      end
-      string += "</div>"
-      link_to(string.html_safe, new_dia_path(:data=> data, :usuario_id => usuario_id), :class => ausencia_no_dia ? "day-link gray-link" : (tem_reprovacao_no_dia?(data, usuario_id) ? "day-link red-link" : "day-link blue-link"))
-    end
-  end
-
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
@@ -37,6 +11,16 @@ module DiasHelper
   
   def tem_ausencia?(inicio, fim, usuario_id)
     !Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).blank?
+  end
+  
+  def classe_do_dia(data, usuario_id)
+    if tem_ausencia_no_dia?(data, usuario_id)
+      "day-link gray-link"
+    elsif tem_reprovacao_no_dia?(data, usuario_id)
+      "day-link red-link"
+    else
+      "day-link blue-link"
+    end
   end
   
   def tem_ausencia_no_dia?(data, usuario_id)
