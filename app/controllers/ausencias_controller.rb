@@ -8,8 +8,10 @@ class AusenciasController < ApplicationController
   end
 
   def new
+    #arrumar permissões? dá pra cadastrar ausência de outra pessoa desse jeito
     @usuario_id = params[:usuario_id]
     @data = params[:data]
+    @tipo = params[:tipo]
   end
 
   def create
@@ -31,7 +33,7 @@ class AusenciasController < ApplicationController
         :ausencia_id => ausencia.id
       ).save
     end
-    redirect_to dias_path(inicio: data.beginning_of_month.to_formatted_s, fim: data.end_of_month.to_formatted_s, usuario: ausencia.dia.usuario.id)
+    redirect_to dias_path(data: params[:data], tipo: params[:tipo])
   end
 
   def index

@@ -1,6 +1,9 @@
 class ApplicationController < ActionController::Base
   before_filter :block_inactive
   protect_from_forgery
+  
+  helper_method :javascript_include_view_js
+  
   def layout_by_resource
     if devise_controller?
       "devise"
@@ -8,7 +11,13 @@ class ApplicationController < ActionController::Base
       "application"
     end
   end
-
+  
+  def javascript_include_view_js
+    if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js"
+      return "/assets/" + params[:controller] + "/" + params[:action]
+    end
+  end
+  
   def current_user
     current_usuario
   end

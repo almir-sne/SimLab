@@ -1,0 +1,1 @@
+$('#status').bind('change', function() { location.href = usuariopath + "?status=" + $(this).val() });
