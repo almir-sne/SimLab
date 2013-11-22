@@ -1,0 +1,107 @@
+<div class="blue-text" style="margin-left: 30px">
+  Estimativa de cartão do Trello
+</div>
+
+<div class="blue-line">  </div>
+
+
+<div class="form-group" style="padding: 15px">
+  <h4> Cartão </h4>
+  <input type="hidden" class="card-placeholder" id="<%= @cartao.trello_id %>">
+</div>
+
+
+<div style="padding: 15px">
+  <% @rodadas.each do |rodada, estimativas| %>
+    <% concluida = @cartao.rodada_concluida? rodada %>
+    <h3 data-toggle="collapse" data-target=<%= "#rodada_#{rodada}" %> > Rodada <%= rodada %>  </h3>
+    <div class="collapse <%= "in" unless concluida %>" id="<%= "rodada_#{rodada}" %>">
+      <table class="list-table">
+        <tr>
+          <th> Nome </th>
+          <th> Estimativa </th>
+        </tr>
+
+        <% estimativas.each do |estimativa| %>
+          <% unless estimativa.valor.nil? %>
+            <tr>
+              <td> <%= estimativa.usuario.nome %> </td>
+              <td> <%= estimativa.valor_string if concluida %> </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+
+      <% if concluida %>
+        <div class="form-group" style="padding: 15px">
+          <h4> Estatisticas </h4>
+          <table class="list-table">
+            <tr >
+              <td>  Total de estimativas </td>
+              <td> <%= @cartao.estimativas_na_rodada rodada %> </td>
+            </tr>
+
+            <tr>
+              <td> Média </td>
+              <td>  <%= @cartao.media rodada %> </td>
+            </tr>
+
+            <tr>
+              <td> Minimo </td>
+              <td> <%= @cartao.minimo rodada %> </td>
+            </tr>
+
+            <tr>
+              <td> Máximo </td>
+              <td> <%= @cartao.maximo rodada %></td>
+            </tr>
+          </table>
+        </div>
+      <% else %>
+        <div class="form-group" style="padding: 15px">
+          Estimativas e estatísticas serão exibidas após conclusão da rodada.
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% unless @cartao.estimado? %>
+    <%= form_tag estimativas_path do %>
+      <div style="padding: 15px">
+        <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
+        <%= select_tag :estimativa, options_for_select([["Estimar", nil], ["0.0", 0.0], ["0.5", 0.5],
+            ["1", 1.0], ["2", 2.0], ["3", 3.0], ["5", 5.0], ["8", 8.0], ["13", 13.0], ["20", 20.0],
+            ["40", 40.0], ["Infinito", -2.0], ["?", -1.0]], @estimativa.valor), :style => "margin-bottom: 0" %>
+        <%= submit_tag "Enviar estimativa", :class => "btn default-button" %>
+      </div>
+    <% end %>
+
+  <% else %>
+    <h4>
+      Estimativa final: <%= @cartao.estimativa_string %>
+    </h4>
+  <% end %>
+
+
+
+  <h3> Coordenação </h3>
+  <div style="padding: 15px">
+    <% if @cartao.estimado? %>
+      <%= link_to "Nova rodada", nova_rodada_estimativas_path(cartao_id: @cartao.trello_id),
+        :class => "btn default-button" %>
+    <% else %>
+      <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.trello_id),
+        :class => "btn default-button" %>
+    <% end %>
+    <br/>
+    <br/>
+    <%= form_tag concluir_estimativas_path do %>
+      <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
+      <%= select_tag :estimativa_final, options_for_select([["Estimar", nil], ["0.0", 0.0], ["0.5", 0.5],
+          ["1", 1.0], ["2", 2.0], ["3", 3.0], ["5", 5.0], ["8", 8.0], ["13", 13.0], ["20", 20.0],
+          ["40", 40.0], ["Infinito", -2.0], ["?", -1.0]], @cartao.estimativa), :style => "margin-bottom: 0" %>
+      <%= submit_tag "Enviar estimativa final", :class => "btn default-button" %>
+    <% end %>
+  </div>
+
+</div>
