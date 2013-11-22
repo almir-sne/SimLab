@@ -20,7 +20,7 @@
       <% @ausencias.each do |ausencia| %>
         <tr>
           <td style="width: 11%">
-          <%= "#{ausencia.dia.data.day} / #{ausencia.dia.data.month} (#{t("date.abbr_day_names")[ausencia.dia.data.wday]})"%>
+            <%= "#{ausencia.dia.data.day} / #{ausencia.dia.data.month} (#{t("date.abbr_day_names")[ausencia.dia.data.wday]})"%>
           </td>
           <td>
             <%= ausencia.justificativa %>
@@ -75,12 +75,22 @@
                 <%= link_to "Cadastrar Ausência", new_ausencia_path(data: dia, usuario_id: @usuario.id, tipo: @tipo), :class => "submenu day-link blue-link" %>
               </ul>
             </div>
-            <%= monta_dia_link("periodos", dia, @usuario.id, @equipe) %>
-            <% unless @dias[dia].blank? %>
-              <% @dias[dia][0].atividades.each do |atividade| %>
-                <input type="hidden" class="card-abrev" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
-              <% end %>
-            <% end %>
+
+            <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
+               class="<%= classe_do_dia(dia, @usuario.id) %>">
+              <div class='panel-scrollable' style='height: 100px'>
+                <%= dia.strftime("%d/%b") %>
+                <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
+                  <br/>
+                  Ausência Registrada
+                <% end %>
+                <% unless @dias[dia].blank? %>
+                  <% @dias[dia][0].atividades.each do |atividade| %>
+                    <input type="hidden" class="card-abrev" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
+                  <% end %>
+                <% end %>
+              </div> 
+            </a>
           </td>
           <% if dia.wday == 6 %>
           </tr><tr>
@@ -91,40 +101,57 @@
   </div>
 
   <div class="tab-pane" id="ausencias_equipe">
-      <table class="day-table" style="width: 100%">
-        <tr>
-          <% t("date.abbr_day_names").each do |p| %>
-            <th><%= p %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% dia_da_semana = 0 %>
-          <% while @inicio.wday != dia_da_semana %>
-            <% dia_da_semana = dia_da_semana + 1 %>
-            <td></td>
-          <% end %> 
-          <% (@inicio..@fim).each do |data| %>
-            <td>
-              <div class="dropdown toggle">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
-                  <i class="icon-collapse"></i>
-                </a>
-                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-                  <%= link_to "Atividades...", new_dia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
-                  <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
-                </ul>
-              </div>
-              <%= monta_dia_link("ausencia_equipe", data, @usuario.id, @equipe) %>
-            </td>
-            <% if data.wday == 6 %>
-            </tr><tr>
-            <% end %>
-          <% end %>
-        </tr>
-      </table>
-    </div>
+    <table class="day-table" style="width: 100%">
+      <tr>
+        <% t("date.abbr_day_names").each do |p| %>
+          <th><%= p %></th>
+        <% end %>
+      </tr>
+      <tr>
+        <% dia_da_semana = 0 %>
+        <% while @inicio.wday != dia_da_semana %>
+          <% dia_da_semana = dia_da_semana + 1 %>
+          <td></td>
+        <% end %> 
+        <% (@inicio..@fim).each do |data| %>
+          <td>
+            <div class="dropdown toggle">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
+                <i class="icon-collapse"></i>
+              </a>
+              <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                <%= link_to "Atividades...", new_dia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+                <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+              </ul>
+            </div>
 
- <div class="tab-pane" id="atividades">
+            <a href="<%= new_dia_path(:data=> data, :usuario_id => @usuario.id) %>"
+               class="day-link blue-link">
+              <div class='panel-scrollable' style='height: 100px'>
+                <%= data.strftime("%d/%b") %>
+                <%  if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
+                  <%  @equipe.each do |pessoa|%>
+                    <%  ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)%>
+                    <%  if !ausencia_do_usuario_no_dia.blank?%>
+                      <br/><b> <%= pessoa.nome %> </b>
+                    <% elsif data < @today and 
+                        Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?%>
+                      <br/> <%= pessoa.nome %> 
+                    <% end %>
+                  <% end%>
+                <% end%>
+              </div>
+            </a>
+          </td>
+          <% if data.wday == 6 %>
+          </tr><tr>
+          <% end %>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+
+  <div class="tab-pane" id="atividades">
     <table class="list-table days-table" id="meses">
       <tr>
         <th>Dia</th>
