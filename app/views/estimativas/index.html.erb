@@ -1,0 +1,18 @@
+<div class="blue-text" style="margin-left: 30px">
+  Planning Poker
+</div>
+
+<div class="blue-line" style="margin: 10px 10px">  </div>
+
+<div class="loggedin">
+  <ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
+    <% @projetos_boards.each do |board| %>
+      <li> <%= link_to board, board_estimativas_path(:board_id => board), :class => "nav-links board-link", 
+          :style => "display: none" %> </li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="loggedout">
+  Conecte ao Trello para continuar.
+</div>

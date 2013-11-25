@@ -31,9 +31,9 @@ class DiasController < ApplicationController
         atividade = Atividade.new
       end
       if atividade_attr["_destroy"] == "1" and !atividade.blank?
-        
         atividade.destroy()
       else
+        c = Cartao.find_or_create_by_trello_id(atividade_attr["cartao_id"])
         atividades_success = atividades_success and atividade.update_attributes(
           :duracao => atividade_attr["horas"].to_i * 60,
           :observacao => atividade_attr["observacao"],
@@ -41,7 +41,7 @@ class DiasController < ApplicationController
           :dia_id => dia.id,
           :usuario_id => dia.usuario.id,
           :aprovacao => nil,
-          :cartao_id => atividade_attr["cartao_id"],
+          :cartao_id => c.id,
           :data => dia.data
         )
       end
@@ -104,7 +104,7 @@ class DiasController < ApplicationController
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos}).group(:id).order(:nome)
+    @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos, usuario_id: Usuario.select(:id).where(status: true)}).group(:id).order(:nome)
     @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
     respond_to do |format|
       format.html # index.html.erb

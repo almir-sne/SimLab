@@ -31,7 +31,7 @@
               <%else%>
                 <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
               <%end%>
-              <li> <%= link_to 'Meu Banco de Horas', periodos_dias_path, :class => "nav-links" %> </li>
+              <li> <%= link_to t('atividades.title'), periodos_dias_path, :class => "nav-links" %> </li>
               <% if can? :create_or_update, Pagamento %>
                 <li> <%= link_to "Pagamentos", pagamentos_path, :class => "nav-links" %> </li>
               <% else %>
@@ -54,6 +54,7 @@
               <%else%>
                 <li> <%=  link_to "Meu Perfil", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
               <%end%>
+              <li> <%=  link_to "Planning Poker", estimativas_path, :class => "nav-links"%> </li>
             </ul>
           </div>
 

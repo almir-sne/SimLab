@@ -14,7 +14,7 @@
       usuario_id_hidden_input.attr('name', 'projeto[workons_attributes]['+new_random_id+'][usuario_id]');
       usuario_id_hidden_input.attr('type', 'hidden');
       $.ajax({
-        url: "<%= get_id_by_nome_usuarios_path %>",
+        url: url,
         data: {name: nome}, 
         success: function(result) { 
           usuario_id_hidden_input.attr('value', result);
@@ -24,12 +24,12 @@
       tableData.append(usuario_id_hidden_input);
       return a;
       }
-  }
-  var segundaPraMim = <%=  @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>
+  } 
+  
   checkTrello(getBoards);
 
   $(document).ready(function() {
-    autocomplete_source(<%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>);
+    autocomplete_source(u);
     if($("input[name='super_projeto']:checked").val() == "true")
       mostraFilhos();
     else

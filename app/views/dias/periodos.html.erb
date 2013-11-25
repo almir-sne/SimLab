@@ -37,7 +37,7 @@
   </div>
 
   <div class="tab-pane active" id="periodos">
-  <table class="month-table" styl ="width: 100%">
+  <table class="month-table" style="width: 100%">
     <tr>
       <% @periodos.each_with_index do |p, i| %>
         <td class="<%= 'today' if p.include?(@today) %>">

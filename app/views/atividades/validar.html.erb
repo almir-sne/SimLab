@@ -64,8 +64,8 @@
         <td><%= atividade.try(:projeto).try(:nome)                                                     %></td>
         <td>
           <%= atividade.observacao                                                       %> <br/>
-          <% if atividade.cartao_id %>
-            <input type="hidden" class="card-placeholder" id="<%= atividade.cartao_id %>" value="<%= atividade.duracao/60 %>"></input>
+          <% if atividade.cartao.trello_id %>
+            <input type="hidden" class="card-placeholder" id="<%= atividade.cartao.trello_id %>" value="<%= atividade.duracao/60 %>"></input>
           <% end %>
         </td>
         <td><%= atividade.formata_duracao                                                  %></td>

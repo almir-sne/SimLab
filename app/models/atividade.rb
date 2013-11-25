@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
-  attr_accessible :duracao, :data, :cartao_id
+  attr_accessible :duracao, :data
   
   scope :periodo, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
@@ -16,6 +16,7 @@ class Atividade < ActiveRecord::Base
     end
   }
 
+  belongs_to :cartao
   belongs_to :dia
   belongs_to :projeto
   belongs_to :usuario
@@ -30,7 +31,7 @@ class Atividade < ActiveRecord::Base
 
   def horas
     unless read_attribute(:duracao).blank?
-      read_attribute(:duracao)/60
+      read_attribute(:duracavo)/60
     else
       0
     end
@@ -60,11 +61,11 @@ class Atividade < ActiveRecord::Base
   end
   
   def self.horas_trabalhadas(cid)
-    Atividade.where(cartao_id: cid).sum(:duracao)/3600
+    Atividade.joins(:cartao).where(cartao: {trello_id: cid}).sum(:duracao)/3600
   end
   
   def self.horas_trabalhadas_format(cid)
-    Time.at(horas_trabalhadas(cid) * 3600).utc.strftime("%H:%M")
+    Time.at(self.horas_trabalhadas(cid) * 3600).utc.strftime("%H:%M")
   end
   
   def self.update_on_trello(key, token, id)

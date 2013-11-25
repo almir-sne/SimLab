@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131121234033) do
+ActiveRecord::Schema.define(:version => 20131122200921) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -45,12 +45,13 @@ ActiveRecord::Schema.define(:version => 20131121234033) do
     t.text     "observacao"
     t.integer  "dia_id"
     t.boolean  "aprovacao"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.text     "mensagem"
     t.integer  "avaliador_id"
     t.date     "data"
-    t.string   "cartao_id"
+    t.integer  "cartao_id"
+    t.integer  "atividade_mae_id"
   end
 
   create_table "ausencias", :force => true do |t|
@@ -72,11 +73,12 @@ ActiveRecord::Schema.define(:version => 20131121234033) do
   end
 
   create_table "cartoes", :force => true do |t|
-    t.string   "cartao_id"
-    t.integer  "atividade_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.integer  "duracao"
+    t.float    "estimativa"
+    t.integer  "rodada"
+    t.string   "trello_id"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "estimado",   :default => false
   end
 
   create_table "contas", :force => true do |t|
@@ -117,6 +119,15 @@ ActiveRecord::Schema.define(:version => 20131121234033) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
+  end
+
+  create_table "estimativas", :force => true do |t|
+    t.integer  "cartao_id"
+    t.integer  "usuario_id"
+    t.float    "valor"
+    t.integer  "rodada"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "meses", :force => true do |t|
