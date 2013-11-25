@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
-  attr_accessible :duracao, :data
+  attr_accessible :duracao, :data, :cartao_id
   
   scope :periodo, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
@@ -21,7 +21,7 @@ class Atividade < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
-  has_many :cartoes, :dependent => :destroy
+  has_one :cartao
 
 
   validates :dia_id, :presence => true
@@ -31,7 +31,7 @@ class Atividade < ActiveRecord::Base
 
   def horas
     unless read_attribute(:duracao).blank?
-      read_attribute(:duracavo)/60
+      read_attribute(:duracao)/60
     else
       0
     end
