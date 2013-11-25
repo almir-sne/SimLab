@@ -21,13 +21,10 @@ class Atividade < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
-  has_one :cartao
-
 
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
-
 
   def horas
     unless read_attribute(:duracao).blank?
