@@ -34,12 +34,14 @@ class UsuariosController < ApplicationController
 
   def edit
     authorize! :update, Usuario
+    @types = ["RG", "CPF", "Carteirinha USP", "Comprovante de residência", "Atestado de matrícula", "Outros"]
     @user = Usuario.find(params[:id])
     @user.telefones.build if @user.telefones.blank?
     @user.contas.build    if @user.contas.blank?
     @user.create_address  if @user.address.blank?
     @user.contratos.build if @user.contratos.blank?
-    @user.anexos.build    if @user.anexos.blank?
+    @uploads = @user.anexos.reject{|anexo| !(@types.include? anexo.tipo) }
+    @uploads = @user.anexos.build    if @uploads.blank?
   end
 
   def update

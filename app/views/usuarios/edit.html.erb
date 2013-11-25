@@ -156,7 +156,7 @@
       <div class="form-group">
         <h3>Anexos</h3>
         <div class="container-fluid">
-          <%= f.fields_for :anexos, :allow_destroy => true do |file| %>
+          <%= f.fields_for :anexos, @uploads, :allow_destroy => true do |file| %>
             <%= file.hidden_field :data, :value => Date.today %>
             <div class="row-fluid">
               <div class="span3">
@@ -165,8 +165,7 @@
               </div>
               <div class="span3">
                 <%= file.label :tipo %>
-                <%= file.select :tipo, options_for_select(["RG", "CPF", "Carteirinha USP",
-                  "Comprovante de residência", "Atestado de matrícula", "Outros"], file.object.tipo)  %>
+                <%= file.select :tipo, options_for_select(@types, file.object.tipo)  %>
               </div>
               <div class="span3">
                 <%= file.label :arquivo %>
@@ -180,7 +179,7 @@
              -->
               <div class="span1">
                 <% unless file.object.arquivo_url.nil? %>
-                  <%= link_to file.object.arquivo_url.split("/").last, file.object.arquivo_url %>
+                  <%= link_to File.basename(file.object.arquivo.url), "/uploads/#{file.object.id}/#{File.basename(file.object.arquivo.url)}" %>
                 <% end %>
                 <!--
                  link_to url_for(:controller => "usuarios", :action => "show_anexo", :id => file.object.id) %>
@@ -230,4 +229,3 @@
     </div>
   </div>
 <% end %>
-
