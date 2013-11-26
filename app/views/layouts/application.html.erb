@@ -17,7 +17,7 @@
   <body onload="checkTrello(loadSimpleCards)">
     <div class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="#">SimLab</a>
+        <a class="brand" href="<%= periodos_dias_path %>">SimLab</a>
         <ul class="nav">
            <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -50,7 +50,11 @@
               <li><a href="<%= usuarios_path(:status => "true") %>">Usuários</a></li>
               <li class="divider"></li>
               <li class="nav-header">Financeiro</li>
-              <li><a href="<%= pagamentos_path %>">Pagamentos</a></li>
+              <% if can? :create_or_update, Pagamento %>
+                <li><a href="<%= pagamentos_path %>">Pagamentos</a></li>
+              <% else %>
+                <li><a href="<%= periodos_pagamentos_path %>">Meus Pagamentos</a></li>
+              <% end %>
             </ul>
            </li>
            <li><a href="<%= log_de_atividades_banco_de_horas_path %>">Notificações</a></li>
