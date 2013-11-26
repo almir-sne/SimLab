@@ -59,7 +59,7 @@
                   <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                     :class=>"nohover", :style => "float: right; margin-right: 10px" %>
                   <div class="slider slider-par">
-                    <%= par.hidden_field :duracao, :class => 'hora_field deleteme'%>
+                    <%= par.hidden_field :horas, :class => 'hora_field'%>
                     <div id="time"> </div>
                     <div id="slider"> </div>
                   </div>
@@ -70,11 +70,11 @@
                   :style => "margin: 20px 0px" , :onclick => 'toggleObservacao(this)'}) %>
               <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
               <div class="grey-line"> </div>
-            <% end %>
-          </div>
-          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
-            :style => "display: none", :id => "nova_atividade" %>
+            </div>
+          <% end %>
         </div>
+        <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
+          :style => "display: none", :id => "nova_atividade" %>
       </div>
       <div class="span5">
         <div class="loggedin">

@@ -64,11 +64,11 @@ class DiasController < ApplicationController
             if par.blank?
               par = Par.new
             end
-            if par["_destroy"] == "1" and !par.blank?
+            if par_attr["_destroy"] == "1" and !par.blank?
               par.destroy()
             else
               par.update_attributes(
-                :duracao => par_attr["duracao"].to_i * 60,
+                :duracao => par_attr["horas"].to_i * 60,
                 :par_id => par_attr["par_id"].to_i,
                 :atividade_id => atividade.id
               )

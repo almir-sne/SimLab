@@ -56,10 +56,11 @@ function initializeSliders() {
 
 function createSlider(sliderParent) {
     var time = sliderParent.find(".hora_field")[0].value;
+    var max;
     if (sliderParent.parent().attr("class") == "par")
-        var max = $(sliderParent).parents("#atividade-form").find(".atividade_field")[0].value;
+        max = $(sliderParent).parents("#atividade-form").find(".atividade_field")[0].value;
     else
-        var max = 720;
+        max = 720;
     initSlider(sliderParent.find('#slider'), time, max);
     initTime(sliderParent.find('#time'), time);
 }
@@ -72,7 +73,7 @@ function initSlider(div, time, max_time) {
     div.slider({
         min: 0,
         max: max_time,
-        value: time,
+        value: parseFloat(time),
         step: 10,
         slide: slideTime,
         orientation: "horizontal",
