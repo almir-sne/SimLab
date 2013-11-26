@@ -72,9 +72,9 @@
               <div class="grey-line"> </div>
             </div>
           <% end %>
+          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
+            :style => "display: none", :id => "nova_atividade" %>
         </div>
-        <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
-          :style => "display: none", :id => "nova_atividade" %>
       </div>
       <div class="span5">
         <div class="loggedin">
