@@ -14,81 +14,70 @@
     <%= javascript_include_tag "jquery-ui-1.10.3.custom.min" %>
     <%= csrf_meta_tags %>
   </head>
-  <body onload="checkTrello(loadSimpleCards);">
-    <div style="padding: 10px 35px">
-      <div id="upper-bar">
-        <div class="row-fluid">
-          <div class="span10"></div>
-          <div class="span2" style="margin-left: 15px">
-            <img alt="InfoXYZ" src="/images/logo.jpg" style="padding: 15px 0px; height: 30px; float: right;"></img>
-          </div>
-        </div>
-        <div class="row-fluid">
-          <div class="span2 dropdown">
-            <ul class="top-nav dropdown-menu" style="display: block; position: static;">
-              <%if can? :update, :validations%>
-                <li> <%= link_to t('funcionalidade.validacao.atividade'), validar_atividades_path, :class => "nav-links" %> </li>
-              <%else%>
-                <li> <%= link_to t('funcionalidade.log.atividade'), log_de_atividades_banco_de_horas_path, :class => "nav-links" %> </li>
-              <%end%>
-              <li> <%= link_to t('atividades.title'), periodos_dias_path, :class => "nav-links" %> </li>
-              <% if can? :create_or_update, Pagamento %>
-                <li> <%= link_to "Pagamentos", pagamentos_path, :class => "nav-links" %> </li>
-              <% else %>
-                <li> <%= link_to "Meus Pagamentos", periodos_pagamentos_path, :class => "nav-links" %> </li>
-              <% end %>
-              <% if can? :manage, Cartao %>
-                <li> <%= link_to "Estatisticas", cartoes_atividades_path, :class => "nav-links" %> </li>
-              <% end %>
+  <body onload="checkTrello(loadSimpleCards)">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">SimLab</a>
+        <ul class="nav">
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Atividades<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="<%= periodos_dias_path %>">Minhas Atividades</a></li>
+              <li><a href="<%= ausencias_path %>">Minhas Ausências</a></li>
+              <li><a href="<%= validar_atividades_path %>">Validação de Atividades</a></li>
             </ul>
-          </div>
-
-          <div class="span2 dropdown">
-            <ul class="top-nav dropdown-menu" style="display: block; position: static;">
-              <%if can? :index, Ausencia %>
-                <li> <%=  link_to "Ausências", ausencias_path, :class => "nav-links"%> </li>
-              <% end %>
-              <li> <%=  link_to "Projetos", projetos_path, :class => "nav-links"%> </li>
-              <%if can? :see, Usuario%>
-                <li> <%=  link_to "Usuários", usuarios_path(:status => "true"), :class => "nav-links"%> </li>
-              <%else%>
-                <li> <%=  link_to "Meu Perfil", edit_usuario_path(current_usuario), :class => "nav-links"%> </li>
-              <%end%>
-              <li> <%=  link_to "Planning Poker", estimativas_path, :class => "nav-links"%> </li>
+           </li>
+          <li><a href="<%= projetos_path %>">Projetos</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Ferramentas<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="<%= estimativas_path %>">Planning Poker</a></li>
+              <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
+              <li class="nav-header">Trello</li>
+              <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
+              <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
             </ul>
-          </div>
-
-          <div class="span3 top-user offset1" >
-            Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
-            <br/>
-            <%= link_to "Alterar senha", edit_usuario_registration_path %>
-            <br/>
-            <%= link_to "Sair", destroy_usuario_session_path, :method => :delete %>
-          </div>
-
-          <div class="span3">
-            <h4 style="margin: 0"> Trello </h4>
-            <div class="loggedout">
-              <a class="btn default-button" id="connectLink" onclick="loginTrello(loadSimpleCards)"> Conectar ao Trello</a>
-            </div>
-
+           </li>
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Organização<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="<%= usuarios_path(:status => "true") %>">Usuários</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Financeiro</li>
+              <li><a href="<%= pagamentos_path %>">Pagamentos</a></li>
+            </ul>
+           </li>
+           <li><a href="<%= log_de_atividades_banco_de_horas_path %>">Notificações</a></li>
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Minha Conta<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="<%= edit_usuario_path(current_usuario) %>">Meus Dados</a></li>
+              <li><a href="<%= edit_usuario_registration_path %>">Alterar Senha</a></li>
+              <li><a href="<%= destroy_usuario_session_path %>">Sair</a></li>
+            </ul>
+           </li>
+           <li class="nav-header">Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome%>! </b>
             <div class="loggedin">
-              <div id="header" style="border: none">
-                Logado como <b class="fullName"></b>
-                <br/>
-                <a id="disconnect" onclick="logoutTrello()">Log Out</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="messages">
-          <%= render 'layouts/messages'%>
-        </div>
+               Trello: <b class="fullName"></b>
+            </div> 
+           </li>
+        </ul>
+        <img alt="InfoXYZ" src="/images/logo.jpg" style="padding: 15px 0px; height: 30px; float: right;"></img>
       </div>
-      <%= yield %>
-      
-      <%= javascript_include_tag javascript_include_view_js %>
-      
     </div>
+   <div class="messages">
+     <%= render 'layouts/messages'%>
+   </div>
+   <%= yield %>
+      
+   <%= javascript_include_tag javascript_include_view_js %>
   </body>
 </html>
