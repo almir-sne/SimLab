@@ -22,6 +22,11 @@ class Atividade < ActiveRecord::Base
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
 
+  has_many :pares, :dependent => :destroy
+  
+  accepts_nested_attributes_for :pares, :allow_destroy => true
+
+
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true

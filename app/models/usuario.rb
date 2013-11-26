@@ -41,13 +41,7 @@ class Usuario < ActiveRecord::Base
 
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
-    #projetos = self.projetos.includes(:workon).where("workons.coordenador" => true)
-    #projetos.map{|z|  z.sub_projetos.empty? ? z : [z, z.sub_projetos] }.flatten.uniq
   end
-
-  #def projetos_coordenados
-    #self.projetos.includes(:workon).where("workons.coordenador" => true)
-  #end
 
   def equipe_coordenada
     equipe_coordenada(projetos_coordenados)
@@ -55,7 +49,7 @@ class Usuario < ActiveRecord::Base
 
   def equipe_coordenada_por_projetos(projeto)
     Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
- end
+  end
 
   def horario_data(data)
     contrato_vigente_em(data).hora_mes
@@ -82,7 +76,12 @@ class Usuario < ActiveRecord::Base
   end
 
   def contrato_atual
-   self.contratos.order(:fim).last
+    self.contratos.order(:fim).last
   end
 
+  def equipe
+    Usuario.joins(:workons).where(workons: {
+        projeto_id: self.projetos, usuario_id: Usuario.select(:id).where(status: true)
+      }).group(:id).order(:nome)
+  end
 end
