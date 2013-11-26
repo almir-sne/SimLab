@@ -85,7 +85,8 @@
                 <% end %>
                 <% unless @dias[dia].blank? %>
                   <% @dias[dia][0].atividades.each do |atividade| %>
-                    <input type="hidden" class="card-abrev" id="<%= atividade.cartao.trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+                    <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
+                    <input type="hidden" class="card-abrev" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
                   <% end %>
                 <% end %>
               </div> 
@@ -174,7 +175,8 @@
                   Observação: <br/>
                   <%=  atividade.observacao%>
                   <br />
-                  <input type="hidden" class="card-placeholder" id="<%= atividade.cartao.trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+                  <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
+                  <input type="hidden" class="card-placeholder" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
                 </div>
               <% end %>
             </td>
