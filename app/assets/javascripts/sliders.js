@@ -84,8 +84,8 @@ function initSlider(div, time, max_time) {
 }
 
 function updateAllSliders() {
-    var max = pega_horas_dia();
-    maxtime = max.totalHorasDia;
+    var maximos = pega_horas_dia();
+    maxtime = maximos.totalHorasDia;
     $(".slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;

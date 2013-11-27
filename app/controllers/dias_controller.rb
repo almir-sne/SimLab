@@ -34,7 +34,8 @@ class DiasController < ApplicationController
       else
         horarios_success = horarios_success and horario.update_attributes(
           :entrada => convert_date(params[:dia][:horarios_attributes][lixo], "entrada"),
-          :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida")
+          :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida"),
+          :dia_id => dia.id
         )
       end
     end
