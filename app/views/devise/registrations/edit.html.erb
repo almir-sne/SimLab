@@ -33,7 +33,7 @@
               <% if can? :create_or_update, Pagamento %>
                 <li> <%= link_to "Pagamentos", pagamentos_path, :class => "nav-links" %> </li>
               <% else %>
-                <li> <%= link_to "Meus Pagamentos", meses_pagamentos_path, :class => "nav-links" %> </li>
+                <li> <%= link_to "Meus Pagamentos", periodos_pagamentos_path, :class => "nav-links" %> </li>
               <% end %>
               <% if can? :manage, Cartao %>
                 <li> <%= link_to "Estatisticas", cartoes_atividades_path, :class => "nav-links" %> </li>
