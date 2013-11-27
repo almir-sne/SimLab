@@ -48,9 +48,15 @@ class Dia < ActiveRecord::Base
   end
 
   def formata_intervalo
-    hora = (read_attribute(:intervalo) / 3600).to_i
-    minuto = (( read_attribute(:intervalo) % 3600) / 60).to_i
-    hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
+    intervalo = read_attribute(:intervalo)
+    if (!read_attribute(:intervalo).nil?)
+      hora = (read_attribute(:intervalo) / 3600).to_i
+      minuto = (( read_attribute(:intervalo) % 3600) / 60).to_i
+      hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
+    else
+      "00:00"
+    end
+    
   end
 
   #def bar_width
