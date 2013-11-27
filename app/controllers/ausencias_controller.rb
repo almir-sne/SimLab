@@ -46,7 +46,7 @@ class AusenciasController < ApplicationController
       projetos = Projeto.all(:order => "nome")
     else
       projetos = current_usuario.projetos_coordenados
-      equipe = current_usuario.equipe(projetos)
+      equipe = current_usuario.equipe_coordenada
     end
     @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
     @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
