@@ -18,8 +18,8 @@ class Usuario < ActiveRecord::Base
   has_many :projetos, :through => :workons
   has_many :boards, :through => :projetos
   has_many :workons, :dependent => :destroy
-  has_many :telefones
-  has_many :contas
+  has_many :telefones, :dependent => :destroy
+  has_many :contas, :dependent => :destroy
   has_many :contratos
   has_many :coordenacoes
   has_many :ausencias, :through => :dias

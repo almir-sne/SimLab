@@ -6,21 +6,28 @@
   <div class="container">
     <div class="row">
       <div class="col-md-2">
-        <%= f.label :entrada %> <br/>
-        <%= f.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;',
-          :onchange => "recalculaHoras()", :id => "dia_0_entrada" %>  <br/>
-        <%= f.label :saida %> <br/>
-        <%= f.time_select :saida, {minute_step: 5}, :style => 'width: 55px;',
-          :onchange => "recalculaHoras()", :id => "dia_0_saida" %>  <br/>
-        <%= f.label :intervalo %> <br/>
-        <%= f.time_select :intervalo, {minute_step: 5} , :style => 'width: 55px;',
-          :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
-        <br/>
-        Total de horas
-        <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
-        <br/>
-        Horas em atividades
-        <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
+          <%= f.fields_for :horarios do |horario_form| %>
+            <%= horario_form.label :entrada %>
+            <br />
+            <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => 'horario_select entrada_horario' %>
+            <br />
+            <%= horario_form.label :saida %>
+            <br />
+            <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => "horario_select saida_horario" %>
+            <br />
+          <% end %>
+           
+          <%= f.link_to_add 'Novo horário' , :horarios, :class=>"nohover" %>
+       
+        <br /><br />
+          Intervalo:
+          <div id="dia_intervalo"> <%= @dia.formata_intervalo %> horas </div>
+       <br/>
+          Total de horas:
+          <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
+          <br/>
+          Horas em atividades:
+          <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
       </div>
       <div class="col-md-5">
         <h3 id="atividades-title">Atividades</h3>

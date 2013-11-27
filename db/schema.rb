@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131126133836) do
+ActiveRecord::Schema.define(:version => 20131126195157) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -112,13 +112,11 @@ ActiveRecord::Schema.define(:version => 20131126133836) do
   end
 
   create_table "dias", :force => true do |t|
-    t.datetime "entrada"
-    t.datetime "saida"
-    t.float    "intervalo"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
+    t.float    "intervalo"
   end
 
   create_table "estimativas", :force => true do |t|
@@ -126,6 +124,14 @@ ActiveRecord::Schema.define(:version => 20131126133836) do
     t.integer  "usuario_id"
     t.float    "valor"
     t.integer  "rodada"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "horarios", :force => true do |t|
+    t.integer  "dia_id"
+    t.datetime "entrada"
+    t.datetime "saida"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

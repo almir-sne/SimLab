@@ -1,14 +1,17 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :entrada, :intervalo, :numero, :saida, :usuario_id, :data
+  attr_accessible :usuario_id, :data, :intervalo
   
   belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
   has_many :ausencias
+  has_many :horarios, :dependent => :destroy
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
-
+  accepts_nested_attributes_for :horarios, :allow_destroy => true
+  
   attr_accessible :atividades_attributes
+  attr_accessible :horarios_attributes
 
   validates :data, :uniqueness => {:scope => :usuario_id}, :presence => true
   validates :usuario_id, :presence => true
@@ -18,13 +21,13 @@ class Dia < ActiveRecord::Base
     Dia.where(usuario_id: usuario_id, data: inicio..fim)
   end
   
-  def entrada
-    read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).in_time_zone('Brasilia')
-  end
+  #def entrada
+    #read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).in_time_zone('Brasilia')
+  #end
 
-  def saida
-    read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).in_time_zone('Brasilia')
-  end
+  #def saida
+    #read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).in_time_zone('Brasilia')
+  #end
 
   def horas
     ((saida - entrada) - read_attribute(:intervalo)) / 3600
@@ -45,18 +48,24 @@ class Dia < ActiveRecord::Base
   end
 
   def formata_intervalo
-    hora = (read_attribute(:intervalo) / 3600).to_i
-    minuto = (( read_attribute(:intervalo) % 3600) / 60).to_i
-    hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
+    intervalo = read_attribute(:intervalo)
+    if (!read_attribute(:intervalo).nil?)
+      hora = (read_attribute(:intervalo) / 3600).to_i
+      minuto = (( read_attribute(:intervalo) % 3600) / 60).to_i
+      hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
+    else
+      "00:00"
+    end
+    
   end
 
-  def bar_width
-    width = horas.nil? ? 0 : (horas * 8)
-    if width > 100
-      width = 100
-    end
-    width.to_s + "%"
-  end
+  #def bar_width
+    #width = horas.nil? ? 0 : (horas * 8)
+    #if width > 100
+      #width = 100
+    #end
+    #width.to_s + "%"
+  #end
 
   def horas_atividades_formato
     total_minutos_atividade = 0

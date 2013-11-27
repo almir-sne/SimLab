@@ -21,10 +21,24 @@ class DiasController < ApplicationController
       dia = Dia.find(params[:dia_id])
     end
     dia_success = dia.update_attributes(
-      :entrada => convert_date(params[:dia], "entrada"),
-      :saida => convert_date(params[:dia], "saida"),
       :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
     )
+    horarios_success = true
+    params[:dia][:horarios_attributes].each do |lixo, horario_attr|
+      horario = Horario.find_by_id horario_attr[:id].to_i
+      if horario.blank?
+        horario = Horario.new
+      end
+      if horario_attr["_destroy"] == "1" and !horario.blank?
+        horario.destroy()
+      else
+        horarios_success = horarios_success and horario.update_attributes(
+          :entrada => convert_date(params[:dia][:horarios_attributes][lixo], "entrada"),
+          :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida"),
+          :dia_id => dia.id
+        )
+      end
+    end
     atividades_success = true
     params[:dia][:atividades_attributes].each do |index, atividade_attr|
       atividade = Atividade.find_by_id atividade_attr[:id].to_i
@@ -64,7 +78,7 @@ class DiasController < ApplicationController
       end
       Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
     end
-    if dia_success and atividades_success
+    if dia_success and atividades_success and horarios_success
       flash[:notice] = I18n.t("atividades.create.success")
     else
       flash[:error] = I18n.t("atividades.create.failure")
@@ -153,6 +167,6 @@ class DiasController < ApplicationController
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
-      0 )
+      0)
   end
 end
