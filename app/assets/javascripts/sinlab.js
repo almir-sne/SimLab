@@ -1,15 +1,37 @@
 function pega_horas_dia()
-{
-    var entradaH = parseInt($('#dia_0_entrada').val());
-    var entradaM = parseInt($('#dia_0_entrada').next().val());
-    var saidaH = parseInt($('#dia_0_saida').val());
-    var saidaM = parseInt($('#dia_0_saida').next().val());
-    var intervaloH = parseInt($('#dia_0_intervalo').val());
-    var intervaloM = parseInt($('#dia_0_intervalo').next().val());
-    var entrada = entradaH * 60 + entradaM;
-    var saida = saidaH * 60 + saidaM;
-    var intervalo = intervaloH * 60 + intervaloM;
-    return saida - entrada - intervalo;
+{   
+    var totalHorasTrabalhadas = 0;
+    var intervalo = 0;
+    var tempoTotal = 0;
+    var primeiraEntrada = 0;
+    var entrada = 0;
+    var saida = 0;
+    $('.horario_select').each(
+      function(i,e) {
+        var entradaH = 0;
+        var entradaM = 0;
+        var saidaH = 0;
+        var saidaM = 0;
+        if ((e.className.indexOf('entrada_horario') != -1) && (e.id.indexOf('4i') != -1)) {
+          entradaH = parseInt(e.value);
+          entradaM = parseInt(e.nextElementSibling.value);
+          entrada = (entradaH * 60) + entradaM;
+          if (i == 0) {
+            primeiraEntrada = entrada;
+          }
+        }
+        else if ((e.className.indexOf('saida_horario') != -1) && (e.id.indexOf('4i') != -1)) {
+          saidaH = parseInt(e.value);
+          saidaM = parseInt(e.nextElementSibling.value);
+          saida = (saidaH * 60) + saidaM;
+          totalHorasTrabalhadas += (saida - entrada);
+        }
+      }   
+    );
+    return {
+      totalIntervalo: (saida - primeiraEntrada - totalHorasTrabalhadas),
+      totalHorasDia: totalHorasTrabalhadas
+    };
 }
 
 function pega_horas_atividade() {

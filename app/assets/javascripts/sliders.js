@@ -1,6 +1,8 @@
 function recalculaHoras() {
     // updateAllSliders();
-    $("#horas_do_dia").text(getTime(pega_horas_dia()));
+    horas = pega_horas_dia();
+    $("#horas_do_dia").text(getTime(horas.totalHorasDia));
+    $("#dia_intervalo").text(getTime(horas.totalIntervalo));
 }
 
 function slideTime(event, ui) {
@@ -11,7 +13,7 @@ function slideTime(event, ui) {
     parent.find(".hora_field")[0].value = ui.value;
     if (parent.attr("class") == "slider slider-horas")
         updateSubSliders(parent, ui.value);
-    updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+    updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 }
 
 function updateSubSliders(parent, maxtime) {
@@ -82,7 +84,8 @@ function initSlider(div, time, max_time) {
 }
 
 function updateAllSliders() {
-    var maxtime = pega_horas_dia();
+    var max = pega_horas_dia();
+    maxtime = max.totalHorasDia;
     $(".slider").each(function(i, e) {
         if ($(e).find(".hora_field")[0].value > maxtime) {
             $(e).find(".hora_field")[0].value = maxtime;
@@ -115,3 +118,4 @@ function validateSliders() {
     }
     return true;
 }
+

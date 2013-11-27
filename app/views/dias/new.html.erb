@@ -10,20 +10,21 @@
         <div class="span2">
           <%= f.fields_for :horarios do |horario_form| %>
           <%= horario_form.label :entrada %>
-          <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()" %>
+          <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => 'horario_select entrada_horario' %>
           <%= horario_form.label :saida %>
-          <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_saida" %>
+          <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => "horario_select saida_horario" %>
           <% end %>
-          
-          <%= f.link_to_add 'Novo horário' , :horarios, :class=>"nohover" %>
         
-        <%= f.label :intervalo %>
-          <%= f.time_select :intervalo, {minute_step: 5} , :style => 'width: 55px;', :onchange => "recalculaHoras()", :id => "dia_0_intervalo"%>
-          <br/>
-          Total de horas
+          <%= f.link_to_add 'Novo horário' , :horarios, :class=>"nohover" %>
+       
+        <br /><br />
+          Intervalo:
+          <div id="dia_intervalo"> <%= @dia.formata_intervalo %> horas </div>
+       <br/>
+          Total de horas:
           <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
           <br/>
-          Horas em atividades
+          Horas em atividades:
           <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
       </div>
 
