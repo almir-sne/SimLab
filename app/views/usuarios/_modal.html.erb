@@ -3,22 +3,22 @@
 
   <div class="modal-body" style="max-height: 95%">
     <%= form_for(@user, :url => custom_create_usuarios_path , :validate => true, :html => {"data-type" => :json}) do |f| %>
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span6">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
             <%= f.label :nome %>
             <%= f.text_field :nome, :style => "width: 100%"%>
           </div>
-          <div class="span5 offset1">
+          <div class="col-md-5 col-md-offset-1">
             <%= f.label :email %>
             <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
           </div>
         </div>
       </div>
 
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span7">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
             <div>
               <%= f.label :password, "Senha" %>
               <%= f.password_field :password , :style => "width: 65%"%>
@@ -28,7 +28,7 @@
               <%= f.select :role, options_for_select(["usuario normal", "admin", "diretor" ]) %>
             </div>
           </div>
-          <div class="span5">
+          <div class="col-md-5">
             <div>
               <%= f.label :password_confirmation, "Confirmar senha" %>
               <%= f.password_field :password_confirmation , :style => "width: 85%"%>

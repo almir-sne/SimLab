@@ -5,9 +5,9 @@
   <%= hidden_field_tag :data, @data %>
   <%= hidden_field_tag :dia_id, @dia_id %>
   <%= hidden_field_tag :tipo, params[:tipo] %>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5">
         <%= f.label :justificativa %>
         <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
         <div class="actions">
@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div class="span5">
+      <div class="col-md-5">
         <h4>Status </h4>
         <% if @ausencia.abonada? %>
           Ausencia foi marcada como falta abonada por:<br/>
@@ -29,7 +29,7 @@
           <%= @ausencia.mensagem %>
         <% end %>
       </div>
-      <div class="span2">
+      <div class="col-md-2">
         <%= f.label "Anexo" %>
         <%= file_field_tag "anexo" %>
       </div>

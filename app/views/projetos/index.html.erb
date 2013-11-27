@@ -4,20 +4,20 @@
 </div>
 <div class="blue-line">  </div>
 
-<div class="container-fluid" id="projetos">
-  <div class="row-fluid">
-    <div class="span4"><h5> Nome do projeto</h5></div>
-    <div class="span1"><h5> Data de início</h5></div>
-    <div class="span1"><h5> Horas Totais</h5></div>
-    <div class="span1"><h5> Valor</h5></div>
-    <div class="span4"><h5> Descrição</h5></div>
+<div class="container" id="projetos">
+  <div class="row">
+    <div class="col-md-4"><h5> Nome do projeto</h5></div>
+    <div class="col-md-1"><h5> Data de início</h5></div>
+    <div class="col-md-1"><h5> Horas Totais</h5></div>
+    <div class="col-md-1"><h5> Valor</h5></div>
+    <div class="col-md-4"><h5> Descrição</h5></div>
   </div>
   <div class="accordion" id="accordion2">
     <%@projetos.each do |super_e_subs| %>
       <div class="accordion-group">
         <div class="accordion-heading">
-          <div class="row-fluid projetos-header">
-            <div class="span4">
+          <div class="row projetos-header">
+            <div class="col-md-4">
               <a data-toggle="collapse" onclick="toggleCollapse(this)" class="nohover" style="padding-left: 10px" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
                 <i class="icon-chevron-sign-right"></i>
               </a> 
@@ -27,11 +27,11 @@
                 <%= super_e_subs[0].nome%>
               <%end%>
             </div>
-            <div class="span1"><%=super_e_subs[0].data_de_inicio%></div>
-            <div class="span1"><%=super_e_subs[0].horas_totais%></div>
-            <div class="span1"><%=super_e_subs[0].valor%></div>
-            <div class="span4"><%=super_e_subs[0].descricao%></div>
-            <div class="span1">
+            <div class="col-md-1"><%=super_e_subs[0].data_de_inicio%></div>
+            <div class="col-md-1"><%=super_e_subs[0].horas_totais%></div>
+            <div class="col-md-1"><%=super_e_subs[0].valor%></div>
+            <div class="col-md-4"><%=super_e_subs[0].descricao%></div>
+            <div class="col-md-1">
               <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(super_e_subs[0].id),
                 :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
                 :class => 'nohover', :title => "Excluir", :style => "float: right; padding-right: 10px"%>
@@ -41,13 +41,13 @@
         <div id="collapse<%=super_e_subs[0].nome.tr(' ','_')%>" class="accordion-body collapse">
           <%super_e_subs[1].each do |sub|%>
             <div class="accordion-inner" style="padding: 0px; padding-top: 5px">
-              <div class="row-fluid projetos-body">
-                <div class="span4" style="padding-left: 25px;"><%= link_to sub.nome, edit_projeto_path(sub)%></div>
-                <div class="span1"><%=sub.data_de_inicio%></div>
-                <div class="span1"><%=sub.horas_totais%></div>
-                <div class="span1"><%=sub.valor%></div>
-                <div class="span4"><%=sub.descricao%></div>
-                <div class="span1">
+              <div class="row projetos-body">
+                <div class="col-md-4" style="padding-left: 25px;"><%= link_to sub.nome, edit_projeto_path(sub)%></div>
+                <div class="col-md-1"><%=sub.data_de_inicio%></div>
+                <div class="col-md-1"><%=sub.horas_totais%></div>
+                <div class="col-md-1"><%=sub.valor%></div>
+                <div class="col-md-4"><%=sub.descricao%></div>
+                <div class="col-md-1">
                   <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(sub.id),
                     :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
                     :class => 'nohover', :title => "Excluir", :style => "float: right; padding-right: 10px"%>

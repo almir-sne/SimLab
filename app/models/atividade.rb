@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
-  attr_accessible :duracao, :data, :cartao_id
+  attr_accessible :duracao, :data, :trello_id
   
   scope :periodo, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
@@ -25,7 +25,6 @@ class Atividade < ActiveRecord::Base
   has_many :pares, :dependent => :destroy
   
   accepts_nested_attributes_for :pares, :allow_destroy => true
-
 
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
@@ -97,6 +96,20 @@ class Atividade < ActiveRecord::Base
       JSON.parse response.body
     else
       :error
+    end
+  end
+  
+  def trello_id
+    unless self.cartao.blank?
+      self.cartao.trello_id
+    else
+      nil
+    end
+  end
+
+  def trello_id=(cartao_id)
+    unless cartao_id.blank?
+      self.cartao = Cartao.find_or_create_by_trello_id(cartao_id)
     end
   end
 end

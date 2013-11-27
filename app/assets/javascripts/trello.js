@@ -76,7 +76,7 @@ function dropCard(event) {
         $("#nova_atividade").click();
         var target = $(".fields").last();
         var card = $("#" + data);
-        var input = $(target.children(".cartao_field")[0]);
+        var input = $(target.find(".cartao_field")[0]);
         input.after(card);
         input.val(card.attr("id"));
     }

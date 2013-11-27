@@ -7,38 +7,38 @@
   <div class="div_edit">
     <div class="form-group">
       <h3> Dados Pessoais </h3>
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span6">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
             <%= f.label :nome %>
             <%= f.text_field :nome, :style => "width: 100%"%>
           </div>
-          <div class="span5 offset1">
+          <div class="col-md-5 col-md-offset-1">
             <%= f.label :email %>
             <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
           </div>
         </div>
 
-        <div class="row-fluid">
-          <div class="span6">
+        <div class="row">
+          <div class="col-md-6">
             <%= f.label :cpf %>
             <%= f.text_field :cpf, class: 'cpf' %>
             <%= f.label :data_de_nascimento, "Data de nascimento"%>
             <%= f.date_select :data_de_nascimento, {start_year: 1940}, :style => "width: 100px" %>
           </div>
-          <div class="span5 offset1">
+          <div class="col-md-5 col-md-offset-1">
             <%= f.label :rg %>
             <%= f.text_field :rg , class: 'rg' %>
           </div>
         </div>
 
         <%= f.fields_for :telefones, :allow_destroy => true do |tel| %>
-          <div class="row-fluid">
-            <div class="span1">
+          <div class="row">
+            <div class="col-md-1">
               <%= tel.label :ddd , "DDD"%>
               <%= tel.text_field :ddd, :style => "width: 35px;", class: 'ddd' %>
             </div>
-            <div class="span6">
+            <div class="col-md-6">
               <%= tel.label :numero, "Telefone" %>
               <%= tel.text_field :numero, class: 'telefone' %>
               <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
@@ -51,20 +51,20 @@
 
     <div class="form-group">
       <h3> Dados Bancários </h3>
-      <div class="container-fluid">
+      <div class="container">
         <%= f.fields_for :contas, :allow_destroy => true do |c| %>
-          <div class="row-fluid">
-            <div class="span4">
+          <div class="row">
+            <div class="col-md-4">
               <%= c.label :banco %>
               <%= c.text_field :banco %>
             </div>
 
-            <div class="span4">
+            <div class="col-md-4">
               <%= c.label :agencia %>
               <%= c.text_field :agencia, class: 'agencia' %>
             </div>
 
-            <div class="span4">
+            <div class="col-md-4">
               <%= c.label :numero, "Conta" %>
               <%= c.text_field :numero, class: 'conta' %>
               <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
@@ -77,7 +77,7 @@
 
     <div class="form-group">
       <h3> Endereço </h3>
-      <div class="container-fluid">
+      <div class="container">
         <%= f.fields_for :address do |builder| %>
           <%= render "/addresses/form", :f => builder %>
         <% end %>
@@ -87,10 +87,10 @@
     <% if can? :create, Usuario %>
       <div class="form-group">
         <h3> Dados Profissionais </h3>
-        <div class="container-fluid">
+        <div class="container">
           <%= f.fields_for :contratos, :allow_destroy => true do |c| %>
-            <div class="row-fluid">
-              <div class="span4">
+            <div class="row">
+              <div class="col-md-4">
                 <%= c.label :hora_mes %>
                 <%= c.text_field :hora_mes, :style => "width: 50%" %>
 
@@ -104,14 +104,14 @@
                 <%= c.select :dia_inicio_periodo, (1..31), {},:style => "width: 75px" %>
 
               </div>
-              <div class="span4">
+              <div class="col-md-4">
                 <%= c.label :tipo, "Tipo de Contrato" %>
                 <%= c.text_field :tipo, :style => "width: 50%" %>
 
                 <%= c.label :funcao, "Função" %>
                 <%= c.text_field :funcao, :style => "width: 50%" %>
               </div>
-              <div class="span5">
+              <div class="col-md-5">
                 <%= c.label :inicio, "Data de inicio do contrato"%>
                 <%= c.date_select :inicio, {}, :style => "width: 100px" %>
 
@@ -130,9 +130,9 @@
       <% end %>
       <div class="form-group">
         <h3> Dados Acadêmicos </h3>
-        <div class="container-fluid">
-          <div class="row-fluid">
-            <div class="span6">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
               <%= f.label :entrada_usp, "Entrada na USP" %>
               <%= f.date_select :entrada_usp, {start_year: 2000, discard_day: true}, :style => "width: 100px" %>
               <%= f.label :saida_usp, "Data ou previsão de formatura"%>
@@ -140,7 +140,7 @@
               <%= f.label :numero_usp, "Carteira de Identificação" %>
               <%= f.text_field :numero_usp, :style => "width: 50%" %>
             </div>
-            <div class="span6">
+            <div class="col-md-6">
               <%= f.label :curso %>
               <%= f.text_field :curso, :style => "width: 50%" %>
               <%= f.label :formado, "Formado?" %>
@@ -155,29 +155,29 @@
 
       <div class="form-group">
         <h3>Anexos</h3>
-        <div class="container-fluid">
+        <div class="container">
           <%= f.fields_for :anexos, @uploads, :allow_destroy => true do |file| %>
             <%= file.hidden_field :data, :value => Date.today %>
-            <div class="row-fluid">
-              <div class="span3">
+            <div class="row">
+              <div class="col-md-3">
                   <%= file.label :nome %>
                   <%= file.text_field :nome %>
               </div>
-              <div class="span3">
+              <div class="col-md-3">
                 <%= file.label :tipo %>
                 <%= file.select :tipo, options_for_select(@types, file.object.tipo)  %>
               </div>
-              <div class="span3">
+              <div class="col-md-3">
                 <%= file.label :arquivo %>
                 <%= file.file_field :arquivo %>
               </div>
              <!--
-             <div class="span1">
+             <div class="col-md-1">
                  file.label "Blob?" %>
                  file.check_box :blob%>
               </div>
              -->
-              <div class="span1">
+              <div class="col-md-1">
                 <% unless file.object.arquivo_url.nil? %>
                   <%= link_to File.basename(file.object.arquivo.url), "/uploads/#{file.object.id}/#{File.basename(file.object.arquivo.url)}" %>
                 <% end %>
@@ -185,7 +185,7 @@
                  link_to url_for(:controller => "usuarios", :action => "show_anexo", :id => file.object.id) %>
                 -->
               </div>
-              <div class="span1">
+              <div class="col-md-1">
                 <%= file.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
               </div>
             </div>
@@ -198,9 +198,9 @@
     <% if can? :create, Usuario %>
       <div class="form-group">
         <h3> Configuração </h3>
-        <div class="container-fluid">
-          <div class="row-fluid">
-            <div class="span6">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
               <%= f.label :role %>
               <%= f.select :role, options_for_select(["usuario normal", "diretor", "admin" ], @user.role) %>
               <%= f.label :status, "Status no Sistema" %>
@@ -212,7 +212,7 @@
               <%= f.text_field :login_trello, :style => "width: 50%" %>
             </div>
 
-            <div class="span6">
+            <div class="col-md-6">
               <%= f.label :projetos %>
               <% @user.projetos.each do |p| %>
                 <%= p.nome %> <br/>
