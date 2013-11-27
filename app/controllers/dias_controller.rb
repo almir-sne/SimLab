@@ -142,13 +142,12 @@ class DiasController < ApplicationController
 
   def convert_date(hash, date_symbol_or_string)
     attribute = date_symbol_or_string.to_s
-    banana = DateTime.new(
+    return DateTime.new(
       hash[attribute + '(1i)'].to_i,
       hash[attribute + '(2i)'].to_i,
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
       0 )
-    return banana
   end
 end
