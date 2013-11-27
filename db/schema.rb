@@ -157,6 +157,15 @@ ActiveRecord::Schema.define(:version => 20131126195157) do
     t.datetime "updated_at",                               :null => false
   end
 
+  create_table "pares", :force => true do |t|
+    t.integer  "usuario_id"
+    t.integer  "par_id"
+    t.integer  "atividade_id"
+    t.float    "duracao"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "projetos", :force => true do |t|
     t.string   "nome"
     t.date     "data_de_inicio"

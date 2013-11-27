@@ -4,6 +4,7 @@ class DiasController < ApplicationController
   def new
     @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], params[:usuario_id])
     @usuario = Usuario.find(params[:usuario_id])
+    @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data]
     @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
@@ -12,6 +13,19 @@ class DiasController < ApplicationController
       format.html
     end
   end
+  {"utf8"=>"✓", "authenticity_token"=>"hENwuCB78eaAmmh1JzMIXiaxD0RaVSYhhJeJhpdZ2h4=",
+    "data"=>"2013-11-26", "dia_id"=>"2863", "usuario_id"=>"17",
+  
+    "dia"=>{"entrada(1i)"=>"2013", "entrada(2i)"=>"11", "entrada(3i)"=>"26", "entrada(4i)"=>"02",
+      "entrada(5i)"=>"00", "saida(1i)"=>"2013", "saida(2i)"=>"11", "saida(3i)"=>"26", "saida(4i)"=>"02",
+      "saida(5i)"=>"00", "intervalo(1i)"=>"2000", "intervalo(2i)"=>"1", "intervalo(3i)"=>"1",
+      "intervalo(4i)"=>"00", "intervalo(5i)"=>"00",
+      
+      "atividades_attributes"=>{"0"=>{"_destroy"=>"false", "projeto_id"=>"12", "horas"=>"120",
+          "cartao_id"=>"269",
+          "pares_attributes"=>{"1385489291971"=>{"par_id"=>"34", "_destroy"=>"false", "duracao"=>"10"},
+            "1385489881783"=>{"par_id"=>"26", "_destroy"=>"false", "duracao"=>"40"}
+          }, "observacao"=>"", "id"=>"3821"}}}, "key"=>"98853929c4100832c39e0f3c505d0332", "token"=>"832166084250b32700b75b9a1b4c40dd97d35918b5aa987c8d6cb5b1c77f7953", "commit"=>"Ok", "action"=>"create", "controller"=>"dias"}
 
   def create
     if params[:dia_id].blank?
@@ -38,7 +52,7 @@ class DiasController < ApplicationController
       end
     end
     atividades_success = true
-    params[:dia][:atividades_attributes].each do |lixo, atividade_attr|
+    params[:dia][:atividades_attributes].each do |index, atividade_attr|
       atividade = Atividade.find_by_id atividade_attr[:id].to_i
       if atividade.blank?
         atividade = Atividade.new
@@ -57,6 +71,23 @@ class DiasController < ApplicationController
           :cartao_id => c.id,
           :data => dia.data
         )
+        if atividade_attr["pares_attributes"]
+          atividade_attr["pares_attributes"].each do |index, par_attr|
+            par = Par.find_by_id par_attr[:id].to_i
+            if par.blank?
+              par = Par.new
+            end
+            if par_attr["_destroy"] == "1" and !par.blank?
+              par.destroy()
+            else
+              par.update_attributes(
+                :duracao => par_attr["horas"].to_i * 60,
+                :par_id => par_attr["par_id"].to_i,
+                :atividade_id => atividade.id
+              )
+            end
+          end
+        end
       end
       Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
     end
@@ -117,7 +148,7 @@ class DiasController < ApplicationController
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    @equipe = Usuario.joins(:workons).where(workons: {projeto_id: @usuario.projetos, usuario_id: Usuario.select(:id).where(status: true)}).group(:id).order(:nome)
+    @equipe = @usuario.equipe
     @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
     respond_to do |format|
       format.html # index.html.erb
@@ -148,6 +179,6 @@ class DiasController < ApplicationController
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
-      0 )
+      0)
   end
 end

@@ -4,11 +4,25 @@ function recalculaHoras() {
 }
 
 function slideTime(event, ui) {
-    $(event.target).parent().find("#time").text(
+    var parent = $(event.target).parent();
+    parent.find("#time").text(
             getTime(ui.value)
             );
-    $(event.target).parent().find(".hora_field")[0].value = ui.value;
-        updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"))
+    parent.find(".hora_field")[0].value = ui.value;
+    if (parent.attr("class") == "slider slider-horas")
+        updateSubSliders(parent, ui.value);
+    updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+}
+
+function updateSubSliders(parent, maxtime) {
+    parent.parents("#atividade-form").find(".slider-par").each(function(i, e) {
+        if ($(e).find(".hora_field")[0].value > maxtime) {
+            $(e).find(".hora_field")[0].value = maxtime;
+            initTime($(e).find("#time"), maxtime);
+            $(e).find("#slider").slider("value", maxtime);
+        }
+        $(e).find("#slider").slider("option", "max", maxtime);
+    });
 }
 
 function updateHorasAtividades(val, max, div) {
@@ -41,8 +55,13 @@ function initializeSliders() {
 }
 
 function createSlider(sliderParent) {
-    var time = sliderParent.find(".hora_field")[0].value
-    initSlider(sliderParent.find('#slider'), time, 720);
+    var time = sliderParent.find(".hora_field")[0].value;
+    var max;
+    if (sliderParent.parent().attr("class") == "par")
+        max = $(sliderParent).parents("#atividade-form").find(".atividade_field")[0].value;
+    else
+        max = 720;
+    initSlider(sliderParent.find('#slider'), time, max);
     initTime(sliderParent.find('#time'), time);
 }
 
@@ -54,7 +73,7 @@ function initSlider(div, time, max_time) {
     div.slider({
         min: 0,
         max: max_time,
-        value: time,
+        value: parseFloat(time),
         step: 10,
         slide: slideTime,
         orientation: "horizontal",

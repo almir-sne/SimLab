@@ -257,9 +257,6 @@
 }
 
 .loggedout {
-    text-align: center;
-    font-size: 20px;
-    padding-top: 30px;
 }
 .loggedin {
     display: none;
@@ -319,6 +316,13 @@
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
+}
+
+.par {
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px;
 }
 
 .modal {
