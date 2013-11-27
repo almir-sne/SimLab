@@ -84,4 +84,8 @@ class Usuario < ActiveRecord::Base
         projeto_id: self.projetos, usuario_id: Usuario.select(:id).where(status: true)
       }).group(:id).order(:nome)
   end
+  
+  def meus_projetos
+    self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+  end
 end

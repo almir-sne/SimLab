@@ -6,7 +6,7 @@ class DiasController < ApplicationController
     @usuario = Usuario.find(params[:usuario_id])
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data]
-    @projetos = @usuario.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    @projetos = @usuario.meus_projetos
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     respond_to do |format|
       format.js
@@ -122,6 +122,7 @@ class DiasController < ApplicationController
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
     @equipe = @usuario.equipe
+    @projetos = @usuario.meus_projetos
     @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
     respond_to do |format|
       format.html # index.html.erb
