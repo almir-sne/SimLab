@@ -13,20 +13,7 @@ class DiasController < ApplicationController
       format.html
     end
   end
-  {"utf8"=>"✓", "authenticity_token"=>"hENwuCB78eaAmmh1JzMIXiaxD0RaVSYhhJeJhpdZ2h4=",
-    "data"=>"2013-11-26", "dia_id"=>"2863", "usuario_id"=>"17",
   
-    "dia"=>{"entrada(1i)"=>"2013", "entrada(2i)"=>"11", "entrada(3i)"=>"26", "entrada(4i)"=>"02",
-      "entrada(5i)"=>"00", "saida(1i)"=>"2013", "saida(2i)"=>"11", "saida(3i)"=>"26", "saida(4i)"=>"02",
-      "saida(5i)"=>"00", "intervalo(1i)"=>"2000", "intervalo(2i)"=>"1", "intervalo(3i)"=>"1",
-      "intervalo(4i)"=>"00", "intervalo(5i)"=>"00",
-      
-      "atividades_attributes"=>{"0"=>{"_destroy"=>"false", "projeto_id"=>"12", "horas"=>"120",
-          "cartao_id"=>"269",
-          "pares_attributes"=>{"1385489291971"=>{"par_id"=>"34", "_destroy"=>"false", "duracao"=>"10"},
-            "1385489881783"=>{"par_id"=>"26", "_destroy"=>"false", "duracao"=>"40"}
-          }, "observacao"=>"", "id"=>"3821"}}}, "key"=>"98853929c4100832c39e0f3c505d0332", "token"=>"832166084250b32700b75b9a1b4c40dd97d35918b5aa987c8d6cb5b1c77f7953", "commit"=>"Ok", "action"=>"create", "controller"=>"dias"}
-
   def create
     if params[:dia_id].blank?
       dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
@@ -47,7 +34,6 @@ class DiasController < ApplicationController
       if atividade_attr["_destroy"] == "1" and !atividade.blank?
         atividade.destroy()
       else
-        c = Cartao.find_or_create_by_trello_id(atividade_attr["cartao_id"])
         atividades_success = atividades_success and atividade.update_attributes(
           :duracao => atividade_attr["horas"].to_i * 60,
           :observacao => atividade_attr["observacao"],
@@ -55,7 +41,7 @@ class DiasController < ApplicationController
           :dia_id => dia.id,
           :usuario_id => dia.usuario.id,
           :aprovacao => nil,
-          :cartao_id => c.id,
+          :trello_id => atividade_attr["trello_id"],
           :data => dia.data
         )
         if atividade_attr["pares_attributes"]
@@ -76,7 +62,7 @@ class DiasController < ApplicationController
           end
         end
       end
-      Atividade.update_on_trello(params[:key], params[:token], atividade_attr["cartao_id"])
+      Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
     end
     if dia_success and atividades_success
       flash[:notice] = I18n.t("atividades.create.success")
