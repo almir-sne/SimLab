@@ -4,16 +4,16 @@
 <div class="div_edit">
     <div class="form-group">
       <h3> Dados do Projeto </h3>
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class=" span6">
+      <div class="container">
+        <div class="row">
+          <div class=" col-md-6">
             <%= f.label :nome %>
             <%= f.text_field :nome, :style => "width: 100%"%>
 
             <%= f.label :descricao %>
             <%= f.text_area :descricao, :style => "height: 80px; width: 100%"%>
           </div>
-          <div class="offset1 span5">
+          <div class="col-md-offset-1 col-md-5">
             <%= f.label :data_de_inicio %>
             <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
 
@@ -23,9 +23,9 @@
     </div>
         <div class="form-group">
       <h3> Relacionamento de projetos </h3>
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class=" span6">
+      <div class="container">
+        <div class="row">
+          <div class=" col-md-6">
             <table>
               <tr>
                 <th><%= f.label "Super-Projeto" %></th>
@@ -53,7 +53,7 @@
               </table>
             </div>
 
-            <div class="offset1 span5" id="pai">
+            <div class="col-md-offset-1 col-md-5" id="pai">
               <%= f.label "projeto pai" %>
               <%= f.select :super_projeto_id, options_for_select(@pais_for_select, [@projeto.super_projeto.try(:nome), @projeto.super_projeto_id]), :style => "width: 70%"%>
             </div>
@@ -63,9 +63,9 @@
     </div>
     <div class="form-group">
 
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
             <h3> Equipe </h3>
             <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
             <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workons, :class=>"nohover" %>
@@ -92,7 +92,7 @@
               <tr id='novo_item'></tr>
             </table>
           </div>
-          <div class="offset2 span3">
+          <div class="col-md-offset-2 col-md-3">
 
             <h3> Boards do Trello </h3>
             <div class="loggedout">

@@ -4,25 +4,25 @@
   <%= form_for(@pagamento, :url => pagamentos_path, :validate => true,
     :html => {"data-type" => :json, :multipart => true}) do |f| %>
     <%= f.hidden_field :usuario_id, :value => @usuario.id%>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
           <%= f.label :data       %>
           <%= f.date_select :data, {}, :style => "width: 32%" %>
         </div>
-        <div class="span2">
+        <div class="col-md-2">
           <%= f.label :motivo      %>
           <%= f.text_field :motivo %>
         </div>
-        <div class="span2">
+        <div class="col-md-2">
           <%= f.label :fonte      %>
           <%= f.text_field :fonte %>
         </div>
-        <div class="span2">
+        <div class="col-md-2">
           <%= f.label :valor        %>
           <%= f.number_field :valor %>
         </div>
-        <div class="span3">
+        <div class="col-md-3">
           <%= f.label "Comprovante"%>
           <%= file_field_tag "comprovante" %>
         </div>

@@ -6,8 +6,8 @@
 <div class="div_edit">
   <div class="form-group">
     <h3> Coordenadores  de <%= @workon.usuario.nome %> no projeto <%= @workon.projeto.nome %> </h3> 
-    <div class="container-fluid">
-      <div class="span6">
+    <div class="container">
+      <div class="col-md-6">
 <%= nested_form_for(@workon, :validate => true, :html => {"data-type" => :json}) do |f| %>
   <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
   <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :coordenacoes, :class=>"nohover" %>

@@ -35,20 +35,20 @@
   <div id="form" style="display:none">
     <%= form_for @pagamento, :validate => true,
     :html => {"data-type" => :json, :multipart => true} do |p| %>
-      <div class="container-fluid">
+      <div class="container">
       <%= p.hidden_field :usuario_id, :value => @usuario.id%>
       <%= p.hidden_field :motivo, :value => "salario"%>
       <%= p.hidden_field :data, :value => @periodo.last%>
-        <div class="row-fluid">
-          <div class="span3">
+        <div class="row">
+          <div class="col-md-3">
             <%= p.label :valor%>
             <%= p.text_field :valor %>
           </div>
-          <div class="span3">
+          <div class="col-md-3">
             <%= p.label :fonte %>
             <%= p.text_field :fonte %>
           </div>
-          <div class="span3">
+          <div class="col-md-3">
             <%= p.label "Comprovante"%>
             <%= file_field_tag "comprovante" %>
           </div>
