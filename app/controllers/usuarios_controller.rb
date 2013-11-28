@@ -14,6 +14,13 @@ class UsuariosController < ApplicationController
     @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
     @user ||= Usuario.new
   end
+  
+  def alt_role
+    if (Rails.env.development? or params[:r] != "")
+      current_user.role = params[:r]
+      current_user.save
+    end
+  end
 
   def custom_create
     authorize! :create, Usuario
