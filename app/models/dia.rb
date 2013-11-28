@@ -1,5 +1,5 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :usuario_id, :data, :intervalo
+  attr_accessible :usuario_id, :data, :intervalo, :entrada, :saida
   
   belongs_to :mes
   belongs_to :usuario

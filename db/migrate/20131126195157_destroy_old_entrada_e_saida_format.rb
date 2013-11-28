@@ -9,10 +9,12 @@ class DestroyOldEntradaESaidaFormat < ActiveRecord::Migration
     add_column :dias, :saida, :datetime
     
     Horario.all.each do |h|
-      dia = h.dia
-      dia.entrada = h.entrada
-      dia.saida = h.saida
-      dia.save
+      if !h.dia.nil?
+        dia = h.dia
+        dia.entrada = h.entrada
+        dia.saida = h.saida
+        dia.save
+      end
     end
   end
   
