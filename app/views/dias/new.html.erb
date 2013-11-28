@@ -15,6 +15,7 @@
             <br />
             <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => "horario_select saida_horario" %>
             <br />
+            <%= horario_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe, :class=>"nohover", :style => "float: right; margin-right: 10px" %>
           <% end %>
            
           <%= f.link_to_add 'Novo horário' , :horarios, :class=>"nohover" %>
