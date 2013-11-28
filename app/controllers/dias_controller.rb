@@ -78,6 +78,12 @@ class DiasController < ApplicationController
       end
       Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
     end
+    params[:cartao].each do |filho_id, pai_id|
+      filho = Cartao.find_or_create_by_trello_id(filho_id)
+      pai = Cartao.find_or_create_by_trello_id(pai_id)
+      filho.pai = pai
+      filho.save
+    end
     if dia_success and atividades_success and horarios_success
       flash[:notice] = I18n.t("atividades.create.success")
     else
@@ -155,6 +161,15 @@ class DiasController < ApplicationController
     contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
     @periodos = contrato.periodos_por_ano(@ano.to_i)
     @today = Date.today
+  end
+  
+  def cartao_pai
+    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
+    unless cartao.pai.blank?
+      render json: cartao.pai.trello_id.to_json
+    else
+      render json: "".to_json
+    end
   end
   
   private
