@@ -158,7 +158,6 @@ ActiveRecord::Schema.define(:version => 20131128151410) do
   end
 
   create_table "pares", :force => true do |t|
-    t.integer  "usuario_id"
     t.integer  "par_id"
     t.integer  "atividade_id"
     t.float    "duracao"

@@ -12,6 +12,7 @@
     <%= javascript_include_tag "trello" %>
     <%= javascript_include_tag "jquery.mask.min.js" %>
     <%= javascript_include_tag "jquery-ui-1.10.3.custom.min" %>
+    <%= javascript_include_tag "layouts/application.js" %>
     <%= csrf_meta_tags %>
   </head>
   <body onload="checkTrello(loadSimpleCards)">
@@ -33,7 +34,8 @@
               Atividades<b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="<%= periodos_dias_path %>">Minhas Atividades</a></li>
+              <li><a href="<%= dias_path(data: Date.today, usuario_id: current_usuario) %>">Calendario de Atividades</a></li>
+              <li><a href="<%= periodos_dias_path %>">Meus Períodos</a></li>
               <%if can? :index, Ausencia %>
                 <li><a href="<%= ausencias_path %>">Minhas Ausências</a></li>
               <% end  %>
@@ -72,9 +74,6 @@
               <% end %>
             </ul>
           </li>
-          <li>
-            <a href="<%= log_de_atividades_banco_de_horas_path %>">Notificações</a>
-          </li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Minha Conta<b class="caret"></b>
@@ -85,19 +84,39 @@
               <li><a href="<%= destroy_usuario_session_path %>" rel="nofollow" data-method="delete" >Sair</a></li>
             </ul>
           </li>
+          <li>
+            <div>
+              Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome %>! </b>
+              <div class="loggedin">
+                Trello: <b class="fullName"></b>
+              </div>
+            </div>
+          </li>
+          <% if (Rails.env.development?) %>
+          <% user_role = current_usuario.role %>
+          <li>
+            <center>
+              Role Alterator 2000 Plus v2<br/>
+              <select onchange="alterar_role(this)">
+                <option value="42" <%=  ((user_role == "admin") ? "selected" : "")%> >Administrador</option>
+                <option value="814" <%=  ((user_role == "usuario normal") ? "selected" : "")%> >Usuário Normal</option>
+              </select>
+            </center>
+          </li>
+          <%  end %>
         </ul>
         <img alt="InfoXYZ" src="/images/logo.jpg" style="margin: 10px 0px; height: 30px; float: right;"/>
-        <div class="navbar-header">Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome %>! </b>
-          <div class="loggedin">
-            Trello: <b class="fullName"></b>
-          </div>
-        </div>
+        
       </div>
     </nav>
     <div class="messages">
       <%= render 'layouts/messages'%>
     </div>
     <%= yield %>
+    
+    <script>
+      var alt_role = "<%= alt_role_usuarios_path %>";
+    </script>
 
     <%= javascript_include_tag javascript_include_view_js %>
   </body>
