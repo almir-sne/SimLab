@@ -14,13 +14,33 @@ module DiasHelper
   end
   
   def classe_do_dia(data, usuario_id)
-    if tem_ausencia_no_dia?(data, usuario_id)
-      "day-link gray-link"
-    elsif tem_reprovacao_no_dia?(data, usuario_id)
-      "day-link red-link"
-    else
-      "day-link blue-link"
+    today = Date.today
+    string = "day-link"
+    
+    if (data == today)
+      string = string + " hoje"
     end
+    
+    if (data.saturday? or data.sunday?)
+      string = string + " fimdesemana"
+    elsif (!data.holiday?)
+      string = string + " diautil"
+    end
+    
+    if (data.holiday?)
+      string = string + " feriado"
+    end
+    
+    if tem_reprovacao_no_dia?(data, usuario_id)
+      string = string + " reprovacao"
+    end
+    
+    if tem_ausencia_no_dia?(data, usuario_id)
+      string = string + " ausencia"
+    end
+
+
+    string
   end
   
   def tem_ausencia_no_dia?(data, usuario_id)

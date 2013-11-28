@@ -351,30 +351,6 @@
     width: 85%
 }
 
-.gray-link {
-    background-color: #666666;
-}
-
-.gray-link:hover {
-    background-color: #444444 !important;
-}
-
-.red-link {
-    background-color: #CC0000;
-}
-
-.red-link:hover {
-    background-color: #B10000 !important;
-}
-
-.blue-link {
-    background: rgb(33, 147, 189);
-}
-
-.blue-link:hover {
-    background-color: rgb(0, 112, 153) !important;
-}
-
 .slider {
     width: 90%
 }
@@ -476,3 +452,66 @@ ul .submenu {
     border: 16px solid #FF00CC;
 }
 
+.ausencia {
+    background-color: #666666;
+}
+
+.ausencia:hover {
+    background-color: #444444 !important;
+}
+
+.reprovacao {
+    background-color: #CC0000;
+}
+
+.reprovacao:hover {
+    background-color: #B10000 !important;
+}
+
+.hoje {
+    background: rgb(33, 147, 189);
+}
+
+.hoje:hover {
+    background-color: rgb(0, 112, 153) !important;
+}
+
+.feriado {
+    background: rgb(0,255,0);
+}
+
+.feriado:hover {
+    background-color: rgb(0,255,0) !important;
+}
+
+.fimdesemana {
+    background: rgb(0,255,255);
+}
+
+.fimdesemana:hover {
+    background-color: rgb(0,255,255) !important;
+}
+
+.diautil {
+    background: rgb(33, 147, 189);
+}
+
+.diautil:hover {
+    background-color: rgb(0, 112, 153) !important;
+}
+
+.blue-link {
+    background: rgb(33, 147, 189);
+}
+
+.blue-link:hover {
+    background-color: rgb(0, 112, 153) !important;
+}
+
+.red-link {
+    background-color: #CC0000;
+}
+
+.red-link:hover {
+    background-color: #B10000 !important;
+}

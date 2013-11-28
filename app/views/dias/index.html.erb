@@ -1,6 +1,6 @@
 <div class="blue-line">  </div>
 <br />
-<div name="navbar" style="width: 15%; float: left;">
+<div name="navbar" style="width: 15%; float: left;" >
   <a style="cursor: pointer;" data-toggle="collapse" data-target="#intervalo">
     <h3>Intervalo</h3>
   </a>
@@ -17,7 +17,7 @@
   </a>
   <div id="projetos" class="collapse">
     <% @projetos.each do |projeto| %>
-      <%= check_box_tag "projeto[0]", projeto[1] %> <%= projeto[0] %>
+      <%= check_box_tag "projeto[0]", projeto[1], true,onclick: '$(".proj' + projeto[1].to_s + '_mark").toggle();' %> <%= projeto[0] %>
       <br/>
     <%  end %>
   </div>
@@ -26,11 +26,12 @@
     <h3>Legenda</h3>
   </a>
   <div id="legenda" class="collapse">
-    <%= check_box_tag "hoje", 0 %>Hoje<br/> 
-    <%= check_box_tag "dar", 0 %>Dia com Atividade Reprovada<br/> 
-    <%= check_box_tag "dac", 0 %>Dia com Ausência Cadastrada<br/> 
-    <%= check_box_tag "du", 0 %>Dias Úteis<br/> 
-    <%= check_box_tag "f", 0 %>Feriado   
+    <div class ="hoje">Hoje</div><br/> 
+    <div class ="reprovacao">Dia com Atividade Reprovada</div><br/> 
+    <div class ="ausencia">Dia com Ausência Cadastrada</div><br/> 
+    <div class ="diautil">Dias Úteis</div><br/> 
+    <div class ="feriado">Feriado</div><br/> 
+    <div class ="fimdesemana">Fim de Semana</div>
   </div>
 </div>
 <div nome="calendario" style="width: 85%; float: right;">
@@ -120,7 +121,7 @@
                 <% unless @dias[dia].blank? %>
                   <% @dias[dia][0].atividades.each do |atividade| %>
                     <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-                    <input type="hidden" class="card-abrev" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+                  <input type="hidden" class="card-abrev" id="<%= cartao_trello_id %>" pid="<%= atividade.projeto_id %>" value="<%= atividade.duracao/60 %>"></input>
                   <% end %>
                 <% end %>
               </div> 
