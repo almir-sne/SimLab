@@ -94,7 +94,7 @@ class DiasController < ApplicationController
       flash[:error] = I18n.t("atividades.create.failure")
     end
     periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
-    redirect_to dias_path(inicio: periodo.first.to_formatted_s, fim: periodo.last.to_formatted_s, usuario: dia.usuario.id)
+    redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
   end
 
   def destroy
