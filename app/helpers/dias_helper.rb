@@ -19,24 +19,17 @@ module DiasHelper
     
     if (data == today)
       string = string + " hoje"
-    end
-    
-    if (data.saturday? or data.sunday?)
-      string = string + " fimdesemana"
-    elsif (!data.holiday?)
-      string = string + " diautil"
-    end
-    
-    if (data.holiday?)
-      string = string + " feriado"
-    end
-    
-    if tem_reprovacao_no_dia?(data, usuario_id)
-      string = string + " reprovacao"
-    end
-    
-    if tem_ausencia_no_dia?(data, usuario_id)
+    elsif tem_ausencia_no_dia?(data, usuario_id)
       string = string + " ausencia"
+    elsif tem_reprovacao_no_dia?(data, usuario_id)
+      string = string + " reprovacao"
+    elsif (data.holiday?)
+      string = string + " feriado"
+    elsif (data.saturday? or data.sunday?)
+      string = string + " fimdesemana"
+    else
+      string = string + " diautil"
+    
     end
 
 

@@ -469,27 +469,27 @@ ul .submenu {
 }
 
 .hoje {
-    background: rgb(33, 147, 189);
+    background: #FF00FF;
 }
 
 .hoje:hover {
-    background-color: rgb(0, 112, 153) !important;
+    background-color: #FF11FF !important;
 }
 
 .feriado {
-    background: rgb(0,255,0);
+    background: rgb(0,150,0);
 }
 
 .feriado:hover {
-    background-color: rgb(0,255,0) !important;
+    background-color: rgb(0,150,0) !important;
 }
 
 .fimdesemana {
-    background: rgb(0,255,255);
+    background: rgb(0,100,100);
 }
 
 .fimdesemana:hover {
-    background-color: rgb(0,255,255) !important;
+    background-color: rgb(0,100,100) !important;
 }
 
 .diautil {
