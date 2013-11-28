@@ -24,59 +24,69 @@ class DiasController < ApplicationController
       :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
     )
     horarios_success = true
-    params[:dia][:horarios_attributes].each do |lixo, horario_attr|
-      horario = Horario.find_by_id horario_attr[:id].to_i
-      if horario.blank?
-        horario = Horario.new
-      end
-      if horario_attr["_destroy"] == "1" and !horario.blank?
-        horario.destroy()
-      else
-        horarios_success = horarios_success and horario.update_attributes(
-          :entrada => convert_date(params[:dia][:horarios_attributes][lixo], "entrada"),
-          :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida"),
-          :dia_id => dia.id
-        )
+    unless params[:dia][:horarios_attributes].nil? 
+      params[:dia][:horarios_attributes].each do |lixo, horario_attr|
+        horario = Horario.find_by_id horario_attr[:id].to_i
+        if horario.blank?
+          horario = Horario.new
+        end
+        if horario_attr["_destroy"] == "1" and !horario.blank?
+          horario.destroy()
+        else
+          horarios_success = horarios_success and horario.update_attributes(
+            :entrada => convert_date(params[:dia][:horarios_attributes][lixo], "entrada"),
+            :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida"),
+            :dia_id => dia.id
+          )
+        end
       end
     end
     atividades_success = true
-    params[:dia][:atividades_attributes].each do |index, atividade_attr|
-      atividade = Atividade.find_by_id atividade_attr[:id].to_i
-      if atividade.blank?
-        atividade = Atividade.new
-      end
-      if atividade_attr["_destroy"] == "1" and !atividade.blank?
-        atividade.destroy()
-      else
-        atividades_success = atividades_success and atividade.update_attributes(
-          :duracao => atividade_attr["horas"].to_i * 60,
-          :observacao => atividade_attr["observacao"],
-          :projeto_id => atividade_attr["projeto_id"],
-          :dia_id => dia.id,
-          :usuario_id => dia.usuario.id,
-          :aprovacao => nil,
-          :trello_id => atividade_attr["trello_id"],
-          :data => dia.data
-        )
-        if atividade_attr["pares_attributes"]
-          atividade_attr["pares_attributes"].each do |index, par_attr|
-            par = Par.find_by_id par_attr[:id].to_i
-            if par.blank?
-              par = Par.new
-            end
-            if par_attr["_destroy"] == "1" and !par.blank?
-              par.destroy()
-            else
-              par.update_attributes(
-                :duracao => par_attr["horas"].to_i * 60,
-                :par_id => par_attr["par_id"].to_i,
-                :atividade_id => atividade.id
-              )
+    unless params[:dia][:atividades_attributes].nil? 
+      params[:dia][:atividades_attributes].each do |index, atividade_attr|
+        atividade = Atividade.find_by_id atividade_attr[:id].to_i
+        if atividade.blank?
+          atividade = Atividade.new
+        end
+        if atividade_attr["_destroy"] == "1" and !atividade.blank?
+          atividade.destroy()
+        else
+          atividades_success = atividades_success and atividade.update_attributes(
+            :duracao => atividade_attr["horas"].to_i * 60,
+            :observacao => atividade_attr["observacao"],
+            :projeto_id => atividade_attr["projeto_id"],
+            :dia_id => dia.id,
+            :usuario_id => dia.usuario.id,
+            :aprovacao => nil,
+            :trello_id => atividade_attr["trello_id"],
+            :data => dia.data
+          )
+          if atividade_attr["pares_attributes"]
+            atividade_attr["pares_attributes"].each do |index, par_attr|
+              par = Par.find_by_id par_attr[:id].to_i
+              if par.blank?
+                par = Par.new
+              end
+              if par_attr["_destroy"] == "1" and !par.blank?
+                par.destroy()
+              else
+                par.update_attributes(
+                  :duracao => par_attr["horas"].to_i * 60,
+                  :par_id => par_attr["par_id"].to_i,
+                  :atividade_id => atividade.id
+                )
+              end
             end
           end
         end
+        Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
       end
-      Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
+    end
+    params[:cartao].each do |filho_id, pai_id|
+      filho = Cartao.find_or_create_by_trello_id(filho_id)
+      pai = Cartao.find_or_create_by_trello_id(pai_id)
+      filho.pai = pai
+      filho.save
     end
     if dia_success and atividades_success and horarios_success
       flash[:notice] = I18n.t("atividades.create.success")
@@ -120,7 +130,7 @@ class DiasController < ApplicationController
       @tipo = params[:tipo]
     end
     if params[:inicio].nil? or params[:fim].nil?
-      if @tipo == 'p' 
+      if @tipo == 'p'
         periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
         @inicio = periodo.first
         @fim = periodo.last
@@ -137,7 +147,6 @@ class DiasController < ApplicationController
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
     @equipe = @usuario.equipe
     @projetos = @usuario.meus_projetos
-    @ausencias_periodo = Ausencia.joins(:dia).where(dia: {data: (@inicio..@fim).to_a})
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -155,6 +164,15 @@ class DiasController < ApplicationController
     contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
     @periodos = contrato.periodos_por_ano(@ano.to_i)
     @today = Date.today
+  end
+  
+  def cartao_pai
+    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
+    unless cartao.pai.blank?
+      render json: cartao.pai.trello_id.to_json
+    else
+      render json: "".to_json
+    end
   end
   
   private

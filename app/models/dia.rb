@@ -21,13 +21,25 @@ class Dia < ActiveRecord::Base
     Dia.where(usuario_id: usuario_id, data: inicio..fim)
   end
   
-  #def entrada
+  def entrada
+    horarios_t = self.horarios
+    if horarios_t.blank?
+      nil
+    else
+      horarios_t.first.entrada.in_time_zone('UTC')
+    end  
     #read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).in_time_zone('Brasilia')
-  #end
+  end
 
-  #def saida
+  def saida
+    horarios_t = self.horarios
+    if horarios_t.blank?
+      nil
+    else
+      horarios_t.last.saida.in_time_zone('UTC')
+    end
     #read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).in_time_zone('Brasilia')
-  #end
+  end
 
   def horas
     ((saida - entrada) - read_attribute(:intervalo)) / 3600
@@ -58,14 +70,6 @@ class Dia < ActiveRecord::Base
     end
     
   end
-
-  #def bar_width
-    #width = horas.nil? ? 0 : (horas * 8)
-    #if width > 100
-      #width = 100
-    #end
-    #width.to_s + "%"
-  #end
 
   def horas_atividades_formato
     total_minutos_atividade = 0

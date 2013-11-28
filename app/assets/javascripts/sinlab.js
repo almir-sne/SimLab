@@ -83,7 +83,7 @@ function getFirstValid(seletor) {
     });
 }
 
-function toggleObservacao(obj) {
+function toggleNext(obj) {
     $(obj).next().toggle();
 }
 

@@ -1,4 +1,3 @@
-
 function getCards() {
     updateLoggedIn();
     $("#output").empty();
@@ -79,7 +78,55 @@ function dropCard(event) {
         var input = $(target.find(".cartao_field")[0]);
         input.after(card);
         input.val(card.attr("id"));
+        insertFather(target, data);
     }
+}
+
+function insertFather(atividadeDiv, cartao_id) {
+    var input = atividadeDiv.find("#input");
+    $.ajax({
+        url: "/dias/cartao_pai",
+        data: {cartao_id: cartao_id},
+        success: function(result) {
+            input.empty();
+            $("<input>").attr({
+                id: "cartao_pai",
+                value: result,
+                type: "hidden",
+                name: "cartao[" + cartao_id + "]"
+            }).appendTo(input);
+            loadCardById(input, result);
+        }
+    });
+}
+
+function loadCardById(div, card_id) {
+    Trello.get("/cards/" + card_id, function(card) {
+        $("<a>").attr({
+            href: card.url,
+            id: card.id,
+            target: "_blank",
+            draggable: true,
+            style: "width: 100%",
+            ondragstart: "dragCard(event)"
+        }).addClass("card filter " + card.idBoard).text(card.name).appendTo(div);
+    });
+}
+
+function dropPai(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    var target = $(event.target.parentElement).find("#input");
+    var pai = $("#" + data).clone();
+    var card = $(event.target).parents("#atividade-form").find(".cartao_field")[0].value;
+    target.empty();
+    $("<input>").attr({
+        id: "cartao_pai",
+        value: data,
+        type: "hidden",
+        name: "cartao[" + card + "]"
+    }).appendTo(target);
+    pai.appendTo(target);
 }
 
 function dragCard(ev) {
@@ -139,7 +186,6 @@ function loadAbrevCards() {
         var card_id = input.id;
         var proj_id = "proj" + $(input).attr("pid") + "_mark";
         Trello.get("/cards/" + card_id, function(card) {
-//            var div = $(parent)
             var text = getTime(input.value).replace(" hora(s)", " - ");
             if (card.name.length > 10)
                 text += card.name.substr(0, 10) + "...";
@@ -208,13 +254,6 @@ function loadBoardLists() {
                     }).text(card.name).appendTo(td);
                     td.appendTo(tr);
                     td = $("<td>");
-//                    var select = $("#estimativa").clone();
-//                    select.attr({
-//                        id: "estimativas_" + card.id,
-//                        name: "estimativas[" + card.id + "]",
-//                        style: "display: inherit"
-//                    }).appendTo(td);
-//                    td.appendTo(tr);
                     $("<a>").attr({
                         href: "/estimativas/cartao/" + card.id,
                         target: "_blank"

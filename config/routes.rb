@@ -71,6 +71,7 @@ SinLab::Application.routes.draw do
     collection do
       get :editar_por_data
       get :periodos
+      get :cartao_pai 
     end
   end
 

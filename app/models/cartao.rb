@@ -1,9 +1,11 @@
 class Cartao < ActiveRecord::Base
-  attr_accessible :trello_id, :estimativa, :rodada, :id, :estimado
+  attr_accessible :trello_id, :estimativa, :rodada, :id, :estimado, :pai_id
   validates :trello_id, :uniqueness => true, :presence => true
   
   has_many :estimativas
   has_many :atividades
+  
+  belongs_to :pai, :class_name => "Cartao"
   
   def rodada_concluida?(rodada)
     if rodada < self.rodada
