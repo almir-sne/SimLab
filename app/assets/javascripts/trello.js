@@ -184,6 +184,7 @@ function loadAbrevCards() {
     $(".card-abrev").each(function(index, input) {
         var parent = input.parentElement;
         var card_id = input.id;
+        var proj_id = "proj" + $(input).attr("pid") + "_mark";
         Trello.get("/cards/" + card_id, function(card) {
             var text = getTime(input.value).replace(" hora(s)", " - ");
             if (card.name.length > 10)
@@ -194,7 +195,8 @@ function loadAbrevCards() {
             $("<a>").attr({
                 href: card.url,
                 target: "_blank",
-                title: card.name
+                title: card.name,
+                class: proj_id
             }).text(text).appendTo(parent);
             $(input).detach();
         });
