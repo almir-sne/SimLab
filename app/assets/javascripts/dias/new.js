@@ -9,5 +9,5 @@ $('#boards').on('shown', function() {
     ajustaAltura();
 });
 initializeSliders();
-updateHorasAtividades(sumSliders(), pega_horas_dia(), $("#horas_atividades"));
+updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 ajustaAltura();

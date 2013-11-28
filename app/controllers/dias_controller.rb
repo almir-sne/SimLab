@@ -82,11 +82,13 @@ class DiasController < ApplicationController
         Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
       end
     end
-    params[:cartao].each do |filho_id, pai_id|
-      filho = Cartao.find_or_create_by_trello_id(filho_id)
-      pai = Cartao.find_or_create_by_trello_id(pai_id)
-      filho.pai = pai
-      filho.save
+    unless params[:cartao].nil?
+      params[:cartao].each do |filho_id, pai_id|
+        filho = Cartao.find_or_create_by_trello_id(filho_id)
+        pai = Cartao.find_or_create_by_trello_id(pai_id)
+        filho.pai = pai
+        filho.save
+      end
     end
     if dia_success and atividades_success and horarios_success
       flash[:notice] = I18n.t("atividades.create.success")
