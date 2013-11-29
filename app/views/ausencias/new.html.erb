@@ -1,18 +1,20 @@
 <div class="blue-line" style="margin: 20px 10px">  </div>
 
-<%= form_for(@ausencia, :url => :ausencias, :method => :post, :html => {:multipart =>true}) do |f| %>
-  <%= hidden_field_tag :usuario_id, @usuario_id %>
-  <%= hidden_field_tag :data, @data %>
-  <%= hidden_field_tag :dia_id, @dia_id %>
-  <%= hidden_field_tag :tipo, params[:tipo] %>
-  <div class="container">
-    <div class="row">
+<%= form_for(@ausencia, :html => {:multipart =>true}) do |f| %>
+  <%= f.hidden_field :dia_id, :value => @dia.id %>
+  <%= hidden_field_tag :tipo, @tipo %>
+  <div class="container-fluid">
+    <div class="row-fluid">
       <div class="col-md-5">
         <%= f.label :justificativa %>
         <%= f.text_area :justificativa, :style => "height: 40px; width: 90%" %>
         <div class="actions">
           <%= f.submit "Ok", :class => "btn default-button" %>
         </div>
+      </div>
+      <div class="span3">
+        <%= f.label "Anexo" %>
+        <%= file_field_tag "anexo" %>
       </div>
 
       <div class="col-md-5">

@@ -228,7 +228,8 @@
 }
 
 #menu_select {
-    margin-left: 15px;
+    width: 90%;
+    margin: 10px;
 }
 
 .nav-links:hover {

@@ -86,6 +86,10 @@ class Usuario < ActiveRecord::Base
   end
   
   def meus_projetos
-    self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    if (self.role == 'admin')
+      Projeto.order(:nome).collect {|p| [p.nome, p.id ] }
+    else
+      self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+    end
   end
 end

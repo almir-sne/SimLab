@@ -54,7 +54,7 @@ SinLab::Application.routes.draw do
     collection do
       post :custom_create
       get :get_id_by_nome
-      post :alt_role
+      get :alt_role
     end
   end
 

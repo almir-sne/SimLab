@@ -41,7 +41,7 @@ class PagamentosController < ApplicationController
       @usuario = current_usuario
     end
     @periodo    = params[:inicio].to_date .. params[:fim].to_date
-    @pagamentos = Pagamento.periodos(@periodo).where(usuario_id: params[:usuario_id])
+    @pagamentos = Pagamento.periodos(@periodo).where(usuario_id: @usuario)
     @pagamentos = @pagamentos.map{|pag| [pag, Anexo.where(:pagamento_id => pag.id).first]}
     @pagamento  = Pagamento.new
   end
@@ -63,12 +63,6 @@ class PagamentosController < ApplicationController
       ).save
     end
     redirect_to :back
-  end
-
-  def download
-    anexo = Anexo.find params[:id]
-    path = "/#{anexo.arquivo}"
-    send_file path, :x_sendfile=>true
   end
 
   def destroy

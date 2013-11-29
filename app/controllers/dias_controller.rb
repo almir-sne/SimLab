@@ -2,8 +2,8 @@ class DiasController < ApplicationController
   before_filter :authenticate_usuario!
 
   def new
-    @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], params[:usuario_id])
-    @usuario = Usuario.find(params[:usuario_id])
+    @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
+    @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], @usuario)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data]
     @projetos = @usuario.meus_projetos
@@ -13,7 +13,7 @@ class DiasController < ApplicationController
       format.html
     end
   end
-  
+
   def create
     if params[:dia_id].blank?
       dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
@@ -24,7 +24,7 @@ class DiasController < ApplicationController
       :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
     )
     horarios_success = true
-    unless params[:dia][:horarios_attributes].nil? 
+    unless params[:dia][:horarios_attributes].nil?
       params[:dia][:horarios_attributes].each do |lixo, horario_attr|
         horario = Horario.find_by_id horario_attr[:id].to_i
         if horario.blank?
@@ -42,7 +42,7 @@ class DiasController < ApplicationController
       end
     end
     atividades_success = true
-    unless params[:dia][:atividades_attributes].nil? 
+    unless params[:dia][:atividades_attributes].nil?
       params[:dia][:atividades_attributes].each do |index, atividade_attr|
         atividade = Atividade.find_by_id atividade_attr[:id].to_i
         if atividade.blank?
@@ -107,30 +107,18 @@ class DiasController < ApplicationController
 
   def editar_por_data
     dia = Dia.find_by_data_and_usuario_id(params[:data], params[:usuario_id])
-    if (!dia.nil?) 
+    if (!dia.nil?)
       redirect_to edit_dia_path(dia.id)
-    else 
+    else
       redirect_to new_dia_path
     end
   end
-  
+
   def index
-    @today = Date.today
-    if params[:data].nil?
-      data = @today
-    else
-      data = Date.parse params[:data]
-    end
-    if params[:usuario_id].nil?
-      @usuario = current_user
-    else
-      @usuario = Usuario.find(params[:usuario_id])
-    end
-    if params[:tipo].blank?
-      @tipo = 'p'
-    else
-      @tipo = params[:tipo]
-    end
+    @today   = Date.today
+    data     = params[:data].nil? ? @today : Date.parse(params[:data])
+    @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
+    @tipo    = params[:tipo].blank? ? 'p' : params[:tipo]
     if params[:inicio].nil? or params[:fim].nil?
       if @tipo == 'p'
         periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
@@ -147,16 +135,19 @@ class DiasController < ApplicationController
       @inicio = Date.parse params[:inicio]
       @fim = Date.parse params[:fim]
     end
-    @dias_periodo = dias_no_periodo(@inicio, @fim)
-    @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
-    @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    @equipe = @usuario.equipe
-    @projetos = @usuario.meus_projetos
+    if can? :manage, :usuario
+      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    end
+    @projetos          = @usuario.meus_projetos
+    @dias_periodo      = dias_no_periodo(@inicio, @fim)
+    @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+    @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @equipe            = @usuario.equipe
     respond_to do |format|
       format.html # index.html.erb
     end
   end
-  
+
   def periodos
     @today = Date.today
     if params[:usuario_id].nil?
@@ -181,6 +172,9 @@ class DiasController < ApplicationController
       contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
       @intervalo = contrato.periodos_por_ano(@ano.to_i)
     end
+    #if can? :manage, :usuario
+      #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    #end
   @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
 end
   
@@ -204,5 +198,5 @@ def convert_date(hash, date_symbol_or_string)
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
       0)
-end
+ end
 end

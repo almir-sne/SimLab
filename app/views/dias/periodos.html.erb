@@ -1,14 +1,11 @@
-<div class="blue-text">
-  <%= link_to '<i class="icon-double-angle-left"></i>'.html_safe, periodos_dias_path(:ano => @ano.to_i - 1, :usuario_id => @usuario.id) %>
-  <%= @ano %>
-  <%= link_to '<i class="icon-double-angle-right"></i>'.html_safe, periodos_dias_path(:ano => @ano.to_i + 1, :usuario_id => @usuario.id) %>
-</div>
+<%= render :partial => 'navegacao' %>
 
-<% if can? :see, :banco_de_horas %>
-  <%= select_tag(:menu_select, options_for_select(@usuarios, @usuario.id), :prompt => "Escolha um usuario") %>
-<%end%>
+<div id="calendario" style="width: 100%; float: right;">
+  <button id="show-navegacao" onclick="showNavegacao();" class="nav-button">
+    Mostrar Legenda <i class="icon-double-angle-right"></i>
+  </button>
 
-<div class="blue-line">  </div>
+  <div class="blue-line">  </div>
 
 
 <table class="month-table" style="width: 100%">
