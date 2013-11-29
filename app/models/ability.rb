@@ -26,6 +26,7 @@ class Ability
       can :update,              [Usuario, Atividade],   :id => true, :id => user.id
       can [:periodos, :listar], Pagamento
       can [:destroy, :create],  Ausencia
+      can :alt_role, Usuario
     end
 
 
