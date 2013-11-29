@@ -518,3 +518,28 @@ ul .submenu {
 .red-link:hover {
     background-color: #B10000 !important;
 }
+
+.rodada {
+    cursor: pointer;
+    text-decoration: underline
+}
+
+.estimativa {
+    width: 80px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: #A1D6FF;
+    font-weight: bold;
+}
+
+.estimativa:hover {
+    background-color: #1298FF;
+}
+
+.estimativa:focus {
+    outline: none;
+}
+
+.estimativa-selecionada {
+    background-color: #56B5FF;
+}

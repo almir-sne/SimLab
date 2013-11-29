@@ -168,6 +168,11 @@ function loadSimpleCards() {
                 }).addClass("cardnaohover").text(card.name).appendTo(div);
                 if (input.value > 0)
                     $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
+                if (input.classList.contains("with-description")) {
+                    $("<div>").attr({
+                        style: "color: black; margin: 10px"
+                    }).html(card.desc.replace(/\n/, "<br/>")).appendTo(div);
+                }
                 $("<br/>").appendTo(div);
                 $(input).detach();
             });

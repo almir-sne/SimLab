@@ -7,26 +7,26 @@
 
 <div class="form-group" style="padding: 15px">
   <h4> Cartão </h4>
-  <input type="hidden" class="card-placeholder" id="<%= @cartao.trello_id %>">
+  <input type="hidden" class="card-placeholder with-description" id="<%= @cartao.trello_id %>">
 </div>
 
 
 <div style="padding: 15px">
   <% @rodadas.each do |rodada, estimativas| %>
     <% concluida = @cartao.rodada_concluida? rodada %>
-    <h3 data-toggle="collapse" data-target=<%= "#rodada_#{rodada}" %> > Rodada <%= rodada %>  </h3>
-    <div class="collapse <%= "in" unless concluida %>" id="<%= "rodada_#{rodada}" %>">
+    <h3 class="rodada" data-toggle="collapse" data-target=<%= "#rodada_#{rodada}" %> > Rodada <%= rodada %>  </h3>
+    <div class="collapse <%= "in" unless concluida and @ultima_rodada != rodada %>" id="<%= "rodada_#{rodada}" %>">
       <table class="list-table">
         <tr>
           <th> Nome </th>
           <th> Estimativa </th>
         </tr>
 
-        <% estimativas.each do |estimativa| %>
-          <% unless estimativa.valor.nil? %>
+        <% estimativas.collect{|e| [e.usuario.nome, e.valor_string]}.sort.each do |estimativa| %>
+          <% unless estimativa[1].nil? %>
             <tr>
-              <td> <%= estimativa.usuario.nome %> </td>
-              <td> <%= estimativa.valor_string if concluida %> </td>
+              <td> <%= estimativa[0] %> </td>
+              <td> <%= estimativa[1] if concluida %> </td>
             </tr>
           <% end %>
         <% end %>
@@ -67,12 +67,14 @@
 
   <% unless @cartao.estimado? %>
     <%= form_tag estimativas_path do %>
-      <div style="padding: 15px">
+      <div style="padding: 15px" class="row">
         <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
-        <%= select_tag :estimativa, options_for_select([["Estimar", nil], ["0.0", 0.0], ["0.5", 0.5],
-            ["1", 1.0], ["2", 2.0], ["3", 3.0], ["5", 5.0], ["8", 8.0], ["13", 13.0], ["20", 20.0],
-            ["40", 40.0], ["Infinito", -2.0], ["?", -1.0]], @estimativa.valor), :style => "margin-bottom: 0" %>
-        <%= submit_tag "Enviar estimativa", :class => "btn default-button" %>
+        <% @estimativa_list.each do |e|%>
+          <div class="col-sm-1">
+            <%= button_tag e[0], :name => "estimativa", :value=> e[1],
+              :class => (@estimativa.valor == e[1]) ? "estimativa estimativa-selecionada": "estimativa" %>
+          </div>
+        <% end %>
       </div>
     <% end %>
 
@@ -91,7 +93,7 @@
         :class => "btn default-button" %>
     <% else %>
       <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.trello_id),
-        :class => "btn default-button" %>
+        :class => "btn default-button", :confirm => "Tem certeza?" %>
     <% end %>
     <br/>
     <br/>
@@ -100,7 +102,7 @@
       <%= select_tag :estimativa_final, options_for_select([["Estimar", nil], ["0.0", 0.0], ["0.5", 0.5],
           ["1", 1.0], ["2", 2.0], ["3", 3.0], ["5", 5.0], ["8", 8.0], ["13", 13.0], ["20", 20.0],
           ["40", 40.0], ["Infinito", -2.0], ["?", -1.0]], @cartao.estimativa), :style => "margin-bottom: 0" %>
-      <%= submit_tag "Enviar estimativa final", :class => "btn default-button" %>
+      <%= submit_tag "Enviar estimativa final", :class => "btn default-button", :confirm => "Tem certeza?" %>
     <% end %>
   </div>
 
