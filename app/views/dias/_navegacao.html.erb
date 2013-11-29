@@ -1,0 +1,42 @@
+<div id="navegacao" style="width: 0%; float: left; display: none" >
+  <button onclick="hideNavegacao()" class="nav-button" style="float: right">
+    <i class="icon-double-angle-left"></i> Esconder
+  </button>
+  <a style="cursor: pointer;" data-toggle="collapse" data-target="#intervalo">
+    <h3>Intervalo</h3>
+  </a>
+  <div id="intervalo" class="collapse">
+    <ul>
+      <li><a>Períodos</a></li>
+      <li><a>Meses</a></li>
+      <li><a>Semanas</a></li>
+    </ul>
+  </div>
+
+  <a style="cursor: pointer;" data-toggle="collapse" data-target="#projetos">
+    <h3>Projetos</h3>
+  </a>
+  <div id="projetos" class="collapse">
+    <% @projetos.each do |projeto| %>
+      <%= check_box_tag "projeto[0]", projeto[1], true,onclick: '$(".proj' + projeto[1].to_s + '_mark").toggle();' %> <%= projeto[0] %>
+      <br/>
+    <%  end %>
+  </div>
+
+  <a style="cursor: pointer;" data-toggle="collapse" data-target="#legenda">
+    <h3>Legenda</h3>
+  </a>
+  <div id="legenda" class="collapse in">
+    <div class ="hoje">Hoje</div><br/> 
+    <div class ="reprovacao">Dia com Atividade Reprovada</div><br/> 
+    <div class ="ausencia">Dia com Ausência Cadastrada</div><br/> 
+    <div class ="diautil">Dias Úteis</div><br/> 
+    <div class ="feriado">Feriado</div><br/> 
+    <div class ="fimdesemana">Fim de Semana</div>
+  </div>
+
+  <% if can? :manage, :usuario %>
+    <%= select_tag :menu_select, options_for_select(@usuarios, @usuario.id),
+      :prompt => "Escolha um usuario", :onchange => "mudaUsuario(this)" %>
+  <%end%>
+</div>

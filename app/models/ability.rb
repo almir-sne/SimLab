@@ -6,7 +6,6 @@ class Ability
 
     if user.role == "admin"
       can :manage, :all
-      can :manage, :banco_de_horas
     elsif user.role == "diretor"
       can :manage, Projeto
       can :manage, Ausencia

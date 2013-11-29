@@ -144,6 +144,9 @@ class DiasController < ApplicationController
       @inicio = Date.parse params[:inicio]
       @fim = Date.parse params[:fim]
     end
+    if can? :manage, :usuario
+      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    end
     @dias_periodo = dias_no_periodo(@inicio, @fim)
     @dias = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
@@ -160,12 +163,15 @@ class DiasController < ApplicationController
     else
       @usuario = Usuario.find(params[:usuario_id])
     end
+    if can? :manage, :usuario
+      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    end
     @ano = params[:ano] || Date.today.year
-    @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
     @periodos = contrato.periodos_por_ano(@ano.to_i)
     @today = Date.today
+    @projetos = @usuario.meus_projetos
   end
   
   def cartao_pai

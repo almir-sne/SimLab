@@ -1,5 +1,5 @@
 function pega_horas_dia()
-{   
+{
     var totalHorasTrabalhadas = 0;
     var intervalo = 0;
     var tempoTotal = 0;
@@ -7,30 +7,30 @@ function pega_horas_dia()
     var entrada = 0;
     var saida = 0;
     $('.horario_select').each(
-      function(i,e) {
-        var entradaH = 0;
-        var entradaM = 0;
-        var saidaH = 0;
-        var saidaM = 0;
-        if ((e.className.indexOf('entrada_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-          entradaH = parseInt(e.value);
-          entradaM = parseInt(e.nextElementSibling.value);
-          entrada = (entradaH * 60) + entradaM;
-          if (i == 0) {
-            primeiraEntrada = entrada;
-          }
-        }
-        else if ((e.className.indexOf('saida_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-          saidaH = parseInt(e.value);
-          saidaM = parseInt(e.nextElementSibling.value);
-          saida = (saidaH * 60) + saidaM;
-          totalHorasTrabalhadas += (saida - entrada);
-        }
-      }   
+            function(i, e) {
+                var entradaH = 0;
+                var entradaM = 0;
+                var saidaH = 0;
+                var saidaM = 0;
+                if ((e.className.indexOf('entrada_horario') != -1) && (e.id.indexOf('4i') != -1)) {
+                    entradaH = parseInt(e.value);
+                    entradaM = parseInt(e.nextElementSibling.value);
+                    entrada = (entradaH * 60) + entradaM;
+                    if (i == 0) {
+                        primeiraEntrada = entrada;
+                    }
+                }
+                else if ((e.className.indexOf('saida_horario') != -1) && (e.id.indexOf('4i') != -1)) {
+                    saidaH = parseInt(e.value);
+                    saidaM = parseInt(e.nextElementSibling.value);
+                    saida = (saidaH * 60) + saidaM;
+                    totalHorasTrabalhadas += (saida - entrada);
+                }
+            }
     );
     return {
-      totalIntervalo: (saida - primeiraEntrada - totalHorasTrabalhadas),
-      totalHorasDia: totalHorasTrabalhadas
+        totalIntervalo: (saida - primeiraEntrada - totalHorasTrabalhadas),
+        totalHorasDia: totalHorasTrabalhadas
     };
 }
 
@@ -117,4 +117,17 @@ function showNavegacao() {
     $("#calendario").animate({width: "85%"});
     nav.show();
     $("#show-navegacao").attr({style: "visibility: hidden;"});
+}
+
+// http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').
+            exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+}
+
+function mudaUsuario(obj) {
+    var url = location.href;
+    if (!url.match(/[?]/))
+        url = url + "?";
+    location.href = url.replace(/usuario_id=[0-9]+/, "") + "usuario_id=" + $(obj).val();
 }
