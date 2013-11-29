@@ -8,32 +8,28 @@ class AusenciasController < ApplicationController
   end
 
   def new
-    #arrumar permissões? dá pra cadastrar ausência de outra pessoa desse jeito
-    @usuario_id = params[:usuario_id]
-    @data = params[:data]
-    @tipo = params[:tipo]
+    @dia      = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), current_usuario.id)
+    @tipo     = params[:tipo]
+    @ausencia = Ausencia.new
   end
 
   def create
-    ausencia = Ausencia.new
-    ausencia.dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), params[:usuario_id].to_i)
-    ausencia.update_attributes(params[:ausencia])
-    data = ausencia.dia.data
-    if ausencia.save
+    @ausencia = Ausencia.new params[:ausencia]
+    if @ausencia.save
       flash[:notice] = I18n.t("ausencias.create.success")
+      unless params[:anexo].nil?
+        Anexo.new(
+          :arquivo     => params[:anexo],
+          :tipo        => "atestado",
+          :data        => @ausencia.dia.data,
+          :usuario_id  => params[:usuario_id],
+          :ausencia_id => @ausencia.id
+        ).save
+      end
     else
       flash[:error] = I18n.t("ausencias.create.failure")
     end
-    unless params[:anexo].nil?
-      Anexo.new(
-        :arquivo => params[:anexo],
-        :tipo => "atestado",
-        :data => params[:data],
-        :usuario_id => params[:usuario_id],
-        :ausencia_id => ausencia.id
-      ).save
-    end
-    redirect_to dias_path(data: params[:data], tipo: params[:tipo])
+    redirect_to dias_path(data: @ausencia.dia.data, tipo: params[:tipo])
   end
 
   def index
