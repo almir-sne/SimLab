@@ -27,12 +27,21 @@
     <h3>Legenda</h3>
   </a>
   <div id="legenda" class="collapse in">
-    <div class ="hoje">Hoje</div><br/> 
-    <div class ="reprovacao">Dia com Atividade Reprovada</div><br/> 
-    <div class ="ausencia">Dia com Ausência Cadastrada</div><br/> 
-    <div class ="diautil">Dias Úteis</div><br/> 
-    <div class ="feriado">Feriado</div><br/> 
-    <div class ="fimdesemana">Fim de Semana</div>
+    <table>
+      <tr>
+        <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td> 
+      </tr><tr>
+        <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td> 
+      </tr><tr>
+        <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td> 
+      </tr><tr>
+        <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td> 
+      </tr><tr>
+        <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td> 
+      </tr><tr>
+        <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td> 
+      </tr>
+    </table>
   </div>
 
   <% if can? :manage, :usuario %>
