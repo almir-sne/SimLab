@@ -16,7 +16,7 @@
     end
   }
 
-  belongs_to :usuario
+  has_one :usuario, :through => :dia
   belongs_to :dia
   belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"

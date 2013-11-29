@@ -1,4 +1,5 @@
 class ProjetosController < ApplicationController
+  load_and_authorize_resource
   before_filter :authenticate_usuario!
 
   # GET /projetos
@@ -10,9 +11,13 @@ class ProjetosController < ApplicationController
       if current_usuario.role == "admin"
         @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
           map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
-      else
+      elsif current_usuario.role == "diretor"
         @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
+            map{|z| z.id})]}
+      else
+        @projetos = current_usuario.projetos.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
+          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos.
             map{|z| z.id})]}
       end
     elsif params["tipo"] == "sub_projetos"
@@ -65,7 +70,7 @@ class ProjetosController < ApplicationController
 
   # GET /projetos/1/edit
   def edit
-    authorize! :edit, Projeto
+    authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
@@ -159,7 +164,7 @@ class ProjetosController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def coordenadorform
     @workon = Workon.find(params[:wrkn_id])
     usuarios = Usuario.joins(:workons).where('usuarios.id != ? and workons.projeto_id = ?', @workon.usuario.id, @workon.projeto.id)
@@ -169,5 +174,5 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
-  
+
 end

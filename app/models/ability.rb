@@ -19,14 +19,15 @@ class Ability
       unless user.projetos_coordenados.blank?
         can :update, :validations
       end
+      can [:read, :edit],       Projeto, :workons => {:usuario_id => user.id}
       can :download,            Anexo, :usuario_id => user.id
-      can :read,                Usuario
-      can [:read,:create],      Dia
+      can :read,                Usuario, :usuario_id => user.id
+      can [:read,:create],      Dia, :usuario_id => user.id
       can [:destroy,:update],   Dia, :id => true, :id => user.id
       can :update,              [Usuario, Atividade],   :id => true, :id => user.id
-      can [:periodos, :listar], Pagamento
-      can [:destroy, :create],  Ausencia
       can :alt_role, Usuario
+      can [:periodos, :listar], Pagamento, :usuario_id => user.id
+      can [:destroy, :create, :show],  Ausencia
     end
 
 
