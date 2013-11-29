@@ -171,7 +171,7 @@ function loadSimpleCards() {
                 if (input.classList.contains("with-description")) {
                     $("<div>").attr({
                         style: "color: black; margin: 10px"
-                    }).html(card.desc.replace(/\n/, "<br/>")).appendTo(div);
+                    }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
                 }
                 $("<br/>").appendTo(div);
                 $(input).detach();
