@@ -446,10 +446,6 @@ ul .submenu {
     padding-top: 10px
 }
 
-.day-table td.today {
-    border: 6px solid #FF00CC;
-}
-
 .month-table td.today {
     border-collapse: separate;
     border: 16px solid #FF00CC;
@@ -542,4 +538,11 @@ ul .submenu {
 
 .estimativa-selecionada {
     background-color: #56B5FF;
+}
+
+.nav-button {
+    border: none;
+    outline: none;
+    margin-right: 15px;
+    padding: 3px 25px;
 }

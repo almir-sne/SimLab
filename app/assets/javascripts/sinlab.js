@@ -102,3 +102,19 @@ function toggleCollapse(obj) {
     else
         obj.children[0].className = "icon-chevron-sign-right"
 }
+
+function hideNavegacao() {
+    var nav = $("#navegacao");
+    nav.animate({width: "0%"});
+    $("#calendario").animate({width: "100%"});
+    nav.hide();
+    $("#show-navegacao").attr({style: "visibility: visible;"});
+}
+
+function showNavegacao() {
+    var nav = $("#navegacao");
+    nav.animate({width: "15%"});
+    $("#calendario").animate({width: "85%"});
+    nav.show();
+    $("#show-navegacao").attr({style: "visibility: hidden;"});
+}
