@@ -3,18 +3,18 @@
     <i class="icon-double-angle-left"></i> Esconder
   </button>
   <a style="cursor: pointer;" data-toggle="collapse" data-target="#intervalo">
-    <h3>Intervalo</h3>
+    <h4>Intervalo</h4>
   </a>
   <div id="intervalo" class="collapse">
     <ul>
-      <li><a>Períodos</a></li>
-      <li><a>Meses</a></li>
-      <li><a>Semanas</a></li>
+      <li><a href="<%= periodos_dias_path(tipo: 'p') %>" >Períodos</a></li>
+      <li><a href="<%= periodos_dias_path(tipo: 'm') %>" >Meses</a></li>
+      <li><a href="<%= periodos_dias_path(tipo: 's') %>" >Semanas</a></li>
     </ul>
   </div>
 
   <a style="cursor: pointer;" data-toggle="collapse" data-target="#projetos">
-    <h3>Projetos</h3>
+    <h4>Projetos</h4>
   </a>
   <div id="projetos" class="collapse">
     <% @projetos.each do |projeto| %>
@@ -24,7 +24,7 @@
   </div>
 
   <a style="cursor: pointer;" data-toggle="collapse" data-target="#legenda">
-    <h3>Legenda</h3>
+    <h4>Legenda</h4>
   </a>
   <div id="legenda" class="collapse in">
     <table>
