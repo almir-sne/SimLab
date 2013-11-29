@@ -139,6 +139,9 @@ class DiasController < ApplicationController
       elsif @tipo == 'm'
         @inicio = data.beginning_of_month
         @fim = data.end_of_month
+      elsif @tipo == 's'
+        @inicio = data.beginning_of_week(:sunday)
+        @fim = data.end_of_week(:sunday)
       end
     else
       @inicio = Date.parse params[:inicio]
@@ -155,38 +158,51 @@ class DiasController < ApplicationController
   end
   
   def periodos
+    @today = Date.today
     if params[:usuario_id].nil?
       @usuario = current_user
     else
       @usuario = Usuario.find(params[:usuario_id])
     end
+    @tipo = params[:tipo] || 'p'
     @ano = params[:ano] || Date.today.year
-    @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-    @meses = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
-    contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
-    @periodos = contrato.periodos_por_ano(@ano.to_i)
-    @today = Date.today
-  end
-  
-  def cartao_pai
-    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
-    unless cartao.pai.blank?
-      render json: cartao.pai.trello_id.to_json
-    else
-      render json: "".to_json
+    if @tipo == 'm'
+      @intervalo = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
+    elsif @tipo == 's'
+      data_inicial = (@today - 1.month).sunday
+      contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+      @intervalo = Array.new
+        fim = @today + 2.week
+        while data_inicial < fim do
+          @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
+          data_inicial = data_inicial + 1.week
+        end
+    elsif @tipo == 'p'
+      contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+      @intervalo = contrato.periodos_por_ano(@ano.to_i)
     end
-  end
+  @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+end
   
-  private
+def cartao_pai
+  cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
+  unless cartao.pai.blank?
+    render json: cartao.pai.trello_id.to_json
+  else
+    render json: "".to_json
+  end
+end
+  
+private
 
-  def convert_date(hash, date_symbol_or_string)
-    attribute = date_symbol_or_string.to_s
-    return DateTime.new(
-      hash[attribute + '(1i)'].to_i,
+def convert_date(hash, date_symbol_or_string)
+  attribute = date_symbol_or_string.to_s
+  return DateTime.new(
+    hash[attribute + '(1i)'].to_i,
       hash[attribute + '(2i)'].to_i,
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
       0)
-  end
+end
 end
