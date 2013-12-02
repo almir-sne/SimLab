@@ -12,6 +12,7 @@ SinLab::Application.routes.draw do
   resources :atividades, :only => [] do
     collection do
       get  :validar
+      get  :validacao
       post :mandar_validacao
       get :cartoes
       post :atualizar_cartoes

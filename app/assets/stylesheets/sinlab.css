@@ -136,14 +136,14 @@
 
 .list-table td{
     font-family: Arial,Helvetica,sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     padding: 10px 15px;
     border-bottom: 2px solid rgb(180, 180, 180);
 }
 
 .list-table th{
     font-family: Arial,Helvetica,sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     text-align: left;
     padding: 10px;
 }
@@ -227,7 +227,7 @@
     text-decoration: none
 }
 
-#menu_select {
+.menu_select {
     width: 90%;
     margin: 10px;
 }

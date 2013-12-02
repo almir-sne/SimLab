@@ -79,7 +79,7 @@ class DiasController < ApplicationController
             end
           end
         end
-        Atividade.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
+        Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
       end
     end
     unless params[:cartao].nil?
