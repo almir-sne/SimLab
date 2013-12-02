@@ -227,8 +227,9 @@
     text-decoration: none
 }
 
-#menu_select {
-    margin-left: 15px;
+.menu_select {
+    width: 90%;
+    margin: 10px;
 }
 
 .nav-links:hover {
