@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe AtividadeController do
+describe AtividadesController do
+  include Helpers
 
   describe "GET 'estatiticas'" do
     it "returns http success" do
@@ -23,4 +24,7 @@ describe AtividadeController do
     end
   end
 
+  before(:each) do
+	  admin_faz_login
+	end
 end
