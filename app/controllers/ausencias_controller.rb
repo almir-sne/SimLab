@@ -11,6 +11,7 @@ class AusenciasController < ApplicationController
     @dia      = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), current_usuario.id)
     @tipo     = params[:tipo]
     @ausencia = Ausencia.new
+    @projetos = current_usuario.projetos.map{|proj| [proj.nome, proj.id]}
   end
 
   def create
@@ -44,6 +45,7 @@ class AusenciasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada
     end
+    projeto_atual = (params[:projeto_id] == "-1" )? Projeto.all : Projeto.find(params[:projeto_id].to_i)
     @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
     @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
     @projeto   = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
@@ -54,7 +56,7 @@ class AusenciasController < ApplicationController
     @anos      = [["Anos - Todos", -1]] + (2012..2014).to_a
     @mes       = params[:mes].blank? ? params[:mes] = hoje.month : params[:mes]
     @meses     = [["Meses - Todos", -1]] + (1..12).collect {|mes| [ t("date.month_names")[mes], mes]}
-    @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil])
+    @ausencias = Ausencia.data(@ano.to_i, @mes.to_i, @dia.to_i).usuario(@usuario.to_i).aprovacao([false,nil]).where(:projeto_id => projeto_atual)
   end
 
   def validar

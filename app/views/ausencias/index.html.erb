@@ -37,27 +37,27 @@
   </div>
   <table class="list-table">
     <tr>
-      <th> Data       </th>
-      <th> Usuário    </th>
-      <th> Justificativa   </th>
-      <th> Anexo </th>
-      <th> Horas abonadas     </th>
+      <th> Data           </th>
+      <th> Usuário        </th>
+      <th> Justificativa  </th>
+      <th> Anexo          </th>
+      <th> Projeto        </th>
+      <th> Horas abonadas </th>
       <th></th>
-      <th> Mensagem   </th>
+      <th> Mensagem       </th>
     </tr>
 
     <% @ausencias.each do |ausencia| %>
       <tr>
-        <%= hidden_field_tag "ausencias[#{ausencia.id}[id]]",ausencia.id                %>
-        <td><%= ausencia.dia.data.strftime("%d/%m/%Y")                                        %></td>
-        <td><%= ausencia.dia.usuario.nome                                                     %></td>
-        <td>
-          <%= ausencia.justificativa                                                       %>
-        </td>
-        <td> <%= link_to(
+        <%= hidden_field_tag "ausencias[#{ausencia.id}[id]]",ausencia.id %>
+        <td><%= ausencia.dia.data.strftime("%d/%m/%Y")                   %></td>
+        <td><%= ausencia.dia.usuario.nome                                %></td>
+        <td><%= ausencia.justificativa                                   %></td>
+        <td><%= link_to(
           File.basename(ausencia.anexo.arquivo.url),
           "/uploads/#{ausencia.anexo.id}/#{File.basename(ausencia.anexo.arquivo.url)}"
-          ) unless ausencia.anexo.nil? %> </td>
+          ) unless ausencia.anexo.nil?                                    %></td>
+        <td><%= ausencia.projeto.nome                                     %></td>
         <td><%= text_field_tag "ausencias[#{ausencia.id}[horas]]", ausencia.horas, :class => "horas" %></td>
         <td style='text-align : right; width: 45px'>
           a. <%= radio_button_tag "ausencias[#{ausencia.id}[abonada]]", true,(ausencia.abonada == true), {:class => 'aprovacao_radio'} %>

@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :contrato do
-    inicio "2013-08-28"
-    fim "2013-08-28"
+    inicio "2013-01-28"
+    fim "2014-12-28"
     valor_hora "9.99"
     hora_mes 1
     usuario_id 1

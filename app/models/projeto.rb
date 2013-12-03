@@ -14,6 +14,7 @@ class Projeto < ActiveRecord::Base
   has_many :usuarios,  :through => :workons
   has_many :workons, :dependent => :destroy
   has_many :boards
+  has_many :ausencias
   accepts_nested_attributes_for :workons, :allow_destroy => true
   accepts_nested_attributes_for :boards, :allow_destroy => true
   accepts_nested_attributes_for :sub_projetos, :reject_if => lambda { |a| a[:content].blank? }
@@ -44,8 +45,8 @@ class Projeto < ActiveRecord::Base
       sub_projetos.map{ |proj| proj.valor }.sum
     end
   end
-  
+
   def equipe
-  
+
   end
 end

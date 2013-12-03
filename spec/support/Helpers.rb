@@ -1,6 +1,7 @@
 module Helpers
   def desenvolvedor_faz_login
     usuario = FactoryGirl.create(:desenvolvedor)
+    contrato = FactoryGirl.create(:contrato)
     visit new_usuario_session_path
     fill_in "usuario_email", :with => usuario.email
     fill_in "usuario_password", :with => "12345678"

@@ -24,6 +24,8 @@ class Usuario < ActiveRecord::Base
   has_many :coordenacoes
   has_many :ausencias, :through => :dias
   has_many :anexos
+  has_many :dias
+  has_many :atividades
 
   accepts_nested_attributes_for :address,      :allow_destroy => true
   accepts_nested_attributes_for :telefones,    :allow_destroy => true
@@ -35,9 +37,6 @@ class Usuario < ActiveRecord::Base
   validates :nome, :presence => true,
     :uniqueness => true
 
-  has_many :meses
-  has_many :dias
-  has_many :atividades
 
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
@@ -84,7 +83,7 @@ class Usuario < ActiveRecord::Base
         projeto_id: self.projetos, usuario_id: Usuario.select(:id).where(status: true)
       }).group(:id).order(:nome)
   end
-  
+
   def meus_projetos
     if (self.role == 'admin')
       Projeto.order(:nome).collect {|p| [p.nome, p.id ] }
