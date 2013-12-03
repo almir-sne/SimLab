@@ -14,13 +14,6 @@ class UsuariosController < ApplicationController
     @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
     @user ||= Usuario.new
   end
-  
-  def alt_role
-    if (Rails.env.development? or params[:r] != "")
-      current_user.role = params[:r]
-      current_user.save
-    end
-  end
 
   def custom_create
     authorize! :create, Usuario
@@ -83,6 +76,23 @@ class UsuariosController < ApplicationController
     #user = Usuario.where('nome LIKE ?', '%'+params[:name]+'%')
     user = Usuario.find_by_nome(params[:name])
     render json: user.id
+  end
+  
+  def alt_role
+    if (Rails.env.development?)
+      u = Usuario.find(params[:id])
+      role = ""
+      if (params[:r] == 42) 
+        role = "admin"
+      elsif (params[:r] == 814) 
+        role = "usuario normal"
+      else
+        role = "usuario normal"
+      end
+      u.role = role
+      u.save
+    end
+    render json: ""
   end
 =begin  #caso seja blob
   def show_anexo
