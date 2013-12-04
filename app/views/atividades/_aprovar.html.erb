@@ -1,0 +1,12 @@
+<%= form_tag aprovar_atividades_path, :remote => true do %>
+  <%= hidden_field_tag :atividade_id, atividade.id %>
+  <button class="icon-envelope blank-button" data-toggle="modal" data-target="#mensagens_<%= atividade.id %>">
+  </button>
+
+  <%= render :partial => "mensagens", :locals => {:atividade => atividade} %>
+
+  <%= button_tag "", :name => "aprovacao", :value=> true,
+    :class => "blank-button icon-ok #{'ok-button' if atividade.aprovacao == true}" %>
+  <%= button_tag "", :name => "aprovacao", :value=> false,
+    :class => "blank-button icon-remove #{'not-ok-button' if atividade.aprovacao == false}" %>
+<% end %>

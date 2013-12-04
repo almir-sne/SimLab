@@ -547,3 +547,21 @@ ul .submenu {
     margin-right: 15px;
     padding: 3px 25px;
 }
+
+.blank-button {
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.ok-button {
+    background-color: #008000;
+    color: #FFF;
+    border-radius: 5px;
+}
+
+.not-ok-button {
+    background-color: #F00;
+    color: #FFF;
+    border-radius: 5px;
+}

@@ -22,27 +22,23 @@ class Dia < ActiveRecord::Base
   end
   
   def entrada
-    horarios_t = self.horarios
-    if horarios_t.blank?
+    if self.horarios.blank?
       nil
     else
-      horarios_t.first.entrada.in_time_zone('UTC')
-    end  
-    #read_attribute(:entrada).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:entrada).in_time_zone('Brasilia')
+      self.horarios.minimum(:entrada).utc.strftime("%H:%M")
+    end
   end
 
   def saida
-    horarios_t = self.horarios
-    if horarios_t.blank?
+    if self.horarios.blank?
       nil
     else
-      horarios_t.last.saida.in_time_zone('UTC')
+      self.horarios.maximum(:saida).utc.strftime("%H:%M")
     end
-    #read_attribute(:saida).nil? ? Time.now.in_time_zone('Brasilia') : read_attribute(:saida).in_time_zone('Brasilia')
   end
 
   def horas
-    ((saida - entrada) - read_attribute(:intervalo)) / 3600
+    self.horarios.collect{|h| h.saida - h.entrada}.sum
   end
 
   def minutos

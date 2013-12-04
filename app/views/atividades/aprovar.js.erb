@@ -1,0 +1,3 @@
+$("#mensagens_<%= @atividade.id %>").modal('hide');
+$("#<%= @atividade.id %>").html("<%= escape_javascript(render(partial: "aprovar",
+    locals: {atividade: @atividade})).html_safe %>");

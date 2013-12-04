@@ -21,15 +21,13 @@
         {:class => 'menu_select', :onchange => "this.form.submit()"}) %>
 
       <p class="menu_select">
-        <b> <%=@total_horas%> horas a serem aprovadas </b>
+        <b> <%=  @total_horas %> horas a serem aprovadas </b>
       </p>
-
     <% end %>
   </div>
 
   <div id="atividades" class="col-sm-10 ">
-
-    <table class="table-striped list-table">
+    <table class="list-table">
       <tr>
         <th> Data       </th>
         <th> Usuário    </th>
@@ -39,29 +37,45 @@
         <th> Status     </th>
         <th> Parceiro(s)</th>
       </tr>
-
-      <% @atividades.each do |atividade| %>
-        <tr>
-          <td><%= atividade.data.strftime("%d/%m/%Y") %> </td>
-          <td><%= atividade.try(:usuario).try(:nome) %> </td>
-          <td><%= atividade.try(:projeto).try(:nome) %> </td>
-          <td><%= atividade.formata_duracao %> </td>
-          <td>
-            <% if atividade.trello_id %>
-              <input type="hidden" class="card-placeholder" id="<%= atividade.trello_id %>"></input>
-            <% end %>
+      <tr>
+        <% @atividades.each do |chave, atividades| %>
+          <td rowspan="<%= atividades.size %>">
+            <%= chave[1].data.strftime("%d/%m/%Y") %>
           </td>
-          <td> <i class="icon-ok"></i> <i class="icon-remove"></i></td>
-          <td>
-            <% atividade.pares.each do |par| %>
-              <p>
-                <%= par.par.nome %>
-                <%= int_to_horas(par.duracao) %>
-              </p>
-            <% end %>
+          <td rowspan="<%= atividades.size %>" style="width: 150px;">
+            <a href="<%= new_dia_path(:data=> chave[1].data, :usuario_id => chave[0].id) %>">
+              <p style="text-decoration: underline"> <%= chave[0].nome %> </p>
+            </a>
+            <p> E: <%= chave[1].entrada %> S: <%= chave[1].saida %></p>
+            <p> <%= int_to_horas chave[1].horas %> horas </p>
           </td>
-        </tr>
-      <% end %>
+          <% atividades.each do |atividade| %>
+            <td><%= atividade.try(:projeto).try(:nome) %> </td>
+            <td><%= atividade.formata_duracao %> </td>
+            <td>
+              <%= atividade.observacao %>
+              <% if atividade.trello_id %>
+                <input type="hidden" class="card-placeholder" id="<%= atividade.trello_id %>"></input>
+              <% end %>
+            </td>
+            <td style="width: 150px;">
+              <div id="<%= atividade.id %>">
+                <%= render :partial => 'aprovar', :locals => {:atividade => atividade}  %>
+              </div>
+            </td>
+            <td>
+              <% atividade.pares.each do |par| %>
+                <p>
+                  <%= par.par.nome %>
+                  <%= int_to_horas(par.duracao) %>
+                </p>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+          <% end %>
+        <% end %>
+      </tr>
     </table>
   </div>
 </div>

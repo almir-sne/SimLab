@@ -5,6 +5,10 @@ module ApplicationHelper
   
   def int_to_horas(h)
     h = h/3600.0
-    "#{h.to_i}:#{((h - h.to_i) * 60).round}"
+    "#{h.to_i}:#{pad ((h - h.to_i) * 60).round}"
+  end
+  
+  def pad(string)
+    ("%2d" % string).gsub(" ", "0")
   end
 end
