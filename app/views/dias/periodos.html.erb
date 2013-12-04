@@ -11,7 +11,7 @@
 <table class="month-table" style="width: 100%">
     <tr>
       <% if @tipo == 'm' %>
-      
+
         <% @intervalo.each_with_index do |m, i| %>
           <td class="<%= 'today' if m.include?(@today) %>">
             <%= link_to periodo_link(m[:inicio], m[:fim], @usuario.id, @tipo, m[:inicio].month).html_safe,
@@ -24,7 +24,7 @@
         <% end %>
 
       <% elsif @tipo == 'p' %>
-      
+
         <% @intervalo.each_with_index do |p, i| %>
           <td class="<%= 'today' if p.include?(@today) %>">
             <%= link_to periodo_link(p.first, p.last, @usuario.id, 'p').html_safe, dias_path(inicio: p.first.to_formatted_s, fim: p.last.to_formatted_s, usuario_id: @usuario.id, tipo: 'p'), :class => (tem_reprovacao?(p.first,p.last,@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
@@ -34,8 +34,8 @@
             <tr>
           <% end %>
         <% end %>
-        
-      <% elsif @tipo = 's' %>
+
+      <% elsif @tipo == 's' %>
         <% @intervalo.each_with_index do |p, i| %>
           <td class="<%= 'today' if p.include?(@today) %>">
             <%= link_to periodo_link(p[:inicio], p[:fim], @usuario.id, 'p').html_safe, dias_path(inicio: p[:inicio].to_formatted_s, fim: p[:fim].to_formatted_s, usuario_id: @usuario.id, tipo: 'p'), :class => (tem_reprovacao?(p[:inicio],p[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link") %>
@@ -44,8 +44,8 @@
             </tr>
             <tr>
           <% end %>
-        <% end %> 
-        
+        <% end %>
+
       <% end %>
      </tr>
 </table>

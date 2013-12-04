@@ -4,7 +4,7 @@ FactoryGirl.define do
     email "userDE@example3.com"
     password "12345678"
 		password_confirmation "12345678"
-    role "desenvolvedor"
+    role "usuario normal"
   end
 
   factory :admin, class: Usuario do
