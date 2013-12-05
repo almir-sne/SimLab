@@ -63,7 +63,6 @@ class AtividadesController < ApplicationController
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
   
-  
   def aprovar
     @atividade = Atividade.find params[:atividade_id]
     if params[:commit] == "Enviar"

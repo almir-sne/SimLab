@@ -9,7 +9,7 @@ class Atividade < ActiveRecord::Base
   scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
   scope :aprovacao, lambda {|value|
-    if value == 3
+    if value == 3 or value.nil?
       where('aprovacao is null')
     elsif value == 0 or value == 1
       where(['aprovacao = ?', value])
