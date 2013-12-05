@@ -32,11 +32,3 @@ class UpdateAusenciasWithProjetos < ActiveRecord::Migration
   end
 
 end
-
-
-
-Tentei recriar erro e estou fazendo testes
-
-
-
-demorei fazendo a migração de volta (difícil)
