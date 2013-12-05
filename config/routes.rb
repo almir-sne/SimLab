@@ -15,6 +15,8 @@ SinLab::Application.routes.draw do
       get :cartoes
       post :atualizar_cartoes
       post :aprovar
+      post :mensagens
+      post :enviar_mensagem
       match "cartoes/listar" => "atividades#listar_atividades"
     end
   end

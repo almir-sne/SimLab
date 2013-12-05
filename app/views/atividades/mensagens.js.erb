@@ -1,0 +1,5 @@
+$("#mensagens").html("<%= escape_javascript(render(partial: "mensagens")).html_safe %>");
+$('#mensagens').modal({
+  backdrop: false,
+  show: true
+})

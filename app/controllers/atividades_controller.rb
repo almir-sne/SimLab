@@ -65,18 +65,27 @@ class AtividadesController < ApplicationController
   
   def aprovar
     @atividade = Atividade.find params[:atividade_id]
-    if params[:commit] == "Enviar"
-      @atividade.mensagem = params[:mensagem]
+    if @atividade.aprovacao.to_s == params[:aprovacao]
+      @atividade.aprovacao = nil
     else
-      if @atividade.aprovacao.to_s == params[:aprovacao]
-        @atividade.aprovacao = nil
-      else
-        @atividade.aprovacao = params[:aprovacao]
-      end
+      @atividade.aprovacao = params[:aprovacao]
     end
     @atividade.save
     respond_to do |format|
       format.js
     end
+  end
+  
+  def mensagens
+    @atividade = Atividade.find params[:atividade_id]
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def enviar_mensagem
+    atividade = Atividade.find params[:atividade_id]
+    atividade.mensagem = params[:mensagem]
+    atividade.save
   end
 end
