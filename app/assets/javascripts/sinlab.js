@@ -1,8 +1,6 @@
 function pega_horas_dia()
 {
     var totalHorasTrabalhadas = 0;
-    var intervalo = 0;
-    var tempoTotal = 0;
     var primeiraEntrada = 0;
     var entrada = 0;
     var saida = 0;

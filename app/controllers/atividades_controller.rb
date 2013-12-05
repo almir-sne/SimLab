@@ -42,24 +42,29 @@ class AtividadesController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada_por_projetos(projetos)
     end
-    @usuario     = params[:usuario_id].to_i
+    if params[:commit] == "limpar"
+      @usuario = 0
+      @projeto = 0
+      @aprovacao = 3
+      @inicio = hoje.at_beginning_of_month
+      @fim = hoje.at_end_of_month
+    else
+      @usuario     = (params[:usuario_id] || cookies[:usuario_id]).to_i
+      @projeto     = (params[:projeto_id] || cookies[:projeto_id]).to_i
+      @aprovacao   = (params[:aprovacao] || cookies[:aprovacao] || 3).to_i
+      @inicio = date_from_object(params[:inicio] || cookies[:inicio] || hoje.at_beginning_of_month)
+      @fim = date_from_object(params[:fim] || cookies[:fim] || hoje.at_end_of_month)
+    end
     @usuarios    = [["Selecione Envolvido", 0]] + equipe.collect { |p| [p.nome, p.id]  }
-    @projeto     = params[:projeto_id].to_i
     @projetos    = [["Selecione Projeto", 0]] + projetos.collect { |p| [p.nome, p.id]  }
     @aprovacoes  = [["Todas", 5], ["Aprovadas", 1],["Reprovadas", 0],["Não Vistas", 3]]
-    @aprovacao   = params[:aprovacao].blank? ? 3 : params[:aprovacao].to_i
-    
-    if params[:data]
-      data = params[:data].split(";")
-      @mes = data[0].to_i
-      @ano = data[1].to_i
-    else
-      @ano         = @ano = hoje.year
-      @mes         = @mes = hoje.month
-    end
-    #filtrar as atividades
-    @atividades = Atividade.usuario(@usuario).projeto(@projeto).ano(@ano).
-      mes(@mes).aprovacao(@aprovacao).order(:data).group_by{|x| [x.usuario, x.dia]}
+    cookies[:usuario_id] = @usuario
+    cookies[:projeto_id] = @projeto
+    cookies[:aprovacao] = @aprovacao
+    cookies[:fim] = @fim
+    cookies[:inicio] = @inicio
+    @atividades = Atividade.usuario(@usuario).projeto(@projeto).periodo(@inicio..@fim).
+      aprovacao(@aprovacao).order(:data).group_by{|x| [x.usuario, x.dia]}
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
   
@@ -87,5 +92,19 @@ class AtividadesController < ApplicationController
     atividade = Atividade.find params[:atividade_id]
     atividade.mensagem = params[:mensagem]
     atividade.save
+  end
+  
+  def date_from_object(obj)
+    if obj.class == Date
+      obj
+    elsif obj.class == String
+      Date.parse(obj)
+    else
+      if Date.valid_date?(obj[:year].to_i, obj[:month].to_i, obj[:day].to_i)
+        Date.new(obj[:year].to_i, obj[:month].to_i, obj[:day].to_i)
+      else
+        Date.new(obj[:year].to_i, obj[:month].to_i, 1).at_end_of_month
+      end
+    end
   end
 end

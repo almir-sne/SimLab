@@ -4,14 +4,13 @@
   </button>
   <br/>
   <%= form_tag validacao_atividades_path, {method: :get} do %>
+    <%= hidden_field_tag :data, data(@mes, @ano) %>
+
     <div class="menu_select">
-      <%= button_tag "<", :name => "data", :value=> data(@mes, @ano - 1) %>
-      <%= @ano %>
-      <%= button_tag ">", :name => "data", :value=> data(@mes, @ano + 1) %>
-      <br/>
-      <%= button_tag "<", :name => "data", :value=> data(@mes - 1, @ano) %>
-      <%= t("date.month_names")[@mes] %>
-      <%= button_tag ">", :name => "data", :value=> data(@mes + 1, @ano) %>
+      <%= select_date @inicio, {:use_short_month => true, :prefix => 'inicio'},
+        {:onchange => "this.form.submit()"} %>
+      <%= select_date @fim, {:use_short_month => true, :prefix => 'fim'},
+        {:onchange => "this.form.submit()"} %>
     </div>
 
     <%= select_tag(:projeto_id, options_for_select(@projetos, @projeto),
@@ -23,6 +22,8 @@
     <%= select_tag(:aprovacao, options_for_select(@aprovacoes, @aprovacao),
       {:class => 'menu_select', :onchange => "this.form.submit()"}) %>
 
+    <%= button_tag "Limpar Filtro", :value => "limpar", :name => "commit",
+      :class => "nav-button", :style => "margin: 10px" %>
     <p class="menu_select">
       <b> <%=  @total_horas %> horas exibidas </b>
     </p>
@@ -86,6 +87,7 @@
   </table>
 </div>
 
-<div class="modal fade" id="mensagens" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="mensagens" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="outline: none; overflow: hidden;">
 
 </div>
