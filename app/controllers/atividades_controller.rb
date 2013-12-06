@@ -36,35 +36,44 @@ class AtividadesController < ApplicationController
   def validacao
     hoje = Date.today
     if current_usuario.role == "admin"
-      equipe = Usuario.select("nome, id").all(:order => "nome")
-      projetos = Projeto.select("nome, id").all(:order => "nome")
+      @projetos_opts = Projeto.select("nome, id").all(:order => "nome").collect { |p| [p.nome, p.id]  }
+      @usuarios_opts = Usuario.select("nome, id").all(:order => "nome").collect { |u| [u.nome, u.id]  }
     else
-      projetos = current_usuario.projetos_coordenados
-      equipe = current_usuario.equipe_coordenada_por_projetos(projetos)
+      @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
+      @usuarios_opts = current_usuario.equipe_coordenada_por_projetos(projetos).collect{ |u| [u.nome, u.id] }
     end
+    @aprovacoes_opts  = [["Todas", 5], ["Aprovadas", 1],["Reprovadas", 0],["Não Vistas", 3]]
     if params[:commit] == "limpar"
-      @usuario = 0
-      @projeto = 0
-      @aprovacao = 3
+      @usuarios_ids = [0]
+      @projetos_ids = [0]
+      #@aprovacao = [3]
       @inicio = hoje.at_beginning_of_month
       @fim = hoje.at_end_of_month
     else
-      @usuario     = (params[:usuario_id] || cookies[:usuario_id]).to_i
-      @projeto     = (params[:projeto_id] || cookies[:projeto_id]).to_i
-      @aprovacao   = (params[:aprovacao] || cookies[:aprovacao] || 3).to_i
+      if params[:usuario_id].nil?
+        @usuarios_ids = @usuarios_opts.collect{|u| u[1]}
+        @usuarios_selected = Array.new
+      else
+        @usuarios_selected = @usuarios_ids = params[:usuario_id].collect{|id| id.to_i}
+      end
+      if params[:projeto_id].nil?
+        @projetos_ids = @projetos_opts.collect{|u| u[1]}
+        @projetos_selected = Array.new
+      else
+        @projetos_selected = @projetos_ids = params[:usuario_id].collect{|id| id.to_i}
+      end
+      #@aprovacao   = (params[:aprovacao] || [""] ).collect {|id| id.to_i}
       @inicio = date_from_object(params[:inicio] || cookies[:inicio] || hoje.at_beginning_of_month)
       @fim = date_from_object(params[:fim] || cookies[:fim] || hoje.at_end_of_month)
     end
-    @usuarios    = [["Selecione Envolvido", 0]] + equipe.collect { |p| [p.nome, p.id]  }
-    @projetos    = [["Selecione Projeto", 0]] + projetos.collect { |p| [p.nome, p.id]  }
-    @aprovacoes  = [["Todas", 5], ["Aprovadas", 1],["Reprovadas", 0],["Não Vistas", 3]]
-    cookies[:usuario_id] = @usuario
-    cookies[:projeto_id] = @projeto
-    cookies[:aprovacao] = @aprovacao
+    cookies[:usuario_id] = @usuarios_selected
+    cookies[:projeto_id] = @projetos_selected
+    #cookies[:aprovacao] = @aprovacao
     cookies[:fim] = @fim
     cookies[:inicio] = @inicio
-    @atividades = Atividade.usuario(@usuario).projeto(@projeto).periodo(@inicio..@fim).
-      aprovacao(@aprovacao).order(:data).group_by{|x| [x.usuario, x.dia]}
+    @atividades = Atividade.where(usuario_id: @usuarios_ids, projeto_id: @projetos_ids, aprovacao: [false,nil]).order(:data).group_by{|x| [x.usuario, x.dia]}
+    debugger
+    #aprovacao(@aprovacao)
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
   

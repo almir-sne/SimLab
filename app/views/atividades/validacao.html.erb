@@ -13,14 +13,14 @@
         {:onchange => "this.form.submit()"} %>
     </div>
 
-    <%= select_tag(:projeto_id, options_for_select(@projetos, @projeto),
-      {:class => 'menu_select', :onchange => "this.form.submit()"}) %>
+    <%= select_tag('projeto_id[]', options_for_select(@projetos_opts, @projetos_selected),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
 
-    <%= select_tag(:usuario_id, options_for_select(@usuarios, @usuario),
-      {:class => 'menu_select', :onchange => "this.form.submit()"}) %>
+    <%= select_tag('usuario_id[]', options_for_select(@usuarios_opts, @usuarios_selected),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
 
-    <%= select_tag(:aprovacao, options_for_select(@aprovacoes, @aprovacao),
-      {:class => 'menu_select', :onchange => "this.form.submit()"}) %>
+    <%= select_tag('aprovacao[]', options_for_select(@aprovacoes_opts),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
 
     <%= button_tag "Limpar Filtro", :value => "limpar", :name => "commit",
       :class => "nav-button", :style => "margin: 10px" %>

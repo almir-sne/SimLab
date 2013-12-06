@@ -117,6 +117,11 @@
     <script>
       var alt_role = "<%= alt_role_usuarios_path %>";
       var userid = <%= current_usuario.id %>;
+      $('.chosen-select').chosen({
+        allow_single_deselect: true,
+        no_results_text: 'No results matched',
+        width: '200px'
+      });
     </script>
 
     <%= javascript_include_tag javascript_include_view_js %>

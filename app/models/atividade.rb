@@ -6,8 +6,20 @@ class Atividade < ActiveRecord::Base
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
   scope :mes, lambda { |value| where(['extract(month from atividades.data) = ?', value]) if value > 0 }
   scope :dia, lambda { |value| where(['extract(day from atividades.data) = ?', value]) if value > 0 }
-  scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
-  scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
+  scope :projeto, lambda { |value|
+    if value.class == Fixnum and value > 0
+      where(['projeto_id = ?', value])
+    elsif !value.nil? and value.size > 0 and value.first > 0
+      where(projeto_id: value)
+    end
+  }
+  scope :usuario, lambda { |value| 
+    if value.class == Fixnum and value > 0
+      where(['usuario_id = ?', value])
+    elsif !value.nil? and value.size > 0 and value.first > 0
+      where(usuario_id: value)
+    end
+  }
   scope :aprovacao, lambda {|value|
     if value == 3 or value.nil?
       where('aprovacao is null')
