@@ -104,12 +104,16 @@ function toggleCollapse(obj) {
 function hideNavegacao() {
     var nav = $("#navegacao");
     nav.animate({width: "0%"});
-    $("#lista").animate({width: "100%"});
+    $("#lista").animate({width: "95%"});
     nav.hide();
     $("#show-navegacao").attr({style: "visibility: visible;"});
+    var pnav = $("#prenavegacao");
+    pnav.show();
 }
 
 function showNavegacao() {
+    var pnav = $("#prenavegacao");
+    pnav.hide();
     var nav = $("#navegacao");
     nav.animate({width: "15%"});
     $("#lista").animate({width: "85%"});

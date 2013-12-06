@@ -1,13 +1,8 @@
 <%= render :partial => 'navegacao' %>
 
-<div id="lista" style="width: 100%; float: right;">
-  <button id="show-navegacao" onclick="showNavegacao();" class="nav-button">
-    Mostrar Legenda <i class="icon-double-angle-right"></i>
-  </button>
-
-  <div class="blue-line">  </div>
-
-
+<div id="lista" style="width: 95%; float: right;">
+    <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :origin => "p", :view => "anual", :data => params[:data]} %>
+  <div id="pagedata">
 <table class="month-table" style="width: 100%">
     <tr>
       <% if @tipo == 'm' %>
@@ -49,6 +44,8 @@
       <% end %>
      </tr>
 </table>
+  </div>
+</div>
 
 
 <script>
