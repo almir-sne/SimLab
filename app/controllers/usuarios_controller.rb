@@ -81,15 +81,13 @@ class UsuariosController < ApplicationController
   def alt_role
     if (Rails.env.development?)
       u = Usuario.find(params[:id])
-      role = ""
-      if (params[:r] == 42) 
-        role = "admin"
-      elsif (params[:r] == 814) 
-        role = "usuario normal"
+      if (params[:r].to_f == 42) 
+        u.role = "admin"
+      elsif (params[:r].to_f == 814) 
+        u.role = "usuario normal"
       else
-        role = "usuario normal"
+        u.role = "usuario normal"
       end
-      u.role = role
       u.save
     end
     render json: ""
