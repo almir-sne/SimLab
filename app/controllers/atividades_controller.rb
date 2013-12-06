@@ -64,7 +64,7 @@ class AtividadesController < ApplicationController
     cookies[:fim] = @fim
     cookies[:inicio] = @inicio
     @atividades = Atividade.usuario(@usuario).projeto(@projeto).periodo(@inicio..@fim).
-      aprovacao(@aprovacao).order(:data).group_by{|x| [x.usuario, x.dia]}
+      aprovacao(@aprovacao).order(:data).group_by{|x| x.dia}
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
   

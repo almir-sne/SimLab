@@ -50,17 +50,17 @@
       <th> Status     </th>
     </tr>
     <tr>
-      <% @atividades.each do |chave, atividades| %>
+      <% @atividades.each do |dia, atividades| %>
         <td rowspan="<%= atividades.size %>">
-          <%= chave[1].data.strftime("%d/%m/%Y") %>
+          <%= dia.data.strftime("%d/%m/%Y") %>
         </td>
         <td rowspan="<%= atividades.size %>" style="width: 150px;">
-          <a href="<%= new_dia_path(:data=> chave[1].data, :usuario_id => chave[0].id) %>" target="_blank">
-            <p style="text-decoration: underline"> <%= chave[0].nome %> </p>
+          <a href="<%= new_dia_path(:data=> dia.data, :usuario_id => dia.usuario.id) %>" target="_blank">
+            <p style="text-decoration: underline"> <%= dia.usuario.nome %> </p>
           </a>
-          <p> E: <%= chave[1].entrada %> S: <%= chave[1].saida %></p>
-          <p> <%= int_to_horas chave[1].horas %> horas </p>
-          <p> <%= chave[1].horas_atividades_todas %> horas </p>
+          <p> E: <%= dia.entrada %> S: <%= dia.saida %></p>
+          <p> <%= int_to_horas dia.horas %> horas </p>
+          <p> <%= dia.horas_atividades_todas %> horas </p>
         </td>
         <% atividades.each do |atividade| %>
           <td><%= atividade.try(:projeto).try(:nome) %> </td>
