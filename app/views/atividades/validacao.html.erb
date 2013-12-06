@@ -12,14 +12,14 @@
       <%= select_date @fim, {:use_short_month => true, :prefix => 'fim'},
         {:onchange => "this.form.submit()"} %>
     </div>
-
+    Projetos:
     <%= select_tag('projeto_id[]', options_for_select(@projetos_opts, @projetos_selected),
       {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
-
+    Usuarios:
     <%= select_tag('usuario_id[]', options_for_select(@usuarios_opts, @usuarios_selected),
       {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
-
-    <%= select_tag('aprovacao[]', options_for_select(@aprovacoes_opts),
+    Aprovações:
+    <%= select_tag('aprovacao[]', options_for_select(@aprovacoes_opts, @aprovacoes_selected),
       {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
 
     <%= button_tag "Limpar Filtro", :value => "limpar", :name => "commit",
@@ -53,7 +53,6 @@
     </thead>
     <tbody>
       <% @atividades.each do |dia, atividades| %>
-
         <% atividades.each do |atividade| %>
           <tr>
             <td >

@@ -22,16 +22,16 @@ class Dia < ActiveRecord::Base
   end
   
   def entrada
-    if self.horarios.blank?
-      nil
+    if self.horarios.nil? or self.horarios.minimum(:entrada).nil?
+      ""
     else
       self.horarios.minimum(:entrada).utc.strftime("%H:%M")
     end
   end
 
   def saida
-    if self.horarios.blank?
-      nil
+    if self.horarios.nil? or self.horarios.maximum(:saida).nil?
+      ""
     else
       self.horarios.maximum(:saida).utc.strftime("%H:%M")
     end

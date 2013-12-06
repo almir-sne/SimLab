@@ -232,6 +232,14 @@
     margin: 10px;
 }
 
+.search-field{
+  height: 30px !important;
+}
+
+.default{
+  height: 30px !important;
+}
+
 .nav-links:hover {
     background:none !important;
 }

@@ -122,8 +122,9 @@
       var userid = <%= current_usuario.id %>;
       $('.chosen-select').chosen({
         allow_single_deselect: true,
-        no_results_text: 'No results matched',
-        width: '200px'
+        no_results_text: 'Nenhum resultado',
+        width: '200px',
+        placeholder_text_multiple: 'Selecione...'
       });
     </script>
 

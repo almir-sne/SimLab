@@ -9,14 +9,14 @@ class Atividade < ActiveRecord::Base
   scope :projeto, lambda { |value|
     if value.class == Fixnum and value > 0
       where(['projeto_id = ?', value])
-    elsif !value.nil? and value.size > 0 and value.first > 0
+    elsif !value.nil? or value.size > 0
       where(projeto_id: value)
     end
   }
   scope :usuario, lambda { |value| 
     if value.class == Fixnum and value > 0
       where(['usuario_id = ?', value])
-    elsif !value.nil? and value.size > 0 and value.first > 0
+    elsif !value.nil? or value.size > 0
       where(usuario_id: value)
     end
   }

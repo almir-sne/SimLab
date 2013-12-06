@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   end
   
   def to_boolean(string)
-    if string.blank?
+    if string.blank? or string == 'nil'
       return nil
     elsif string == "true"
       return true
