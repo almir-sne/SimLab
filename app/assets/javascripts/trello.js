@@ -159,21 +159,31 @@ function loadSimpleCards() {
             var parent = input.parentElement;
             var card_id = input.id;
             Trello.get("/cards/" + card_id, function(card) {
-                var div = $("<div>");
-                div.addClass("nodrop");
-                div.appendTo(parent);
-                $("<a>").attr({
-                    href: card.url,
-                    target: "_blank"
-                }).addClass("cardnaohover").text(card.name).appendTo(div);
-                if (input.value > 0)
-                    $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
-                if (input.classList.contains("with-description")) {
-                    $("<div>").attr({
-                        style: "color: black; margin: 10px"
-                    }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
+                if (input.classList.contains("father-abrev")) {
+                    $("<a>").attr({
+                        href: card.url,
+                        title: card.name,
+                        target: "_blank"
+                    }).addClass("cardnaohover").text("SIM").appendTo(parent);
                 }
-                $("<br/>").appendTo(div);
+                else {
+                    var div = $("<div>");
+                    div.addClass("nodrop");
+                    div.appendTo(parent);
+                    $("<a>").attr({
+                        href: card.url,
+                        target: "_blank"
+                    }).addClass("cardnaohover").text(card.name).appendTo(div);
+                    if (input.value > 0)
+                        $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
+                    if (input.classList.contains("with-description")) {
+                        $("<div>").attr({
+                            style: "color: black; margin: 10px"
+                        }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
+                    }
+
+                    $("<br/>").appendTo(div);
+                }
                 $(input).detach();
             });
         });

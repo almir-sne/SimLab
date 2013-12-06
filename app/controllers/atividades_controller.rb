@@ -71,8 +71,7 @@ class AtividadesController < ApplicationController
     #cookies[:aprovacao] = @aprovacao
     cookies[:fim] = @fim
     cookies[:inicio] = @inicio
-    @atividades = Atividade.where(usuario_id: @usuarios_ids, projeto_id: @projetos_ids, aprovacao: [false,nil]).order(:data).group_by{|x| [x.usuario, x.dia]}
-    debugger
+    @atividades = Atividade.where(usuario_id: @usuarios_ids, projeto_id: @projetos_ids, aprovacao: [false,nil]).order(:data).group_by{|x| x.dia}
     #aprovacao(@aprovacao)
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
