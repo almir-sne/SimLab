@@ -1,14 +1,13 @@
 <%= render :partial => 'navegacao' %>
 
-<div id="lista" style="width: 100%; float: right;">
-  <button id="show-navegacao" onclick="showNavegacao();" class="nav-button">
-    Mostrar Legenda <i class="icon-double-angle-right"></i>
-  </button>
+<div id="lista" style="width: 95%; float: right;">
+  <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :inicio => @inicio, :fim => @fim, :origin => "i", :view => "periodo"} %>
+  <div id="pagetabs">
   <ul class="nav nav-tabs fix-color" id="myTab">
     <li class="active"><a href="#periodos">Calendário</a></li>
     <li><a href="#atividades">Atividades</a></li>
-    <li><a href="#ausencias_tab">Ausências</a></li>
-    <li><a href="#ausencias_equipe">Ausências da Equipe</a></li>
+    <!-- <li><a href="#ausencias_tab">Ausências</a></li> -->
+    <!-- <li><a href="#ausencias_equipe">Ausências da Equipe</a></li> -->
   </ul>
   <br/>
   <div class="tab-content">
@@ -207,7 +206,20 @@
       <br />
       <br />
       <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>
+      
     </div>
 
   </div>
+</div>
+ <table>
+     <tr>
+       <td>LEGENDA: </td>
+       <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td><td style="width: 10px;"></td>
+       <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td><td style="width: 10px;"></td>
+       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td> 
+       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>       
+       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td> 
+       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td> 
+    </tr>
+ </table>
 </div>
