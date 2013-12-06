@@ -24,6 +24,10 @@
 
     <%= button_tag "Limpar Filtro", :value => "limpar", :name => "commit",
       :class => "nav-button", :style => "margin: 10px" %>
+
+    <button type="button" class="blank-button" onClick="document.location.reload(true)">
+      <i class="icon-refresh"></i>
+    </button>
     <p class="menu_select">
       <b> <%=  @total_horas %> horas exibidas </b>
     </p>
@@ -41,6 +45,7 @@
       <th> Projeto    </th>
       <th> Duração    </th>
       <th> Detalhes   </th>
+      <th> Possui cartão pai? </th>
       <th> Parceiro(s)</th>
       <th> Status     </th>
     </tr>
@@ -50,7 +55,7 @@
           <%= chave[1].data.strftime("%d/%m/%Y") %>
         </td>
         <td rowspan="<%= atividades.size %>" style="width: 150px;">
-          <a href="<%= new_dia_path(:data=> chave[1].data, :usuario_id => chave[0].id) %>">
+          <a href="<%= new_dia_path(:data=> chave[1].data, :usuario_id => chave[0].id) %>" target="_blank">
             <p style="text-decoration: underline"> <%= chave[0].nome %> </p>
           </a>
           <p> E: <%= chave[1].entrada %> S: <%= chave[1].saida %></p>
@@ -62,8 +67,18 @@
           <td><%= atividade.formata_duracao %> </td>
           <td>
             <%= atividade.observacao %>
-            <% if atividade.trello_id %>
-              <input type="hidden" class="card-placeholder" id="<%= atividade.trello_id %>"></input>
+            <% if atividade.cartao %>
+              <input type="hidden" class="card-placeholder" id="<%= atividade.trello_id %>"/></input>
+            <% end %>
+
+          </td>
+          <td>
+            <% if atividade.try(:cartao).try(:pai) %>
+              <input type="hidden" class="card-placeholder father-abrev"
+                     id="<%= atividade.cartao.pai.trello_id %>">
+              </input>
+            <% else %>
+              <div> NÃO </div>
             <% end %>
           </td>
           <td>
