@@ -13,26 +13,26 @@ class AtividadesController < ApplicationController
     @anos        = [["Anos - Todos", -1]] + (2012..hoje.year).to_a
     @mes         = params[:mes].blank? ? params[:mes] = -1 : params[:mes].to_i
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [t("date.month_names")[mes], mes]}
-    
+
     cartoes = Atividade.joins(:cartao).ano(@ano).mes(@mes).dia(@dia).projeto(@projeto).
       usuario(@usuario).where("trello_id is not null").order("data desc").pluck(:trello_id).uniq
-    
+
     @stats = cartoes.collect {|id| {
         cartao_id: id,
         horas: Cartao.horas_trabalhadas_format(id),
         num_atividades: Atividade.joins(:cartao).where(cartao: {trello_id: id}).count
       }}
   end
-  
+
   def atualizar_cartoes
     Cartao.order(:updated_at).pluck(:trello_id).each { |c| Cartao.update_on_trello(params[:key], params[:token], c) }
   end
-  
+
   def listar_atividades
     @atividades = Atividade.joins(:cartao).where(cartao: {trello_id: params[:cartao_id]})
     @cartao_id = params[:cartao_id]
   end
-  
+
   def validacao
     hoje = Date.today
     if current_usuario.role == "admin"
@@ -61,7 +61,7 @@ class AtividadesController < ApplicationController
       else
         @usuarios_selected = usuarios_ids = params[:usuario_id].collect{|id| id.to_i}
       end
-      if params[:projeto_id].nil? 
+      if params[:projeto_id].nil?
         if cookies[:projeto_id].blank? or cookies[:projeto_id].class == String
           projetos_ids = @projetos_opts.collect{|u| u[1]}
           @projetos_selected = Array.new
@@ -93,7 +93,7 @@ class AtividadesController < ApplicationController
     @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids, aprovacao: aprovacoes_ids, data: @inicio..@fim).order(:data).group_by{|x| x.dia}
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
-  
+
   def aprovar
     @atividade = Atividade.find params[:atividade_id]
     if @atividade.aprovacao.to_s == params[:aprovacao]
@@ -106,20 +106,20 @@ class AtividadesController < ApplicationController
       format.js
     end
   end
-  
+
   def mensagens
     @atividade = Atividade.find params[:atividade_id]
     respond_to do |format|
       format.js
     end
   end
-  
+
   def enviar_mensagem
     atividade = Atividade.find params[:atividade_id]
     atividade.mensagem = params[:mensagem]
     atividade.save
   end
-  
+
   def date_from_object(obj)
     if obj.class == Date
       obj

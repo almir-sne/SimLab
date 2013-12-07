@@ -40,12 +40,7 @@
               <div class="grey-line"> </div>
               <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
                 :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-              <% unless atividade_form.object.mensagem.blank?  %>
-                <div class="red-background activity-message">
-                  <%= atividade_form.object.avaliador.try(:nome) %>: <br/>
-                  <%= atividade_form.object.mensagem %>
-                </div>
-              <% end %>
+              <%= render "mensagem", :atividade_form => atividade_form %>
               <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
               <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
               {}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>

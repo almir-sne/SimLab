@@ -1,7 +1,7 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :mensagem, :avaliador_id
+  attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :avaliador_id
   attr_accessible :duracao, :data, :trello_id
-  
+
   scope :periodo, lambda { |range| where(data: range) if range}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
   scope :mes, lambda { |value| where(['extract(month from atividades.data) = ?', value]) if value > 0 }
@@ -21,10 +21,12 @@ class Atividade < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
+  has_many :mensagens, :dependent => :destroy
 
   has_many :pares, :dependent => :destroy
-  
+
   accepts_nested_attributes_for :pares, :allow_destroy => true
+  accepts_nested_attributes_for :mensagens
 
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
@@ -60,7 +62,7 @@ class Atividade < ActiveRecord::Base
       ""
     end
   end
-  
+
   def trello_id
     unless self.cartao.blank?
       self.cartao.trello_id

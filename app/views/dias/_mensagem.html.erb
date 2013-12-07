@@ -1,0 +1,24 @@
+<% mensagens = atividade_form.object.mensagens %>
+<% unless mensagens.blank? %>
+  <div class="blue-background activity-message">
+    <table>
+      <tr>
+        <th>De      </th>
+        <th>mensagem</th>
+        <th>Data    </th>
+      </tr>
+      <% mensagens.each do |msg| %>
+        <tr>
+          <td><%= msg.autor.nome %></td>
+          <td><%= msg.conteudo   %></td>
+          <td><%= msg.updated_at %></td>
+        </tr>
+      <%end%>
+    </table>
+    <%= atividade_form.fields_for Mensagem.new, :allow_destroy => true do |msg| %>
+      <%= msg.text_field :conteudo %>
+      <%= msg.hidden_field :atividade_id, :value =>  atividade_form.object.id%>
+      <%= msg.hidden_field :autor_id,     :value =>  atividade_form.object.usuario.id%>
+    <%end%>
+  </div>
+<% end %>
