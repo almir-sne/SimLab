@@ -24,7 +24,7 @@
   has_one    :anexo
 
   def self.por_periodo(inicio, fim, usuario_id)
-    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order(dia: :data)
+    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')
   end
 
   def horas=(val)

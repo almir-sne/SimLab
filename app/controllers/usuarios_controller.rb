@@ -1,5 +1,5 @@
 class UsuariosController < ApplicationController
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
   load_and_authorize_resource
 
   def index
@@ -22,7 +22,7 @@ class UsuariosController < ApplicationController
 
   def create
     authorize! :create, Usuario
-    @user = Usuario.new(params[:usuario])
+    @user = Usuario.new(usuario_params)
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
@@ -54,7 +54,7 @@ class UsuariosController < ApplicationController
       params[:usuario].except! :anexos_attributes
     end
 =end
-    if @user.update_attributes(params[:usuario])
+    if @user.update_attributes(usuario_params)
       flash[:notice] = I18n.t("usuario.update.success")
       redirect_to edit_usuario_path(@user)
     else
@@ -92,6 +92,17 @@ class UsuariosController < ApplicationController
     end
     render json: ""
   end
+  
+  
+  private
+  def usuario_params
+    params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome, 
+    :entrada_usp, :saida_usp, :cpf, :contratos_attributes, :role, :address_id, :formado, :status, 
+    :data_de_nascimento, :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso, 
+    :numero_usp, :login_trello, :anexos_attributes)
+  end
+  
+      
 =begin  #caso seja blob
   def show_anexo
     anexo = Anexo.find params[:id]
