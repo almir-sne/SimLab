@@ -1,5 +1,5 @@
 class ResumoController < ApplicationController
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
 
   def show # tenho q arrumar as rotas....
   	tipo_de_consulta = params[:id]

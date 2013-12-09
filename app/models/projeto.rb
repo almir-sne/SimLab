@@ -1,6 +1,4 @@
 class Projeto < ActiveRecord::Base
-  attr_accessible :data_de_inicio, :descricao, :nome, :workons_attributes, :super_projeto_id, :sub_projetos_attributes
-
   validates :data_de_inicio, :presence => true
 
   validates :descricao,      :presence => true
@@ -46,7 +44,7 @@ class Projeto < ActiveRecord::Base
     end
   end
 
-  def equipe
-
-  end
+  private
+  
+  
 end
