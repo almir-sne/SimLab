@@ -1,6 +1,8 @@
 require 'spec_helper'
+require 'devise'
 
 describe PagamentosController do
+  include Helpers
 
   describe "GET 'index'" do
     it "returns http success" do
@@ -9,18 +11,15 @@ describe PagamentosController do
     end
   end
 
-  describe "GET 'meses'" do
+  describe "GET 'periodos'" do
     it "returns http success" do
-      get 'meses'
+      get 'periodos', usuario_id: 1
       response.should be_success
     end
   end
 
-  describe "GET 'show'" do
-    it "returns http success" do
-      get 'show'
-      response.should be_success
-    end
+  before(:each) do
+    sign_in admin_faz_login
   end
 
 end

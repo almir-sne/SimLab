@@ -5,7 +5,7 @@ feature "Projetos" do
 
 	describe "novo" do
 		scenario "deveria poder ser criado" do
-      admin_faz_login
+			admin_faz_login
 		  visit projetos_path
 		  fill_in "Nome",  :with => @projeto_novo[:nome]
 		  fill_in "Descrição", :with => @projeto_novo[:descricao]
@@ -33,7 +33,7 @@ feature "Projetos" do
 		  visit projetos_path
 		  click_link projeto.nome
 		  fill_in "Nome", :with => "Teste"
-#      save_and_open_page
+#     save_and_open_page
  		  click_button "Salvar"
 		  page.should have_content(I18n.t("projetos.update.sucess"))
 		end

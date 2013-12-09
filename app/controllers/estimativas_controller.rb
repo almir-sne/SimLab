@@ -1,4 +1,4 @@
-class EstimativasController < ApplicationController
+  class EstimativasController < ApplicationController
   def index
     @projetos_boards = current_user.boards.pluck(:board_id).uniq
   end

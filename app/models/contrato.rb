@@ -1,5 +1,12 @@
 class Contrato < ActiveRecord::Base
   attr_accessible :contratante, :fim, :funcao, :hora_mes, :inicio, :tipo, :usuario_id, :valor_hora, :dia_inicio_periodo
+  after_initialize :init
+
+  def init
+    self.dia_inicio_periodo  ||= 1           #will set the default value only if it's nil
+    self.inicio ||= Date.new(2013,01,01)
+    self.fim ||= Date.new(2013,12,31)
+  end
 
   def periodo_vigente(data)
     dia_inicio_local = self.dia_inicio_periodo

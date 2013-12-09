@@ -1,4 +1,4 @@
-require 'spec_helper'
+  require 'spec_helper'
 
 feature "Usuário" do
   include Helpers
@@ -20,10 +20,11 @@ feature "Usuário" do
       visit usuarios_path
   #    save_and_open_page
       click_link coordenador.nome.to_s
-      fill_in "Nome", :with => "Pedro"
+      #save_and_open_page
+      fill_in "usuario_nome", :with => "Pedro"
       fill_in "Banco", :with => "ladrao"
       click_button "Salvar"
-      page.should have_content "Successfully updated Usuario."
+      page.should have_content "Dados cadastrais atualizados com sucesso"
     end
   end
 

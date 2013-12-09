@@ -55,10 +55,10 @@ class UsuariosController < ApplicationController
     end
 =end
     if @user.update_attributes(params[:usuario])
-      flash[:notice] = "Usuário atualizado com sucesso"
+      flash[:notice] = I18n.t("usuario.update.success")
       redirect_to edit_usuario_path(@user)
     else
-      flash[:notice] = "Erro durante atualização de cadastro"
+      flash[:error] = I18n.t("usuario.update.failure")
       render :action => 'edit'
     end
   end

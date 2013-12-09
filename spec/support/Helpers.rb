@@ -4,6 +4,7 @@ module Helpers
     contrato = FactoryGirl.create(:contrato)
     projeto = FactoryGirl.create(:projeto)
     usuario.projetos = Projeto.all
+    contrato.update_attribute(:usuario_id, usuario.id)
     visit new_usuario_session_path
     fill_in "usuario_email", :with => usuario.email
     fill_in "usuario_password", :with => "12345678"
@@ -12,7 +13,7 @@ module Helpers
   end
 
   def coordenador_faz_login
-    usuario = FactoryGirl.create(:coordenador)
+    usuario = FactoryGirl.build(:coordenador)
     visit new_usuario_session_path
     fill_in "usuario_email", :with => usuario.email
     fill_in "usuario_password", :with => "12345678"
@@ -25,6 +26,7 @@ module Helpers
     contrato = FactoryGirl.create(:contrato)
     projeto = FactoryGirl.create(:projeto)
     usuario.projetos = Projeto.all
+    contrato.update_attribute(:usuario_id, usuario.id)
     visit new_usuario_session_path
     fill_in "usuario_email", :with => usuario.email
     fill_in "usuario_password", :with => "12345678"

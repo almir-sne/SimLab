@@ -267,6 +267,9 @@ pt-BR:
       failure: "Não foi possível salvar o registro."
     delete:
       success: "Usuario apagado com sucesso."
+    update:
+      success: "Dados cadastrais atualizados com sucesso"
+      failure: "Erro ao atualizar dados cadastrais"
   simlab:
     titulo: "SimLab"
   funcionalidade:

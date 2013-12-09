@@ -21,11 +21,6 @@ SinLab::Application.routes.draw do
     end
   end
 
-  post "cartoes/atualizar_cartoes"
-  get "cartoes/estatisticas"
-  get "cartoes/atividades"
-
-
   resources :pagamentos do
     collection do
       get  :periodos
