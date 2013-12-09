@@ -156,7 +156,10 @@ class DiasController < ApplicationController
       @usuario = Usuario.find(params[:usuario_id])
     end
     @tipo = params[:tipo] || 'p'
-    @ano = params[:ano] || Date.today.year
+    if (params[:date])
+      date_year = params[:data].to_date.year
+    end
+    @ano = date_year || params[:ano] || Date.today.year
     if @tipo == 'm'
       @intervalo = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     elsif @tipo == 's'
@@ -170,7 +173,11 @@ class DiasController < ApplicationController
         end
     elsif @tipo == 'p'
       contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
-      @intervalo = contrato.periodos_por_ano(@ano.to_i)
+      if (!contrato.blank?)
+        @intervalo = contrato.periodos_por_ano(@ano.to_i)
+      else
+        @intervalo = nil
+      end
     end
     #if can? :manage, :usuario
       #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
