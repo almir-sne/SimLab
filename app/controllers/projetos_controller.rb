@@ -1,6 +1,6 @@
 class ProjetosController < ApplicationController
   load_and_authorize_resource
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
@@ -86,7 +86,7 @@ class ProjetosController < ApplicationController
   # POST /projetos.json
   def create
     authorize! :create, Projeto
-    @projeto = Projeto.new(params[:projeto])
+    @projeto = Projeto.new(projetos_params)
     if @projeto.save
       redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
@@ -126,7 +126,7 @@ class ProjetosController < ApplicationController
     #lidar com subprojetos
     failure = false
     if params[:super_projeto] == "true"
-      params[:projeto].except! :super_projeto_id
+      projetos_params.except! :super_projeto_id
       subprojetos = params[:sub_projetos]
       subprojetos.each do |index, sub|
         subprojeto = Projeto.find(sub["id"].to_i)
@@ -140,7 +140,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-    failure ||= !(@projeto.update_attributes params[:projeto])
+    failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
@@ -173,6 +173,12 @@ class ProjetosController < ApplicationController
       format.html
       format.js
     end
+  end
+  
+  private
+  
+  def projetos_params
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :workons_attributes, :super_projeto_id, :sub_projetos_attributes)
   end
 
 end

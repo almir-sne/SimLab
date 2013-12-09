@@ -1,5 +1,5 @@
 class DiasController < ApplicationController
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
 
   def new
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user

@@ -1,6 +1,4 @@
 class Workon < ActiveRecord::Base
-  attr_accessible :projeto_id, :usuario_id, :coordenacoes_attributes
-
   belongs_to :usuario
   belongs_to :projeto
   has_many :coordenacoes
