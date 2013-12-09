@@ -6,8 +6,9 @@
         <h4 class="modal-title" id="myModalLabel">Mensagens</h4>
       </div>
       <div class="modal-body">
+        <%= render "mensagem", mensagens: @atividade.mensagens %>
         <%= hidden_field_tag :atividade_id, @atividade.id %>
-        <%= text_area_tag :mensagem, @atividade.mensagem, :style => "width: 100%" %>
+        <%= text_area_tag :mensagem, "", :style => "width: 100%" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
