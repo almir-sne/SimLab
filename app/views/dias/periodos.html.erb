@@ -1,11 +1,11 @@
 <%= render :partial => 'navegacao' %>
 
 <div id="lista" style="width: 100%; float: right;">
-    <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :origin => "p", :view => "anual", :data => params[:data]} %>
+    <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :origin => "p", :view => "anual", :data => params[:data], :intervalo => @intervalo} %>
   <div id="pagedata">
 <table class="month-table" style="width: 100%">
     <tr>
-      <% if @tipo == 'm' %>
+      <% if @tipo == 'm' and !@intervalo.blank? %>
 
         <% @intervalo.each_with_index do |m, i| %>
           <td class="<%= 'today' if m.include?(@today) %>">
@@ -18,7 +18,7 @@
           <% end %>
         <% end %>
 
-      <% elsif @tipo == 'p' %>
+      <% elsif @tipo == 'p' and !@intervalo.blank? %>
 
         <% @intervalo.each_with_index do |p, i| %>
           <td class="<%= 'today' if p.include?(@today) %>">
@@ -30,7 +30,7 @@
           <% end %>
         <% end %>
 
-      <% elsif @tipo == 's' %>
+      <% elsif @tipo == 's' and !@intervalo.blank? %>
         <% @intervalo.each_with_index do |p, i| %>
           <td class="<%= 'today' if p.include?(@today) %>">
             <%= link_to periodo_link(p[:inicio], p[:fim], @usuario.id, 'p').html_safe, dias_path(inicio: p[:inicio].to_formatted_s, fim: p[:fim].to_formatted_s, usuario_id: @usuario.id, tipo: 'p'), :class => (tem_reprovacao?(p[:inicio],p[:fim],@usuario.id) ? "month-link red-link" : "month-link blue-link") %>

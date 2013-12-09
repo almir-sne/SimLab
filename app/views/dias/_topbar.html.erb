@@ -45,15 +45,17 @@
             <% if data.nil? %>
               <%  data = Date.today %>
             <% end %>
-              <a href="<%= periodos_dias_path(data: data.to_date - 1.year, tipo: tipo, view: view) %>"><i class="icon-arrow-left"></i></a> 
-                <%= data.to_date.year %> 
-              <a href="<%= periodos_dias_path(data: data.to_date + 1.year, tipo: tipo, view: view) %>"><i class="icon-arrow-right"></i></a>
+              <% if !intervalo.blank? %>
+              <a href="<%= periodos_dias_path(data: data.to_date - 1.year, ano: (data.to_date - 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-left"></i></a> 
+                <%=  intervalo.first.first %> a <%=  intervalo.last.last %>
+              <a href="<%= periodos_dias_path(data: data.to_date + 1.year, ano: (data.to_date + 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-right"></i></a>
+              <% end %>
             <%  end %>
             
             <% if tipo == "m" %>         
-              <a href="<%= periodos_dias_path(data: data.to_date - 1.year, tipo: tipo, view: view) %>"><i class="icon-arrow-left"></i></a> 
+              <a href="<%= periodos_dias_path(data: data.to_date - 1.year, ano: (data.to_date - 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-left"></i></a> 
                 <%= data.to_date.year %> 
-              <a href="<%= periodos_dias_path(data: data.to_date + 1.year, tipo: tipo, view: view) %>"><i class="icon-arrow-right"></i></a>
+              <a href="<%= periodos_dias_path(data: data.to_date + 1.year, ano: (data.to_date + 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-right"></i></a>
             <%  end %>  
         <% end %>
         
@@ -66,9 +68,23 @@
               <% if data.blank? %>
                 <% data = Date.today %>
               <% end %>
-              <td><a href="<%= periodos_dias_path(data: data, tipo: 'p', view: view) %>" >[Períodos]</a></td>
-              <td><a href="<%= periodos_dias_path(data: data, tipo: 'm', view: view) %>" >[Meses]</a></td>
-              <td><a href="<%= periodos_dias_path(data: data, tipo: 's', view: view) %>" >[Semanas]</a></td>
+              <% if tipo != 'p' %>
+                <td><a href="<%= periodos_dias_path(data: data, tipo: 'p', view: view) %>" >[Períodos]</a></td>
+              <% else %>
+                <td><b>[Períodos]</b></td>
+              <% end %>
+                
+              <% if tipo != 'm' %>  
+                <td><a href="<%= periodos_dias_path(data: data, tipo: 'm', view: view) %>" >[Meses]</a></td>
+              <% else %>
+                <td><b>[Meses]</b></td>
+              <% end %>
+                
+              <% if tipo != 's' %>
+                <td><a href="<%= periodos_dias_path(data: data, tipo: 's', view: view) %>" >[Semanas]</a></td>
+              <% else %>
+                <td><b>[Semanas]</b></td>
+              <% end %>
             <% elsif view == "periodo" %>
               <td><a href="<%= dias_path(inicio: inicio, usuario_id: current_usuario, tipo: "p", view: view) %>" >[Períodos]</a></td>
               <td><a href="<%= dias_path(inicio: inicio, usuario_id: current_usuario, tipo: "m", view: view) %>" >[Meses]</a></td>
