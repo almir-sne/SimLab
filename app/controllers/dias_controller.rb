@@ -62,7 +62,7 @@ class DiasController < ApplicationController
             :trello_id => atividade_attr["trello_id"],
             :data => dia.data
           )
-          unless atividade_attr[:mensagem][:conteudo].blank?
+          if(!(atividade_attr[:mensagem].blank?) && !(atividade_attr[:mensagem][:conteudo].blank?))
             Mensagem.create(atividade_attr[:mensagem])
           end
           if atividade_attr["pares_attributes"]
