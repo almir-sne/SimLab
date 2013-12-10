@@ -11,7 +11,7 @@ SinLab::Application.routes.draw do
 
   resources :atividades, :only => [] do
     collection do
-      get  :validacao 
+      get  :validacao
       get :cartoes
       post :atualizar_cartoes
       post :aprovar
@@ -69,7 +69,7 @@ SinLab::Application.routes.draw do
     collection do
       get :editar_por_data
       get :periodos
-      get :cartao_pai 
+      get :cartao_pai
     end
   end
 
@@ -88,7 +88,7 @@ SinLab::Application.routes.draw do
 
   get "/uploads/:id/:basename.:extension", :controller => "anexos", :action => "download"
 
-  root :to => "home#index"
+  root :to => "dias#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
