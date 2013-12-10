@@ -139,3 +139,19 @@ function mudaUsuario(obj) {
         url = url + "?";
     location.href = url.replace(/usuario_id=[0-9]+/, "") + "usuario_id=" + $(obj).val();
 }
+
+function ver_periodo_novo(obj)
+{
+    var orgurl = $(obj).attr("tpg");
+    var inicio = $('#datepicker1').val();
+    var fim = $('#datepicker2').val();
+    
+    var finalurl = orgurl + "&inicio=" + inicio + "&fim=" + fim;
+    
+    $(obj).attr("href",finalurl);
+}
+
+$(function() {
+    $("#datepicker1").datepicker({dateFormat: "yy-mm-dd"});
+    $("#datepicker2").datepicker({dateFormat: "yy-mm-dd"});
+});

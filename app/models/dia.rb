@@ -102,11 +102,15 @@ class Dia < ActiveRecord::Base
   end
 
   def formata_mensagens
-    m = ""
-    self.atividades.where("mensagem is not null").each do |a|
-      m += "#{a.mensagem}\n"
+    msgs = ""
+    self.atividades.each  do |a|
+      a.mensagens.each do |m|
+          unless (m.conteudo.nil?)
+            msgs += "#{m.conteudo}\n"
+          end
+      end
     end
-    m.strip
+    msgs.strip
   end
 
   def intervalo

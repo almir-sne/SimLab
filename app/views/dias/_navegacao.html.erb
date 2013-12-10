@@ -11,6 +11,6 @@
   </div>
   <% if can? :manage, :usuario %>
     <%= select_tag :menu_select, options_for_select(@usuarios, @usuario.id),
-      :prompt => "Escolha um usuario", :onchange => "mudaUsuario(this)" %>
+      :prompt => "Escolha um usuario", :onchange => "mudaUsuario(this)", :style => "width: 90%; margin: 10px" %>
   <%end%>
 </div>

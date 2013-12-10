@@ -1,18 +1,17 @@
 <% mensagens = atividade_form.object.mensagens %>
 <% unless mensagens.blank? %>
-  <div class="blue-background activity-message">
+  <div class="activity-message">
     <table>
-      <tr>
-        <th>De      </th>
-        <th>mensagem</th>
-        <th>Data    </th>
-      </tr>
-      <% mensagens.each do |msg| %>
-        <tr>
-          <td><%= msg.autor.nome %></td>
-          <td><%= msg.conteudo   %></td>
-          <td><%= msg.updated_at %></td>
-        </tr>
+      <% mensagens.each do |m| %>
+         <% if m.autor_id != current_usuario.id %>
+            <div class="mensagem-border-coordenador">
+          <% else %>
+            <div class="mensagem-border-usuario">
+          <% end %>
+            <div style="color: #3B0B17"><b><%= m.usuario.nome %></b></div>
+            <div><%= m.conteudo %></div>
+            <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
+          </div>
       <%end%>
     </table>
     <%= atividade_form.fields_for Mensagem.new, :allow_destroy => true do |msg| %>

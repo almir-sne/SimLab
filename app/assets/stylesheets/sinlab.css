@@ -587,3 +587,33 @@ ul .submenu {
 table.dataTable thead th {
     border-left: 1px solid #000;
 }
+
+.mensagem-border-coordenador {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-style: solid; 
+    border-radius: 6px; 
+    border-width: 1px;
+    border-color: #E0E6F8;
+    background-color: #E0E6F8;
+    margin: 1px;
+    width: 80%;
+    float: left;
+    text-align:justify;
+    text-justify:inter-word;
+}
+
+.mensagem-border-usuario {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-style: solid; 
+    border-radius: 6px; 
+    border-width: 1px;
+    border-color: #D8F6CE;
+    background-color: #D8F6CE;
+    margin: 1px;
+    width: 80%;
+    float: right;
+    text-align:justify;
+    text-justify:inter-word;
+}

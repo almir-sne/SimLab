@@ -23,8 +23,9 @@
           
           <% if tipo == "p" %>
             <a href="<%= dias_path(data: (inicio.to_date - 1.day), usuario_id: current_usuario, tipo: tipo) %>"><i class="icon-arrow-left"></i></a> 
-              <%= inicio.to_date.strftime("%d/%m/%Y") %> a <%= fim.to_date.strftime("%d/%m/%Y") %> 
+              <input type="text" id="datepicker1" size=10 value="<%= inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= fim.to_date.strftime("%d/%m/%Y") %>"> 
             <a href="<%= dias_path(data: (fim.to_date + 1.day), usuario_id: current_usuario, tipo: tipo) %>"><i class="icon-arrow-right"></i></a> 
+            <a tpg="<%= dias_path(data: (fim.to_date), usuario_id: current_usuario, tipo: tipo) %>" href="#" onclick="ver_periodo_novo(this);">Ver Novo Periodo</a>
            <% end %>
         
           <% if tipo == "m" %>
@@ -47,8 +48,9 @@
             <% end %>
               <% if !intervalo.blank? %>
               <a href="<%= periodos_dias_path(data: data.to_date - 1.year, ano: (data.to_date - 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-left"></i></a> 
-                <%=  intervalo.first.first %> a <%=  intervalo.last.last %>
+                <input type="text" id="datepicker1" size=10 value="<%=  intervalo.first.first %>"> a <input type="text" id="datepicker2" size=10 value="<%=  intervalo.last.last %>" > 
               <a href="<%= periodos_dias_path(data: data.to_date + 1.year, ano: (data.to_date + 1.year).year, tipo: tipo, view: view) %>"><i class="icon-arrow-right"></i></a>
+              <a tpg="<%= periodos_dias_path(data: data.to_date, ano: (data.to_date).year, tipo: tipo, view: view) %>" href="#" onclick="ver_periodo_novo(this);">Ver Novo Periodo</a> 
               <% end %>
             <%  end %>
             

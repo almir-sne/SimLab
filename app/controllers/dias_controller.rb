@@ -178,7 +178,11 @@ class DiasController < ApplicationController
     elsif @tipo == 'p'
       contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
       if (!contrato.blank?)
-        @intervalo = contrato.periodos_por_ano(@ano.to_i)
+        if params[:inicio].blank? and params[:fim].blank?
+          @intervalo = contrato.periodos_por_ano(@ano.to_i)
+        else
+          @intervalo = contrato.periodos_entre_datas(params[:inicio].to_date,params[:fim].to_date)
+        end
       else
         @intervalo = nil
       end
