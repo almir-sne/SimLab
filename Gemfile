@@ -17,11 +17,10 @@ gem 'uglifier'
 
 gem 'jquery-rails'
 
-gem 'devise', '~> 3.2.2'
+gem 'devise'
 gem 'thin'
 gem 'squeel'
 gem 'cancan'
-gem 'client_side_validations', :git => 'https://github.com/bcardarella/client_side_validations.git', :branch => '3-2-stable'
 gem "nested_form"
 gem "mysql2"
 
@@ -40,8 +39,8 @@ group :test, :development do
 	gem 'simplecov', :require => false
 end
 
-gem 'holidays', '~> 1.0.5'
-gem 'will_paginate', '~> 3.0'
+gem 'holidays'
+gem 'will_paginate'
 gem "carrierwave"
 gem 'chosen-rails'
 
@@ -58,10 +57,10 @@ gem 'chosen-rails'
 # gem 'capistrano'
 
 # To use debugger
-  gem 'debugger'
+gem 'debugger'
 
 # Awesome Print
-gem "awesome_print", "~> 1.2.0"
+gem "awesome_print"
 
 # add these gems to help with the transition:
 gem 'protected_attributes'
