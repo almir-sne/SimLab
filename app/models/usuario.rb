@@ -24,7 +24,7 @@ class Usuario < ActiveRecord::Base
   accepts_nested_attributes_for :contratos,    :allow_destroy => true
   accepts_nested_attributes_for :coordenacoes, :allow_destroy => true
   accepts_nested_attributes_for :anexos,       :allow_destroy => true
-  
+
   has_many :projetos, :through => :workons
 
   validates :nome, :presence => true,
@@ -41,10 +41,6 @@ class Usuario < ActiveRecord::Base
 
   def equipe_coordenada_por_projetos(projeto)
     Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
-  end
-  
-  def equipe
-    Usuario.joins(:workons).where(workons: {projeto_id: self.projetos, usuario_id: self}).group(:id)
   end
 
   def horario_data(data)
@@ -76,8 +72,8 @@ class Usuario < ActiveRecord::Base
   end
 
   def equipe
-    Usuario.joins(:workons).where(workons: { 
-        projeto_id: self.projetos, usuario_id: Usuario.select(:id).where(status: true)
+    Usuario.joins(:workons).where(workons: {
+        projeto_id: self.projetos.to_a, usuario_id: Usuario.select(:id).where(status: true)
       }).group(:id).order(:nome)
   end
 
@@ -87,5 +83,5 @@ class Usuario < ActiveRecord::Base
     else
       self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     end
-  end 
+  end
 end
