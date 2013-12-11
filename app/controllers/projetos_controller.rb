@@ -80,6 +80,12 @@ class ProjetosController < ApplicationController
         map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.order(:nome)
+    @hoje = Date.today
+    @equipe = @projeto.usuarios.order(:nome)
+    @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
+    @fim = params[:fim].try(:to_date) || @hoje.end_of_month
+    @ausencias = Ausencia.joins(:dia).where(dia: {usuario_id: @equipe, data: @inicio..@fim}, projeto_id: @projeto.id ).group_by{|x| x.dia.data}
+    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, usuario_id: @equipe, projeto_id: @projeto.id).group_by{|x| x.dia.data}
   end
 
   # POST /projetos

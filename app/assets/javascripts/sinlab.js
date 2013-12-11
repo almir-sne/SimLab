@@ -151,6 +151,17 @@ function ver_periodo_novo(obj)
     $(obj).attr("href",finalurl);
 }
 
+function ver_periodo_novo_proj(obj)
+{
+    var orgurl = $(obj).attr("tpg");
+    var inicio = $('#datepicker1').val();
+    var fim = $('#datepicker2').val();
+    
+    var finalurl = orgurl + "?inicio=" + inicio + "&fim=" + fim;
+    
+    $(obj).attr("href",finalurl);
+}
+
 $(function() {
     $("#datepicker1").datepicker({dateFormat: "yy-mm-dd"});
     $("#datepicker2").datepicker({dateFormat: "yy-mm-dd"});

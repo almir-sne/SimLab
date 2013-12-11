@@ -112,11 +112,11 @@ ActiveRecord::Schema.define(:version => 20131206231045) do
   end
 
   create_table "dias", :force => true do |t|
-    t.float    "intervalo"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
+    t.float    "intervalo"
   end
 
   create_table "estimativas", :force => true do |t|

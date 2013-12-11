@@ -11,7 +11,7 @@ class Projeto < ActiveRecord::Base
   belongs_to :super_projeto, :class_name => "Projeto"
   has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id", :dependent => :nullify
   has_many :atividades
-  has_many :usuarios,  :through => :workons
+  has_many :usuarios, :through => :workons
   has_many :workons, :dependent => :destroy
   has_many :boards
   has_many :ausencias

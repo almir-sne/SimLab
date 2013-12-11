@@ -45,7 +45,7 @@ class AusenciasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada
     end
-    projeto_atual = (params[:projeto_id] == "-1" )? Projeto.all : Projeto.find(params[:projeto_id].to_i)
+    projeto_atual = (params[:projeto_id].blank? or params[:projeto_id] == "-1" )? Projeto.all : Projeto.find(params[:projeto_id].to_i)
     @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
     @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
     @projeto   = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
