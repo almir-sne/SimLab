@@ -89,7 +89,6 @@ SinLab::Application.routes.draw do
   get "/uploads/:id/:basename.:extension", :controller => "anexos", :action => "download"
 
   root :to => "dias#index"
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
