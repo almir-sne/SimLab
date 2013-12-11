@@ -1,0 +1,37 @@
+<%= nested_form_for(@deck) do |f| %>
+  <% if @deck.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@deck.errors.count, "error") %> prohibited this deck from being saved:</h2>
+
+      <ul>
+        <% @deck.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nome %><br />
+    <%= f.text_field :nome %>
+  </div>
+
+<div style="padding: 10px">
+  <h2> Cartas</h2>
+    <%= f.fields_for :planning_cards do |card| %>
+    <%= card.label :nome %>
+    <%= card.text_field :nome %>
+
+    <%= card.label :valor %>
+    <%= card.text_field :valor %>
+
+    <%= card.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+
+  <% end %>
+  <%= f.link_to_add 'Nova carta' , :planning_cards, :class => "default-button" %>
+</div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131206231045) do
+ActiveRecord::Schema.define(:version => 20131211174503) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -111,12 +111,22 @@ ActiveRecord::Schema.define(:version => 20131206231045) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "decks", :force => true do |t|
+    t.string   "nome"
+    t.integer  "minimum_id"
+    t.integer  "maximum_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "dias", :force => true do |t|
     t.float    "intervalo"
     t.integer  "usuario_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
+    t.datetime "entrada"
+    t.datetime "saida"
   end
 
   create_table "estimativas", :force => true do |t|
@@ -172,6 +182,14 @@ ActiveRecord::Schema.define(:version => 20131206231045) do
     t.float    "duracao"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "planning_cards", :force => true do |t|
+    t.string   "nome"
+    t.float    "valor"
+    t.integer  "deck_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "projetos", :force => true do |t|

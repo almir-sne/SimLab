@@ -1,4 +1,7 @@
 SinLab::Application.routes.draw do
+  
+  resources :decks
+  
   resources :estimativas, :only => [:index, :create] do
     collection do
       match 'board/:board_id' => "estimativas#board", :as => :board
