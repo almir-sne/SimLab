@@ -8,14 +8,14 @@ class AusenciasController < ApplicationController
   end
 
   def new
-    @dia      = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), current_usuario.id)
+    @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: current_usuario.id)
     @tipo     = params[:tipo]
     @ausencia = Ausencia.new
     @projetos = current_usuario.projetos.map{|proj| [proj.nome, proj.id]}
   end
 
   def create
-    @ausencia = Ausencia.new params[:ausencia]
+    @ausencia = Ausencia.new ausencia_params
     if @ausencia.save
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
@@ -45,7 +45,7 @@ class AusenciasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada
     end
-    projeto_atual = (params[:projeto_id] == "-1" )? Projeto.all : Projeto.find(params[:projeto_id].to_i)
+    projeto_atual = (params[:projeto_id] == "-1" || params[:projeto_id].nil?) ? Projeto.all : Projeto.find(params[:projeto_id].to_i)
     @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
     @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
     @projeto   = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id]
@@ -86,5 +86,10 @@ class AusenciasController < ApplicationController
       format.html
       format.js
     end
+  end
+  
+  private
+  def ausencia_params
+     params.require(:ausencia).permit(:abonada, :avaliador_id, :horas, :justificativa, :mensagem, :dia_id, :projeto_id)
   end
 end

@@ -85,7 +85,7 @@
                     <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
                   </td>
                   <td>
-                    <%= link_to "Adicionar Coordenadores", edit_workon_path( Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
+                    <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
                   </td>
                 </tr>
               <% end %>
