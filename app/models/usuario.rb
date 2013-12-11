@@ -43,6 +43,10 @@ class Usuario < ActiveRecord::Base
     Usuario.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(projeto_id: projeto, coordenacoes: {usuario_id: self})})
   end
 
+  def equipe
+    Usuario.joins(:workons).where(workons: {projeto_id: self.projetos, usuario_id: self}).group(:id)
+  end
+
   def horario_data(data)
     contrato_vigente_em(data).hora_mes
   end
