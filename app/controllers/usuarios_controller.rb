@@ -6,7 +6,7 @@ class UsuariosController < ApplicationController
     authorize! :see, Usuario
     @status = params[:status]
     unless @status.blank? or @status == "Todos"
-      @users = Usuario.where(:status => @status == "true").order(:nome)
+      @users = Usuario.where(:status => true).order(:nome)
     else
       @users = Usuario.load(:order => :nome)
       @status = "Todos"
