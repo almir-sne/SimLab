@@ -8,7 +8,7 @@ class UsuariosController < ApplicationController
     unless @status.blank? or @status == "Todos"
       @users = Usuario.where(:status => @status == "true").order(:nome)
     else
-      @users = Usuario.all(:order => :nome)
+      @users = Usuario.load(:order => :nome)
       @status = "Todos"
     end
     @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
