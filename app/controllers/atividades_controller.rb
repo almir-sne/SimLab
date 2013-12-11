@@ -109,7 +109,7 @@ class AtividadesController < ApplicationController
 
   def mensagens
     @atividade = Atividade.find params[:atividade_id]
-    @atividade.mensagens.update_all visto: true
+    @atividade.mensagens.where{autor_id != my{current_usuario}.id}.update_all visto: true
     respond_to do |format|
       format.js
     end

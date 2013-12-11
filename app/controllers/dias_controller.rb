@@ -8,7 +8,7 @@ class DiasController < ApplicationController
     @data = params[:data]
     @projetos = @usuario.meus_projetos
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
-    Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.update_all :visto => true}
+    Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.where{autor_id != ati.usuario_id}.update_all :visto => true}
     respond_to do |format|
       format.js
       format.html
@@ -62,11 +62,9 @@ class DiasController < ApplicationController
             :trello_id => atividade_attr["trello_id"],
             :data => dia.data
           )
-          unless atividade_attr[:mensagem].blank?
-            unless atividade_attr[:mensagem][:conteudo].blank?
-              Mensagem.create(atividade_attr[:mensagem])
-            end
-          end  
+          if(!(atividade_attr[:mensagem].blank?) && !(atividade_attr[:mensagem][:conteudo].blank?))
+            Mensagem.create(atividade_attr[:mensagem])
+          end
           if atividade_attr["pares_attributes"]
             atividade_attr["pares_attributes"].each do |index, par_attr|
               par = Par.find_by_id par_attr[:id].to_i
