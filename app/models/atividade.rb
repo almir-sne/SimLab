@@ -1,7 +1,4 @@
 class Atividade < ActiveRecord::Base
-  attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :avaliador_id
-  attr_accessible :duracao, :data, :trello_id
-
   scope :periodo, lambda { |range| where(data: range) if range}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
   scope :mes, lambda { |value| where(['extract(month from atividades.data) = ?', value]) if value > 0 }
