@@ -79,7 +79,7 @@ class ProjetosController < ApplicationController
       sort{|a, b| a.nome <=> b.nome}.
         map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.load.order(nome: :asc)
+    @usuarios = Usuario.all.order(nome: :asc)
     @hoje = Date.today
     @equipe = @projeto.usuarios.pluck(:nome).sort
     @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
@@ -102,12 +102,12 @@ class ProjetosController < ApplicationController
     end
   end
 
-  # PUT /projetos/1
-  # PUT /projetos/1.json
+  # PATCH /projetos/1
+  # PATCH /projetos/1.json
   def update
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
-    boards = @projeto.boards
+    boards = @projeto.boards.to_a
     #lidar com boards
     unless params[:trello].blank?
       params[:trello].each do |id|
@@ -127,6 +127,7 @@ class ProjetosController < ApplicationController
       end
     end
     boards.each do |b|
+      debugger
       b.destroy
     end
     #lidar com subprojetos
@@ -184,7 +185,7 @@ class ProjetosController < ApplicationController
   private
   
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, workons_attributes: [], :super_projeto_id, :sub_projetos_attributes)
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, workons_attributes: [:id, :usuario_id, :_destroy], sub_projetos: [:id, :filho])
   end
 
 end
