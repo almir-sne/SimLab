@@ -1,7 +1,7 @@
 <div class="blue-line" style="margin: 20px 10px">  </div>
 
 <%= form_for(@ausencia, :html => {:multipart =>true}) do |f| %>
-  <%= f.hidden_field :dia_id, :value => @dia.id %>
+  <%= f.hidden_field :dia_id, :value => @dia.try(:id) %>
   <%= hidden_field_tag :tipo, @tipo %>
   <div class="container-fluid">
     <div class="row-fluid">

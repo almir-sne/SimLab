@@ -1,5 +1,4 @@
 class AusenciasController < ApplicationController
-  load_and_authorize_resource
 
   def destroy
     ausencia = Ausencia.find params[:id]
@@ -8,13 +7,14 @@ class AusenciasController < ApplicationController
   end
 
   def new
-    @dia      = Dia.where(data: Date.parse(params[:data]), usuario_id: current_usuario.id).first
+    @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: current_usuario.id)
     @tipo     = params[:tipo]
     @projetos = current_usuario.projetos.map{|proj| [proj.nome, proj.id]}
+    @ausencia = Ausencia.find_or_initialize_by dia_id: @dia.try(:id)
   end
 
   def create
-    @ausencia = Ausencia.new 
+    @ausencia = Ausencia.find_or_initialize_by dia_id: params[:ausencia][:dia_id]
     if @ausencia.update_attributes(ausencia_params)
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
@@ -87,7 +87,7 @@ class AusenciasController < ApplicationController
       format.js
     end
   end
-  
+
   private
   def ausencia_params
     params.require(:ausencia).permit(:usuario_id, :horas, :abonada, :avaliador_id, :justificativa, :mensagem, :dia_id, :projeto_id, anexo: [:arquivo])

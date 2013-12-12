@@ -206,9 +206,9 @@ class DiasController < ApplicationController
   private
 
   def dia_params
-    params.require(:dia).permit(:data, :usuario_id, :cartao, 
-      atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy, 
-          pares_attributes: [:id, :par_id, :_destroy, :horas]], 
+    params.require(:dia).permit(:data, :usuario_id, :cartao,
+      atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy,
+          pares_attributes: [:id, :par_id, :_destroy, :horas]],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
 
