@@ -79,13 +79,13 @@ class ProjetosController < ApplicationController
       sort{|a, b| a.nome <=> b.nome}.
         map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.order(:nome)
+    @usuarios = Usuario.load.order(nome: :asc)
     @hoje = Date.today
-    @equipe = @projeto.usuarios.order(:nome)
+    @equipe = @projeto.usuarios.pluck(:nome).sort
     @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
     @fim = params[:fim].try(:to_date) || @hoje.end_of_month
-    @ausencias = Ausencia.joins(:dia).where(dia: {usuario_id: @equipe, data: @inicio..@fim}, projeto_id: @projeto.id ).group_by{|x| x.dia.data}
-    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, usuario_id: @equipe, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
   end
 
   # POST /projetos
@@ -184,7 +184,7 @@ class ProjetosController < ApplicationController
   private
   
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :workons_attributes, :super_projeto_id, :sub_projetos_attributes)
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, workons_attributes: [], :super_projeto_id, :sub_projetos_attributes)
   end
 
 end

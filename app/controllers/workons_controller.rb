@@ -84,6 +84,6 @@ class WorkonsController < ApplicationController
   private
   
   def workon_params
-    params.require(:workon).permit(:projeto_id, :usuario_id, :coordenacoes_attributes)
+    params.require(:workon).permit(:projeto_id, :usuario_id, coordenacoes_attributes: [:id, :usuario_id])
   end
 end

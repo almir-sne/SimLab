@@ -1,5 +1,4 @@
 class Cartao < ActiveRecord::Base
-  attr_accessible :trello_id, :estimativa, :rodada, :id, :estimado, :pai_id
   validates :trello_id, :uniqueness => true, :presence => true
   
   has_many :estimativas

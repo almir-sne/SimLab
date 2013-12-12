@@ -22,11 +22,11 @@ class DiasController < ApplicationController
       dia = Dia.find(params[:dia_id])
     end
     dia_success = dia.update_attributes(
-      :intervalo => (params[:dia]["intervalo(4i)"].to_f * 3600.0 +  params[:dia]["intervalo(5i)"].to_f * 60.0),
+      :intervalo => (dia_params["intervalo(4i)"].to_f * 3600.0 +  dia_params["intervalo(5i)"].to_f * 60.0),
     )
     horarios_success = true
-    unless params[:dia][:horarios_attributes].nil?
-      params[:dia][:horarios_attributes].each do |lixo, horario_attr|
+    unless dia_params[:horarios_attributes].nil?
+      dia_params[:horarios_attributes].each do |lixo, horario_attr|
         horario = Horario.find_by_id horario_attr[:id].to_i
         if horario.blank?
           horario = Horario.new
@@ -35,16 +35,16 @@ class DiasController < ApplicationController
           horario.destroy()
         else
           horarios_success = horarios_success and horario.update_attributes(
-            :entrada => convert_date(params[:dia][:horarios_attributes][lixo], "entrada"),
-            :saida => convert_date(params[:dia][:horarios_attributes][lixo], "saida"),
+            :entrada => convert_date(dia_params[:horarios_attributes][lixo], "entrada"),
+            :saida => convert_date(dia_params[:horarios_attributes][lixo], "saida"),
             :dia_id => dia.id
           )
         end
       end
     end
     atividades_success = true
-    unless params[:dia][:atividades_attributes].nil?
-      params[:dia][:atividades_attributes].each do |index, atividade_attr|
+    unless dia_params[:atividades_attributes].nil?
+      dia_params[:atividades_attributes].each do |index, atividade_attr|
         atividade = Atividade.find_by_id atividade_attr[:id].to_i
         if atividade.blank?
           atividade = Atividade.new
@@ -194,25 +194,32 @@ class DiasController < ApplicationController
     @projetos          = @usuario.meus_projetos
   end
 
-def cartao_pai
-  cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
-  unless cartao.pai.blank?
-    render json: cartao.pai.trello_id.to_json
-  else
-    render json: "".to_json
+  def cartao_pai
+    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
+    unless cartao.pai.blank?
+      render json: cartao.pai.trello_id.to_json
+    else
+      render json: "".to_json
+    end
   end
-end
 
-private
+  private
 
-def convert_date(hash, date_symbol_or_string)
-  attribute = date_symbol_or_string.to_s
-  return DateTime.new(
-    hash[attribute + '(1i)'].to_i,
+  def dia_params
+    params.require(:dia).permit(:data, :usuario_id, :cartao, 
+      atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy, 
+          pares_attributes: [:id, :par_id, :_destroy, :horas]], 
+      horarios_attributes: [:id, :entrada, :saida, :_destroy])
+  end
+
+  def convert_date(hash, date_symbol_or_string)
+    attribute = date_symbol_or_string.to_s
+    return DateTime.new(
+      hash[attribute + '(1i)'].to_i,
       hash[attribute + '(2i)'].to_i,
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
-      0)
- end
+    0)
+  end
 end

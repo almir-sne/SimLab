@@ -10,26 +10,28 @@ class AusenciasController < ApplicationController
   def new
     @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: current_usuario.id)
     @tipo     = params[:tipo]
-    @ausencia = Ausencia.new
     @projetos = current_usuario.projetos.map{|proj| [proj.nome, proj.id]}
   end
 
   def create
-    @ausencia = Ausencia.new ausencia_params
-    if @ausencia.save
-      flash[:notice] = I18n.t("ausencias.create.success")
-      unless params[:anexo].nil?
-        Anexo.new(
-          :arquivo     => params[:anexo],
-          :tipo        => "atestado",
-          :data        => @ausencia.dia.data,
-          :usuario_id  => params[:usuario_id],
-          :ausencia_id => @ausencia.id
-        ).save
-      end
-    else
-      flash[:error] = I18n.t("ausencias.create.failure")
-    end
+    ausencia_params
+    debugger
+    banana = Array.new
+    #Ausencia.create!(ausencia_params)
+    #if @ausencia.save
+      #flash[:notice] = I18n.t("ausencias.create.success")
+      #unless params[:anexo].nil?
+        #Anexo.new(
+          #:arquivo     => params[:anexo],
+          #:tipo        => "atestado",
+          #:data        => @ausencia.dia.data,
+          #:usuario_id  => params[:usuario_id],
+          #:ausencia_id => @ausencia.id
+        #).save
+      #end
+    #else
+      #flash[:error] = I18n.t("ausencias.create.failure")
+    #end
     redirect_to dias_path(data: @ausencia.dia.data, tipo: params[:tipo])
   end
 
@@ -91,6 +93,6 @@ class AusenciasController < ApplicationController
   
   private
   def ausencia_params
-     params.require(:ausencia).permit(:abonada, :avaliador_id, :horas, :justificativa, :mensagem, :dia_id, :projeto_id)
+     params.require(:ausencia).permit(:abonada, :avaliador_id, :justificativa, :mensagem, :dia_id, :projeto_id, :anexo)
   end
 end

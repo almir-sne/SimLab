@@ -38,15 +38,15 @@
                 <% if data < @hoje %>
                   <% if @atividades[data].nil? %>
                     <% @equipe.each do |u| %>
-                      <% unless ausentes.include?(u.nome) %>
-                        <div style="display: block;"><%= u.nome %></div>
+                      <% unless ausentes.include?(u) %>
+                        <div style="display: block;"><%= u %></div>
                       <% end %>  
                     <% end %>
                   <% else %>
                     <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
                     <% @equipe.each do |u| %>
-                        <% if !working_users.include?(u.nome) and !ausentes.include?(u.nome) %>
-                          <div style="display: block;"><%= u.nome %></div>
+                        <% if !working_users.include?(u) and !ausentes.include?(u) %>
+                          <div style="display: block;"><%= u %></div>
                         <% end %>
                     <% end %>
                   <% end %>
@@ -137,7 +137,6 @@
                 <tr>
                   <td style="padding: 0px 20px;">
                     <%= worker.object.try(:usuario).try(:nome) %>
-                    <%= worker.hidden_field :usuario_id %>
                   </td>
                   <td style="margin-left: 10px">
                     <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
