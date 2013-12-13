@@ -39,10 +39,11 @@
             <ul class="dropdown-menu">
               <li><a href="<%= dias_path(data: Date.today, usuario_id: current_usuario) %>">Calendario de Atividades</a></li>
               <li><a href="<%= periodos_dias_path %>">Meus Períodos</a></li>
-              <%if can? :index, Ausencia %>
-                <li><a href="<%= ausencias_path %>">Minhas Ausências</a></li>
+              <%if can? :manage, Atividade %>
+                <li class="navbar-section">Administração</li>
+                <li><a href="<%= ausencias_path %>">Ausências</a></li>
+                <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
               <% end %>
-              <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
             </ul>
           </li>
           <li>

@@ -40,10 +40,9 @@ class DecksController < ApplicationController
   # POST /decks
   # POST /decks.json
   def create
-    @deck = Deck.new(params[:deck])
-
+    @deck = Deck.new
     respond_to do |format|
-      if @deck.save
+      if update_deck(@deck, params)
         format.html { redirect_to decks_path, notice: 'Deck criado com sucesso.' }
         format.json { render json: @deck, status: :created, location: @deck }
       else
@@ -57,25 +56,8 @@ class DecksController < ApplicationController
   # PUT /decks/1.json
   def update
     @deck = Deck.find(params[:id])
-
-    success = @deck.update_attribute(:nome, params[:deck][:nome])
-    
-    params[:deck][:planning_cards_attributes].each do |key, attributes|
-      card = PlanningCard.where(id: attributes[:id]).last
-      if card.blank?
-        card = PlanningCard.new
-      end
-      if attributes["_destroy"] == "1" and !card.blank?
-        card.destroy()
-      else
-        card.deck = @deck
-        card.save
-        
-        success = success and card.update_attributes(nome: attributes[:nome], valor: attributes[:valor])
-      end
-    end
     respond_to do |format|
-      if success
+      if update_deck(@deck, params)
         format.html { redirect_to decks_path, notice: 'Deck atualizado com sucesso.' }
         format.json { head :no_content }
       else
@@ -95,5 +77,24 @@ class DecksController < ApplicationController
       format.html { redirect_to decks_url }
       format.json { head :no_content }
     end
+  end
+  
+  def update_deck(deck, params)
+    success = deck.update_attribute(:nome, params[:deck][:nome])
+    
+    params[:deck][:planning_cards_attributes].each do |key, attributes|
+      card = PlanningCard.where(id: attributes[:id]).last
+      if card.blank?
+        card = PlanningCard.new
+      end
+      if attributes["_destroy"] == "1" and !card.blank?
+        card.destroy()
+      else
+        card.deck = deck
+        card.save
+        success = success and card.update_attributes(nome: attributes[:nome], valor: attributes[:valor])
+      end
+    end
+    success
   end
 end
