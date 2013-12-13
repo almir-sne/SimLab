@@ -1,5 +1,4 @@
 class PagamentosController < ApplicationController
-  load_and_authorize_resource
 
   def index
     hoje = Date.today
@@ -47,15 +46,15 @@ class PagamentosController < ApplicationController
   end
 
   def create
-    pagamento = Pagamento.new(params[:pagamento])
-    if pagamento.update_attributes(params[:pagamento])
+    pagamento = Pagamento.new(pagamento_params)
+    if pagamento.update_attributes(pagamento_params)
       flash[:notice] = I18n.t("pagamento.create.success")
     else
       flash[:alert] = I18n.t("pagamento.create.failure")
     end
     unless params[:comprovante].nil?
       Anexo.new(
-        :arquivo => params[:comprovante],
+        :arquivo => params.require(:comprovante),
         :tipo => "holerite",
         :data => params[:pagamento][:data],
         :usuario_id => params[:pagamento][:usuario_id],
@@ -73,4 +72,11 @@ class PagamentosController < ApplicationController
     end
     redirect_to :back
   end
+
+
+  private
+    def pagamento_params
+      params.require(:pagamento).permit("usuario_id", "motivo", "data", "valor", "fonte")
+    end
+
 end

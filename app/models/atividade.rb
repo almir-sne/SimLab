@@ -30,11 +30,7 @@ class Atividade < ActiveRecord::Base
   validates :usuario_id, :presence => true
 
   def horas
-    unless read_attribute(:duracao).blank?
-      read_attribute(:duracao)/60
-    else
-      0
-    end
+    read_attribute(:duracao).blank? ? 0 : read_attribute(:duracao)/60
   end
 
   def bar_width
@@ -61,16 +57,10 @@ class Atividade < ActiveRecord::Base
   end
 
   def trello_id
-    unless self.cartao.blank?
-      self.cartao.trello_id
-    else
-      nil
-    end
+    self.cartao.blank? ? nil : self.cartao.trello_id
   end
 
   def trello_id=(cartao_id)
-    unless cartao_id.blank?
-      self.cartao = Cartao.find_or_create_by_trello_id(cartao_id)
-    end
+    self.cartao = Cartao.find_or_create_by_trello_id(cartao_id) unless cartao_id.blank?
   end
 end
