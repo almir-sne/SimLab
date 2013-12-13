@@ -108,18 +108,22 @@ class AtividadesController < ApplicationController
   end
 
   def mensagens
+    user = current_usuario
+    user ||= current_user
     @atividade = Atividade.find params[:atividade_id]
-    @atividade.mensagens.where{autor_id != my{current_usuario}.id}.update_all visto: true
+    @atividade.mensagens.where{autor_id != my{user}.id}.update_all visto: true
     respond_to do |format|
       format.js
     end
   end
 
   def enviar_mensagem
+    user = current_usuario
+    user ||= current_user
     mensagem = Mensagem.new(
       atividade_id: params[:atividade_id],
       conteudo: params[:mensagem],
-      autor_id: current_usuario.id
+      autor_id: user.id
     )
     if mensagem.save
       flash[:notice] = I18n.t("mensagem.create.success")
