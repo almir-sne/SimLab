@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131213155932) do
+ActiveRecord::Schema.define(:version => 20131213190639) do
 
   create_table "addresses", :force => true do |t|
     t.string   "state"
@@ -134,8 +134,10 @@ ActiveRecord::Schema.define(:version => 20131213155932) do
     t.integer  "usuario_id"
     t.float    "valor"
     t.integer  "rodada"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "rodada_id"
+    t.integer  "planning_card_id"
   end
 
   create_table "horarios", :force => true do |t|
@@ -201,6 +203,19 @@ ActiveRecord::Schema.define(:version => 20131213155932) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "super_projeto_id"
+  end
+
+  create_table "rodadas", :force => true do |t|
+    t.integer  "cartao_id"
+    t.datetime "inicio"
+    t.datetime "fim"
+    t.integer  "deck_id"
+    t.integer  "criador_id"
+    t.integer  "finalizador_id"
+    t.integer  "numero"
+    t.boolean  "fechada"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "telefones", :force => true do |t|
