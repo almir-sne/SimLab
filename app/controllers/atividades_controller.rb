@@ -120,6 +120,7 @@ class AtividadesController < ApplicationController
   def enviar_mensagem
     user = current_usuario
     user ||= current_user
+    Atividade.find(params[:atividade_id]).update_attribute :avaliador_id, user.id
     mensagem = Mensagem.new(
       atividade_id: params[:atividade_id],
       conteudo: params[:mensagem],
