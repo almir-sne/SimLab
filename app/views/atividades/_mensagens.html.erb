@@ -12,13 +12,13 @@
           <% else %>
             <div class="mensagem-border-usuario">
           <% end %>
-            <div style="color: #3B0B17"><b><%= Usuario.find(m.autor_id).nome %></b></div>
+            <div style="color: #3B0B17"><b><%= Usuario.where(id: m.autor_id).first.try(:nome) %></b></div>
             <div><%= m.conteudo %></div>
             <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
           </div>
         <% end %>
         <% #render "mensagem", mensagens: @atividade.mensagens %>
-        <%= hidden_field_tag :atividade_id, @atividade.id %> 
+        <%= hidden_field_tag :atividade_id, @atividade.id %>
       </div>
       <%= text_area_tag :mensagem, "", :style => "width: 100%" %>
       <div class="modal-footer">
