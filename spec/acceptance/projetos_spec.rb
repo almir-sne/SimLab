@@ -7,11 +7,10 @@ feature "Projetos" do
 		scenario "deveria poder ser criado" do
 			admin_faz_login
 		  visit projetos_path
-		  fill_in "Nome",  :with => @projeto_novo[:nome]
-		  fill_in "Descrição", :with => @projeto_novo[:descricao]
-		  fill_in "Valor", :with => @projeto_novo[:valor]
+		  fill_in "Nome",  :with => "asdf"
+		  fill_in "Descrição", :with => "asdfasd"
 		  click_button "Salvar"
-		  page.should have_content(I18n.t("projetos.create.sucess", :model => "Projeto"))
+		  page.should have_content(I18n.t("projetos.create.success", :model => "Projeto"))
 		  page.should have_content(@projeto_novo[:nome])
 		end
 
@@ -20,7 +19,6 @@ feature "Projetos" do
 		  visit projetos_path
 		  fill_in "Nome",  :with => @projeto_novo[:nome]
 		  fill_in "Descrição", :with => @projeto_novo[:descricao]
-		  fill_in "Valor", :with => @projeto_novo[:valor]
 		  click_button "Salvar"
 		  page.should have_content(I18n.t("unauthorized.manage.all") )
 		end

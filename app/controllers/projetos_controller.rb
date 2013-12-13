@@ -1,5 +1,4 @@
 class ProjetosController < ApplicationController
-  load_and_authorize_resource
   before_action :authenticate_usuario!
 
   # GET /projetos
@@ -181,9 +180,9 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
-  
+
   private
-  
+
   def projetos_params
     params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, workons_attributes: [:id, :usuario_id, :_destroy], sub_projetos: [:id, :filho])
   end

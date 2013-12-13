@@ -20,7 +20,7 @@
             <div class="col-md-4">
               <a data-toggle="collapse" onclick="toggleCollapse(this)" class="nohover" style="padding-left: 10px" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
                 <i class="icon-chevron-sign-right"></i>
-              </a> 
+              </a>
               <%if current_usuario.role == "admin"%>
                 <%= link_to super_e_subs[0].nome, edit_projeto_path(super_e_subs[0])%>
               <%else%>

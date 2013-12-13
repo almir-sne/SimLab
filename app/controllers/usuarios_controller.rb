@@ -8,7 +8,7 @@ class UsuariosController < ApplicationController
     unless @status.blank? or @status == "Todos"
       @users = Usuario.where(:status => true).order(:nome)
     else
-      @users = Usuario.load(:order => :nome)
+      @users = Usuario.order(:nome).load
       @status = "Todos"
     end
     @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
@@ -16,7 +16,6 @@ class UsuariosController < ApplicationController
   end
 
   def custom_create
-    authorize! :create, Usuario
     create
   end
 
