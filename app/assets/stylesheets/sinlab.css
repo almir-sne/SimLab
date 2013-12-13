@@ -151,13 +151,16 @@
 .default-button {
     background: none;
     border-radius: 0;
-    background-color: rgb(180, 180, 180);
+    background-color: #DBDBDB;
     color: black !important;
     text-shadow: none;
     font-size: 17px;
     padding: 2px 20px;
 }
 
+.default-button:hover {
+    background-color: #B4B4B4;
+}
 
 .blue-background {
     background-color: rgb(168, 212, 229);
@@ -233,11 +236,11 @@
 }
 
 .search-field{
-  height: 30px !important;
+    height: 30px !important;
 }
 
 .default{
-  height: 30px !important;
+    height: 30px !important;
 }
 
 .nav-links:hover {
@@ -616,4 +619,9 @@ table.dataTable thead th {
     float: right;
     text-align:justify;
     text-justify:inter-word;
+}
+
+.navbar-section {
+    padding: 5px 10px;
+    font-weight: bold;
 }

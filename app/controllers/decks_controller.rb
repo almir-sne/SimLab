@@ -44,7 +44,7 @@ class DecksController < ApplicationController
 
     respond_to do |format|
       if @deck.save
-        format.html { redirect_to @deck, notice: 'Deck was successfully created.' }
+        format.html { redirect_to decks_path, notice: 'Deck criado com sucesso.' }
         format.json { render json: @deck, status: :created, location: @deck }
       else
         format.html { render action: "new" }
@@ -58,9 +58,25 @@ class DecksController < ApplicationController
   def update
     @deck = Deck.find(params[:id])
 
+    success = @deck.update_attribute(:nome, params[:deck][:nome])
+    
+    params[:deck][:planning_cards_attributes].each do |key, attributes|
+      card = PlanningCard.where(id: attributes[:id]).last
+      if card.blank?
+        card = PlanningCard.new
+      end
+      if attributes["_destroy"] == "1" and !card.blank?
+        card.destroy()
+      else
+        card.deck = @deck
+        card.save
+        
+        success = success and card.update_attributes(nome: attributes[:nome], valor: attributes[:valor])
+      end
+    end
     respond_to do |format|
-      if @deck.update_attributes(params[:deck])
-        format.html { redirect_to @deck, notice: 'Deck was successfully updated.' }
+      if success
+        format.html { redirect_to decks_path, notice: 'Deck atualizado com sucesso.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

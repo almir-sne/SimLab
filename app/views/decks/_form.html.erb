@@ -16,22 +16,38 @@
     <%= f.text_field :nome %>
   </div>
 
-<div style="padding: 10px">
-  <h2> Cartas</h2>
+  <div style="padding: 10px">
+    <p> Notas: </p>
+    <ul>
+      <li>
+        Deixe o campo valor vazio para cartas cujo valor não é numérico,
+        tais cartas não são utilizadas no calculo da média
+      </li>
+      <li>
+        Se o campo "nome" estiver em branco será usado o campo "valor" como nome da carta
+      </li>
+      <li>
+        É possível marcar cartas não numéricas como minimas ou máximas do deck escrevendo "min" ou "max" como valor.
+        Por exemplo, a carta infinito deve ter nome "Infinito" e valor "max"
+      </li>
+    </ul>
+
+    <h2> Cartas</h2>
     <%= f.fields_for :planning_cards do |card| %>
-    <%= card.label :nome %>
-    <%= card.text_field :nome %>
 
-    <%= card.label :valor %>
-    <%= card.text_field :valor %>
+      <%= card.label :nome %>
+      <%= card.text_field :nome, :value => card.object.nome %>
 
-    <%= card.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+      <%= card.label :valor %>
+      <%= card.text_field :valor, :value => card.object.valor %>
 
-  <% end %>
-  <%= f.link_to_add 'Nova carta' , :planning_cards, :class => "default-button" %>
-</div>
-
-  <div class="actions">
-    <%= f.submit %>
+      <%= card.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+    <% end %>
+    <%= f.link_to_add 'Nova carta' , :planning_cards, :class => "btn default-button", :style => "margin: 10px" %>
   </div>
+  <div id="lower-bar" class="navbar-fixed-bottom toolbar">
+    <%= f.submit :class => "btn default-button" %>
+    <%= link_to 'Voltar', decks_path, :class =>  "btn default-button" %>
+  </div>
+
 <% end %>

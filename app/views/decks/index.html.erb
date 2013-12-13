@@ -9,13 +9,11 @@
       <th>Nome</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
 
     <% @decks.each do |deck| %>
       <tr>
         <td><%= deck.nome %></td>
-        <td><%= link_to 'Ver', deck %></td>
         <td><%= link_to 'Editar', edit_deck_path(deck) %></td>
         <td><%= link_to 'Remover', deck, method: :delete, data: { confirm: 'Tem certeza?' } %></td>
       </tr>

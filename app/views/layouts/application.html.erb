@@ -53,9 +53,11 @@
               Ferramentas<b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="<%= estimativas_path %>">Planning Poker</a></li>
+              <li class="navbar-section">Planning Poker</li>
+              <li> <%= link_to "Estimativas", estimativas_path %></li>
+              <li> <%= link_to "Decks", decks_path %></li>
+              <li class="navbar-section">Trello</li>
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
-              <li class="navbar-header">Trello</li>
               <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
             </ul>
@@ -67,9 +69,8 @@
             <ul class="dropdown-menu">
               <%if can? :see, Usuario%>
                 <li><a href="<%= usuarios_path(:status => "true") %>">Usuários</a></li>
-                <li class="divider"></li>
               <% end %>
-              <li class="navbar-header">Financeiro</li>
+              <li class="navbar-section">Financeiro</li>
               <% if can? :create_or_update, Pagamento %>
                 <li><a href="<%= pagamentos_path %>">Pagamentos</a></li>
               <% else %>
@@ -88,7 +89,7 @@
             </ul>
           </li>
           <li>
-            <div>
+            <div style="margin: 10px;">
               Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome %>! </b>
               <div class="loggedin">
                 Trello: <b class="fullName"></b>
@@ -96,8 +97,8 @@
             </div>
           </li>
           <% if (Rails.env.development?) %>
-          <% user_role = current_usuario.role %>
-          <li>
+            <% user_role = current_usuario.role %>
+            <li>
             <center>
               Role Alterator 2000 Plus v2<br/>
               <select onchange="alterar_role(this)">
@@ -105,27 +106,27 @@
                 <option value="814" <%=  ((user_role == "usuario normal") ? "selected" : "")%> >Usuário Normal</option>
               </select>
             </center>
-          </li>
-          <%  end %>
+            </li>
+          <% end %>
         </ul>
         <img alt="InfoXYZ" src="/images/logo.jpg" style="margin: 10px 0px; height: 30px; float: right;"/>
-        
+
       </div>
     </nav>
     <div class="messages">
       <%= render 'layouts/messages'%>
     </div>
     <%= yield %>
-    
+
     <script>
-      var alt_role = "<%= alt_role_usuarios_path %>";
-      var userid = <%= current_usuario.id %>;
-      $('.chosen-select').chosen({
-        allow_single_deselect: true,
-        no_results_text: 'Nenhum resultado',
-        width: '200px',
-        placeholder_text_multiple: 'Selecione...'
-      });
+    var alt_role = "<%= alt_role_usuarios_path %>";
+    var userid = <%= current_usuario.id %>;
+    $('.chosen-select').chosen({
+      allow_single_deselect: true,
+      no_results_text: 'Nenhum resultado',
+      width: '200px',
+      placeholder_text_multiple: 'Selecione...'
+    });
     </script>
 
     <%= javascript_include_tag javascript_include_view_js %>
