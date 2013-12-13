@@ -77,13 +77,13 @@ class UsuariosController < ApplicationController
     user = Usuario.find_by_nome(params[:name])
     render json: user.id
   end
-  
+
   def alt_role
     if (Rails.env.development?)
       u = Usuario.find(params[:id])
-      if (params[:r].to_f == 42) 
+      if (params[:r].to_f == 42)
         u.role = "admin"
-      elsif (params[:r].to_f == 814) 
+      elsif (params[:r].to_f == 814)
         u.role = "usuario normal"
       else
         u.role = "usuario normal"
@@ -92,17 +92,22 @@ class UsuariosController < ApplicationController
     end
     render json: ""
   end
-  
-  
+
+
   private
   def usuario_params
-    params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome, 
-    :entrada_usp, :saida_usp, :cpf, :contratos_attributes, :role, :address_id, :formado, :status, 
-    :data_de_nascimento, :address_attributes, :rg, :telefones_attributes, :contas_attributes, :curso, 
-    :numero_usp, :login_trello, :anexos_attributes)
+    params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome,
+    :entrada_usp, :saida_usp, :cpf, :role, :address_id, :formado, :status, :data_de_nascimento, :rg,
+    :curso, :numero_usp, :login_trello,
+    anexos_attributes:    [:data, :nome, :tipo, :arquivo, :_destroy],
+    contratos_attributes: [:hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
+      :fim, :_destroy],
+    telefones_attributes: [:ddd, :numero, :_destroy],
+    contas_attributes:    [:banco, :agencia, :numero, :_destroy],
+    address_attributes:   [:street, :bairro, :city, :state, :number, :complemento, :cep])
   end
-  
-      
+
+
 =begin  #caso seja blob
   def show_anexo
     anexo = Anexo.find params[:id]
