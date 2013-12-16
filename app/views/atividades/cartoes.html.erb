@@ -40,8 +40,7 @@
       <%= form_tag atualizar_cartoes_atividades_path  do %>
         <%= hidden_field_tag :key  %>
         <%= hidden_field_tag :token  %>
-        <%= submit_tag 'Sincronizar horas do Trello', :confirm =>
-          "Esta operação pode demorar, pois depende do Trello, continuar?", :class => 'btn default-button' %>
+        <%= submit_tag 'Sincronizar horas do Trello', data: {confirm: "Esta operação pode demorar pois depende do Trello. Continuar?"}, class: 'btn default-button' %>
       <% end %>
     </div>
   </div>

@@ -48,8 +48,8 @@
                 <div class="col-md-4"><%=sub.descricao%></div>
                 <div class="col-md-1">
                   <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(sub.id),
-                    :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
-                    :class => 'nohover', :title => "Excluir", :style => "float: right; padding-right: 10px"%>
+                    method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")},
+                    class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px"%>
                 </div>
               </div>
             </div>

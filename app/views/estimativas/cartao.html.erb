@@ -87,17 +87,17 @@
   <div style="padding: 15px">
     <% if @cartao.estimado? %>
       <%= link_to "Nova rodada", nova_rodada_estimativas_path(cartao_id: @cartao.trello_id),
-        :class => "btn default-button", :confirm => "Tem certeza?" %>
+        class: "btn default-button", data: {confirm: "Tem certeza?"} %>
     <% else %>
       <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.trello_id),
-        :class => "btn default-button", :confirm => "Tem certeza?" %>
+        class: "btn default-button", data: {confirm: "Tem certeza?"} %>
     <% end %>
     <br/>
     <br/>
     <%= form_tag concluir_estimativas_path do %>
       <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
       <%= select_tag :estimativa_final, options_for_select([["Estimar", nil]] + @estimativa_list, @cartao.estimativa), :style => "margin-bottom: 0" %>
-      <%= submit_tag "Enviar estimativa final", :class => "btn default-button", :confirm => "Tem certeza?" %>
+      <%= submit_tag "Enviar estimativa final", :class => "btn default-button", ata: {confirm: "Tem certeza?"} %>
     <% end %>
   </div>
 
