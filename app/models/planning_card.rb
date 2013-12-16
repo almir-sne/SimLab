@@ -15,6 +15,13 @@ class PlanningCard < ActiveRecord::Base
       self.deck.maximum = self
       self.deck.save
     else
+      if self.deck.minimum == self
+        self.deck.minimum = nil
+        self.deck.save
+      elsif self.deck.maximum == self
+        self.deck.maximum = nil
+        self.deck.save
+      end
       self[:valor] = val.to_f
     end
   end

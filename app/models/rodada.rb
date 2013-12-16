@@ -8,19 +8,19 @@ class Rodada < ActiveRecord::Base
   
   has_many :estimativas
   
+  has_many :planning_cards, :through => :estimativas
+  
   def media
-    self.estimativas.where("valor > 0").average(:valor)
+    self.planning_cards.where("planning_cards.valor is not null").average(:valor).to_f.round 2
   end
   
   def minimo
-#    self.estimativas.where("valor is not null").minimum(:valor)
+   (self.planning_cards.where(id: self.deck.minimum.try(:id)).first.try(:nome) ||
+     self.planning_cards.where("planning_cards.valor is not null").minimum(:valor))
   end
   
   def maximo
-#    unless self.estimativas.where(valor: -2.0, rodada: rodada).blank?
-#      "Infinito"
-#    else
-#      self.estimativas.where("valor >= 0 and rodada = ?", rodada).maximum(:valor)
-#    end
+    (self.planning_cards.where(id: self.deck.maximum.try(:id)).first.try(:nome) ||
+     self.planning_cards.where("planning_cards.valor is not null").maximum(:valor))
   end
 end

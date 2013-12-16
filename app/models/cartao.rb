@@ -16,8 +16,16 @@ class Cartao < ActiveRecord::Base
     "#{h.to_i}:#{((h - h.to_i) * 60).round}"
   end
   
-  def estimado?
-    self.rodadas.where(fechada: false).blank?
+  def rodada_aberta?
+    !self.rodadas.where(fechada: false).blank?
+  end
+  
+  def fechar_rodada(user)
+    rodada = self.rodadas.where(fechada: false).last
+    rodada.fechada = true
+    rodada.fim = Time.now
+    rodada.finalizador = user
+    rodada.save
   end
   
   def self.update_on_trello(key, token, id)

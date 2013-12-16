@@ -10,7 +10,6 @@ class EstimativasController < ApplicationController
   def cartao
     @cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
     @decks = Deck.all
-    #    @rodadas = @cartao.estimativas.where("valor is not null").group_by(&:rodada)
   end
   
   def create
@@ -23,20 +22,13 @@ class EstimativasController < ApplicationController
   end
   
   def fechar_rodada
-    cartao = Cartao.where(trello_id: params[:cartao_id]).first
-    cartao.estimado = true
-    rodada = cartao.rodadas.where(fechado: false).last
-    rodada.fechada = true
-    rodada.fim = Time.now
-    rodada.finalizador = current_user
-    rodada.save
-    cartao.save
-    redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
+    cartao = Cartao.find params[:cartao_id]
+    cartao.fechar_rodada(current_user)
+    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
   end
   
   def nova_rodada
     cartao = Cartao.find params[:cartao_id]
-    cartao.estimado = false
     Rodada.new(cartao_id: params[:cartao_id], inicio: Time.now,
       criador_id: current_user.id, deck_id: params[:deck_id], fechada: false,
       numero: cartao.rodadas.maximum(:numero).to_i + 1).save
@@ -45,10 +37,10 @@ class EstimativasController < ApplicationController
   end
   
   def concluir
-    cartao = Cartao.where(trello_id: params[:cartao_id]).first
-    cartao.estimado = true
+    cartao = Cartao.find params[:cartao_id]
+    cartao.fechar_rodada(current_user)
     cartao.estimativa = params[:estimativa_final]
     cartao.save
-    redirect_to cartao_estimativas_path(cartao_id: params[:cartao_id])
+    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
   end
 end

@@ -18,7 +18,8 @@
           <th> Estimativa </th>
         </tr>
 
-        <% rodada.estimativas.collect{|e| [e.usuario.nome, e.planning_card.nome]}.sort.each do |estimativa| %>
+        <% rodada.estimativas.where("planning_card_id is not null").
+          collect{|e| [e.usuario.nome, e.planning_card.nome]}.sort.each do |estimativa| %>
           <% unless estimativa[1].nil? %>
             <tr>
               <td> <%= estimativa[0] %> </td>
@@ -30,7 +31,7 @@
 
       <% if rodada.fechada %>
         <div class="form-group" style="padding: 15px">
-          <h4> Estatisticas </h4>
+          <h4> Estatísticas </h4>
           <table class="list-table">
             <tr >
               <td>  Total de estimativas </td>
@@ -51,6 +52,22 @@
               <td> Máximo </td>
               <td> <%= rodada.maximo %></td>
             </tr>
+            <% if rodada.inicio %>
+              <tr>
+                <td> Inicio </td>
+                <td> <%= rodada.inicio %> - Criada por <%= rodada.criador.nome %> </td>
+              </tr>
+
+              <tr>
+                <td> Fim </td>
+                <td> <%= rodada.fim %> - Concluida por <%= rodada.finalizador.nome %> </td>
+              </tr>
+
+              <tr>
+                <td> Duração </td>
+                <td> <%= int_to_horas(rodada.fim.to_i - rodada.inicio.to_i) %> </td>
+              </tr>
+            <% end %>
           </table>
         </div>
       <% else %>
@@ -76,22 +93,21 @@
       <% end %>
     <% end %>
   <% end %>
-<%# if @cartao.estimado? %>
-<%#*<h4>%>
-<%#*Estimativa final: <%= @cartao.estimativa_string %>%>
-<%#*</h4>%>
-<%# end %>
+  <% unless @cartao.estimativa.blank? %>
+    <h4>
+      Estimativa final: <%= @cartao.estimativa %>
+    </h4>
+  <% end %>
   <br/>
   <br/>
   <h3> Coordenação </h3>
   <div style="padding: 15px">
-    <% if @cartao.estimado? %>
+    <% unless @cartao.rodada_aberta? %>
       <%= form_tag nova_rodada_estimativas_path do %>
         <%= hidden_field_tag :cartao_id, @cartao.id %>
         <%= select_tag :deck_id, options_for_select(@decks.collect{|d| [d.nome, d.id]}), :style => "margin-bottom: 0" %>
         <%= submit_tag "Nova rodada", :class => "btn default-button", :confirm => "Tem certeza?" %>
       <% end %>
-
     <% else %>
       <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.id),
         :class => "btn default-button", :confirm => "Tem certeza?" %>
