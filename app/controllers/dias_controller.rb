@@ -5,7 +5,7 @@ class DiasController < ApplicationController
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
     @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], @usuario)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
-    @data = params[:data]
+    @data = params[:data] || Date.today.to_s    
     @projetos = @usuario.meus_projetos
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.where{autor_id != ati.usuario_id}.update_all :visto => true}
@@ -80,6 +80,33 @@ class DiasController < ApplicationController
                   :atividade_id => atividade.id
                 )
               end
+            end
+          end
+          
+          if atividade_attr["tags_attributes"]
+            tags_da_atividade = atividade.tags
+            unless atividade_attr["tags_attributes"].nil?
+              atividade_attr["tags_attributes"].each do |index, tag_attr|
+                tag = Tag.find_by_nome tag_attr[:nome]
+                if tag_attr["_destroy"] == "1"
+                  if !tag.blank? and tags_da_atividade.include?(tag)
+                    tags_da_atividade.delete(tag)
+                  end
+                else
+                  if tag.blank?
+                    tag = Tag.new(nome: tag_attr[:nome])
+                    tag.save
+                    tags_da_atividade << tag
+                  else
+                    if !tags_da_atividade.include?(tag)
+                      tags_da_atividade << tag
+                    end
+                  end
+                end
+                if tag.atividades.blank?
+                  tag.destroy
+                end
+              end 
             end
           end
         end

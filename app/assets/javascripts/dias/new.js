@@ -11,3 +11,10 @@ $('#boards').on('shown', function() {
 initializeSliders();
 updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 ajustaAltura();
+
+function tag_autocomplete_apply()
+{
+    $(".tag_autocomplete").autocomplete({
+        source: availableTags
+    });
+}
