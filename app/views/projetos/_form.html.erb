@@ -125,7 +125,7 @@
         <div class="row">
           <div class="col-md-5">
             <h3> Equipe </h3>
-            <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
+            <input type='text' id='equipe_autocomplete' onfocus="set_autocomplete_equipe()"/>
             <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workons, :class=>"nohover" %>
             <table>
               <tr>
@@ -172,7 +172,7 @@
 
 <script>
   var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
-  var u = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>;
   var url = "<%= get_id_by_nome_usuarios_path %>";
+  var availableTags = <%= raw @usuarios.collect {|u| u.nome} %>;
 </script>
 
