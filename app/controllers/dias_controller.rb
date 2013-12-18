@@ -5,7 +5,7 @@ class DiasController < ApplicationController
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
     @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], @usuario)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
-    @data = params[:data] || Date.today.to_s    
+    @data = params[:data] || Date.today.to_s
     @projetos = @usuario.meus_projetos
     @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
     Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.where{autor_id != ati.usuario_id}.update_all :visto => true}
@@ -43,6 +43,7 @@ class DiasController < ApplicationController
       end
     end
     atividades_success = true
+    registro_success = true
     unless params[:dia][:atividades_attributes].nil?
       params[:dia][:atividades_attributes].each do |index, atividade_attr|
         atividade = Atividade.find_by_id atividade_attr[:id].to_i
@@ -52,7 +53,7 @@ class DiasController < ApplicationController
         if atividade_attr["_destroy"] == "1" and !atividade.blank?
           atividade.destroy()
         else
-          atividades_success = atividades_success and atividade.update_attributes(
+          atividade.attributes = {
             :duracao => atividade_attr["horas"].to_i * 60,
             :observacao => atividade_attr["observacao"],
             :projeto_id => atividade_attr["projeto_id"],
@@ -61,7 +62,12 @@ class DiasController < ApplicationController
             :aprovacao => nil,
             :trello_id => atividade_attr["trello_id"],
             :data => dia.data
-          )
+          }
+          reg = Registro.new :autor_id => dia.usuario.id
+          reg.transforma_hash_em_modificacao atividade.changes
+          atividades_success = atividades_success and atividade.save
+          reg.atividade_id = atividade.id
+          registro_success = reg.save
           if(!(atividade_attr[:mensagem].blank?) && !(atividade_attr[:mensagem][:conteudo].blank?))
             Mensagem.create(atividade_attr[:mensagem])
           end
@@ -82,7 +88,7 @@ class DiasController < ApplicationController
               end
             end
           end
-          
+
           if atividade_attr["tags_attributes"]
             tags_da_atividade = atividade.tags
             unless atividade_attr["tags_attributes"].nil?
@@ -106,7 +112,7 @@ class DiasController < ApplicationController
                 if tag.atividades.blank?
                   tag.destroy
                 end
-              end 
+              end
             end
           end
         end
@@ -121,7 +127,7 @@ class DiasController < ApplicationController
         filho.save
       end
     end
-    if dia_success and atividades_success and horarios_success
+    if dia_success and atividades_success and horarios_success and registro_success
       flash[:notice] = I18n.t("atividades.create.success")
     else
       flash[:error] = I18n.t("atividades.create.failure")
