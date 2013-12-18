@@ -8,9 +8,9 @@
       <div class="modal-body" style="overflow-y: scroll; height:300px;">
 
         <% @atividade.registros.each do |reg| %>
-            <div ><b><%= reg.autor.try(:nome) %></b></div>
-            <div><%= reg.modificacao %></div>
-            <div><i><%= reg.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
+          <div ><b><%= reg.autor.try(:nome) %></b></div>
+          <div><%= reg.modificacao %></div>
+          <div><i><%= reg.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
         <% end %>
 
         <% @atividade.mensagens.each do |m| %>
@@ -19,11 +19,12 @@
           <% else %>
             <div class="mensagem-border-usuario">
           <% end %>
-            <div style="color: #3B0B17"><b><%= m.autor.try(:nome) %></b></div>
-            <div><%= m.conteudo %></div>
-            <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
+          <div style="color: #3B0B17"><b><%= m.autor.try(:nome) %></b></div>
+          <div><%= m.conteudo %></div>
+          <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
           </div>
         <% end %>
+
         <%= hidden_field_tag :atividade_id, @atividade.id %>
       </div>
       <%= text_area_tag :mensagem, "", :style => "width: 100%" %>
