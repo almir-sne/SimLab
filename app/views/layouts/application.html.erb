@@ -120,16 +120,11 @@
     <%= yield %>
 
     <script>
-    var alt_role = "<%= alt_role_usuarios_path %>";
-    var userid = <%= current_usuario.id %>;
-    $('.chosen-select').chosen({
-      allow_single_deselect: true,
-      no_results_text: 'Nenhum resultado',
-      width: '200px',
-      placeholder_text_multiple: 'Selecione...'
-    });
+      var alt_role = "<%= alt_role_usuarios_path %>";
+      var userid = <%= current_usuario.id %>;
     </script>
 
     <%= javascript_include_tag javascript_include_view_js %>
+    <%= javascript_include_tag "layouts/after_yield.js" %>
   </body>
 </html>

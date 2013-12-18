@@ -38,25 +38,6 @@ function pega_horas_atividade() {
     return(atividadeH * 60 + atividadeM);
 }
 
-//@author rezende
-function autocomplete_source(ac_source) {
-    $('.typeahead').typeahead({
-        source: ac_source,
-        minLength: 0,
-        items: ac_source.length,
-        //peguei de tatiyants.com/how-to-use-json-objects-with-twitter-bootstrap-typeahead
-        matcher: function(item) {
-            if (this.query == "*")
-                return true;
-            else
-            if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
-                return true;
-            }
-            return false;
-        }
-    });
-}
-
 function toggleAusencia() {
     $("#ausencias").show();
     $("#meses-button").show();
@@ -147,6 +128,17 @@ function ver_periodo_novo(obj)
     var fim = $('#datepicker2').val();
     
     var finalurl = orgurl + "&inicio=" + inicio + "&fim=" + fim;
+    
+    $(obj).attr("href",finalurl);
+}
+
+function ver_periodo_novo_proj(obj)
+{
+    var orgurl = $(obj).attr("tpg");
+    var inicio = $('#datepicker1').val();
+    var fim = $('#datepicker2').val();
+    
+    var finalurl = orgurl + "?inicio=" + inicio + "&fim=" + fim;
     
     $(obj).attr("href",finalurl);
 }

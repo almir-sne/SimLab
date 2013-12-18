@@ -31,8 +31,9 @@
       </div>
       <div class="col-md-5">
         <h3 id="atividades-title">Atividades</h3>
-        <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)">
-          &nbsp;Arraste cartões do Trello aqui.
+        <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 100px;">
+          <br/>
+          <center>Arraste cartões do Trello aqui.</center>
         </div>
         <div class="panel-scrollable" id="atividade-panel">
           <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
@@ -53,37 +54,58 @@
                 <div id="slider"></div>
               </div>
               <%= atividade_form.hidden_field :trello_id, :class => 'cartao_field'%>
-
-              <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
-                <div class="par">
-                  <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
-                  <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
-                    :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-                  <div class="slider slider-par">
-                    <%= par.hidden_field :horas, :class => 'hora_field'%>
-                    <div id="time"> </div>
-                    <div id="slider"> </div>
-                  </div>
-                </div>
-              <% end %>
-              <%= atividade_form.link_to_add "Inserir par", :pares %> <br/>
-              <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
+              <hr style="margin-top: 0px; margin-bottom: 0px;">
+              <div id="par_div">
+                <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
+                 <div class="par">
+                   <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
+                   <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+                     :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+                   <div class="slider slider-par">
+                     <%= par.hidden_field :horas, :class => 'hora_field'%>
+                     <div id="time"> </div>
+                     <div id="slider"> </div>
+                   </div>
+                 </div>
+                <% end %>
+              
+                <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
+              </div>
+              <hr style="margin-top: 0px; margin-bottom: 0px;">
+              <div id="tag_div">
+               <%= atividade_form.fields_for :tags, :allow_destroy => true do |tag| %>
+                  <div class="tag">
+                    <div class="ui-widget">
+                     <%= tag.text_field :nome, {:class => "tag_autocomplete", :onfocus => "tag_autocomplete_apply();"}%>   
+                       <%= tag.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+                    :class=>"nohover", :style => "margin-right: 10px" %>
+                   </div>                  
+                 </div>
+               <% end %>
+               <%= atividade_form.link_to_add "Inserir Novo Tag", :tags %> <br/>
+              </div>
+              <hr style="margin-top: 0px; margin-bottom: 0px;">
+              <div id="observacao_div">
+                <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
                   :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
-              <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
-              <br/>
-              <%= link_to 'Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
+                <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
+              </div>
+              <hr style="margin-top: 0px; margin-bottom: 0px;">
+              <div id="pai_div">
+                <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
                 :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
 
-              <div style="display: none">
-                <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
-                  &nbsp;Arraste o cartão pai aqui.
-                </div>
-                <div id="input">
-                  <% unless atividade_form.object.cartao.try(:pai).nil? %>
-                    <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
+               <div style="display: none">
+                 <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+                   &nbsp;Arraste o cartão pai aqui.
+                 </div>
+                 <div id="input">
+                   <% unless atividade_form.object.cartao.try(:pai).nil? %>
+                     <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
                       :class => 'cartao_field' %>
-                  <% end %>
-                </div>
+                   <% end %>
+                 </div>
+               </div>
               </div>
             </div>
           <% end %>
@@ -122,7 +144,12 @@
         <%= hidden_field_tag :key  %>
         <%= hidden_field_tag :token  %>
         <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
+        <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
       </div>
     </div>
   </div>
 <% end %>
+
+<script>
+   var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
+</script>

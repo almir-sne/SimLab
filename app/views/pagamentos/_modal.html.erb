@@ -1,33 +1,39 @@
-<div id="new-pagamento-modal" class="modal hide fade" tabindex="-1" role="dialog"
-  aria-labelledby="myModalLabel" aria-hidden="true" style="width:90%; height:110px; margin-left:-45%; ">
-
-  <%= form_for(@pagamento, :url => pagamentos_path, :validate => true,
-    :html => {"data-type" => :json, :multipart => true}) do |f| %>
-    <%= f.hidden_field :usuario_id, :value => @usuario.id%>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3">
-          <%= f.label :data       %>
-          <%= f.date_select :data, {}, :style => "width: 32%" %>
+<div id="new-pagamento-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="outline: none; overflow: hidden ;width:50%; height:1000px; margin: 10% 25%">
+  <div clas="modal-dialog">
+    <div class="modal-content" style="padding: 10px">
+      <div class="modal-body">
+      <%= form_for(@pagamento, :url => pagamentos_path, :validate => true,
+        :html => {"data-type" => :json, :multipart => true}) do |f| %>
+        <%= f.hidden_field :usuario_id, :value => @usuario.id%>
+        <div class="field">
+          <%= f.label :data       %><br/>
+          <%= f.date_select :data, {}, :style => "width: 25%" %>
         </div>
-        <div class="col-md-2">
-          <%= f.label :motivo      %>
-          <%= f.text_field :motivo %>
+        <div class="field">
+          <%= f.label :motivo      %><br/>
+          <%= f.text_field :motivo, :size => 20 %>
         </div>
-        <div class="col-md-2">
-          <%= f.label :fonte      %>
-          <%= f.text_field :fonte %>
+        <div class="field">
+          <%= f.label :fonte      %><br/>
+          <%= f.text_field :fonte, :size => 20  %>
         </div>
-        <div class="col-md-2">
-          <%= f.label :valor        %>
-          <%= f.number_field :valor %>
+        <div class="field">
+          <%= f.label :valor        %><br/>
+          <%= f.number_field :valor, :size => 20  %>
         </div>
-        <div class="col-md-3">
-          <%= f.label "Comprovante"%>
+        <div class="field">
+          <%= f.label "Comprovante"%><br/>
           <%= file_field_tag "comprovante" %>
         </div>
       </div>
-    <%= f.submit "Salvar", :class => "btn default-button"%>
-    </div>
-  <%end%>
+      <div class="modal-footer">     
+        <%= f.submit "Salvar", :class => "btn default-button"%>
+        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;">
+                    Cancelar
+                  </button>
+      </div>
+    <%end%>
+  </div>    
 </div>
+  </div>

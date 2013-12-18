@@ -1,49 +1,43 @@
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 50%; margin-left: -25%; height: 240px">
-
-  <div class="modal-body" style="max-height: 95%">
-    <%= form_for(@user, :url => custom_create_usuarios_path , :validate => true, :html => {"data-type" => :json}) do |f| %>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <%= f.label :nome %>
-            <%= f.text_field :nome, :style => "width: 100%"%>
-          </div>
-          <div class="col-md-5 col-md-offset-1">
-            <%= f.label :email %>
-            <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
-          </div>
-        </div>
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="outline: none; overflow: hidden; width: 500px; height: 240px; margin: 5% 30% ">
+  <div clas="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <%= form_for(@user, :url => custom_create_usuarios_path , :validate => true, :html => {"data-type" => :json}) do |f| %>
+              <div class="col-md-6">
+                <%= f.label :nome %>
+                <%= f.text_field :nome, :style => "width: 100%"%>
+              </div>
+              <div class="col-md-5 col-md-offset-1">
+                <%= f.label :email %>
+                <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
+              </div>
+              <div class="col-md-7">
+                <div>
+                  <%= f.label :password, "Senha" %><br/>
+                  <%= f.password_field :password , :style => "width: 65%"%>
+                </div>
+                <div class="field">
+                  <%= f.label :role %>
+                  <%= f.select :role, options_for_select(["usuario normal", "admin", "diretor" ]) %>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div>
+                  <%= f.label :password_confirmation, "Confirmar senha" %>
+                  <%= f.password_field :password_confirmation , :style => "width: 85%"%>
+                </div>
+                <br />
+                
+              </div>
+              <div class="modal-footer" style="margin-top: 7px">
+                  <%= f.submit "Salvar", :style => "float: right;", :class => "btn default-button"%>
+                  <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;">
+                    Cancelar
+                  </button>
+                </div>
+        <% end %>
       </div>
-
-      <div class="container">
-        <div class="row">
-          <div class="col-md-7">
-            <div>
-              <%= f.label :password, "Senha" %>
-              <%= f.password_field :password , :style => "width: 65%"%>
-            </div>
-            <div class="field">
-              <%= f.label :role %>
-              <%= f.select :role, options_for_select(["usuario normal", "admin", "diretor" ]) %>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div>
-              <%= f.label :password_confirmation, "Confirmar senha" %>
-              <%= f.password_field :password_confirmation , :style => "width: 85%"%>
-            </div>
-            <br />
-            <div class="actions" style="margin-top: 7px">
-              <%= f.submit "Salvar", :style => "float: right;", :class => "btn default-button"%>
-              <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left;">
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-
+    </div>
   </div>
 </div>

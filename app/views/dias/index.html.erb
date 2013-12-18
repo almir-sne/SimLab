@@ -6,8 +6,7 @@
   <ul class="nav nav-tabs fix-color" id="myTab">
     <li class="active"><a href="#periodos">Calendário</a></li>
     <li><a href="#atividades">Atividades</a></li>
-    <!-- <li><a href="#ausencias_tab">Ausências</a></li> -->
-    <!-- <li><a href="#ausencias_equipe">Ausências da Equipe</a></li> -->
+    <li><a href="#ausencias_tab">Ausências</a></li>
   </ul>
   <br/>
   <div class="tab-content">
@@ -98,57 +97,6 @@
               </a>
             </td>
             <% if dia.wday == 6 %>
-            </tr><tr>
-            <% end %>
-          <% end %>
-        </tr>
-      </table>
-    </div>
-
-    <div class="tab-pane" id="ausencias_equipe">
-      <table class="day-table" style="width: 100%">
-        <tr>
-          <% t("date.abbr_day_names").each do |p| %>
-            <th><%= p %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% dia_da_semana = 0 %>
-          <% while @inicio.wday != dia_da_semana %>
-            <% dia_da_semana = dia_da_semana + 1 %>
-            <td></td>
-          <% end %> 
-          <% (@inicio..@fim).each do |data| %>
-            <td>
-              <div class="dropdown toggle">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
-                  <i class="icon-collapse"></i>
-                </a>
-                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-                  <%= link_to "Atividades...", new_dia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
-                  <%= link_to "Cadastrar Ausência", new_ausencia_path(:data=> data, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
-                </ul>
-              </div>
-
-              <a href="#"
-                 class="day-link blue-link">
-                <div class='panel-scrollable' style='height: 100px'>
-                  <%= data.strftime("%d/%b") %>
-                  <%  if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
-                    <%  @equipe.each do |pessoa|%>
-                      <%  ausencia_do_usuario_no_dia = Ausencia.data(data.year, data.month, data.day).usuario(pessoa.id)%>
-                      <%  if !ausencia_do_usuario_no_dia.blank?%>
-                        <br/><b> <%= pessoa.nome %> </b>
-                      <% elsif data < @today and 
-                          Atividade.ano(data.year).mes(data.month).dia(data.day).usuario(pessoa.id).blank?%>
-                        <br/> <%= pessoa.nome %> 
-                      <% end %>
-                    <% end%>
-                  <% end%>
-                </div>
-              </a>
-            </td>
-            <% if data.wday == 6 %>
             </tr><tr>
             <% end %>
           <% end %>

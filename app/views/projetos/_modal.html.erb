@@ -1,33 +1,36 @@
-<div id="new-projeto-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true" style="width: 400px;height: 410px; ">
+<div id="new-projeto-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="new-projeto-modal"
+     aria-hidden="true" style="outline: none; overflow: hidden; width: 400px;height: 500px; margin: 6% 35%">
+  <div clas="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: 420px;">
 
-  <div class="modal-body" style="max-height: 380px;">
+        <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
+          <div class="modal-header red-background">
+            Todos os campos são obrigatórios. <br/>
+            Nome do projeto deve ser único.
+          </div>
+        <div class="modal-body">
+          <div class="field">
+            <%= f.label :nome %>
+            <%= f.text_field :nome%>
+          </div>
 
-    <%= form_for(@projeto, :url => projetos_path, :validate => true, :html => {"data-type" => :json}) do |f| %>
-      <div class="red-background">
-        Todos os campos são obrigatórios. <br/>
-        Nome do projeto deve ser único.
+          <div class="field">
+            <%= f.label :data_de_inicio %><br/>
+            <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
+          </div>
+
+          <div class="field">
+            <%= f.label :descricao %>
+            <%= f.text_area :descricao, :style => "height: 80px; width: 280px"%>
+          </div>
+        </div>
+          <div class="modal-footer">
+            <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
+            <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
+          </div>
+        <% end %>
       </div>
-      <div class="field">
-        <%= f.label :nome %>
-        <%= f.text_field :nome%>
-      </div>
-
-      <div class="field">
-        <%= f.label :data_de_inicio %>
-        <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
-      </div>
-
-      <div class="field">
-        <%= f.label :descricao %>
-        <%= f.text_area :descricao, :style => "height: 80px; width: 300px"%>
-      </div>
-
-      <div class="actions">
-        <button class="btn default-button" data-dismiss="modal" aria-hidden="true" style="float: left">Cancelar</button>
-        <%= f.submit "Salvar", :style => "float: right", :class => "btn default-button"%>
-      </div>
-    <% end %>
-
+    </div>
   </div>
 </div>

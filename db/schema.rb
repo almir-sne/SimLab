@@ -12,7 +12,6 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20131218152209) do
-
   create_table "addresses", :force => true do |t|
     t.string   "state"
     t.string   "city"
@@ -50,6 +49,11 @@ ActiveRecord::Schema.define(:version => 20131218152209) do
     t.integer  "avaliador_id"
     t.date     "data"
     t.integer  "cartao_id"
+  end
+
+  create_table "atividades_tags", :force => true do |t|
+    t.integer "atividade_id"
+    t.integer "tag_id"
   end
 
   create_table "ausencias", :force => true do |t|
@@ -212,6 +216,12 @@ ActiveRecord::Schema.define(:version => 20131218152209) do
     t.boolean  "fechada"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+  end
+      
+  create_table "tags", :force => true do |t|
+    t.text     "nome"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "telefones", :force => true do |t|
