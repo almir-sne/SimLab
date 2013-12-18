@@ -95,17 +95,13 @@ class DiasController < ApplicationController
             tags_banco = tags_da_atividade.collect{|t| t.nome}
             tags_a_adicionar = tags_form - tags_banco
             tags_a_remover = tags_banco - tags_form
-            debugger
             tags_a_adicionar.each do |tag_nome|
-              debugger
               if !tag_nome.blank?
                 tag = Tag.find_by_nome tag_nome
-                debugger
                 if tag.blank?
                   tag = Tag.new(nome: tag_nome)
                   tag.save
                 end
-                debugger
                 if !tags_da_atividade.include?(tag)
                   tags_da_atividade << tag
                 end
