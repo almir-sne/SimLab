@@ -1,0 +1,26 @@
+<div class="blue-text" style="margin-left: 30px">
+  Decks de Planning Poker
+</div>
+
+<div style="padding: 15px">
+
+  <table class="list-table">
+    <tr>
+      <th>Nome</th>
+      <th></th>
+      <th></th>
+    </tr>
+
+    <% @decks.each do |deck| %>
+      <tr>
+        <td><%= deck.nome %></td>
+        <td><%= link_to 'Editar', edit_deck_path(deck) %></td>
+        <td><%= link_to 'Remover', deck, method: :delete, data: { confirm: 'Tem certeza?' } %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'Novo Deck', new_deck_path, :style => "padding: 10px" %>
+</div>

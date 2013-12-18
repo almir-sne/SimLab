@@ -1,6 +1,15 @@
 require 'holidays'
 require 'holidays/br'
 module DiasHelper
+  
+  def get_string_tags(atividade)
+    string = ""
+    atividade.tags.each do |t|
+      string += t.nome + ", "
+    end
+    string
+  end
+  
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end

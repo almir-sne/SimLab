@@ -1,10 +1,13 @@
 SinLab::Application.routes.draw do
+  
+  resources :decks
+  
   resources :estimativas, :only => [:index, :create] do
     collection do
       match 'board/:board_id' => "estimativas#board", :as => :board
       match 'cartao/:cartao_id' => "estimativas#cartao", :as => :cartao
       get :fechar_rodada
-      get :nova_rodada
+      post :nova_rodada
       post :concluir
     end
   end

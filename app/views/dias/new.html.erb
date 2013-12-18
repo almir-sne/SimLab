@@ -73,16 +73,8 @@
               </div>
               <hr style="margin-top: 0px; margin-bottom: 0px;">
               <div id="tag_div">
-               <%= atividade_form.fields_for :tags, :allow_destroy => true do |tag| %>
-                  <div class="tag">
-                    <div class="ui-widget">
-                     <%= tag.text_field :nome, {:class => "tag_autocomplete", :onfocus => "tag_autocomplete_apply();"}%>   
-                       <%= tag.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
-                    :class=>"nohover", :style => "margin-right: 10px" %>
-                   </div>                  
-                 </div>
-               <% end %>
-               <%= atividade_form.link_to_add "Inserir Novo Tag", :tags %> <br/>
+                <% tags = get_string_tags(atividade_form.object) %>
+                <%= text_field :tags,"",{class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();", value: tags}%> 
               </div>
               <hr style="margin-top: 0px; margin-bottom: 0px;">
               <div id="observacao_div">
