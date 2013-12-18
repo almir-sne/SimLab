@@ -38,7 +38,6 @@ class EstimativasController < ApplicationController
   
   def concluir
     cartao = Cartao.find params[:cartao_id]
-    cartao.fechar_rodada(current_user)
     cartao.estimativa = params[:estimativa_final]
     cartao.save
     redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)

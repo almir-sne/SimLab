@@ -22,10 +22,12 @@ class Cartao < ActiveRecord::Base
   
   def fechar_rodada(user)
     rodada = self.rodadas.where(fechada: false).last
-    rodada.fechada = true
-    rodada.fim = Time.now
-    rodada.finalizador = user
-    rodada.save
+    if rodada
+      rodada.fechada = true
+      rodada.fim = Time.now
+      rodada.finalizador = user
+      rodada.save
+    end
   end
   
   def self.update_on_trello(key, token, id)
