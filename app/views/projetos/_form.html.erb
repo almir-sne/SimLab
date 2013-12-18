@@ -173,6 +173,6 @@
 <script>
   var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
   var url = "<%= get_id_by_nome_usuarios_path %>";
-  var availableTags = <%= raw @usuarios.collect {|u| u.nome} %>;
+  var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
 </script>
 

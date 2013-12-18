@@ -56,6 +56,6 @@
 function set_autocomplete_equipe()
 {
   $("#equipe_autocomplete").autocomplete({
-        source: availableTags
+        source: users_projeto
     });
 }

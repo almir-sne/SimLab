@@ -83,31 +83,34 @@ class DiasController < ApplicationController
             end
           end
           
-          if atividade_attr["tags_attributes"]
+          if params["tags"]
             tags_da_atividade = atividade.tags
-            unless atividade_attr["tags_attributes"].nil?
-              atividade_attr["tags_attributes"].each do |index, tag_attr|
-                tag = Tag.find_by_nome tag_attr[:nome]
-                if tag_attr["_destroy"] == "1"
-                  if !tag.blank? and tags_da_atividade.include?(tag)
-                    tags_da_atividade.delete(tag)
-                  end
-                else
-                  if tag.blank?
-                    tag = Tag.new(nome: tag_attr[:nome])
-                    tag.save
-                    tags_da_atividade << tag
-                  else
-                    if !tags_da_atividade.include?(tag)
-                      tags_da_atividade << tag
-                    end
-                  end
+            tags_form = params["tags"][0].split(",").collect{|n| n.strip}
+            tags_banco = tags_da_atividade.collect{|t| t.nome}
+            tags_a_adicionar = tags_form - tags_banco
+            tags_a_remover = tags_banco - tags_form
+            debugger
+            tags_a_adicionar.each do |tag_nome|
+              debugger
+              if !tag_nome.blank?        
+                tag = Tag.find_by_nome tag_nome
+                debugger
+                if tag.blank?
+                  tag = Tag.new(nome: tag_nome)
+                  tag.save
                 end
-                if tag.atividades.blank?
-                  tag.destroy
+                debugger
+                if !tags_da_atividade.include?(tag)
+                  tags_da_atividade << tag
                 end
-              end 
-            end
+              end
+            end     
+            tags_a_remover.each do |tag_nome|
+              tag = Tag.find_by_nome tag_nome
+              if !tag.blank?
+                tags_da_atividade.delete(tag);
+              end
+            end          
           end
         end
         Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
@@ -197,11 +200,11 @@ class DiasController < ApplicationController
       data_inicial = (@today - 1.month).sunday
       contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
       @intervalo = Array.new
-        fim = @today + 2.week
-        while data_inicial < fim do
-          @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
-          data_inicial = data_inicial + 1.week
-        end
+      fim = @today + 2.week
+      while data_inicial < fim do
+        @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
+        data_inicial = data_inicial + 1.week
+      end
     elsif @tipo == 'p'
       contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
       if (!contrato.blank?)
@@ -215,31 +218,31 @@ class DiasController < ApplicationController
       end
     end
     #if can? :manage, :usuario
-      #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     #end
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @projetos          = @usuario.meus_projetos
   end
 
-def cartao_pai
-  cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
-  unless cartao.pai.blank?
-    render json: cartao.pai.trello_id.to_json
-  else
-    render json: "".to_json
+  def cartao_pai
+    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
+    unless cartao.pai.blank?
+      render json: cartao.pai.trello_id.to_json
+    else
+      render json: "".to_json
+    end
   end
-end
 
-private
+  private
 
-def convert_date(hash, date_symbol_or_string)
-  attribute = date_symbol_or_string.to_s
-  return DateTime.new(
-    hash[attribute + '(1i)'].to_i,
+  def convert_date(hash, date_symbol_or_string)
+    attribute = date_symbol_or_string.to_s
+    return DateTime.new(
+      hash[attribute + '(1i)'].to_i,
       hash[attribute + '(2i)'].to_i,
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
       0)
- end
+  end
 end
