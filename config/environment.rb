@@ -4,6 +4,7 @@ require File.expand_path('../application', __FILE__)
 # Initialize the rails application
 SinLab::Application.initialize!
 
+#Global Functions
 def extract_tags(string)
     regex_tags = /(\[(.*?)\])+/
     preprocessed = string
