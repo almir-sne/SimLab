@@ -6,7 +6,7 @@ SinLab::Application.initialize!
 
 #Global Functions
 def extract_tags(string)
-    regex_tags = /(\[(.*?)\])+/
+    regex_tags = /(\[(.*?)\])/
     preprocessed = string
     tag_processada = "unclean"
     tags_remoto = Array.new
@@ -21,7 +21,7 @@ def extract_tags(string)
   end
   
   def remove_tags(string)
-    regex_tags = /(\[(.*?)\])+/
+    regex_tags = /(\[(.*?)\])/
     preprocessed = string
     tag_processada = "unclean"
     while (tag_processada != "" and !tag_processada.nil?)
