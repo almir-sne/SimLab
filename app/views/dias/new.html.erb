@@ -73,8 +73,9 @@
                 </div>
                 <hr style="margin-top: 0px; margin-bottom: 0px;">
                 <div id="tag_div">
-                  <%= tags = get_string_tags(atividade_form.object.cartao) %>
+                  <% tags = get_string_tags(atividade_form.object.cartao) %>
                   Tags: <%= text_field :tags,"",{class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();", value: tags}%> 
+                  <%= link_to('Tags do Cartão (Via Trello)','javascript:void(0)', {:id => (atividade_form.object.cartao.try(:trello_id)).to_s + "_card", :class => "_card" ,:onclick => 'updateTags(this);'}) %>
                   </div>
                   <hr style="margin-top: 0px; margin-bottom: 0px;">
                   <div id="observacao_div">

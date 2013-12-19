@@ -75,6 +75,7 @@ function dropCard(event) {
         $("#nova_atividade").click();
         var target = $(".fields").last();
         var tags = $("#tags_").last();
+        var tag_link = $("._card").last();
         var card = $("#" + data);
         var input = $(target.find(".cartao_field")[0]);
         input.after(card);
@@ -86,7 +87,7 @@ function dropCard(event) {
                 tags.val(result);
             }
         });
-        
+        tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
 }

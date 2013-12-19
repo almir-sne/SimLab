@@ -12,6 +12,21 @@ initializeSliders();
 updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 ajustaAltura();
 
+function updateTags(obj)
+{   
+    var id_nome_string = obj.id.toString().replace("_card","");
+   
+    box = $(obj).prev();
+    
+    $.ajax({
+        url: "/dias/cartao_tags",
+        data: {cartao_id: id_nome_string},
+        success: function(result) {
+            box.val(result);
+        }
+    });
+}
+
 function split(val) {
     return val.split(/,\s*/);
 }
