@@ -63,10 +63,9 @@
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
               <li>
               <% if can? :manage, :all %>
-                <%= form_tag atualizar_tags_cartoes_dias_path %>
-                <%= hidden_field_tag :key  %>
-                <%= hidden_field_tag :token  %>
-                <%= submit_tag "Atualizar Tags (Trello => Banco)" %>
+                <%= link_to "Atualizar Tags (Trello => Banco)", atualizar_tags_cartoes_dias_path(:token => params[:token], :key => params[:key]),
+          :confirm => "Operação Lenta: Deseja mesmo Atualizar os Tags (Trello => Banco)?",
+          :class => 'nohover', :title => "Atualização Tags"%>
               <% end %>
               </li>
             </ul>

@@ -65,8 +65,9 @@ SinLab::Application.routes.draw do
     collection do
       get :editar_por_data
       get :periodos
-      get :cartao_pai 
-      post :atualizar_tags_cartoes
+      get :cartao_pai
+      get :cartao_tags
+      get :atualizar_tags_cartoes
     end
   end
 

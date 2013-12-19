@@ -74,10 +74,19 @@ function dropCard(event) {
     if (cartaoRepetido == false) {
         $("#nova_atividade").click();
         var target = $(".fields").last();
+        var tags = $("#tags_").last();
         var card = $("#" + data);
         var input = $(target.find(".cartao_field")[0]);
         input.after(card);
         input.val(card.attr("id"));
+        $.ajax({
+            url: "/dias/cartao_tags",
+            data: {cartao_id: card.attr("id")},
+            success: function(result) {
+                tags.val(result);
+            }
+        });
+        
         insertFather(target, data);
     }
 }

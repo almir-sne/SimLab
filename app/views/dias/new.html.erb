@@ -6,142 +6,142 @@
   <div class="container">
     <div class="row">
       <div class="col-md-2">
-          <%= f.fields_for :horarios do |horario_form| %>
-            <%= horario_form.label :entrada %>
-            <br />
-            <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => 'horario_select entrada_horario' %>
-            <br />
-            <%= horario_form.label :saida %>
-            <br />
-            <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => "horario_select saida_horario" %>
-            <br />
-            <%= horario_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe, :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-          <% end %>
+        <%= f.fields_for :horarios do |horario_form| %>
+          <%= horario_form.label :entrada %>
+          <br />
+          <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => 'horario_select entrada_horario' %>
+          <br />
+          <%= horario_form.label :saida %>
+          <br />
+          <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;', :onchange => "recalculaHoras()", :class => "horario_select saida_horario" %>
+          <br />
+          <%= horario_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe, :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+        <% end %>
 
-          <%= f.link_to_add 'Novo Horário' , :horarios, {class: "nohover", id: "novo-horario-link"} %>
-        <br /><br />
-        Intervalo:
-        <div id="dia_intervalo"> <%= @dia.formata_intervalo %> horas </div>
-        <br/>
-        Total de horas:
-        <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
-        <br/>
-        Horas em atividades:
-        <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
-      </div>
-      <div class="col-md-5">
-        <h3 id="atividades-title">Atividades</h3>
-        <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 100px;">
+        <%= f.link_to_add 'Novo Horário' , :horarios, {class: "nohover", id: "novo-horario-link"} %>
+          <br /><br />
+          Intervalo:
+          <div id="dia_intervalo"> <%= @dia.formata_intervalo %> horas </div>
           <br/>
-          <center>Arraste cartões do Trello aqui.</center>
+          Total de horas:
+          <div id="horas_do_dia"> <%= @dia.formata_horas  %> horas </div>
+          <br/>
+          Horas em atividades:
+          <div id="horas_atividades"> <%= @dia.horas_atividades_todas  %> horas </div>
         </div>
-        <div class="panel-scrollable" id="atividade-panel">
-          <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
-            <div id="atividade-form">
-              <div class="grey-line"> </div>
-              <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
-                :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-              <%= render "mensagem", :atividade_form => atividade_form %>
-              <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-              <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-              {}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
-              <br/>
+        <div class="col-md-5">
+          <h3 id="atividades-title">Atividades</h3>
+          <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 100px;">
+            <br/>
+            <center>Arraste cartões do Trello aqui.</center>
+          </div>
+          <div class="panel-scrollable" id="atividade-panel">
+            <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
+              <div id="atividade-form">
+                <div class="grey-line"> </div>
+                <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+                  :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+                <%= render "mensagem", :atividade_form => atividade_form %>
+                <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+                <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+                {}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
+                <br/>
 
-              <div class="slider slider-horas">
-                <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
-                <%= atividade_form.hidden_field :horas, :class => 'hora_field atividade_field'%>
-                <div id="time"></div>
-                <div id="slider"></div>
-              </div>
-              <%= atividade_form.hidden_field :trello_id, :class => 'cartao_field'%>
-              <hr style="margin-top: 0px; margin-bottom: 0px;">
-              <div id="par_div">
-                <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
-                 <div class="par">
-                   <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
-                   <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
-                     :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-                   <div class="slider slider-par">
-                     <%= par.hidden_field :horas, :class => 'hora_field'%>
-                     <div id="time"> </div>
-                     <div id="slider"> </div>
-                   </div>
-                 </div>
-                <% end %>
-              
-                <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
-              </div>
-              <hr style="margin-top: 0px; margin-bottom: 0px;">
-              <div id="tag_div">
-                <% tags = get_string_tags(atividade_form.object.cartao) %>
-                 Tags: <%= text_field :tags,"",{class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();", value: tags}%> 
-              </div>
-              <hr style="margin-top: 0px; margin-bottom: 0px;">
-              <div id="observacao_div">
-                <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
-                  :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
-                <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
-              </div>
-              <hr style="margin-top: 0px; margin-bottom: 0px;">
-              <div id="pai_div">
-                <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
-                :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
+                <div class="slider slider-horas">
+                  <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
+                  <%= atividade_form.hidden_field :horas, :class => 'hora_field atividade_field'%>
+                  <div id="time"></div>
+                  <div id="slider"></div>
+                </div>
+                <%= atividade_form.hidden_field :trello_id, :class => 'cartao_field'%>
+                <hr style="margin-top: 0px; margin-bottom: 0px;">
+                <div id="par_div">
+                  <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
+                    <div class="par">
+                      <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
+                      <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+                        :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+                      <div class="slider slider-par">
+                        <%= par.hidden_field :horas, :class => 'hora_field'%>
+                        <div id="time"> </div>
+                        <div id="slider"> </div>
+                      </div>
+                    </div>
+                  <% end %>
 
-               <div style="display: none">
-                 <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
-                   &nbsp;Arraste o cartão pai aqui.
-                 </div>
-                 <div id="input">
-                   <% unless atividade_form.object.cartao.try(:pai).nil? %>
-                     <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
-                      :class => 'cartao_field' %>
-                   <% end %>
-                 </div>
-               </div>
-              </div>
-            </div>
-          <% end %>
-          <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
-            :style => "display: none", :id => "nova_atividade" %>
-        </div>
-      </div>
-      <div class="col-md-5">
-        <div class="loggedin">
-          <a id="collapse-button" data-toggle="collapse" data-target="#boards">
-            Boards do Trello
-          </a>
-          <div class="collapse in" id="boards">
-            <div class="row">
-              <% @projetos_boards.each_with_index do |board, index| %>
-                <div class="col-md-4">
-                  <%= check_box_tag board[0], board, false, onclick: "filterCards(this)"  %>
-                  <%= hidden_field_tag :board_id, board[0], :class => "board-placeholder" %>
+                  <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
                 </div>
-                <% if (index + 1) % 3 == 0%>
+                <hr style="margin-top: 0px; margin-bottom: 0px;">
+                <div id="tag_div">
+                  <%= tags = get_string_tags(atividade_form.object.cartao) %>
+                  Tags: <%= text_field :tags,"",{class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();", value: tags}%> 
+                  </div>
+                  <hr style="margin-top: 0px; margin-bottom: 0px;">
+                  <div id="observacao_div">
+                    <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
+                        :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
+                    <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
+                  </div>
+                  <hr style="margin-top: 0px; margin-bottom: 0px;">
+                  <div id="pai_div">
+                    <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
+                      :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
+
+                    <div style="display: none">
+                      <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+                        &nbsp;Arraste o cartão pai aqui.
+                      </div>
+                      <div id="input">
+                        <% unless atividade_form.object.cartao.try(:pai).nil? %>
+                          <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
+                            :class => 'cartao_field' %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="row">
-                <% end %>
               <% end %>
+              <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
+                :style => "display: none", :id => "nova_atividade" %>
             </div>
           </div>
-          <div class="panel-scrollable" id="output" ></div>
+          <div class="col-md-5">
+            <div class="loggedin">
+              <a id="collapse-button" data-toggle="collapse" data-target="#boards">
+                Boards do Trello
+              </a>
+              <div class="collapse in" id="boards">
+                <div class="row">
+                  <% @projetos_boards.each_with_index do |board, index| %>
+                    <div class="col-md-4">
+                      <%= check_box_tag board[0], board, false, onclick: "filterCards(this)"  %>
+                      <%= hidden_field_tag :board_id, board[0], :class => "board-placeholder" %>
+                    </div>
+                    <% if (index + 1) % 3 == 0%>
+                    </div>
+                    <div class="row">
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="panel-scrollable" id="output" ></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div id="lower-bar" class="navbar-fixed-bottom toolbar">
-    <div style="width: 100%">
-      <div class="actions" style="float: left; margin-left: 10px;">
-        <!-- xi -->
-        <%= hidden_field_tag :key  %>
-        <%= hidden_field_tag :token  %>
-        <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
-        <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
+      <div id="lower-bar" class="navbar-fixed-bottom toolbar">
+        <div style="width: 100%">
+          <div class="actions" style="float: left; margin-left: 10px;">
+            <!-- xi -->
+            <%= hidden_field_tag :key  %>
+            <%= hidden_field_tag :token  %>
+            <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
+            <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-<% end %>
+    <% end %>
 
-<script>
-   var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
-</script>
+    <script>
+              var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
+    </script>

@@ -88,6 +88,7 @@ class DiasController < ApplicationController
               end
             end
           end
+        
           if params["tags"]
             tags_da_atividade = atividade.tags
             tags_form = params["tags"][0].split(",").collect{|n| n.strip}
@@ -115,7 +116,6 @@ class DiasController < ApplicationController
           end
         end
         Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"],tags_do_cartao.collect{|t| t.nome})
-        
       end
     end
     unless params[:cartao].nil?
@@ -279,6 +279,19 @@ class DiasController < ApplicationController
     cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
     unless cartao.pai.blank?
       render json: cartao.pai.trello_id.to_json
+    else
+      render json: "".to_json
+    end
+  end
+  
+  def cartao_tags
+    cartao = Cartao.find_by_trello_id(params[:cartao_id])
+    unless cartao.blank?
+      tags = ""
+      cartao.tags.each do |t|
+        tags += t.nome + ", "
+      end
+      render json: tags.to_json
     else
       render json: "".to_json
     end
