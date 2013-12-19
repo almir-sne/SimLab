@@ -88,7 +88,7 @@ class DiasController < ApplicationController
               end
             end
           end
-        
+
           if params["tags"]
             tags_da_atividade = atividade.tags
             tags_form = params["tags"][0].split(",").collect{|n| n.strip}
@@ -134,7 +134,7 @@ class DiasController < ApplicationController
     periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
     redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
   end
-  
+
   def atualizar_tags_cartoes
     if (!params[:key].blank? and !params[:token].blank?)
       Cartao.all.each do |c|
@@ -143,19 +143,19 @@ class DiasController < ApplicationController
         unless (data == :error)
 
           tags_list = extract_tags(data["name"])
-            
+
           tags_string = ""
           tags_list.each do |t|
             tags_string += t.to_s + ", "
           end
-      
+
           tags_do_cartao = c.tags
           tags_form = tags_string.split(",").collect{|n| n.strip}
           tags_banco = tags_do_cartao.collect{|t| t.nome}
           tags_a_adicionar = tags_form - tags_banco
-          tags_a_remover = tags_banco - tags_form         
+          tags_a_remover = tags_banco - tags_form
           tags_a_adicionar.each do |tag_nome|
-            if !tag_nome.blank?        
+            if !tag_nome.blank?
               tag = Tag.find_by_nome tag_nome
               if tag.blank?
                 tag = Tag.new(nome: tag_nome)
@@ -165,14 +165,14 @@ class DiasController < ApplicationController
                 tags_do_cartao << tag
               end
             end
-          end     
+          end
           tags_a_remover.each do |tag_nome|
             tag = Tag.find_by_nome tag_nome
             if !tag.blank?
               tags_do_cartao.delete(tag);
             end
           end
-      
+
           if (tags_do_cartao.blank?)
             puts "Cartão sem Tags"
           else
@@ -181,7 +181,7 @@ class DiasController < ApplicationController
         end
       end
     end
-    redirect_to :back 
+    redirect_to :back
   end
 
   def destroy
@@ -283,7 +283,7 @@ class DiasController < ApplicationController
       render json: "".to_json
     end
   end
-  
+
   def cartao_tags
     cartao = Cartao.find_by_trello_id(params[:cartao_id])
     unless cartao.blank?

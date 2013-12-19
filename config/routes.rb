@@ -1,7 +1,7 @@
 SinLab::Application.routes.draw do
-  
+
   resources :decks
-  
+
   resources :estimativas, :only => [:index, :create] do
     collection do
       match 'board/:board_id' => "estimativas#board", :as => :board
@@ -71,7 +71,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :ausencias, :only => [:index, :destroy, :create, :new] do
+  resources :ausencias, :only => [:index, :destroy, :create, :new, :update] do
     collection do
       post :validar
       post :ausencia
