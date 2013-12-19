@@ -74,12 +74,12 @@ function dropCard(event) {
     if (cartaoRepetido == false) {
         $("#nova_atividade").click();
         var target = $(".fields").last();
-        var tags = $("#tags_").last();
-        var tag_link = $("._card").last();
         var card = $("#" + data);
         var input = $(target.find(".cartao_field")[0]);
         input.after(card);
         input.val(card.attr("id"));
+        var tags = $(".tag_autocomplete").last();
+        var tag_link = $("._card").last();
         $.ajax({
             url: "/dias/cartao_tags",
             data: {cartao_id: card.attr("id")},
