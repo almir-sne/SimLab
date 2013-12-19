@@ -13,6 +13,10 @@ class AusenciasController < ApplicationController
     @ausencia = Ausencia.find_or_initialize_by dia_id: @dia.try(:id)
   end
 
+  def update
+    create
+  end
+
   def create
     @ausencia = Ausencia.find_or_initialize_by dia_id: params[:ausencia][:dia_id]
     if @ausencia.update_attributes(ausencia_params)
