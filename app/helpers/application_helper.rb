@@ -11,4 +11,5 @@ module ApplicationHelper
   def pad(string)
     ("%2d" % string).gsub(" ", "0")
   end
+  
 end

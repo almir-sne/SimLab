@@ -61,6 +61,14 @@
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
               <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
+              <li>
+              <% if can? :manage, :all %>
+                <%= form_tag atualizar_tags_cartoes_dias_path %>
+                <%= hidden_field_tag :key  %>
+                <%= hidden_field_tag :token  %>
+                <%= submit_tag "Atualizar Tags (Trello => Banco)" %>
+              <% end %>
+              </li>
             </ul>
           </li>
           <li class="dropdown">
@@ -101,7 +109,6 @@
             <% user_role = current_usuario.role %>
             <li>
             <center>
-              Role Alterator 2000 Plus v2<br/>
               <select onchange="alterar_role(this)">
                 <option value="42" <%=  ((user_role == "admin") ? "selected" : "")%> >Administrador</option>
                 <option value="814" <%=  ((user_role == "usuario normal") ? "selected" : "")%> >Usuário Normal</option>
@@ -109,6 +116,7 @@
             </center>
             </li>
           <% end %>
+            
         </ul>
         <img alt="InfoXYZ" src="/images/logo.jpg" style="margin: 10px 0px; height: 30px; float: right;"/>
 

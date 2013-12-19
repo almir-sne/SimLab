@@ -37,13 +37,6 @@ SinLab::Application.routes.draw do
     get "meses/index"
   end
 
-  resources :banco_de_horas, :only => [:index] do
-    collection do
-      get  :show_mes
-      get  :log_de_atividades
-    end
-  end
-
   devise_for :usuarios
   devise_scope :usuarios do
     get '/login' => 'devise/sessions#new'
@@ -73,6 +66,7 @@ SinLab::Application.routes.draw do
       get :editar_por_data
       get :periodos
       get :cartao_pai 
+      post :atualizar_tags_cartoes
     end
   end
 

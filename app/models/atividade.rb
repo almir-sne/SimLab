@@ -1,6 +1,6 @@
 class Atividade < ActiveRecord::Base
   attr_accessible :dia_id, :observacao, :projeto_id, :usuario_id, :aprovacao, :avaliador_id
-  attr_accessible :duracao, :data, :trello_id, :tags
+  attr_accessible :duracao, :data, :trello_id
 
   scope :periodo, lambda { |range| where(data: range) if range}
   scope :ano, lambda { |value| where(['extract(year from atividades.data) = ?', value]) if value > 0 }
@@ -22,13 +22,11 @@ class Atividade < ActiveRecord::Base
   belongs_to :usuario
   belongs_to :avaliador, :class_name => "Usuario"
   has_many :mensagens, :dependent => :destroy
-  has_and_belongs_to_many :tags
 
   has_many :pares, :dependent => :destroy
 
   accepts_nested_attributes_for :pares, :allow_destroy => true
   accepts_nested_attributes_for :mensagens, :allow_destroy => true
-  accepts_nested_attributes_for :tags
   
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true

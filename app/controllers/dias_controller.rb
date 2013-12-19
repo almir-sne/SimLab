@@ -82,38 +82,37 @@ class DiasController < ApplicationController
               end
             end
           end
-          
-          if params["tags"]
-            tags_da_atividade = atividade.tags
-            tags_form = params["tags"][0].split(",").collect{|n| n.strip}
-            tags_banco = tags_da_atividade.collect{|t| t.nome}
-            tags_a_adicionar = tags_form - tags_banco
-            tags_a_remover = tags_banco - tags_form
-            debugger
-            tags_a_adicionar.each do |tag_nome|
-              debugger
-              if !tag_nome.blank?        
+          if !atividade_attr[:trello_id].blank?
+            if params["tags"]
+              cartao = Cartao.find_or_create_by_trello_id(atividade_attr[:trello_id])
+              tags_do_cartao = cartao.tags
+              tags_form = params["tags"][0].split(",").collect{|n| n.strip}
+              tags_banco = tags_do_cartao.collect{|t| t.nome}
+              tags_a_adicionar = tags_form - tags_banco
+              tags_a_remover = tags_banco - tags_form         
+              tags_a_adicionar.each do |tag_nome|
+                if !tag_nome.blank?        
+                  tag = Tag.find_by_nome tag_nome
+                  if tag.blank?
+                    tag = Tag.new(nome: tag_nome)
+                    tag.save
+                  end
+                  if !tags_do_cartao.include?(tag)
+                    tags_do_cartao << tag
+                  end
+                end
+              end     
+              tags_a_remover.each do |tag_nome|
                 tag = Tag.find_by_nome tag_nome
-                debugger
-                if tag.blank?
-                  tag = Tag.new(nome: tag_nome)
-                  tag.save
+                if !tag.blank?
+                  tags_do_cartao.delete(tag);
                 end
-                debugger
-                if !tags_da_atividade.include?(tag)
-                  tags_da_atividade << tag
-                end
-              end
-            end     
-            tags_a_remover.each do |tag_nome|
-              tag = Tag.find_by_nome tag_nome
-              if !tag.blank?
-                tags_da_atividade.delete(tag);
-              end
-            end          
+              end          
+            end
           end
         end
-        Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"])
+        Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"],tags_do_cartao.collect{|t| t.nome})
+        
       end
     end
     unless params[:cartao].nil?
@@ -131,6 +130,55 @@ class DiasController < ApplicationController
     end
     periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
     redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
+  end
+  
+  def atualizar_tags_cartoes
+    if (!params[:key].blank? and !params[:token].blank?)
+      Cartao.all.each do |c|
+        my_card_master_id = c.trello_id
+        data = Cartao.get_trello_data(params[:key], params[:token], my_card_master_id)
+        unless (data == :error)
+
+          tags_list = extract_tags(data["name"])
+            
+          tags_string = ""
+          tags_list.each do |t|
+            tags_string += t.to_s + ", "
+          end
+      
+          tags_do_cartao = c.tags
+          tags_form = tags_string.split(",").collect{|n| n.strip}
+          tags_banco = tags_do_cartao.collect{|t| t.nome}
+          tags_a_adicionar = tags_form - tags_banco
+          tags_a_remover = tags_banco - tags_form         
+          tags_a_adicionar.each do |tag_nome|
+            if !tag_nome.blank?        
+              tag = Tag.find_by_nome tag_nome
+              if tag.blank?
+                tag = Tag.new(nome: tag_nome)
+                tag.save
+              end
+              if !tags_do_cartao.include?(tag)
+                tags_do_cartao << tag
+              end
+            end
+          end     
+          tags_a_remover.each do |tag_nome|
+            tag = Tag.find_by_nome tag_nome
+            if !tag.blank?
+              tags_do_cartao.delete(tag);
+            end
+          end
+      
+          if (tags_do_cartao.blank?)
+            puts "Cartão sem Tags"
+          else
+            puts tags_do_cartao.collect{|t| t.nome}.to_s
+          end
+        end
+      end
+    end
+    redirect_to :back 
   end
 
   def destroy

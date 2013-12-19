@@ -1,11 +1,14 @@
 class Cartao < ActiveRecord::Base
-  attr_accessible :trello_id, :estimativa, :rodada, :id, :pai_id
+  attr_accessible :trello_id, :estimativa, :rodada, :id, :pai_id, :tags
   validates :trello_id, :uniqueness => true, :presence => true
   
   has_many :atividades
   has_many :rodadas
   
   belongs_to :pai, :class_name => "Cartao"
+  has_and_belongs_to_many :tags
+  
+  accepts_nested_attributes_for :tags
   
   def self.horas_trabalhadas(trello_id)
     Cartao.where(trello_id: trello_id).last.atividades.sum(:duracao)/3600
@@ -30,22 +33,39 @@ class Cartao < ActiveRecord::Base
     end
   end
   
-  def self.update_on_trello(key, token, id)
+  def self.update_on_trello(key, token, id, tags)
     data = get_trello_data(key, token, id)
     unless (data == :error)
-      regex = /[ ][(]\d+[.]?\d*[)]$/
-      horas_remoto = data["name"].match(regex).to_s.match(/\d+[.]?\d*+/).to_s
+      regex_horas = /[ ][(]\d+[.]?\d*[)]$/
+      
+      horas_remoto = data["name"].match(regex_horas).to_s.match(/\d+[.]?\d*+/).to_s
+      
+      tags_remoto = extract_tags(data["name"])
+      
       horas_local = "%.1f" % Cartao.horas_trabalhadas(id)
-      unless (horas_remoto == horas_local)
-        name = "#{data["name"].sub(regex, "")} (#{horas_local})"
-        uri = URI('https://trello.com/1/cards/' + id + '/name')
-        uri.query = URI.encode_www_form({:key => key, :token => token })
-        req = Net::HTTP::Put.new(uri)
-        req.set_form_data({"value" => name})
-        http = Net::HTTP.new(uri.hostname, uri.port)
-        http.use_ssl = true
-        http.request(req)
+      nome_novo = remove_tags(data["name"]);
+      tags_texto = ""
+      unless tags.nil?
+        tags.each do |t|
+          tags_texto += "[" + t.to_s + "] "
+        end
+        if (!tags_texto.blank?)
+          nome_novo = tags_texto + " " + nome_novo
+        end 
       end
+
+      if (horas_remoto != horas_local)               
+        name = "#{nome_novo.sub(regex_horas, "")} (#{horas_local})"
+      else
+        name = nome_novo
+      end
+      uri = URI('https://trello.com/1/cards/' + id + '/name')
+      uri.query = URI.encode_www_form({:key => key, :token => token })
+      req = Net::HTTP::Put.new(uri)
+      req.set_form_data({"value" => name})
+      http = Net::HTTP.new(uri.hostname, uri.port)
+      http.use_ssl = true
+      http.request(req)
     end
   end
   
