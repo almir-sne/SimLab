@@ -17,6 +17,7 @@ class Usuario < ActiveRecord::Base
   has_many :anexos
   has_many :dias
   has_many :atividades
+  has_many :registros
 
   accepts_nested_attributes_for :address,      :allow_destroy => true
   accepts_nested_attributes_for :telefones,    :allow_destroy => true

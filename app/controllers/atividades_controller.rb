@@ -95,31 +95,40 @@ class AtividadesController < ApplicationController
   end
 
   def aprovar
+    @user = current_user
+    @user ||= current_usuario
     @atividade = Atividade.find params[:atividade_id]
     if @atividade.aprovacao.to_s == params[:aprovacao]
       @atividade.aprovacao = nil
     else
       @atividade.aprovacao = params[:aprovacao]
     end
-    @atividade.save
+    reg = Registro.new(autor_id: @user.id, atividade_id: @atividade.id)
+    reg.transforma_hash_em_modificacao @atividade.changes
+    @atividade.save and reg.save
     respond_to do |format|
       format.js
     end
   end
 
   def mensagens
+    user = current_usuario
+    user ||= current_user
     @atividade = Atividade.find params[:atividade_id]
-    @atividade.mensagens.where{autor_id != my{current_usuario}.id}.update_all visto: true
+    @atividade.mensagens.where{autor_id != my{user}.id}.update_all visto: true
     respond_to do |format|
       format.js
     end
   end
 
   def enviar_mensagem
+    user = current_usuario
+    user ||= current_user
+    Atividade.find(params[:atividade_id]).update_attribute :avaliador_id, user.id
     mensagem = Mensagem.new(
       atividade_id: params[:atividade_id],
       conteudo: params[:mensagem],
-      autor_id: current_usuario.id
+      autor_id: user.id
     )
     if mensagem.save
       flash[:notice] = I18n.t("mensagem.create.success")

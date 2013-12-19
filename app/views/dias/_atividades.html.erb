@@ -1,0 +1,49 @@
+<table class="list-table days-table" id="meses">
+  <tr>
+    <th>Dia</th>
+    <th>Entrada</th>
+    <th>Saída</th>
+    <th>Intervalo</th>
+    <th style="padding-left: 25px;"><%= t('atividades.title') %></th>
+    <th>Horas Aprovadas</th>
+    <th></th>
+  </tr>
+  <% @dias.values.flatten.each do |dia| %>
+    <% if !dia.nil? and !dia.atividades.blank? %>
+      <tr>
+        <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
+        <td><%= dia.entrada_formatada %></td>
+        <td><%= dia.saida_formatada %></td>
+        <td><%= (dia.intervalo.nil?) ? "" : dia.intervalo.strftime("%H:%M") %></td>
+        <td style="width: 60%; border: none">
+          <% dia.atividades.each do |atividade| %>
+            <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
+              Observação: <br/>
+              <%=  atividade.observacao%>
+              <br />
+              <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
+              <input type="hidden" class="card-placeholder" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+            </div>
+          <% end %>
+        </td>
+        <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
+          <%= dia.horas_atividades_formato + "h" %>
+        </td>
+        <td style="width: 13%;">
+          <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, data: dia.data), :class => 'icon-edit nohover'%>
+          <%= link_to '<i class="icon-trash"> </i>'.html_safe, dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"), :class => 'nohover', :title => "Excluir"%>
+          <% if dia.tem_reprovacao? %>
+            <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+  <tr style="border-top:thin solid; border-color:black">
+    <td colspan=5>Total incluindo faltas abonadas </td>
+    <td style="padding: 22px"><%= horas_trabalhadas_aprovadas(@inicio, @fim, @usuario.id) %>h</td>
+  </tr>
+</table>
+<br />
+<br />
+<div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>

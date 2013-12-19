@@ -29,7 +29,6 @@
   checkTrello(getBoards);
 
   $(document).ready(function() {
-    autocomplete_source(u);
     if($("input[name='super_projeto']:checked").val() == "true")
       mostraFilhos();
     else
@@ -53,3 +52,10 @@
     $("#filhos").show(200);
     $("#pai").hide(200);
   }
+  
+function set_autocomplete_equipe()
+{
+  $("#equipe_autocomplete").autocomplete({
+        source: users_projeto
+    });
+}

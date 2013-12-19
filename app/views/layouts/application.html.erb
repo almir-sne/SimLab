@@ -39,10 +39,11 @@
             <ul class="dropdown-menu">
               <li><a href="<%= dias_path(data: Date.today, usuario_id: current_usuario) %>">Calendario de Atividades</a></li>
               <li><a href="<%= periodos_dias_path %>">Meus Períodos</a></li>
-              <%if can? :index, Ausencia %>
-                <li><a href="<%= ausencias_path %>">Minhas Ausências</a></li>
+              <%if can? :manage, Atividade %>
+                <li class="navbar-section">Administração</li>
+                <li><a href="<%= ausencias_path %>">Ausências</a></li>
+                <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
               <% end %>
-              <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
             </ul>
           </li>
           <li>
@@ -53,11 +54,20 @@
               Ferramentas<b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="<%= estimativas_path %>">Planning Poker</a></li>
+              <li class="navbar-section">Planning Poker</li>
+              <li> <%= link_to "Estimativas", estimativas_path %></li>
+              <li> <%= link_to "Decks", decks_path %></li>
+              <li class="navbar-section">Trello</li>
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
-              <li class="navbar-header">Trello</li>
               <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
+              <li>
+              <% if can? :manage, :all %>
+                <%= link_to "Atualizar Tags (Trello => Banco)", atualizar_tags_cartoes_dias_path(:token => params[:token], :key => params[:key]),
+          :confirm => "Operação Lenta: Deseja mesmo Atualizar os Tags (Trello => Banco)?",
+          :class => 'nohover', :title => "Atualização Tags"%>
+              <% end %>
+              </li>
             </ul>
           </li>
           <li class="dropdown">
@@ -67,9 +77,8 @@
             <ul class="dropdown-menu">
               <%if can? :see, Usuario%>
                 <li><a href="<%= usuarios_path(:status => "true") %>">Usuários</a></li>
-                <li class="divider"></li>
               <% end %>
-              <li class="navbar-header">Financeiro</li>
+              <li class="navbar-section">Financeiro</li>
               <% if can? :create_or_update, Pagamento %>
                 <li><a href="<%= pagamentos_path %>">Pagamentos</a></li>
               <% else %>
@@ -88,7 +97,7 @@
             </ul>
           </li>
           <li>
-            <div>
+            <div style="margin: 10px;">
               Bem vindo, <b style="color: rgb(33, 147, 189);"><%= current_usuario.nome %>! </b>
               <div class="loggedin">
                 Trello: <b class="fullName"></b>
@@ -96,38 +105,33 @@
             </div>
           </li>
           <% if (Rails.env.development?) %>
-          <% user_role = current_usuario.role %>
-          <li>
+            <% user_role = current_usuario.role %>
+            <li>
             <center>
-              Role Alterator 2000 Plus v2<br/>
               <select onchange="alterar_role(this)">
                 <option value="42" <%=  ((user_role == "admin") ? "selected" : "")%> >Administrador</option>
                 <option value="814" <%=  ((user_role == "usuario normal") ? "selected" : "")%> >Usuário Normal</option>
               </select>
             </center>
-          </li>
-          <%  end %>
+            </li>
+          <% end %>
+            
         </ul>
         <img alt="InfoXYZ" src="/images/logo.jpg" style="margin: 10px 0px; height: 30px; float: right;"/>
-        
+
       </div>
     </nav>
     <div class="messages">
       <%= render 'layouts/messages'%>
     </div>
     <%= yield %>
-    
+
     <script>
       var alt_role = "<%= alt_role_usuarios_path %>";
       var userid = <%= current_usuario.id %>;
-      $('.chosen-select').chosen({
-        allow_single_deselect: true,
-        no_results_text: 'Nenhum resultado',
-        width: '200px',
-        placeholder_text_multiple: 'Selecione...'
-      });
     </script>
 
     <%= javascript_include_tag javascript_include_view_js %>
+    <%= javascript_include_tag "layouts/after_yield.js" %>
   </body>
 </html>

@@ -7,19 +7,20 @@ class AusenciasController < ApplicationController
   end
 
   def new
-    @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: current_usuario.id)
+    if can? :manage, :all
+      usuario = Usuario.find(params[:usuario_id].to_i)
+    else
+      usuario = current_usuario
+    end
+    @dia      = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), usuario.id )
+    @ausencia = Ausencia.find_or_initialize_by_dia_id_and_projeto_id(@dia.id, params[:projeto_id].try(:to_i))
     @tipo     = params[:tipo]
-    @projetos = current_usuario.projetos.map{|proj| [proj.nome, proj.id]}
-    @ausencia = Ausencia.find_or_initialize_by dia_id: @dia.try(:id)
-  end
-
-  def update
-    create
+    @projetos = usuario.projetos.map{|proj| [proj.nome, proj.id]}
   end
 
   def create
-    @ausencia = Ausencia.find_or_initialize_by dia_id: params[:ausencia][:dia_id]
-    if @ausencia.update_attributes(ausencia_params)
+    @ausencia = Ausencia.find_or_initialize_by_dia_id_and_projeto_id(params[:ausencia][:dia_id], params[:ausencia][:projeto_id])
+    if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
         Anexo.new(
@@ -34,6 +35,10 @@ class AusenciasController < ApplicationController
       flash[:error] = I18n.t("ausencias.create.failure")
     end
     redirect_to dias_path(data: @ausencia.dia.data, tipo: params[:tipo])
+  end
+
+  def update
+    create
   end
 
   def index

@@ -3,6 +3,7 @@
 <%= form_for(@ausencia, :html => {:multipart =>true}) do |f| %>
   <%= f.hidden_field :dia_id, :value => @dia.try(:id) %>
   <%= hidden_field_tag :tipo, @tipo %>
+  <%= f.hidden_field :abonada, value: false %>
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="col-md-4">
@@ -14,7 +15,7 @@
       </div>
       <div class="col-md-2">
         <%= f.label :projeto_id %>
-        <%= f.select :projeto_id, options_for_select(@projetos)%>
+        <%= f.select :projeto_id, options_for_select(@projetos, f.object.projeto.try(:id)) %>
       </div>
       <div class="col-md-3">
         <%= f.label "Anexo" %>

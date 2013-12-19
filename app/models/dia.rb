@@ -1,6 +1,4 @@
 class Dia < ActiveRecord::Base
-
-  
   belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
@@ -9,7 +7,6 @@ class Dia < ActiveRecord::Base
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
   accepts_nested_attributes_for :horarios, :allow_destroy => true
-  
   validates :data, :uniqueness => {:scope => :usuario_id}, :presence => true
   validates :usuario_id, :presence => true
   #  validate :validar_horas
@@ -17,20 +14,44 @@ class Dia < ActiveRecord::Base
   def self.por_periodo(inicio, fim, usuario_id)
     Dia.where(usuario_id: usuario_id, data: inicio..fim)
   end
-  
+
+  def formata_horas
+    if (entrada.blank? || saida.blank?)
+      "0:00"
+    else
+      hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i
+      minuto = ((((saida - entrada) - read_attribute(:intervalo)) % 3600) / 60).to_i
+      hora.to_s + ":" + minuto.to_s.rjust(2, '0')
+    end
+  end
+
   def entrada
     if self.horarios.nil? or self.horarios.minimum(:entrada).nil?
-      ""
+      0.0
     else
-      self.horarios.minimum(:entrada).utc.strftime("%H:%M")
+      self.horarios.minimum(:entrada).utc
     end
   end
 
   def saida
     if self.horarios.nil? or self.horarios.maximum(:saida).nil?
-      ""
+      0.0
     else
-      self.horarios.maximum(:saida).utc.strftime("%H:%M")
+      self.horarios.maximum(:saida).utc
+    end
+  end
+
+  def entrada_formatada
+    if entrada.nil? and entrada != 0.0
+      entrada.strftime("%H:%M")
+    else
+      ""
+    end
+  end
+
+  def saida_formatada
+    if saida.nil? and saida != 0.0
+      saida.strftime("%H:%M")
     end
   end
 
@@ -42,15 +63,6 @@ class Dia < ActiveRecord::Base
     ((saida - entrada) - read_attribute(:intervalo)) / 60
   end
 
-  def formata_horas
-    if (read_attribute(:entrada).blank? || read_attribute(:saida).blank?)
-      "0:00"
-    else
-      hora = (((saida - entrada) - read_attribute(:intervalo)) / 3600).to_i
-      minuto = ((((saida - entrada) - read_attribute(:intervalo)) % 3600) / 60).to_i
-      hora.to_s + ":" + minuto.to_s.rjust(2, '0')
-    end
-  end
 
   def formata_intervalo
     intervalo = read_attribute(:intervalo)
@@ -61,7 +73,7 @@ class Dia < ActiveRecord::Base
     else
       "00:00"
     end
-    
+
   end
 
   def horas_atividades_formato
@@ -102,9 +114,9 @@ class Dia < ActiveRecord::Base
     msgs = ""
     self.atividades.each  do |a|
       a.mensagens.each do |m|
-          unless (m.conteudo.nil?)
-            msgs += "#{m.conteudo}\n"
-          end
+        unless (m.conteudo.nil?)
+          msgs += "#{m.conteudo}\n"
+        end
       end
     end
     msgs.strip
@@ -119,7 +131,7 @@ class Dia < ActiveRecord::Base
   end
 
   def tem_atividades?
-    return 
+    return
   end
 
   private

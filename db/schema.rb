@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131206231045) do
+ActiveRecord::Schema.define(:version => 20131218194827) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -71,17 +71,20 @@ ActiveRecord::Schema.define(version: 20131206231045) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "cartoes", force: true do |t|
-    t.float    "estimativa"
-    t.integer  "rodada"
+  create_table "cartoes", :force => true do |t|
+    t.string   "estimativa"
     t.string   "trello_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "estimado",   default: false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "pai_id"
   end
 
-  create_table "contas", force: true do |t|
+  create_table "cartoes_tags", :force => true do |t|
+    t.integer "cartao_id"
+    t.integer "tag_id"
+  end
+
+  create_table "contas", :force => true do |t|
     t.string   "agencia"
     t.string   "banco"
     t.string   "numero"
@@ -111,21 +114,31 @@ ActiveRecord::Schema.define(version: 20131206231045) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dias", force: true do |t|
+  create_table "decks", :force => true do |t|
+    t.string   "nome"
+    t.integer  "minimum_id"
+    t.integer  "maximum_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "dias", :force => true do |t|
+    t.float    "intervalo"
     t.integer  "usuario_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date     "data"
-    t.float    "intervalo"
+    t.datetime "entrada"
+    t.datetime "saida"
   end
 
   create_table "estimativas", force: true do |t|
     t.integer  "cartao_id"
     t.integer  "usuario_id"
-    t.float    "valor"
-    t.integer  "rodada"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "rodada_id"
+    t.integer  "planning_card_id"
   end
 
   create_table "horarios", force: true do |t|
@@ -174,7 +187,15 @@ ActiveRecord::Schema.define(version: 20131206231045) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "projetos", force: true do |t|
+  create_table "planning_cards", :force => true do |t|
+    t.string   "nome"
+    t.float    "valor"
+    t.integer  "deck_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "projetos", :force => true do |t|
     t.string   "nome"
     t.date     "data_de_inicio"
     t.text     "descricao"
@@ -185,7 +206,34 @@ ActiveRecord::Schema.define(version: 20131206231045) do
     t.integer  "super_projeto_id"
   end
 
-  create_table "telefones", force: true do |t|
+  create_table "registros", :force => true do |t|
+    t.text     "modificacao"
+    t.integer  "autor_id"
+    t.integer  "atividade_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "rodadas", :force => true do |t|
+    t.integer  "cartao_id"
+    t.datetime "inicio"
+    t.datetime "fim"
+    t.integer  "deck_id"
+    t.integer  "criador_id"
+    t.integer  "finalizador_id"
+    t.integer  "numero"
+    t.boolean  "fechada"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "tags", :force => true do |t|
+    t.text     "nome"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "telefones", :force => true do |t|
     t.integer  "ddd"
     t.string   "numero"
     t.integer  "usuario_id"

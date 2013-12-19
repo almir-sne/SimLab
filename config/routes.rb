@@ -1,10 +1,13 @@
 SinLab::Application.routes.draw do
+
+  resources :decks
+
   resources :estimativas, :only => [:index, :create] do
     collection do
       get 'board/:board_id' => "estimativas#board", :as => :board
       get 'cartao/:cartao_id' => "estimativas#cartao", :as => :cartao
       get :fechar_rodada
-      get :nova_rodada
+      post :nova_rodada
       post :concluir
     end
   end
@@ -32,13 +35,6 @@ SinLab::Application.routes.draw do
     resources :tokens,:only => [:create, :destroy]
     get 'meses/:id/dias' => "meses#dias"
     get "meses/index"
-  end
-
-  resources :banco_de_horas, :only => [:index] do
-    collection do
-      get  :show_mes
-      get  :log_de_atividades
-    end
   end
 
   devise_for :usuarios
@@ -70,6 +66,8 @@ SinLab::Application.routes.draw do
       get :editar_por_data
       get :periodos
       get :cartao_pai
+      get :cartao_tags
+      get :atualizar_tags_cartoes
     end
   end
 

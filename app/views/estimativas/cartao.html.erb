@@ -9,49 +9,65 @@
 </div>
 
 <div style="padding: 15px">
-  <% @rodadas.each do |rodada, estimativas| %>
-    <% concluida = @cartao.rodada_concluida? rodada %>
-    <h3 class="rodada" data-toggle="collapse" data-target=<%= "#rodada_#{rodada}" %> > Rodada <%= rodada %>  </h3>
-    <div class="collapse <%= "in" unless concluida and @ultima_rodada != rodada %>" id="<%= "rodada_#{rodada}" %>">
+  <% @cartao.rodadas.each do |rodada| %>
+    <h3 class="rodada" data-toggle="collapse" data-target=<%= "#rodada_#{rodada.numero}" %> > Rodada <%= rodada.numero %>  </h3>
+    <div class="collapse <%= "in" unless rodada.fechada %>" id="<%= "rodada_#{rodada.numero}" %>">
       <table class="list-table">
         <tr>
           <th> Nome </th>
           <th> Estimativa </th>
         </tr>
 
-        <% estimativas.collect{|e| [e.usuario.nome, e.valor_string]}.sort.each do |estimativa| %>
+        <% rodada.estimativas.where("planning_card_id is not null").
+          collect{|e| [e.usuario.nome, e.planning_card.nome]}.sort.each do |estimativa| %>
           <% unless estimativa[1].nil? %>
             <tr>
               <td> <%= estimativa[0] %> </td>
-              <td> <%= estimativa[1] if concluida %> </td>
+              <td> <%= estimativa[1] if rodada.fechada %> </td>
             </tr>
           <% end %>
         <% end %>
       </table>
 
-      <% if concluida %>
+      <% if rodada.fechada %>
         <div class="form-group" style="padding: 15px">
-          <h4> Estatisticas </h4>
+          <h4> Estatísticas </h4>
           <table class="list-table">
             <tr >
               <td>  Total de estimativas </td>
-              <td> <%= @cartao.estimativas_na_rodada rodada %> </td>
+              <td> <%= rodada.estimativas.count %> </td>
             </tr>
 
             <tr>
               <td> Média </td>
-              <td>  <%= @cartao.media rodada %> </td>
+              <td>  <%= rodada.media %> </td>
             </tr>
 
             <tr>
               <td> Minimo </td>
-              <td> <%= @cartao.minimo rodada %> </td>
+              <td> <%= rodada.minimo %> </td>
             </tr>
 
             <tr>
               <td> Máximo </td>
-              <td> <%= @cartao.maximo rodada %></td>
+              <td> <%= rodada.maximo %></td>
             </tr>
+            <% if rodada.inicio %>
+              <tr>
+                <td> Inicio </td>
+                <td> <%= rodada.inicio %> - Criada por <%= rodada.criador.nome %> </td>
+              </tr>
+
+              <tr>
+                <td> Fim </td>
+                <td> <%= rodada.fim %> - Concluida por <%= rodada.finalizador.nome %> </td>
+              </tr>
+
+              <tr>
+                <td> Duração </td>
+                <td> <%= int_to_horas(rodada.fim.to_i - rodada.inicio.to_i) %> </td>
+              </tr>
+            <% end %>
           </table>
         </div>
       <% else %>
@@ -60,44 +76,48 @@
         </div>
       <% end %>
     </div>
-  <% end %>
 
-  <% unless @cartao.estimado? %>
-    <%= form_tag estimativas_path do %>
-      <div style="padding: 15px" class="row">
-        <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
-        <% @estimativa_list.each do |e|%>
-          <div class="col-sm-1">
-            <%= button_tag e[0], :name => "estimativa", :value=> e[1],
-              :class => (@estimativa.valor == e[1]) ? "estimativa estimativa-selecionada": "estimativa" %>
-          </div>
-        <% end %>
-      </div>
+    <% unless rodada.fechada %>
+      <% sua_estimativa = rodada.estimativas.where(usuario_id: current_usuario.id).last %>
+      <%= form_tag estimativas_path do %>
+        <div style="padding: 15px" class="row">
+          <%= hidden_field_tag :cartao_id, @cartao.id %>
+          <%= hidden_field_tag :rodada_id, rodada.id %>
+          <% rodada.deck.planning_cards.each do |c|%>
+            <div class="col-sm-1">
+              <%= button_tag c.nome, :name => "planning_card_id", :value=> c.id,
+                :class => (sua_estimativa.try(:planning_card) == c) ? "estimativa estimativa-selecionada": "estimativa" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
-
-  <% else %>
+  <% end %>
+  <% unless @cartao.estimativa.blank? %>
     <h4>
-      Estimativa final: <%= @cartao.estimativa_string %>
+      Estimativa final: <%= @cartao.estimativa %>
     </h4>
   <% end %>
-
   <br/>
   <br/>
   <h3> Coordenação </h3>
   <div style="padding: 15px">
-    <% if @cartao.estimado? %>
-      <%= link_to "Nova rodada", nova_rodada_estimativas_path(cartao_id: @cartao.trello_id),
-        class: "btn default-button", data: {confirm: "Tem certeza?"} %>
+    <% unless @cartao.rodada_aberta? %>
+      <%= form_tag nova_rodada_estimativas_path do %>
+        <%= hidden_field_tag :cartao_id, @cartao.id %>
+        <%= select_tag :deck_id, options_for_select(@decks.collect{|d| [d.nome, d.id]}), :style => "margin-bottom: 0" %>
+        <%= submit_tag "Nova rodada", :class => "btn default-button", :confirm => "Tem certeza?" %>
+      <% end %>
     <% else %>
-      <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.trello_id),
-        class: "btn default-button", data: {confirm: "Tem certeza?"} %>
+      <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.id),
+        :class => "btn default-button", :confirm => "Tem certeza?" %>
     <% end %>
     <br/>
     <br/>
     <%= form_tag concluir_estimativas_path do %>
-      <%= hidden_field_tag :cartao_id, @cartao.trello_id %>
-      <%= select_tag :estimativa_final, options_for_select([["Estimar", nil]] + @estimativa_list, @cartao.estimativa), :style => "margin-bottom: 0" %>
-      <%= submit_tag "Enviar estimativa final", :class => "btn default-button", ata: {confirm: "Tem certeza?"} %>
+      <%= hidden_field_tag :cartao_id, @cartao.id %>
+      <%= text_field_tag :estimativa_final, @cartao.estimativa %>
+      <%= submit_tag "Enviar estimativa final", :class => "btn default-button", :confirm => "Tem certeza?" %>
     <% end %>
   </div>
 

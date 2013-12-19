@@ -78,6 +78,16 @@ function dropCard(event) {
         var input = $(target.find(".cartao_field")[0]);
         input.after(card);
         input.val(card.attr("id"));
+        var tags = $(".tag_autocomplete").last();
+        var tag_link = $("._card").last();
+        $.ajax({
+            url: "/dias/cartao_tags",
+            data: {cartao_id: card.attr("id")},
+            success: function(result) {
+                tags.val(result);
+            }
+        });
+        tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
 }

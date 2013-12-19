@@ -12,46 +12,8 @@
   <div class="tab-content">
 
     <div class="tab-pane" id="ausencias_tab">
-      <table class="list-table days-table" id="ausencias">
-        <tr>
-          <th>Dia</th>
-          <th style="width: 60%">Justificativa </th>
-          <th>Abonada?</th>
-          <th></th>
-        </tr>
-        <% @ausencias.each do |ausencia| %>
-          <tr>
-            <td style="width: 11%">
-              <%= "#{ausencia.dia.data.day} / #{ausencia.dia.data.month} (#{t("date.abbr_day_names")[ausencia.dia.data.wday]})"%>
-            </td>
-            <td>
-              <%= ausencia.justificativa %>
-            </td>
-            <td>
-              <% if ausencia.abonada? %>
-                <i class="icon-ok"></i>
-              <% else %>
-                <i class="icon-remove"></i>
-              <% end %>
-            </td>
-            <td>
-              <%= form_tag( { :controller => :ausencias, :action => :ausencia, :id => ausencia.id },
-                {:remote => true, :method => :post, :class => "inline-form"} ) do %>
-                <%= hidden_field_tag :usuario_id, @usuario.id %>
-                <%= link_to_submit ' ', :class => 'icon-edit nohover',
-                  :style => "margin-right: 10px", :title => "Editar" %>
-              <% end %>
-              <%= link_to '<i class="icon-trash"> </i>'.html_safe, ausencia_path(ausencia.id), method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir" %>
-            </td>
-          </tr>
-        <% end %>
-        <tr style="border-top:thin solid; border-color:black">
-          <td colspan=3>Horas totais de faltas abonadas </td>
-          <td><%= horas_ausencias_abonadas(@inicio, @fim, @usuario.id) %></td>
-        </tr>
-      </table>
+      <%= render "ausencias"%>
     </div>
-
 
     <div class="tab-pane active" id="periodos">
       <table class="day-table day-calendario" style="width: 100%">
@@ -65,7 +27,7 @@
           <% while @inicio.wday != dia_da_semana %>
             <% dia_da_semana = dia_da_semana + 1 %>
             <td></td>
-          <% end %> 
+          <% end %>
           <% (@inicio..@fim).each do |dia| %>
             <td>
               <div class="dropdown toggle">
@@ -91,7 +53,7 @@
                       <input type="hidden" class="card-abrev" id="<%= cartao_trello_id %>" pid="<%= atividade.projeto_id %>" value="<%= atividade.duracao/60 %>"></input>
                     <% end %>
                   <% end %>
-                </div> 
+                </div>
               </a>
             </td>
             <% if dia.wday == 6 %>
@@ -103,56 +65,7 @@
     </div>
 
     <div class="tab-pane" id="atividades">
-      <table class="list-table days-table" id="meses">
-        <tr>
-          <th>Dia</th>
-          <th>Entrada</th>
-          <th>Saída</th>
-          <th>Intervalo</th>
-          <th style="padding-left: 25px;"><%= t('atividades.title') %></th>
-          <th>Horas Aprovadas</th>
-          <th></th>
-        </tr>
-        <% @dias.values.flatten.each do |dia| %>
-          <% if !dia.nil? and !dia.atividades.blank? %>
-            <tr>
-              <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
-              <td><%= dia.entrada %></td>
-              <td><%= dia.saida %></td>
-              <td><%= (dia.intervalo.nil?) ? "" : dia.intervalo.strftime("%H:%M") %></td>
-              <td style="width: 60%; border: none">
-                <% dia.atividades.each do |atividade| %>
-                  <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
-                    Observação: <br/>
-                    <%=  atividade.observacao%>
-                    <br />
-                    <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-                    <input type="hidden" class="card-placeholder" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
-                  </div>
-                <% end %>
-              </td>
-              <td style="padding: 22px" <%= 'class="red-background"' if dia.horas_atividades_formato != dia.formata_horas %>>
-                <%= dia.horas_atividades_formato + "h" %>
-              </td>
-              <td style="width: 13%;">
-                <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, data: dia.data), class: 'icon-edit nohover'%>
-                <%= link_to '<i class="icon-trash"> </i>'.html_safe, dia_path(dia.id), method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir" %>
-                <% if dia.tem_reprovacao? %>
-                  <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        <% end %>
-        <tr style="border-top:thin solid; border-color:black">
-          <td colspan=5>Total incluindo faltas abonadas </td>
-          <td style="padding: 22px"><%= horas_trabalhadas_aprovadas(@inicio, @fim, @usuario.id) %>h</td>
-        </tr>
-      </table>
-      <br />
-      <br />
-      <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>
-      
+      <%= render "atividades" %>
     </div>
 
   </div>
@@ -162,10 +75,10 @@
        <td>LEGENDA: </td>
        <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td><td style="width: 10px;"></td>
        <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td><td style="width: 10px;"></td>
-       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td> 
-       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>       
-       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td> 
-       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td> 
+       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td>
+       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>
+       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td>
+       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td>
     </tr>
  </table>
 </div>
