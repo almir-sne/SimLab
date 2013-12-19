@@ -128,6 +128,8 @@ ActiveRecord::Schema.define(:version => 20131218194827) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "data"
+    t.datetime "entrada"
+    t.datetime "saida"
   end
 
   create_table "estimativas", :force => true do |t|
@@ -202,6 +204,14 @@ ActiveRecord::Schema.define(:version => 20131218194827) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "super_projeto_id"
+  end
+
+  create_table "registros", :force => true do |t|
+    t.text     "modificacao"
+    t.integer  "autor_id"
+    t.integer  "atividade_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "rodadas", :force => true do |t|

@@ -95,13 +95,17 @@ class AtividadesController < ApplicationController
   end
 
   def aprovar
+    @user = current_user
+    @user ||= current_usuario
     @atividade = Atividade.find params[:atividade_id]
     if @atividade.aprovacao.to_s == params[:aprovacao]
       @atividade.aprovacao = nil
     else
       @atividade.aprovacao = params[:aprovacao]
     end
-    @atividade.save
+    reg = Registro.new(autor_id: @user.id, atividade_id: @atividade.id)
+    reg.transforma_hash_em_modificacao @atividade.changes
+    @atividade.save and reg.save
     respond_to do |format|
       format.js
     end

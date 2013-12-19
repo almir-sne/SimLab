@@ -67,7 +67,7 @@
           <% while @inicio.wday != dia_da_semana %>
             <% dia_da_semana = dia_da_semana + 1 %>
             <td></td>
-          <% end %> 
+          <% end %>
           <% (@inicio..@fim).each do |dia| %>
             <td>
               <div class="dropdown toggle">
@@ -93,7 +93,7 @@
                       <input type="hidden" class="card-abrev" id="<%= cartao_trello_id %>" pid="<%= atividade.projeto_id %>" value="<%= atividade.duracao/60 %>"></input>
                     <% end %>
                   <% end %>
-                </div> 
+                </div>
               </a>
             </td>
             <% if dia.wday == 6 %>
@@ -154,7 +154,7 @@
       <br />
       <br />
       <div id="segundapramim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 40%; margin-left: -20%; height: 250px"></div>
-      
+
     </div>
 
   </div>
@@ -164,10 +164,10 @@
        <td>LEGENDA: </td>
        <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td><td style="width: 10px;"></td>
        <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td><td style="width: 10px;"></td>
-       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td> 
-       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>       
-       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td> 
-       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td> 
+       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td>
+       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>
+       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td>
+       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td>
     </tr>
  </table>
 </div>

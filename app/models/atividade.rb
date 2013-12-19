@@ -24,10 +24,10 @@ class Atividade < ActiveRecord::Base
   has_many :mensagens, :dependent => :destroy
 
   has_many :pares, :dependent => :destroy
+  has_many :registros, :dependent => :destroy
 
   accepts_nested_attributes_for :pares, :allow_destroy => true
   accepts_nested_attributes_for :mensagens, :allow_destroy => true
-  
   validates :dia_id, :presence => true
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
