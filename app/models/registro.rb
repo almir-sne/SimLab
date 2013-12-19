@@ -32,7 +32,7 @@ class Registro < ActiveRecord::Base
           log << (" alterou o projeto de " + Projeto.find(valores.first).nome + " para " + Projeto.find(valores.last).nome)
         end
       when "aprovacao"
-        log << " alterou a aprovação"
+        log << " alterou a aprovação,"
       when "avaliador_id"
         if valores.first.nil?
           log << " virou avaliador"
