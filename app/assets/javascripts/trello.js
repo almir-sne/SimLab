@@ -103,7 +103,7 @@ function insertFather(atividadeDiv, cartao_id) {
                 id: "cartao_pai",
                 value: result,
                 type: "hidden",
-                name: "cartao[" + cartao_id + "]"
+                name: "cartao[" + cartao_id + "][cartao_pai]"
             }).appendTo(input);
             loadCardById(input, result);
         }
@@ -134,7 +134,7 @@ function dropPai(event) {
         id: "cartao_pai",
         value: data,
         type: "hidden",
-        name: "cartao[" + card + "]"
+        name: "cartao[" + card + "][cartao_pai]"
     }).appendTo(target);
     pai.appendTo(target);
 }

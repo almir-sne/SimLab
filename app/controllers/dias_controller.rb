@@ -63,11 +63,13 @@ class DiasController < ApplicationController
             :trello_id => atividade_attr["trello_id"],
             :data => dia.data
           }
-          reg = Registro.new :autor_id => dia.usuario.id
+          reg = Registro.new :autor_id => current_user.id
           reg.transforma_hash_em_modificacao atividade.changes
           atividades_success = atividades_success and atividade.save
           reg.atividade_id = atividade.id
-          registro_success = reg.save
+          unless reg.modificacao.blank?
+            registro_success = registro_success and reg.save
+          end
           if(!(atividade_attr[:mensagem].blank?) && !(atividade_attr[:mensagem][:conteudo].blank?))
             Mensagem.create(atividade_attr[:mensagem])
           end
@@ -88,42 +90,41 @@ class DiasController < ApplicationController
               end
             end
           end
-
-          if params["tags"]
-            tags_da_atividade = atividade.tags
-            tags_form = params["tags"][0].split(",").collect{|n| n.strip}
-            tags_banco = tags_da_atividade.collect{|t| t.nome}
-            tags_a_adicionar = tags_form - tags_banco
-            tags_a_remover = tags_banco - tags_form
-            tags_a_adicionar.each do |tag_nome|
-              if !tag_nome.blank?
-                tag = Tag.find_by_nome tag_nome
-                if tag.blank?
-                  tag = Tag.new(nome: tag_nome)
-                  tag.save
-                end
-                if !tags_da_atividade.include?(tag)
-                  tags_da_atividade << tag
-                end
-              end
-            end
-            tags_a_remover.each do |tag_nome|
-              tag = Tag.find_by_nome tag_nome
-              if !tag.blank?
-                tags_da_atividade.delete(tag);
-              end
-            end
-          end
         end
-        Cartao.update_on_trello(params[:key], params[:token], atividade_attr["trello_id"],tags_do_cartao.collect{|t| t.nome})
       end
     end
     unless params[:cartao].nil?
-      params[:cartao].each do |filho_id, pai_id|
+      params[:cartao].each do |filho_id, parametros|
         filho = Cartao.find_or_create_by_trello_id(filho_id)
-        pai = Cartao.find_or_create_by_trello_id(pai_id)
+        if parametros["tags"]
+          tags_do_cartao = filho.tags
+          tags_form = parametros["tags"].split(",").collect{|n| n.strip}
+          tags_banco = tags_do_cartao.collect{|t| t.nome}
+          tags_a_adicionar = tags_form - tags_banco
+          tags_a_remover = tags_banco - tags_form
+          tags_a_adicionar.each do |tag_nome|
+            if !tag_nome.blank?
+              tag = Tag.find_by_nome tag_nome
+              if tag.blank?
+                tag = Tag.new(nome: tag_nome)
+                tag.save
+              end
+              if !tags_do_cartao.include?(tag)
+                tags_do_cartao << tag
+              end
+            end
+          end
+          tags_a_remover.each do |tag_nome|
+            tag = Tag.find_by_nome tag_nome
+            if !tag.blank?
+              tags_do_cartao.delete(tag);
+            end
+          end
+        end     
+        pai = Cartao.find_or_create_by_trello_id(parametros["cartao_pai"])
         filho.pai = pai
         filho.save
+        Cartao.update_on_trello(params[:key], params[:token], filho.trello_id, tags_do_cartao.collect{|t| t.nome})
       end
     end
     if dia_success and atividades_success and horarios_success and registro_success
@@ -131,7 +132,6 @@ class DiasController < ApplicationController
     else
       flash[:error] = I18n.t("atividades.create.failure")
     end
-    periodo = dia.usuario.contrato_atual.periodo_vigente(dia.data)
     redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
   end
 
