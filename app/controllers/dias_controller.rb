@@ -3,7 +3,7 @@ class DiasController < ApplicationController
 
   def new
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
-    @dia = Dia.find_or_initialize_by_data_and_usuario_id(params[:data], @usuario)
+    @dia = Dia.find_or_create_by_data_and_usuario_id(params[:data], @usuario.id)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data] || Date.today.to_s
     @projetos = @usuario.meus_projetos
