@@ -249,7 +249,7 @@ class DiasController < ApplicationController
       @intervalo = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     elsif @tipo == 's'
       data_inicial = (@today - 1.month).sunday
-      contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+      contrato = @usuario.contratos.where('extract(year from inicio) <= ? or extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
       @intervalo = Array.new
       fim = @today + 2.week
       while data_inicial < fim do
@@ -257,7 +257,7 @@ class DiasController < ApplicationController
         data_inicial = data_inicial + 1.week
       end
     elsif @tipo == 'p'
-      contrato = @usuario.contratos.where('extract(year from inicio) = ? or extract(year from fim) = ?', @ano, @ano).order(:inicio).last
+      contrato = @usuario.contratos.where('extract(year from inicio) <= ? and extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
       if (!contrato.blank?)
         if params[:inicio].blank? and params[:fim].blank?
           @intervalo = contrato.periodos_por_ano(@ano.to_i)
