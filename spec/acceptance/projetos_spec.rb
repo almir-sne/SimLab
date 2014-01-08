@@ -26,22 +26,20 @@ feature "Projetos" do
 
 	describe "existente" do
 		scenario "deveria poder ser editado" do
-		  projeto = FactoryGirl.create(:projeto)
 		  admin_faz_login
 		  visit projetos_path
-		  click_link projeto.nome
+		  click_link Projeto.first.nome
 		  fill_in "Nome", :with => "Teste"
 #     save_and_open_page
  		  click_button "Salvar"
-		  page.should have_content(I18n.t("projetos.update.sucess"))
+		  page.should have_content(I18n.t("projetos.update.success"))
 		end
 
 		scenario "nao poderia ser editado por desenvolvedor" do
-		  projeto = FactoryGirl.create(:projeto)
 		  desenvolvedor_faz_login
 		  visit projetos_path
-		  click_link projeto.nome
- 		  page.should have_content(I18n.t("unauthorized.manage.all") )
+ 		  page.should have_no_selector(:link_or_button, Projeto.first.nome)
+ 		  page.should have_content(Projeto.first.nome)
 		end
 
 		scenario "não deveria ser acessivel sem login" do
