@@ -61,11 +61,13 @@
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
               <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
-              <li>
+              
+              <li>  
+                
               <% if can? :manage, :all %>
-                <%= link_to "Atualizar Tags (Trello => Banco)", atualizar_tags_cartoes_dias_path(:token => params[:token], :key => params[:key]),
-          :confirm => "Operação Lenta: Deseja mesmo Atualizar os Tags (Trello => Banco)?",
-          :class => 'nohover', :title => "Atualização Tags"%>
+                Key: <%=text_field_tag :key  %>
+                Token: <%= text_field_tag :token  %>
+                URL: <%= atualizar_tags_cartoes_dias_path() %>
               <% end %>
               </li>
             </ul>

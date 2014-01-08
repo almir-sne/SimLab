@@ -87,6 +87,8 @@ function dropCard(event) {
                 tags.val(result);
             }
         });
+        var field_name = "cartao[" + data + "][tags]";
+        tags.attr("name",field_name);
         tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
@@ -103,7 +105,7 @@ function insertFather(atividadeDiv, cartao_id) {
                 id: "cartao_pai",
                 value: result,
                 type: "hidden",
-                name: "cartao[" + cartao_id + "]"
+                name: "cartao[" + cartao_id + "][cartao_pai]"
             }).appendTo(input);
             loadCardById(input, result);
         }
@@ -134,7 +136,7 @@ function dropPai(event) {
         id: "cartao_pai",
         value: data,
         type: "hidden",
-        name: "cartao[" + card + "]"
+        name: "cartao[" + card + "][cartao_pai]"
     }).appendTo(target);
     pai.appendTo(target);
 }

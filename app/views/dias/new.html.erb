@@ -72,17 +72,21 @@
                   <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
                 </div>
                 <hr style="margin-top: 0px; margin-bottom: 0px;">
-                <div id="tag_div">
-                  <% tags = get_string_tags(atividade_form.object.cartao) %>
-                  Tags: <%= text_field :tags,"",{class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();", value: tags}%> 
-                  <%= link_to('Tags do Cartão (Via Banco)','javascript:void(0)', {:id => (atividade_form.object.cartao.try(:trello_id)).to_s + "_card", :class => "_card" ,:onclick => 'updateTags(this);'}) %>
-                  </div>
-                  <hr style="margin-top: 0px; margin-bottom: 0px;">
-                  <div id="observacao_div">
-                    <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
-                        :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
-                    <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
-                  </div>
+
+                <hr style="margin-top: 0px; margin-bottom: 0px;">
+                <div id="observacao_div">
+                  <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
+                      :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
+                  <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
+                </div>
+                  <div id="tag_div">
+                    <% tags = get_string_tags(atividade_form.object.cartao) %>
+                    Editar tags: <%= text_field_tag :tags,"", {class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();",
+                        value: tags, name: "cartao[#{atividade_form.object.try(:cartao).try(:trello_id)}][tags]"} %> 
+                      <%= link_to('Resetar Tags','javascript:void(0)',
+                        {:id => (atividade_form.object.try(:cartao).try(:trello_id)).to_s + "_card", :class => "_card",
+                          :onclick => 'updateTags(this);'}) %>
+                    </div>
                   <hr style="margin-top: 0px; margin-bottom: 0px;">
                   <div id="pai_div">
                     <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
@@ -94,6 +98,7 @@
                       </div>
                       <div id="input">
                         <% unless atividade_form.object.cartao.try(:pai).nil? %>
+
                           <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
                             :class => 'cartao_field' %>
                         <% end %>
@@ -136,6 +141,7 @@
             <!-- xi -->
             <%= hidden_field_tag :key  %>
             <%= hidden_field_tag :token  %>
+           
             <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
             <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
           </div>
@@ -144,5 +150,5 @@
     <% end %>
 
     <script>
-              var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
+            var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
     </script>
