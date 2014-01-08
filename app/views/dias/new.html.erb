@@ -79,16 +79,14 @@
                       :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
                   <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
                 </div>
-                <% if atividade_form.object.cartao %>
                   <div id="tag_div">
                     <% tags = get_string_tags(atividade_form.object.cartao) %>
                     Tags: <%= text_field_tag :tags,"", {class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();",
-                        value: tags, name: "cartao[#{atividade_form.object.cartao.trello_id}][tags]"} %> 
+                        value: tags, name: "cartao[#{atividade_form.object.try(:cartao).try(:trello_id)}][tags]"} %> 
                       <%= link_to('Tags do Cartão (Via Banco)','javascript:void(0)',
-                        {:id => (atividade_form.object.cartao.try(:trello_id)).to_s + "_card", :class => "_card",
+                        {:id => (atividade_form.object.try(:cartao).try(:trello_id)).to_s + "_card", :class => "_card",
                           :onclick => 'updateTags(this);'}) %>
                     </div>
-                  <% end %>
                   <hr style="margin-top: 0px; margin-bottom: 0px;">
                   <div id="pai_div">
                     <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',

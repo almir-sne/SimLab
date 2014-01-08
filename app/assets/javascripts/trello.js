@@ -87,6 +87,8 @@ function dropCard(event) {
                 tags.val(result);
             }
         });
+        var field_name = "cartao[" + data + "][tags]";
+        tags.attr("name",field_name);
         tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
