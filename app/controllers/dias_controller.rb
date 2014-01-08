@@ -274,6 +274,8 @@ class DiasController < ApplicationController
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @projetos          = @usuario.meus_projetos
   end
+  
+  
 
   def cartao_pai
     cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])

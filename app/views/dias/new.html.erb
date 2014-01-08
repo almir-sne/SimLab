@@ -141,6 +141,7 @@
             <!-- xi -->
             <%= hidden_field_tag :key  %>
             <%= hidden_field_tag :token  %>
+           
             <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
             <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
           </div>
