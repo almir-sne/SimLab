@@ -9,14 +9,14 @@
       var tableData = a.children().eq(0);
       var usuario_id_hidden_input = $(document.createElement('input'));
       var new_random_id = a.children().eq(1).children().eq(0).attr('id').split('_')[3];
-      nome = ($('#autocomplete_field').val());
+      nome = ($('#equipe_autocomplete').val());
       usuario_id_hidden_input.attr('id', 'projeto_workons_attributes_'+new_random_id+'_usuario_id');
       usuario_id_hidden_input.attr('name', 'projeto[workons_attributes]['+new_random_id+'][usuario_id]');
       usuario_id_hidden_input.attr('type', 'hidden');
       $.ajax({
         url: url,
-        data: {name: nome}, 
-        success: function(result) { 
+        data: {name: nome},
+        success: function(result) {
           usuario_id_hidden_input.attr('value', result);
         }
       });
@@ -24,8 +24,8 @@
       tableData.append(usuario_id_hidden_input);
       return a;
       }
-  } 
-  
+  }
+
   checkTrello(getBoards);
 
   $(document).ready(function() {
@@ -52,7 +52,7 @@
     $("#filhos").show(200);
     $("#pai").hide(200);
   }
-  
+
 function set_autocomplete_equipe()
 {
   $("#equipe_autocomplete").autocomplete({
