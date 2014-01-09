@@ -347,7 +347,7 @@
     max-height: 90%;
 }
 
-.form-group {
+.grey-form {
     text-align: left;
     border-radius: 10px;
     margin: 10px;
@@ -355,7 +355,7 @@
     padding-bottom: 10px;
 }
 
-.form-group h3 {
+.grey-form h3 {
     padding: 15px 20px;
 }
 
@@ -409,7 +409,7 @@
     width: 70px;
 }
 
-.form-group input[type="text"] {
+.grey-form input[type="text"] {
     width: 90%;
 }
 
@@ -624,4 +624,12 @@ table.dataTable thead th {
 .navbar-section {
     padding: 5px 10px;
     font-weight: bold;
+}
+
+.btn-cadastro {
+    width: 47%;
+}
+
+.btn-cadastro:visited {
+    color: #FFF;
 }

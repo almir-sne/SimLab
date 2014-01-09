@@ -3,7 +3,7 @@
 </div>
 <div class="blue-line">  </div>
 
-<div class="form-group" style="padding: 15px">
+<div class="grey-form" style="padding: 15px">
   <h4> Cartão </h4>
   <input type="hidden" class="card-placeholder with-description" id="<%= @cartao.trello_id %>">
 </div>
@@ -30,7 +30,7 @@
       </table>
 
       <% if rodada.fechada %>
-        <div class="form-group" style="padding: 15px">
+        <div class="grey-form" style="padding: 15px">
           <h4> Estatísticas </h4>
           <table class="list-table">
             <tr >
@@ -71,7 +71,7 @@
           </table>
         </div>
       <% else %>
-        <div class="form-group" style="padding: 15px">
+        <div class="grey-form" style="padding: 15px">
           Estimativas e estatísticas serão exibidas após conclusão da rodada.
         </div>
       <% end %>
