@@ -1,5 +1,4 @@
 class Contrato < ActiveRecord::Base
-  attr_accessible :contratante, :fim, :funcao, :hora_mes, :inicio, :tipo, :usuario_id, :valor_hora, :dia_inicio_periodo
   after_initialize :init
 
   def init

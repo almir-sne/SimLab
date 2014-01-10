@@ -10,17 +10,15 @@ feature "Usuário" do
       fill_in "Email", :with => @visitante[:email]
       fill_in "usuario_password", :with => @visitante[:password]
       fill_in "usuario_password_confirmation", :with => @visitante[:password]
-      click_button  "Salvar"
+      click_on  "Salvar"
       page.should have_content I18n.t("devise.registrations.signed_up_another")
     end
 
-    scenario 'admin deve poder editar pessoas no site' do
+    scenario 'deve poder editar pessoas no site' do
       coordenador = FactoryGirl.create :coordenador
       admin_faz_login
       visit usuarios_path
-  #    save_and_open_page
       click_link coordenador.nome.to_s
-      #save_and_open_page
       fill_in "usuario_nome", :with => "Pedro"
       fill_in "Banco", :with => "ladrao"
       click_button "Salvar"
@@ -28,13 +26,13 @@ feature "Usuário" do
     end
   end
 
-  describe "anyone" do
+  describe "qualquer um" do
     scenario 'deve poder fazer login' do
       desenvolvedor_faz_login
       page.should have_content I18n.t("devise.sessions.signed_in")
     end
 
-    scenario 'deve poder editar suas informações' do
+    scenario 'pode mudar sua senha' do
       desenvolvedor_faz_login
       visit edit_usuario_registration_path
       fill_in "usuario_password", :with => "novasenha"

@@ -15,7 +15,7 @@ class AtividadesController < ApplicationController
     @meses       = [["Meses - Todos", -1]] + (1..12).collect {|mes| [t("date.month_names")[mes], mes]}
 
     cartoes = Atividade.joins(:cartao).ano(@ano).mes(@mes).dia(@dia).projeto(@projeto).
-      usuario(@usuario).where("trello_id is not null").order("data desc").pluck(:trello_id).uniq
+      usuario(@usuario).where{cartao.trello_id != nil}.order("data desc").pluck("cartoes.trello_id").uniq
 
     @stats = cartoes.collect {|id| {
         cartao_id: id,
@@ -76,7 +76,6 @@ class AtividadesController < ApplicationController
           aprovacoes_ids = [true, false, nil]
           @aprovacoes_selected = Array.new
         else
-          debugger
           @aprovacoes_selected = aprovacoes_ids = cookies[:aprovacao].collect{|id| to_boolean(id) }
         end
       else
@@ -90,7 +89,8 @@ class AtividadesController < ApplicationController
     cookies[:aprovacao] = @aprovacoes_selected
     cookies[:fim] = @fim
     cookies[:inicio] = @inicio
-    @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids, aprovacao: aprovacoes_ids, data: @inicio..@fim).order(:data).group_by{|x| x.dia}
+    @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids,
+      aprovacao: aprovacoes_ids, data: @inicio..@fim).order(:data).group_by{|x| x.dia}
     @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
   end
 
@@ -150,4 +150,5 @@ class AtividadesController < ApplicationController
       end
     end
   end
+
 end

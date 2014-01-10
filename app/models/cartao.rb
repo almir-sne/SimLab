@@ -1,28 +1,27 @@
 class Cartao < ActiveRecord::Base
-  attr_accessible :trello_id, :estimativa, :rodada, :id, :pai_id, :tags
   validates :trello_id, :uniqueness => true, :presence => true
-  
+
   has_many :atividades
   has_many :rodadas
-  
+
   belongs_to :pai, :class_name => "Cartao"
   has_and_belongs_to_many :tags
-  
+
   accepts_nested_attributes_for :tags
-  
+
   def self.horas_trabalhadas(trello_id)
     Cartao.where(trello_id: trello_id).last.atividades.sum(:duracao)/3600
   end
-  
+
   def self.horas_trabalhadas_format(cid)
     h = self.horas_trabalhadas(cid)
     "#{h.to_i}:#{((h - h.to_i) * 60).round}"
   end
-  
+
   def rodada_aberta?
     !self.rodadas.where(fechada: false).blank?
   end
-  
+
   def fechar_rodada(user)
     rodada = self.rodadas.where(fechada: false).last
     if rodada
@@ -32,16 +31,16 @@ class Cartao < ActiveRecord::Base
       rodada.save
     end
   end
-  
+
   def self.update_on_trello(key, token, id, tags)
     data = get_trello_data(key, token, id)
     unless (data == :error)
       regex_horas = /[ ][(]\d+[.]?\d*[)]$/
-      
+
       horas_remoto = data["name"].match(regex_horas).to_s.match(/\d+[.]?\d*+/).to_s
-      
+
       tags_remoto = extract_tags(data["name"])
-      
+
       horas_local = "%.1f" % Cartao.horas_trabalhadas(id)
       nome_novo = remove_tags(data["name"]);
       tags_texto = ""
@@ -51,10 +50,10 @@ class Cartao < ActiveRecord::Base
         end
         if (!tags_texto.blank?)
           nome_novo = tags_texto + " " + nome_novo
-        end 
+        end
       end
 
-      if (horas_remoto != horas_local)               
+      if (horas_remoto != horas_local)
         name = "#{nome_novo.sub(regex_horas, "")} (#{horas_local})"
       else
         name = nome_novo
@@ -68,7 +67,7 @@ class Cartao < ActiveRecord::Base
       http.request(req)
     end
   end
-  
+
   def self.get_trello_data(key, token, id)
     uri = URI('https://trello.com/1/cards/' + id)
     uri.query = URI.encode_www_form({:key => key, :token => token })

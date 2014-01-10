@@ -1,8 +1,4 @@
-  class Ausencia < ActiveRecord::Base
-
-  attr_accessible :abonada, :avaliador_id, :horas, :justificativa, :mensagem,
-    :dia_id, :projeto_id
-
+class Ausencia < ActiveRecord::Base
   scope :data, lambda { |ano, mes, dia| Ausencia.ano(ano).mes(mes).dia(dia) }
   scope :ano, lambda { |value| joins(:dia).where(['extract(year from data) = ?', value]) if value > 0 }
   scope :mes, lambda { |value| joins(:dia).where(['extract(month from data) = ?', value]) if value > 0 }
@@ -24,7 +20,7 @@
   has_one    :anexo
 
   def self.por_periodo(inicio, fim, usuario_id)
-    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order(dia: :data)
+    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')
   end
 
   def horas=(val)

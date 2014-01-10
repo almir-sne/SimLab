@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_filter :block_inactive
+  before_action :block_inactive
   protect_from_forgery
 
   helper_method :javascript_include_view_js

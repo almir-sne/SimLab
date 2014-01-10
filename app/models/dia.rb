@@ -1,6 +1,4 @@
 class Dia < ActiveRecord::Base
-  attr_accessible :usuario_id, :data, :intervalo, :entrada, :saida
-
   belongs_to :mes
   belongs_to :usuario
   has_many :atividades, :dependent => :destroy
@@ -9,10 +7,6 @@ class Dia < ActiveRecord::Base
 
   accepts_nested_attributes_for :atividades, :allow_destroy => true
   accepts_nested_attributes_for :horarios, :allow_destroy => true
-
-  attr_accessible :atividades_attributes
-  attr_accessible :horarios_attributes
-
   validates :data, :uniqueness => {:scope => :usuario_id}, :presence => true
   validates :usuario_id, :presence => true
   #  validate :validar_horas

@@ -7,11 +7,10 @@ feature "Projetos" do
 		scenario "deveria poder ser criado" do
 			admin_faz_login
 		  visit projetos_path
-		  fill_in "Nome",  :with => @projeto_novo[:nome]
-		  fill_in "Descrição", :with => @projeto_novo[:descricao]
-		  fill_in "Valor", :with => @projeto_novo[:valor]
+		  fill_in "Nome",  :with => "asdf"
+		  fill_in "Descrição", :with => "asdfasd"
 		  click_button "Salvar"
-		  page.should have_content(I18n.t("projetos.create.sucess", :model => "Projeto"))
+		  page.should have_content(I18n.t("projetos.create.success", :model => "Projeto"))
 		  page.should have_content(@projeto_novo[:nome])
 		end
 
@@ -20,7 +19,6 @@ feature "Projetos" do
 		  visit projetos_path
 		  fill_in "Nome",  :with => @projeto_novo[:nome]
 		  fill_in "Descrição", :with => @projeto_novo[:descricao]
-		  fill_in "Valor", :with => @projeto_novo[:valor]
 		  click_button "Salvar"
 		  page.should have_content(I18n.t("unauthorized.manage.all") )
 		end
@@ -28,22 +26,20 @@ feature "Projetos" do
 
 	describe "existente" do
 		scenario "deveria poder ser editado" do
-		  projeto = FactoryGirl.create(:projeto)
 		  admin_faz_login
 		  visit projetos_path
-		  click_link projeto.nome
+		  click_link Projeto.first.nome
 		  fill_in "Nome", :with => "Teste"
 #     save_and_open_page
  		  click_button "Salvar"
-		  page.should have_content(I18n.t("projetos.update.sucess"))
+		  page.should have_content(I18n.t("projetos.update.success"))
 		end
 
 		scenario "nao poderia ser editado por desenvolvedor" do
-		  projeto = FactoryGirl.create(:projeto)
 		  desenvolvedor_faz_login
 		  visit projetos_path
-		  click_link projeto.nome
- 		  page.should have_content(I18n.t("unauthorized.manage.all") )
+ 		  page.should have_no_selector(:link_or_button, Projeto.first.nome)
+ 		  page.should have_content(Projeto.first.nome)
 		end
 
 		scenario "não deveria ser acessivel sem login" do

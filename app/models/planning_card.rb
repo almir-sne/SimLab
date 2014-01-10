@@ -1,8 +1,8 @@
 class PlanningCard < ActiveRecord::Base
-  attr_accessible :nome, :valor, :deck_id
-  
   belongs_to :deck
-  
+
+  validates :deck_id, :presence => true
+
   def valor=(val)
     if val.blank?
       self[:valor] = nil
@@ -25,7 +25,7 @@ class PlanningCard < ActiveRecord::Base
       self[:valor] = val.to_f
     end
   end
-  
+
   def valor
     if self.deck && self.deck.maximum == self
       "max"
@@ -35,7 +35,7 @@ class PlanningCard < ActiveRecord::Base
       self[:valor]
     end
   end
-  
+
   def nome
     unless self[:nome].blank?
       self[:nome]

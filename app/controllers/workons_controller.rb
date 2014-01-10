@@ -14,7 +14,6 @@ class WorkonsController < ApplicationController
   # GET /workons/1.json
   def show
     @workon = Workon.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @workon }
@@ -41,7 +40,7 @@ class WorkonsController < ApplicationController
   # POST /workons
   # POST /workons.json
   def create
-    @workon = Workon.new(params[:workon])
+    @workon = Workon.new(workon_params)
 
     respond_to do |format|
       if @workon.save
@@ -60,7 +59,7 @@ class WorkonsController < ApplicationController
     @workon = Workon.find(params[:id])
 
     respond_to do |format|
-      if @workon.update_attributes(params[:workon])
+      if @workon.update_attributes(workon_params)
         format.html { redirect_to edit_workon_path(@workon), notice: 'Workon was successfully updated.' }
         format.json { head :no_content }
       else
@@ -80,5 +79,11 @@ class WorkonsController < ApplicationController
       format.html { redirect_to workons_url }
       format.json { head :no_content }
     end
+  end
+  
+  private
+  
+  def workon_params
+    params.require(:workon).permit(:projeto_id, :usuario_id, coordenacoes_attributes: [:id, :usuario_id])
   end
 end

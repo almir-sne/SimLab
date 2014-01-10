@@ -6,5 +6,4 @@ class AnexosController < ApplicationController
     path = "/#{anexo.arquivo}"
     send_file path, :x_sendfile=>true
   end
-
 end

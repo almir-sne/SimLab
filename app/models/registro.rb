@@ -1,6 +1,4 @@
 class Registro < ActiveRecord::Base
-  attr_accessible :atividade_id, :autor_id, :modificacao
-
   validates :atividade_id, :presence => true
   validates :autor_id, :presence => true
   validates :modificacao, :presence => true

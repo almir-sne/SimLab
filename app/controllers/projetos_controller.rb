@@ -1,6 +1,5 @@
 class ProjetosController < ApplicationController
-  load_and_authorize_resource
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
 
   # GET /projetos
   # GET /projetos.json
@@ -79,20 +78,20 @@ class ProjetosController < ApplicationController
       sort{|a, b| a.nome <=> b.nome}.
         map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.order(:nome)
+    @usuarios = Usuario.all.order(nome: :asc)
     @hoje = Date.today
-    @equipe = @projeto.usuarios.order(:nome)
+    @equipe = @projeto.usuarios.pluck(:nome).sort
     @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
     @fim = params[:fim].try(:to_date) || @hoje.end_of_month
-    @ausencias = Ausencia.joins(:dia).where(dia: {usuario_id: @equipe, data: @inicio..@fim}, projeto_id: @projeto.id ).group_by{|x| x.dia.data}
-    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, usuario_id: @equipe, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
   end
 
   # POST /projetos
   # POST /projetos.json
   def create
     authorize! :create, Projeto
-    @projeto = Projeto.new(params[:projeto])
+    @projeto = Projeto.new(projetos_params)
     if @projeto.save
       redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
@@ -102,12 +101,12 @@ class ProjetosController < ApplicationController
     end
   end
 
-  # PUT /projetos/1
-  # PUT /projetos/1.json
+  # PATCH /projetos/1
+  # PATCH /projetos/1.json
   def update
     authorize! :create, Projeto
     @projeto = Projeto.find(params[:id])
-    boards = @projeto.boards
+    boards = @projeto.boards.to_a
     #lidar com boards
     unless params[:trello].blank?
       params[:trello].each do |id|
@@ -127,12 +126,13 @@ class ProjetosController < ApplicationController
       end
     end
     boards.each do |b|
+      debugger
       b.destroy
     end
     #lidar com subprojetos
     failure = false
     if params[:super_projeto] == "true"
-      params[:projeto].except! :super_projeto_id
+      projetos_params.except! :super_projeto_id
       subprojetos = params[:sub_projetos]
       subprojetos.each do |index, sub|
         subprojeto = Projeto.find(sub["id"].to_i)
@@ -146,7 +146,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-    failure ||= !(@projeto.update_attributes params[:projeto])
+    failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
@@ -179,6 +179,12 @@ class ProjetosController < ApplicationController
       format.html
       format.js
     end
+  end
+
+  private
+
+  def projetos_params
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, workons_attributes: [:id, :usuario_id, :_destroy], sub_projetos: [:id, :filho])
   end
 
 end

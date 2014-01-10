@@ -1,5 +1,4 @@
 class AusenciasController < ApplicationController
-  load_and_authorize_resource
 
   def destroy
     ausencia = Ausencia.find params[:id]
@@ -21,7 +20,7 @@ class AusenciasController < ApplicationController
 
   def create
     @ausencia = Ausencia.find_or_initialize_by_dia_id_and_projeto_id(params[:ausencia][:dia_id], params[:ausencia][:projeto_id])
-    if @ausencia.update_attributes params[:ausencia]
+    if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
         Anexo.new(
@@ -54,6 +53,7 @@ class AusenciasController < ApplicationController
       projetos = current_usuario.projetos_coordenados
       equipe = current_usuario.equipe_coordenada
     end
+
     projeto_atual = (params[:projeto_id].blank? or params[:projeto_id] == "-1" )? Projeto.all : Projeto.find(params[:projeto_id].to_i)
     @usuario   = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id]
     @usuarios  = [["Usuários - Todos", -1]] + equipe.collect { |p| [p.nome, p.id]  }
@@ -95,5 +95,10 @@ class AusenciasController < ApplicationController
       format.html
       format.js
     end
+  end
+
+  private
+  def ausencia_params
+    params.require(:ausencia).permit(:id, :usuario_id, :horas, :abonada, :avaliador_id, :justificativa, :mensagem, :dia_id, :projeto_id, anexo: [:id, :arquivo])
   end
 end

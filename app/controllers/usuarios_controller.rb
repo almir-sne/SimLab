@@ -1,14 +1,14 @@
 class UsuariosController < ApplicationController
-  before_filter :authenticate_usuario!
+  before_action :authenticate_usuario!
   load_and_authorize_resource
 
   def index
     authorize! :see, Usuario
     @status = params[:status]
     unless @status.blank? or @status == "Todos"
-      @users = Usuario.where(:status => @status == "true").order(:nome)
+      @users = Usuario.where(:status => true).order(:nome)
     else
-      @users = Usuario.all(:order => :nome)
+      @users = Usuario.order(:nome).load
       @status = "Todos"
     end
     @status_list = ["Todos", ["Ativo", true], ["Inativo", false]]
@@ -16,13 +16,12 @@ class UsuariosController < ApplicationController
   end
 
   def custom_create
-    authorize! :create, Usuario
     create
   end
 
   def create
     authorize! :create, Usuario
-    @user = Usuario.new(params[:usuario])
+    @user = Usuario.new(usuario_params)
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
     else
@@ -54,7 +53,7 @@ class UsuariosController < ApplicationController
       params[:usuario].except! :anexos_attributes
     end
 =end
-    if @user.update_attributes(params[:usuario])
+    if @user.update_attributes(usuario_params)
       flash[:notice] = I18n.t("usuario.update.success")
       redirect_to edit_usuario_path(@user)
     else
@@ -77,13 +76,13 @@ class UsuariosController < ApplicationController
     user = Usuario.find_by_nome(params[:name])
     render json: user.id
   end
-  
+
   def alt_role
     if (Rails.env.development?)
       u = Usuario.find(params[:id])
-      if (params[:r].to_f == 42) 
+      if (params[:r].to_f == 42)
         u.role = "admin"
-      elsif (params[:r].to_f == 814) 
+      elsif (params[:r].to_f == 814)
         u.role = "usuario normal"
       else
         u.role = "usuario normal"
@@ -92,6 +91,22 @@ class UsuariosController < ApplicationController
     end
     render json: ""
   end
+
+
+  private
+  def usuario_params
+    params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome,
+    :entrada_usp, :saida_usp, :cpf, :role, :address_id, :formado, :status, :data_de_nascimento, :rg,
+    :curso, :numero_usp, :login_trello,
+    anexos_attributes:    [:id, :data, :nome, :tipo, :arquivo, :_destroy],
+    contratos_attributes: [:id, :hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
+      :fim, :_destroy],
+    telefones_attributes: [:id, :ddd, :numero, :_destroy],
+    contas_attributes:    [:id, :banco, :agencia, :numero, :_destroy],
+    address_attributes:   [:id, :street, :bairro, :city, :state, :number, :complemento, :cep])
+  end
+
+
 =begin  #caso seja blob
   def show_anexo
     anexo = Anexo.find params[:id]

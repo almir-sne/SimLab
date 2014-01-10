@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
-
+gem 'rails', '~> 4.0.2'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
@@ -10,23 +9,18 @@ gem 'sqlite3'
 
 # Gems used only for assets and not required
 # in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-end
+gem 'sass-rails'
+gem 'coffee-rails'
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer', :platforms => :ruby
+gem 'uglifier'
 
 gem 'jquery-rails'
 
-gem 'devise', '~> 3.0.0'
+gem 'devise'
 gem 'thin'
 gem 'squeel'
 gem 'cancan'
-gem 'client_side_validations', :git => 'https://github.com/bcardarella/client_side_validations.git', :branch => '3-2-stable'
 gem "nested_form"
 gem "mysql2"
 
@@ -45,8 +39,8 @@ group :test, :development do
 	gem 'simplecov', :require => false
 end
 
-gem 'holidays', '~> 1.0.5'
-gem 'will_paginate', '~> 3.0'
+gem 'holidays'
+gem 'will_paginate'
 gem "carrierwave"
 gem 'chosen-rails'
 
@@ -63,7 +57,13 @@ gem 'chosen-rails'
 # gem 'capistrano'
 
 # To use debugger
-  gem 'debugger'
+gem 'debugger'
 
 # Awesome Print
-  gem "awesome_print", "~> 1.2.0"
+gem "awesome_print"
+
+# add these gems to help with the transition:
+#gem 'protected_attributes'
+#gem 'rails-observers'
+#gem 'actionpack-page_caching'
+#gem 'actionpack-action_caching'

@@ -1,5 +1,4 @@
 class Coordenacao < ActiveRecord::Base
-  attr_accessible :usuario_id, :workon_id
   belongs_to :workon
   belongs_to :usuario
 
