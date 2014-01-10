@@ -24,7 +24,7 @@
       <% (@inicio..@fim).each do |data| %>
         <% ausentes = Array.new %>
         <td>
-          <a href="#" class="day-link blue-link">
+          <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
             <div class='panel-scrollable' style='height: 100px'>
               <%= data.strftime("%d/%b") %>
               <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>

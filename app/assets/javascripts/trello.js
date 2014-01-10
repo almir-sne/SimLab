@@ -1,13 +1,16 @@
 function getCards() {
     updateLoggedIn();
+    
     $("#output").empty();
+    $(".trelloprogress").show();
     Trello.members.get("me", function(member) {
         $(".fullName").each(function(i, e) {
             $(e).text(member.fullName);
         });
         var $cards = $("<div>").attr({
             id: "card-list"
-        }).text("Carregando cartões...").appendTo("#output");
+        }).appendTo("#output");
+        
         Trello.get("members/me/cards", function(cards) {
             $cards.empty();
             $.each(cards, function(ix, card) {
@@ -21,9 +24,10 @@ function getCards() {
                 }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
             });
         });
-        loadFormCards();
+        $(".trelloprogress").hide();
         loadBoards();
         getToken();
+        
     });
 }
 
@@ -44,6 +48,7 @@ function loginTrello(callback) {
 }
 
 function checkTrello(callback) {
+    $(".trelloprogress").show();
     Trello.authorize({
         interactive: false,
         success: callback,
@@ -51,6 +56,7 @@ function checkTrello(callback) {
         scope: {read: true, write: true, account: false},
         expiration: "never"
     });
+    $(".trelloprogress").hide();
 }
 
 function logoutTrello() {
@@ -87,6 +93,8 @@ function dropCard(event) {
                 tags.val(result);
             }
         });
+        var field_name = "cartao[" + data + "][tags]";
+        tags.attr("name",field_name);
         tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
@@ -111,6 +119,7 @@ function insertFather(atividadeDiv, cartao_id) {
 }
 
 function loadCardById(div, card_id) {
+    $(".trelloprogress").show();
     Trello.get("/cards/" + card_id, function(card) {
         $("<a>").attr({
             href: card.url,
@@ -120,6 +129,7 @@ function loadCardById(div, card_id) {
             style: "width: 100%",
             ondragstart: "dragCard(event)"
         }).addClass("card filter " + card.idBoard).text(card.name).appendTo(div);
+        $(".trelloprogress").hide();
     });
 }
 
@@ -146,6 +156,7 @@ function dragCard(ev) {
 function loadFormCards() {
     $(".cartao_field").each(function(index, input) {
         var card_id = input.value;
+        $(".trelloprogress").show();
         Trello.get("/cards/" + card_id, function(card) {
             $(input).after($("<a>").attr({
                 href: card.url,
@@ -155,12 +166,14 @@ function loadFormCards() {
                 style: "width: 100%",
                 ondragstart: "dragCard(event)"
             }).addClass("card filter " + card.idBoard).text(card.name));
+            $(".trelloprogress").hide();
         });
     });
 }
 
 function loadSimpleCards() {
     updateLoggedIn();
+    $(".trelloprogress").show();
     Trello.members.get("me", function(member) {
         $(".fullName").each(function(i, e) {
             $(e).text(member.fullName);
@@ -195,8 +208,10 @@ function loadSimpleCards() {
                     $("<br/>").appendTo(div);
                 }
                 $(input).detach();
+                
             });
         });
+        $(".trelloprogress").hide();
         getToken();
         loadBoards();
         loadAbrevCards();
@@ -210,6 +225,7 @@ function loadAbrevCards() {
         var parent = input.parentElement;
         var card_id = input.id;
         var proj_id = "proj" + $(input).attr("pid") + "_mark";
+        $(".trelloprogress").show();
         Trello.get("/cards/" + card_id, function(card) {
             var text = getTime(input.value).replace(" hora(s)", " - ");
             if (card.name.length > 10)
@@ -224,6 +240,7 @@ function loadAbrevCards() {
                 class: proj_id
             }).text(text).appendTo(parent);
             $(input).detach();
+            $(".trelloprogress").hide();
         });
     });
 }
@@ -231,9 +248,11 @@ function loadAbrevCards() {
 function loadBoards() {
     $(".board-placeholder").each(function(index, input) {
         var board_id = input.value;
+        $(".trelloprogress").show();
         Trello.get("/boards/" + board_id, function(board) {
             $(input).after(board.name);
             $(input).detach();
+            $(".trelloprogress").hide();
         });
     });
 }
@@ -241,8 +260,10 @@ function loadBoards() {
 function loadBoardLinks() {
     $(".board-link").each(function(index, link) {
         var board_id = $(link).html().trim();
+        $(".trelloprogress").show();
         Trello.get("/boards/" + board_id, function(board) {
             $(link).html(board.name).show();
+            $(".trelloprogress").hide();
         });
     });
 }
@@ -251,9 +272,12 @@ function loadBoardLists() {
     if ($("#board").length > 0) {
         var board_id = $("#board").val();
         var listDiv = $("#list-div");
+        $(".trelloprogress").show();
         Trello.get("/boards/" + board_id, function(board) {
             $("#selected-board").html(board.name);
+            $(".trelloprogress").hide();
         });
+        $(".trelloprogress").show();
         Trello.get("/boards/" + board_id + "/lists?cards=open&card_fields=name,url&fields=name", function(lists) {
             $(lists).each(function(ix, list) {
                 $("<h3>").attr({
@@ -286,17 +310,19 @@ function loadBoardLists() {
                     td.appendTo(tr);
                     tr.appendTo(table);
                 });
+                $(".trelloprogress").hide();
             });
         });
     }
 }
 
 function getBoards() {
-    updateLoggedIn();
+    updateLoggedIn();    
     $("#output").empty();
+    $(".trelloprogress").show();
     Trello.members.get("me", function(member) {
         $("#fullName").text(member.fullName);
-        var $boards = $("<div>").text("Carregando boards...").appendTo("#output");
+        var $boards = $("<div>").appendTo("#output");
         Trello.get("members/me/boards", function(boards) {
             $boards.empty();
             $.each(boards, function(ix, board) {
@@ -322,6 +348,7 @@ function getBoards() {
                 }
             });
         });
+        $(".trelloprogress").hide();
     });
 }
 
