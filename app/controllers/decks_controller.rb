@@ -42,7 +42,7 @@ class DecksController < ApplicationController
   def create
     @deck = Deck.new
     respond_to do |format|
-      if update_deck(@deck, params)
+      if update_deck(@deck, deck_params)
         format.html { redirect_to decks_path, notice: 'Deck criado com sucesso.' }
         format.json { render json: @deck, status: :created, location: @deck }
       else
@@ -57,7 +57,7 @@ class DecksController < ApplicationController
   def update
     @deck = Deck.find(params[:id])
     respond_to do |format|
-      if update_deck(@deck, params)
+      if update_deck(@deck, deck_params)
         format.html { redirect_to decks_path, notice: 'Deck atualizado com sucesso.' }
         format.json { head :no_content }
       else
@@ -78,11 +78,11 @@ class DecksController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  def update_deck(deck, params)
-    success = deck.update_attribute(:nome, params[:deck][:nome])
-    
-    params[:deck][:planning_cards_attributes].each do |key, attributes|
+
+  def update_deck(deck, dparams)
+    success = deck.update_attribute(:nome, dparams[:nome])
+
+    dparams[:planning_cards_attributes].each do |key, attributes|
       card = PlanningCard.where(id: attributes[:id]).last
       if card.blank?
         card = PlanningCard.new
@@ -96,5 +96,9 @@ class DecksController < ApplicationController
       end
     end
     success
+  end
+
+  def deck_params
+    params.require(:deck).permit(:nome, planning_cards_attributes: [:id, :nome, :valor, :_destroy])
   end
 end

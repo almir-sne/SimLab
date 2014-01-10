@@ -98,12 +98,12 @@ class UsuariosController < ApplicationController
     params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome,
     :entrada_usp, :saida_usp, :cpf, :role, :address_id, :formado, :status, :data_de_nascimento, :rg,
     :curso, :numero_usp, :login_trello,
-    anexos_attributes:    [:data, :nome, :tipo, :arquivo, :_destroy],
-    contratos_attributes: [:hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
+    anexos_attributes:    [:id, :data, :nome, :tipo, :arquivo, :_destroy],
+    contratos_attributes: [:id, :hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
       :fim, :_destroy],
-    telefones_attributes: [:ddd, :numero, :_destroy],
-    contas_attributes:    [:banco, :agencia, :numero, :_destroy],
-    address_attributes:   [:street, :bairro, :city, :state, :number, :complemento, :cep])
+    telefones_attributes: [:id, :ddd, :numero, :_destroy],
+    contas_attributes:    [:id, :banco, :agencia, :numero, :_destroy],
+    address_attributes:   [:id, :street, :bairro, :city, :state, :number, :complemento, :cep])
   end
 
 

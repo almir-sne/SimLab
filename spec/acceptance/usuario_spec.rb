@@ -26,13 +26,13 @@ feature "Usuário" do
     end
   end
 
-  describe "anyone" do
+  describe "qualquer um" do
     scenario 'deve poder fazer login' do
       desenvolvedor_faz_login
       page.should have_content I18n.t("devise.sessions.signed_in")
     end
 
-    scenario 'deve poder editar suas informações' do
+    scenario 'pode mudar sua senha' do
       desenvolvedor_faz_login
       visit edit_usuario_registration_path
       fill_in "usuario_password", :with => "novasenha"

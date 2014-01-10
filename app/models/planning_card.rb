@@ -1,6 +1,8 @@
 class PlanningCard < ActiveRecord::Base
   belongs_to :deck
 
+  validates :deck_id, :presence => true
+
   def valor=(val)
     if val.blank?
       self[:valor] = nil
