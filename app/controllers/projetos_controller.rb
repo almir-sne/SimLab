@@ -146,6 +146,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
+    
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -164,7 +165,6 @@ class ProjetosController < ApplicationController
     authorize! :destroy, Projeto
     @projeto = Projeto.find(params[:id])
     @projeto.destroy
-
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
@@ -179,6 +179,11 @@ class ProjetosController < ApplicationController
       format.html
       format.js
     end
+  end
+  
+  def campos_cadastro
+    #authorize! :read, Projeto
+    @id = params[:id]
   end
 
   private
