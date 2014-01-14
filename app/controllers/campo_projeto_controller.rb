@@ -1,0 +1,2 @@
+class CampoProjetoController < ApplicationController
+end
