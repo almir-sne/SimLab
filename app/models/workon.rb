@@ -1,6 +1,7 @@
 class Workon < ActiveRecord::Base
   belongs_to :usuario
   belongs_to :projeto
+  belongs_to :permissao
   has_many :coordenacoes
 
   validates_presence_of :projeto_id

@@ -19,7 +19,10 @@ class Ability
       unless user.projetos_coordenados.blank?
         can :update, :validations
       end
-      can [:read, :edit],       Projeto, :workons => {:usuario_id => user.id}
+      can :create, Projeto
+      can [:read, :edit], Projeto, :workons => {:usuario_id => user.id}
+      can [:update, :destroy], Projeto, :workons => {:usuario_id => user.id, :permissao => {:nome => "admin"}}
+      can :update, Projeto, :workons => {:usuario_id => user.id, :permissao => {:nome => "coordenador"}}
       can :download,            Anexo, :usuario_id => user.id
       can :read,                Usuario, :usuario_id => user.id
       can [:read,:create],      Dia, :usuario_id => user.id

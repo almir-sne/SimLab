@@ -1,66 +1,66 @@
 <%= javascript_include_tag :defaults, "nested_form" %>
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
-<div class="div_edit">
+  <div class="div_edit">
 
-  <div>
-    Período
-    <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date.strftime("%d/%m/%Y") %>"> 
-    <a tpg="<%= edit_projeto_path() %>" href="#" onclick="ver_periodo_novo_proj(this);">Ver Novo Periodo</a>
-  </div>
-  
-  <table class="day-table" style="width: 100%">
-    <tr>
-      <% t("date.abbr_day_names").each do |p| %>
-        <th><%= p %></th>
-      <% end %>
-    </tr>
-    <tr>
-      <% dia_da_semana = 0 %>
-      <% while @inicio.wday != dia_da_semana %>
-        <% dia_da_semana = dia_da_semana + 1 %>
-        <td></td>
-      <% end %>
-      <% (@inicio..@fim).each do |data| %>
-        <% ausentes = Array.new %>
-        <td>
-          <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
-            <div class='panel-scrollable' style='height: 100px'>
-              <%= data.strftime("%d/%b") %>
-              <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
-                <% unless @ausencias[data].nil? %>
-                  <% @ausencias[data].collect{ |a| a.usuario.nome}.each do |nome| %>
-                    <% ausentes << nome %>
-                    <div style="display: block;"><b><%= nome %></b></div>
-                  <% end %>
-                <% end %>
-                
-                <% if data < @hoje %>
-                  <% if @atividades[data].nil? %>
-                    <% @equipe.each do |u| %>
-                      <% unless ausentes.include?(u) %>
-                        <div style="display: block;"><%= u %></div>
-                      <% end %>  
+    <div>
+      Período
+      <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date.strftime("%d/%m/%Y") %>"> 
+      <a tpg="<%= edit_projeto_path() %>" href="#" onclick="ver_periodo_novo_proj(this);">Ver Novo Periodo</a>
+    </div>
+
+    <table class="day-table" style="width: 100%">
+      <tr>
+        <% t("date.abbr_day_names").each do |p| %>
+          <th><%= p %></th>
+        <% end %>
+      </tr>
+      <tr>
+        <% dia_da_semana = 0 %>
+        <% while @inicio.wday != dia_da_semana %>
+          <% dia_da_semana = dia_da_semana + 1 %>
+          <td></td>
+        <% end %>
+        <% (@inicio..@fim).each do |data| %>
+          <% ausentes = Array.new %>
+          <td>
+            <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
+              <div class='panel-scrollable' style='height: 100px'>
+                <%= data.strftime("%d/%b") %>
+                <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
+                  <% unless @ausencias[data].nil? %>
+                    <% @ausencias[data].collect{ |a| a.usuario.nome}.each do |nome| %>
+                      <% ausentes << nome %>
+                      <div style="display: block;"><b><%= nome %></b></div>
                     <% end %>
-                  <% else %>
-                    <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
-                    <% @equipe.each do |u| %>
+                  <% end %>
+
+                  <% if data < @hoje %>
+                    <% if @atividades[data].nil? %>
+                      <% @equipe.each do |u| %>
+                        <% unless ausentes.include?(u) %>
+                          <div style="display: block;"><%= u %></div>
+                        <% end %>  
+                      <% end %>
+                    <% else %>
+                      <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
+                      <% @equipe.each do |u| %>
                         <% if !working_users.include?(u) and !ausentes.include?(u) %>
                           <div style="display: block;"><%= u %></div>
                         <% end %>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                <% end %>  
-              <% end %>
-            </div>
-          </a>
-        </td>
-        <% if data.wday == 6 %>
-        </tr><tr>
+                  <% end %>  
+                <% end %>
+              </div>
+            </a>
+          </td>
+          <% if data.wday == 6 %>
+          </tr><tr>
+          <% end %>
         <% end %>
-      <% end %>
-    </tr>
-  </table>
+      </tr>
+    </table>
 
 
     <div class="grey-form">
@@ -130,19 +130,24 @@
             <table>
               <tr>
                 <th style="padding: 0px 20px;"> Nome </th>
-                <th> Remover </th>
                 <th></th>
+                <th> Remover </th>
               </tr>
               <%= f.fields_for :workons, :wrapper => false do |worker| %>
                 <tr>
                   <td style="padding: 0px 20px;">
                     <%= worker.object.try(:usuario).try(:nome) %>
                   </td>
-                  <td style="margin-left: 10px">
-                    <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+                  <td style="padding: 0px 20px">
+                    <%= worker.select :permissao_id, options_for_select(Permissao.all.collect{|p| [p.nome, p.id]},
+                      worker.object.permissao_id)  %>
                   </td>
                   <td>
-                    <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
+                    <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).
+                        where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
+                  </td>
+                  <td style="margin-left: 10px">
+                    <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
                   </td>
                 </tr>
               <% end %>
@@ -170,8 +175,8 @@
 <% end %>
 
 <script>
-  var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
-  var url = "<%= get_id_by_nome_usuarios_path %>";
-  var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
+      var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
+      var url = "<%= get_id_by_nome_usuarios_path %>";
+      var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
 </script>
 

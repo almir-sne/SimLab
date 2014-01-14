@@ -4,7 +4,6 @@ class ProjetosController < ApplicationController
   # GET /projetos
   # GET /projetos.json
   def index
-    authorize! :read, Projeto
     if params["tipo"] == "TODOS" || params["tipo"].nil?
       @tipo = "TODOS"
       if current_usuario.role == "admin"
@@ -93,6 +92,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.new(projetos_params)
     if @projeto.save
+      Workon.new(usuario: current_user, projeto: @projeto, permissao: Permissao.find_by(nome: "admin")).save
       redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
       puts @projeto.errors
@@ -184,7 +184,8 @@ class ProjetosController < ApplicationController
   private
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, workons_attributes: [:id, :usuario_id, :_destroy], sub_projetos: [:id, :filho])
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
+      workons_attributes: [:id, :usuario_id, :_destroy, :permissao_id], sub_projetos: [:id, :filho])
   end
 
 end
