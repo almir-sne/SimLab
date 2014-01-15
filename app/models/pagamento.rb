@@ -1,5 +1,4 @@
 class Pagamento < ActiveRecord::Base
-  belongs_to :mes
   belongs_to :usuario
   belongs_to :criador, :class_name => "Usuario"
   has_one    :anexo
