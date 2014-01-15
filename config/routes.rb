@@ -53,6 +53,7 @@ SinLab::Application.routes.draw do
 
   resources :projetos do
     collection do
+      get ':id/campos_cadastro' => "projetos#campos_cadastro"
       post :coordenadorform
     end
   end
