@@ -19,6 +19,10 @@
               <%= campo.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "margin-left: 10%" %>
             </div>
             <div>
+              <%= campo.label :formato %>
+              <%= campo.text_field :formato, :style => "width: 60%; margin-left: 48px" %>
+            </div>
+            <div>
               <%= campo.label :tipo %>
               <%= campo.select :tipo, (1..10)%>
             </div>
