@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140114121551) do
+ActiveRecord::Schema.define(version: 20140115143312) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20140114121551) do
     t.integer  "projeto_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "categoria"
   end
 
   create_table "cartoes", force: true do |t|

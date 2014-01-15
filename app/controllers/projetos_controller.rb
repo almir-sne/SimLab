@@ -146,7 +146,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-    
+
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -180,16 +180,21 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
-  
+
   def campos_cadastro
-    #authorize! :read, Projeto
-    @id = params[:id]
+    authorize! :create, Projeto
+    @projeto = Projeto.find params[:id]
+    @projeto.campo_projetos.build if @projeto.campo_projetos.blank?
   end
 
   private
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, workons_attributes: [:id, :usuario_id, :_destroy], sub_projetos: [:id, :filho])
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
+      workons_attributes: [:id, :usuario_id, :_destroy],
+      sub_projetos: [:id, :filho],
+      campo_projetos_attributes: [:id, :categoria, :nome, :tipo, :_destroy]
+      )
   end
 
 end
