@@ -1,0 +1,37 @@
+<div class="blue-text" style="margin-left: 30px">
+  Campos Do Projeto
+</div>
+<div class="blue-line">  </div>
+
+<%= nested_form_for(@projeto,  :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <div class="div_edit">
+    <%= f.fields_for :campo_projetos, :allow_destroy => true do |campo| %> 
+      <div class="form-group">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <%= f.label :categoria %>
+              <%= f.text_field :categoria, :style => "width: 100%"%>
+            </div>
+            <div class="col-md-4 col-md-offset-1">
+              <%= f.label :nome %>
+              <%= f.email_field :nome, :autofocus => true, :style => "width: 85%" %>
+            </div>
+            <div class="col-md-3">
+              <%= f.label :tipo %>
+              <%= f.text_field :tipo, :style => "width: 100%"%>
+            </div>
+            <div class="col-md-3">
+              <%= f.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%= f.link_to_add 'Adicionar Campo', :campo_projetos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+    <div class="form-group" style="background: none">
+      <%= f.submit "Salvar", :class => "btn default-button"%>
+      <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
+    </div>
+  </div>
+<% end %>
