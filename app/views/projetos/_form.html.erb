@@ -2,7 +2,17 @@
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
 <div class="div_edit">
+  
+  <ul class="nav nav-tabs">
+  <li><a href="#calendario" data-toggle="tab">Calendário</a></li>
+  <li><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
+  <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
+  <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
+</ul>
+  
+<div class="tab-content">
 
+  <div class="tab-pane active" id="calendario">
   <div>
     Período
     <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date.strftime("%d/%m/%Y") %>"> 
@@ -61,8 +71,9 @@
       <% end %>
     </tr>
   </table>
+  </div>
 
-
+  <div class="tab-pane" id="dadosproj">
     <div class="form-group">
       <h3> Dados do Projeto </h3>
       <div class="container">
@@ -80,7 +91,9 @@
         </div>
       </div>
     </div>
+   </div>
 
+   <div class="tab-pane" id="relproj">
     <div class="form-group">
       <h3> Relacionamento de projetos </h3>
       <div class="container">
@@ -119,7 +132,9 @@
         </div> <!-- row -->
       </div>
     </div>
+   </div>
 
+  <div class="tab-pane" id="equipe">
     <div class="form-group">
       <div class="container">
         <div class="row">
@@ -162,11 +177,15 @@
         </div>
       </div>
     </div>
-    <div class="actions">
+
+  </div>
+  <div class="actions">
       <%= f.submit "Salvar", :class => "btn default-button"%>
       <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
     </div>
-  </div>
+</div>
+  
+</div>
 <% end %>
 
 <script>
