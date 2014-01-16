@@ -4,5 +4,4 @@ class CampoDado < ActiveRecord::Base
   
   validates_presence_of :campo_projeto_id
   validates_presence_of :usuario_id
-
 end

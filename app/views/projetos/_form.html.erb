@@ -8,6 +8,7 @@
   <li><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
   <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
   <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
+  <li><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
 </ul>
   
 <div class="tab-content">
@@ -179,6 +180,16 @@
     </div>
 
   </div>
+  
+  <div class="tab-pane" id="meusdados">
+    <%=  f.fields_for :campo_dados do |myfields| %>
+      <% if myfields.object.usuario_id == current_usuario.id %>
+        <%= myfields.label myfields.object.campo_projeto.nome %>
+        <%= myfields.text_field :dado %>
+      <% end %>
+    <% end %>
+  </div>
+  
   <div class="actions">
       <%= f.submit "Salvar", :class => "btn default-button"%>
       <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
