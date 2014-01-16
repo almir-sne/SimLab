@@ -13,13 +13,13 @@ class Projeto < ActiveRecord::Base
   has_many :workons, :dependent => :destroy
   has_many :boards
   has_many :ausencias
-  has_many :campo_projetos
-  has_many :campo_dados, :through => :campo_projetos
+  has_many :campos
+  has_many :dados, :through => :campos
   accepts_nested_attributes_for :workons, :allow_destroy => true
   accepts_nested_attributes_for :boards, :allow_destroy => true
   accepts_nested_attributes_for :sub_projetos, :reject_if => lambda { |a| a[:content].blank? }
-  accepts_nested_attributes_for :campo_projetos, :allow_destroy => true
-  accepts_nested_attributes_for :campo_dados, :allow_destroy => true
+  accepts_nested_attributes_for :campos, :allow_destroy => true
+  accepts_nested_attributes_for :dados, :allow_destroy => true
 
   #def coordenadores
     #self.usuarios.includes(:workon).where("workons.coordenador" => true)

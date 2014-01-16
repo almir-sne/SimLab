@@ -182,10 +182,10 @@
   </div>
   
   <div class="tab-pane" id="meusdados">
-    <%=  f.fields_for :campo_dados do |myfields| %>
+    <%=  f.fields_for :dados do |myfields| %>
+    <%= myfields.label myfields.object.campo.nome %>
       <% if myfields.object.usuario_id == current_usuario.id %>
-        <%= myfields.label myfields.object.campo_projeto.nome %>
-        <%= myfields.text_field :dado %>
+       <%= myfields.text_field :dado %>
       <% end %>
     <% end %>
   </div>
