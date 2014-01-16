@@ -1,5 +1,6 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
+  load_and_authorize_resource
 
   # GET /projetos
   # GET /projetos.json
@@ -104,7 +105,7 @@ class ProjetosController < ApplicationController
   # PATCH /projetos/1
   # PATCH /projetos/1.json
   def update
-    authorize! :create, Projeto
+    authorize! :update, Projeto
     @projeto = Projeto.find(params[:id])
     boards = @projeto.boards.to_a
     #lidar com boards
@@ -126,7 +127,6 @@ class ProjetosController < ApplicationController
       end
     end
     boards.each do |b|
-      debugger
       b.destroy
     end
     #lidar com subprojetos
@@ -180,12 +180,13 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
+  
+  permit_params :data_de_inicio, :descricao, :nome
 
   private
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
-      workons_attributes: [:id, :usuario_id, :_destroy, :permissao_id], sub_projetos: [:id, :filho])
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome)
   end
 
 end
