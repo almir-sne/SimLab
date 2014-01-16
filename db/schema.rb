@@ -71,6 +71,16 @@ ActiveRecord::Schema.define(version: 20140116173340) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "campos", force: true do |t|
+    t.text     "nome"
+    t.integer  "tipo"
+    t.text     "formato"
+    t.integer  "projeto_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "categoria"
+  end
+
   create_table "cartoes", force: true do |t|
     t.string   "estimativa"
     t.string   "trello_id"
@@ -112,6 +122,12 @@ ActiveRecord::Schema.define(version: 20140116173340) do
     t.integer  "workon_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "dados", force: true do |t|
+    t.integer "campo_id"
+    t.text    "dado"
+    t.integer "usuario_id"
   end
 
   create_table "decks", force: true do |t|

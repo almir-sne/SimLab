@@ -13,11 +13,11 @@ class ProjetosController < ApplicationController
       elsif current_usuario.role == "diretor"
         @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
-            map{|z| z.id})]}
+                map{|z| z.id})]}
       else
         @projetos = current_usuario.projetos.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos.
-            map{|z| z.id})]}
+                map{|z| z.id})]}
       end
     elsif params["tipo"] == "sub_projetos"
       @tipo = "sub_projetos"
@@ -73,10 +73,10 @@ class ProjetosController < ApplicationController
     @projeto = Projeto.find(params[:id])
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-        map{|filho| [filho.nome, filho.id]}
+      map{|filho| [filho.nome, filho.id]}
     @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
       sort{|a, b| a.nome <=> b.nome}.
-        map{|proj| [proj.nome, proj.id]}
+      map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.all.order(nome: :asc)
     @hoje = Date.today
@@ -146,6 +146,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
+
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -164,7 +165,6 @@ class ProjetosController < ApplicationController
     authorize! :destroy, Projeto
     @projeto = Projeto.find(params[:id])
     @projeto.destroy
-
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
@@ -181,12 +181,24 @@ class ProjetosController < ApplicationController
     end
   end
   
-  permit_params :data_de_inicio, :descricao, :nome
+  
 
+  def campos_cadastro
+    authorize! :create, Projeto
+    @projeto = Projeto.find params[:id]
+    @projeto.campo_projetos.build if @projeto.campo_projetos.blank?
+  end
+
+  permit_params :data_de_inicio, :descricao, :nome
+  
   private
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome)
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
+      workons_attributes: [:id, :usuario_id, :_destroy],
+      sub_projetos: [:id, :filho],
+      campo_projetos_attributes: [:id, :categoria, :nome, :tipo, :_destroy]
+    )
   end
 
 end

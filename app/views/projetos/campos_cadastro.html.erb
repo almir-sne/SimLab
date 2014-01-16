@@ -1,0 +1,39 @@
+<div class="blue-text" style="margin-left: 30px">
+  Campos Do Projeto
+</div>
+<div class="blue-line">  </div>
+
+<%= nested_form_for(@projeto,  :validate => true, :html => {"data-type" => :json}) do |f| %>
+  <div class="div_edit">
+    <%= f.fields_for :campo_projetos, :allow_destroy => true do |campo| %>
+      <div class="form-group">
+        <div class="container">
+          <div class="row">
+            <div>
+              <%= campo.label :categoria %>
+              <%= campo.text_field :categoria, :style => "width: 60%; margin-left: 20px"%>
+            </div>
+            <div>
+              <%= campo.label :nome %>
+              <%= campo.text_field :nome, :style => "width: 60%; margin-left: 48px" %>
+              <%= campo.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "margin-left: 10%" %>
+            </div>
+            <div>
+              <%= campo.label :formato %>
+              <%= campo.text_field :formato, :style => "width: 60%; margin-left: 48px" %>
+            </div>
+            <div>
+              <%= campo.label :tipo %>
+              <%= campo.select :tipo, (1..10)%>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%= f.link_to_add 'Adicionar Campo', :campo_projetos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+    <div class="form-group" style="background: none">
+      <%= f.submit "Salvar", :class => "btn default-button"%>
+      <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
+    </div>
+  </div>
+<% end %>
