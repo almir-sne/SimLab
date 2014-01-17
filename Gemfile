@@ -20,7 +20,7 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'thin'
 gem 'squeel'
-gem 'cancan'
+gem 'cancan', :git => 'git://github.com/ollym/cancan.git', :branch => "ollym_changes"
 gem "nested_form"
 gem "mysql2"
 
@@ -67,4 +67,4 @@ gem "awesome_print"
 #gem 'rails-observers'
 #gem 'actionpack-page_caching'
 #gem 'actionpack-action_caching'
-gem 'cancan_strong_parameters'
+#gem 'cancan_strong_parameters'

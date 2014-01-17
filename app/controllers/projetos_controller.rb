@@ -1,6 +1,5 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
-  load_and_authorize_resource
 
   # GET /projetos
   # GET /projetos.json
@@ -126,6 +125,13 @@ class ProjetosController < ApplicationController
         end
       end
     end
+    unless params[:dados].blank?
+      params[:dados].each do |campo_id, valor|
+        dado = Dado.find_or_create_by(campo_id: campo_id, usuario_id: current_user.id)
+        dado.valor = valor
+        dado.save
+      end
+    end
     boards.each do |b|
       b.destroy
     end
@@ -146,7 +152,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-
+    
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -186,18 +192,15 @@ class ProjetosController < ApplicationController
   def campos_cadastro
     authorize! :create, Projeto
     @projeto = Projeto.find params[:id]
-    @projeto.campo_projetos.build if @projeto.campo_projetos.blank?
+    @projeto.campos.build if @projeto.campos.blank?
   end
 
-  permit_params :data_de_inicio, :descricao, :nome
-  
-  private
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, :permissao_id,
       workons_attributes: [:id, :usuario_id, :_destroy],
       sub_projetos: [:id, :filho],
-      campo_projetos_attributes: [:id, :categoria, :nome, :tipo, :_destroy]
+      campos_attributes: [:id, :categoria, :nome, :tipo, :formato, :_destroy]
     )
   end
 
