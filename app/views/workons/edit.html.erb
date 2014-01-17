@@ -1,41 +1,41 @@
 <div class="blue-text" style="margin-left: 30px">
- Cadastro de Coordenadores
+  Cadastro de Coordenadores
 </div>
 <div class="blue-line">  </div>
 
 <div class="div_edit">
-  <div class="form-group">
+  <div class="grey-form">
     <h3> Coordenadores  de <%= @workon.usuario.nome %> no projeto <%= @workon.projeto.nome %> </h3> 
     <div class="container">
       <div class="col-md-6">
-<%= nested_form_for(@workon, :validate => true, :html => {"data-type" => :json}) do |f| %>
-  <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
-  <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :coordenacoes, :class=>"nohover" %>
-  <table>
-  <tr>
-    <th style="padding: 0px 20px;"> Nome </th>
-    <th> Remover </th>
-  </tr>
-  <%= f.fields_for :coordenacoes, :wrapper => false do |c| %>
-    <tr>
-      <td style="padding: 0px 20px;">
-        <%= c.object.try(:usuario).try(:nome) %>  
-        <%= c.hidden_field :usuario_id %>
-      </td>
-      <td style="margin-left: 10px">
-        <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
-      </td>
-    </tr>
-  <% end %>
-  <tr id='novo_item'></tr>
-  </table>
-  <div class="actions">
-      <%= f.submit "Salvar", :class => "btn default-button"%>
-      <%= link_to "Voltar", "/projetos/"+@workon.projeto.id.to_s+"/edit/", :class => "btn default-button" %>
-  </div>
-  
-<% end %>
-</div></div></div></div></div>
+        <%= nested_form_for(@workon, :validate => true, :html => {"data-type" => :json}) do |f| %>
+          <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
+          <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :coordenacoes, :class=>"nohover" %>
+          <table>
+            <tr>
+              <th style="padding: 0px 20px;"> Nome </th>
+              <th> Remover </th>
+            </tr>
+            <%= f.fields_for :coordenacoes, :wrapper => false do |c| %>
+              <tr>
+                <td style="padding: 0px 20px;">
+                  <%= c.object.try(:usuario).try(:nome) %>  
+                  <%= c.hidden_field :usuario_id %>
+                </td>
+                <td style="margin-left: 10px">
+                  <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+                </td>
+              </tr>
+            <% end %>
+            <tr id='novo_item'></tr>
+          </table>
+          <div class="actions">
+            <%= f.submit "Salvar", :class => "btn default-button"%>
+            <%= link_to "Voltar", "/projetos/"+@workon.projeto.id.to_s+"/edit/", :class => "btn default-button" %>
+          </div>
+
+        <% end %>
+      </div></div></div></div></div>
 <script>
   var u = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>;
   var up = <%= get_id_by_nome_usuarios_path %>;

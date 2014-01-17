@@ -146,6 +146,7 @@
             <table>
               <tr>
                 <th style="padding: 0px 20px;"> Nome </th>
+                <th></th>
                 <th> Remover </th>
                 <th></th>
               </tr>
@@ -153,6 +154,10 @@
                 <tr>
                   <td style="padding: 0px 20px;">
                     <%= worker.object.try(:usuario).try(:nome) %>
+                  </td>
+                  <td style="padding: 0px 20px">
+                    <%= worker.select :permissao_id, options_for_select(Permissao.all.collect{|p| [p.nome, p.id]},
+                      worker.object.permissao_id)  %>
                   </td>
                   <td style="margin-left: 10px">
                     <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>

@@ -1,10 +1,10 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
+  load_and_authorize_resource
 
   # GET /projetos
   # GET /projetos.json
   def index
-    authorize! :read, Projeto
     if params["tipo"] == "TODOS" || params["tipo"].nil?
       @tipo = "TODOS"
       if current_usuario.role == "admin"
@@ -13,11 +13,11 @@ class ProjetosController < ApplicationController
       elsif current_usuario.role == "diretor"
         @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
-            map{|z| z.id})]}
+                map{|z| z.id})]}
       else
         @projetos = current_usuario.projetos.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
           map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos.
-            map{|z| z.id})]}
+                map{|z| z.id})]}
       end
     elsif params["tipo"] == "sub_projetos"
       @tipo = "sub_projetos"
@@ -73,10 +73,10 @@ class ProjetosController < ApplicationController
     @projeto = Projeto.find(params[:id])
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-        map{|filho| [filho.nome, filho.id]}
+      map{|filho| [filho.nome, filho.id]}
     @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
       sort{|a, b| a.nome <=> b.nome}.
-        map{|proj| [proj.nome, proj.id]}
+      map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.all.order(nome: :asc)
     @hoje = Date.today
@@ -93,6 +93,7 @@ class ProjetosController < ApplicationController
     authorize! :create, Projeto
     @projeto = Projeto.new(projetos_params)
     if @projeto.save
+      Workon.new(usuario: current_user, projeto: @projeto, permissao: Permissao.find_by(nome: "admin")).save
       redirect_to projetos_path, notice: I18n.t("projetos.create.success")
     else
       puts @projeto.errors
@@ -104,7 +105,7 @@ class ProjetosController < ApplicationController
   # PATCH /projetos/1
   # PATCH /projetos/1.json
   def update
-    authorize! :create, Projeto
+    authorize! :update, Projeto
     @projeto = Projeto.find(params[:id])
     boards = @projeto.boards.to_a
     #lidar com boards
@@ -126,7 +127,6 @@ class ProjetosController < ApplicationController
       end
     end
     boards.each do |b|
-      debugger
       b.destroy
     end
     #lidar com subprojetos
@@ -180,6 +180,8 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
+  
+  
 
   def campos_cadastro
     authorize! :create, Projeto
@@ -187,6 +189,8 @@ class ProjetosController < ApplicationController
     @projeto.campo_projetos.build if @projeto.campo_projetos.blank?
   end
 
+  permit_params :data_de_inicio, :descricao, :nome
+  
   private
 
   def projetos_params
@@ -194,7 +198,7 @@ class ProjetosController < ApplicationController
       workons_attributes: [:id, :usuario_id, :_destroy],
       sub_projetos: [:id, :filho],
       campo_projetos_attributes: [:id, :categoria, :nome, :tipo, :_destroy]
-      )
+    )
   end
 
 end
