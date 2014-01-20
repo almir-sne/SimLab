@@ -20,7 +20,7 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'thin'
 gem 'squeel'
-gem 'cancan', :git => 'git://github.com/ollym/cancan.git', :branch => "ollym_changes"
+gem 'cancan'
 gem "nested_form"
 gem "mysql2"
 

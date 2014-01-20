@@ -1,9 +1,4 @@
-  $(document).ready(
-    function() {
-      autocomplete_source(u);
-    }
-  );
-  window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
+window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) {
     var a = $(content).insertBefore($('#novo_item'));
     //@author rezende, stein
     //vou comentar linha por linha para poder refatorar depois
@@ -16,20 +11,26 @@
     nome = ($('#autocomplete_field').val());
     //depende do model pai (workon) e do model filho (coordenacoes)
     //também depende de quais fields se quer
-    usuario_id_hidden_input.attr('id', 'workon_coordenacoes_attributes_'+new_random_id+'_usuario_id');
-    usuario_id_hidden_input.attr('name', 'workon[coordenacoes_attributes]['+new_random_id+'][usuario_id]');
+    usuario_id_hidden_input.attr('id', 'workon_coordenacoes_attributes_' + new_random_id + '_usuario_id');
+    usuario_id_hidden_input.attr('name', 'workon[coordenacoes_attributes][' + new_random_id + '][usuario_id]');
     usuario_id_hidden_input.attr('type', 'hidden');
     //é necessário achar o id do novo usuário
     //pode ser refatorado sem ajax, talvez
     $.ajax({
-      url: up,
-      data: {name: nome}, 
-      success: function(result) { 
-        usuario_id_hidden_input.attr('value', result);
-      }
+        url: url,
+        data: {name: nome},
+        success: function(result) {
+            usuario_id_hidden_input.attr('value', result);
+        }
     });
     //dar append nas coisas
     tableData.text(nome);
     tableData.append(usuario_id_hidden_input);
     return a;
-  }
+}
+
+function set_autocomplete_equipe() {
+    $("#autocomplete_field").autocomplete({
+        source: users_projeto
+    });
+}

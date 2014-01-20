@@ -9,7 +9,7 @@
     <div class="container">
       <div class="col-md-6">
         <%= nested_form_for(@workon, :validate => true, :html => {"data-type" => :json}) do |f| %>
-          <input type='text' data-provide="typeahead" class='typeahead' id='autocomplete_field'/>
+          <input type='text' id='autocomplete_field' onfocus="set_autocomplete_equipe()"/>
           <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :coordenacoes, :class=>"nohover" %>
           <table>
             <tr>
@@ -17,7 +17,7 @@
               <th> Remover </th>
             </tr>
             <%= f.fields_for :coordenacoes, :wrapper => false do |c| %>
-              <tr>
+              <tr class="fields">
                 <td style="padding: 0px 20px;">
                   <%= c.object.try(:usuario).try(:nome) %>  
                   <%= c.hidden_field :usuario_id %>
@@ -37,6 +37,6 @@
         <% end %>
       </div></div></div></div></div>
 <script>
-  var u = <%= @usuarios.collect {|u| u.nome}.to_json.html_safe %>;
-  var up = <%= get_id_by_nome_usuarios_path %>;
+          var url = "<%= get_id_by_nome_usuarios_path %>";
+          var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
 </script>

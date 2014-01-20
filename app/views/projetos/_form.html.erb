@@ -1,4 +1,3 @@
-<%= javascript_include_tag :defaults, "nested_form" %>
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
   <div class="div_edit">
@@ -151,7 +150,7 @@
                     <th></th>
                   </tr>
                   <%= f.fields_for :workons, :wrapper => false, :allow_destroy => true do |worker| %>
-                    <tr>
+                    <tr class="fields">
                       <td style="padding: 0px 20px;">
                         <%= worker.object.try(:usuario).try(:nome) %>
                       </td>
