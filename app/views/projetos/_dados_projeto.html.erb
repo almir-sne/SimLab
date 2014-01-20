@@ -1,18 +1,18 @@
-<div class="form-group">
+<div class="form-horizontal">
   <h3> Dados do Projeto </h3>
-  <div class="container">
-    <div class="row">
-      <div class=" col-md-6">
-        <%= f.label :nome %>
-        <%= f.text_field :nome, :style => "width: 100%"%>
-        <%= f.label :descricao %>
-        <%= f.text_area :descricao, :style => "height: 80px; width: 100%"%>
-      </div>
-      <div class="col-md-offset-1 col-md-5">
-        <%= f.label :data_de_inicio %>
-        <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
-      </div>
-    </div>
+  <div class="form-group">
+    <%= f.label :nome, :class => "col-sm-2" %>
+    <%= f.text_field :nome, :class => "col-sm-9"%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :descricao, :class => "col-sm-2" %>
+    <%= f.text_area :descricao, :style => "height: 80px", :class => "col-sm-9"%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :data_de_inicio, :class => "col-sm-2" %>
+    <%= f.date_select :data_de_inicio, {}, :style => "width: 100px", :class => "col-sm-5" %>
   </div>
 </div>
 
