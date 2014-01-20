@@ -1,0 +1,19 @@
+<div class="form-group">
+  <h3> Dados do Projeto </h3>
+  <div class="container">
+    <div class="row">
+      <div class=" col-md-6">
+        <%= f.label :nome %>
+        <%= f.text_field :nome, :style => "width: 100%"%>
+        <%= f.label :descricao %>
+        <%= f.text_area :descricao, :style => "height: 80px; width: 100%"%>
+      </div>
+      <div class="col-md-offset-1 col-md-5">
+        <%= f.label :data_de_inicio %>
+        <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'nav_bar', locals: {f: f} %>

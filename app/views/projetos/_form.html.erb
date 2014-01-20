@@ -1,9 +1,9 @@
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
 
-  <div class="div_edit">
+<div class="div_edit" style="margin: 10px;">
 
-    <ul class="nav nav-tabs">
-      <li><a href="#calendario" data-toggle="tab">Calendário</a></li>
+    <ul class="nav nav-tabs" style="margin-right: 10px;">
+      <li class="active"><a href="#calendario" data-toggle="tab">Calendário</a></li>
       <li><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
       <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
       <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
@@ -13,197 +13,31 @@
     <div class="tab-content">
 
       <div class="tab-pane active" id="calendario">
-        <div>
-          Período
-          <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date.strftime("%d/%m/%Y") %>"> 
-          <a tpg="<%= edit_projeto_path() %>" href="#" onclick="ver_periodo_novo_proj(this);">Ver Novo Periodo</a>
-        </div>
-
-        <table class="day-table" style="width: 100%">
-          <tr>
-            <% t("date.abbr_day_names").each do |p| %>
-              <th><%= p %></th>
-            <% end %>
-          </tr>
-          <tr>
-            <% dia_da_semana = 0 %>
-            <% while @inicio.wday != dia_da_semana %>
-              <% dia_da_semana = dia_da_semana + 1 %>
-              <td></td>
-            <% end %>
-            <% (@inicio..@fim).each do |data| %>
-              <% ausentes = Array.new %>
-              <td>
-                <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
-                  <div class='panel-scrollable' style='height: 100px'>
-                    <%= data.strftime("%d/%b") %>
-                    <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
-                      <% unless @ausencias[data].nil? %>
-                        <% @ausencias[data].collect{ |a| a.usuario.nome}.each do |nome| %>
-                          <% ausentes << nome %>
-                          <div style="display: block;"><b><%= nome %></b></div>
-                        <% end %>
-                      <% end %>
-
-                      <% if data < @hoje %>
-                        <% if @atividades[data].nil? %>
-                          <% @equipe.each do |u| %>
-                            <% unless ausentes.include?(u) %>
-                              <div style="display: block;"><%= u %></div>
-                            <% end %>  
-                          <% end %>
-                        <% else %>
-                          <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
-                          <% @equipe.each do |u| %>
-                            <% if !working_users.include?(u) and !ausentes.include?(u) %>
-                              <div style="display: block;"><%= u %></div>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                      <% end %>  
-                    <% end %>
-                  </div>
-                </a>
-              </td>
-              <% if data.wday == 6 %>
-              </tr><tr>
-              <% end %>
-            <% end %>
-          </tr>
-        </table>
+        <%= render :partial => 'calendario' %>
       </div>
 
       <div class="tab-pane" id="dadosproj">
-        <div class="form-group">
-          <h3> Dados do Projeto </h3>
-          <div class="container">
-            <div class="row">
-              <div class=" col-md-6">
-                <%= f.label :nome %>
-                <%= f.text_field :nome, :style => "width: 100%"%>
-                <%= f.label :descricao %>
-                <%= f.text_area :descricao, :style => "height: 80px; width: 100%"%>
-              </div>
-              <div class="col-md-offset-1 col-md-5">
-                <%= f.label :data_de_inicio %>
-                <%= f.date_select :data_de_inicio, {}, :style => "width: 100px" %>
-              </div>
-            </div>
-          </div>
-        </div>
+        <%= render :partial => 'dados_projeto', locals: {f: f} %>
       </div>
 
       <div class="tab-pane" id="relproj">
-        <div class="form-group">
-          <h3> Relacionamento de projetos </h3>
-          <div class="container">
-            <div class="row">
-              <div class=" col-md-6">
-                <table>
-                  <tr>
-                    <th><%= f.label "Super-Projeto" %></th>
-                    <th style="padding: 0px 20px;"><%= f.label "Sub-Projeto"%></th>
-                  </tr>
-                  <tr>
-                    <td><%= radio_button_tag :super_projeto, true, @eh_super_projeto%></td>
-                    <td style="padding: 0px 20px;"><%= radio_button_tag :super_projeto, false, !@eh_super_projeto%></td>
-                  </tr>
-                </table>
-              </div>
-
-              <div id="filhos">
-                <table>
-                  <tr>
-                    <th><%= f.label "filho?", :style => "margin-right: 20%"%></th>
-                    <th><%= f.label "projetos filhos" %>                     </th>
-                  </tr>
-                  <% @filhos_for_select.each_with_index do |sub, index| %>
-                    <tr>
-                      <td><%= check_box_tag "sub_projetos[#{index}[filho]", 1, !(@projeto.sub_projetos[index].nil?) %>    </td>
-                      <td><%=@filhos_for_select[index][0]%><%= hidden_field_tag "sub_projetos[#{index}[id]]", @filhos_for_select[index][1], :style => "margin-right: 50%"%></td>
-                    </tr>
-                  <%end%>
-                </table>
-              </div>
-              <div class="col-md-offset-1 col-md-5" id="pai">
-                <%= f.label "projeto pai" %>
-                <%= f.select :super_projeto_id, options_for_select(@pais_for_select, [@projeto.super_projeto.try(:nome), @projeto.super_projeto_id]), :style => "width: 70%"%>
-              </div>
-            </div> <!-- row -->
-          </div>
-        </div>
+        <%= render :partial => 'relacionamento_projeto', locals: {f: f} %>
       </div>
 
       <div class="tab-pane" id="equipe">
-        <div class="form-group">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-5">
-                <h3> Equipe </h3>
-                <input type='text' id='equipe_autocomplete' onfocus="set_autocomplete_equipe()"/>
-                <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workons, :class=>"nohover" %>
-                <table>
-                  <tr>
-                    <th style="padding: 0px 20px;"> Nome </th>
-                    <th></th>
-                    <th> Remover </th>
-                    <th></th>
-                  </tr>
-                  <%= f.fields_for :workons, :wrapper => false, :allow_destroy => true do |worker| %>
-                    <tr class="fields">
-                      <td style="padding: 0px 20px;">
-                        <%= worker.object.try(:usuario).try(:nome) %>
-                      </td>
-                      <td style="padding: 0px 20px">
-                        <%= worker.select :permissao_id, options_for_select(Permissao.all.collect{|p| [p.nome, p.id]},
-                          worker.object.permissao_id)  %>
-                      </td>
-                      <td style="margin-left: 10px">
-                        <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
-                      </td>
-                      <td>
-                        <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
-                      </td>
-                    </tr>
-                  <% end %>
-                  <tr id='novo_item'></tr>
-                </table>
-              </div>
-              <div class="col-md-offset-2 col-md-3">
-
-                <h3> Boards do Trello </h3>
-                <div class="loggedout">
-                  <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
-                </div>
-                <div class="loggedin">
-                  <div id="output" class="panel-scrollable" style="height: 200px"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <%= render partial: 'equipe', locals: {f: f} %>
       </div>
 
       <div class="tab-pane" id="meusdados">
-        <% @projeto.campos.each do |campo| %>
-          <%= campo.nome %>
-          <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), :name => "dados[#{campo.id}]" %>
-        <% end %>
-      </div>
-
-      <div class="actions">
-        <%= f.submit "Salvar", :class => "btn default-button"%>
-        <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
+        <%= render partial: 'meus_dados', locals: {f: f} %>
       </div>
     </div>
-
   </div>
 <% end %>
 
 <script>
-            var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
-            var url = "<%= get_id_by_nome_usuarios_path %>";
-            var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
+  var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
+  var url = "<%= get_id_by_nome_usuarios_path %>";
+  var users_projeto = <%= raw @usuarios.collect {|u| u.nome} %>;
 </script>
 

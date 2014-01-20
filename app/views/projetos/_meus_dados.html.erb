@@ -1,0 +1,7 @@
+<% @projeto.campos.each do |campo| %>
+  <%= campo.nome %>
+  <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), :name => "dados[#{campo.id}]" %>
+<% end %>
+
+
+<%= render partial: 'nav_bar', locals: {f: f} %>

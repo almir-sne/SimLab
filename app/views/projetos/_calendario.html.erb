@@ -1,0 +1,58 @@
+<div>
+  Período
+  <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date.strftime("%d/%m/%Y") %>"> 
+  <a tpg="<%= edit_projeto_path() %>" href="#" onclick="ver_periodo_novo_proj(this);">Ver Novo Periodo</a>
+</div>
+
+<table class="day-table" style="width: 100%">
+  <tr>
+    <% t("date.abbr_day_names").each do |p| %>
+      <th><%= p %></th>
+    <% end %>
+  </tr>
+  <tr>
+    <% dia_da_semana = 0 %>
+    <% while @inicio.wday != dia_da_semana %>
+      <% dia_da_semana = dia_da_semana + 1 %>
+      <td></td>
+    <% end %>
+    <% (@inicio..@fim).each do |data| %>
+      <% ausentes = Array.new %>
+      <td>
+        <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
+          <div class='panel-scrollable' style='height: 100px'>
+            <%= data.strftime("%d/%b") %>
+            <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
+              <% unless @ausencias[data].nil? %>
+                <% @ausencias[data].collect{ |a| a.usuario.nome}.each do |nome| %>
+                  <% ausentes << nome %>
+                  <div style="display: block;"><b><%= nome %></b></div>
+                <% end %>
+              <% end %>
+
+              <% if data < @hoje %>
+                <% if @atividades[data].nil? %>
+                  <% @equipe.each do |u| %>
+                    <% unless ausentes.include?(u) %>
+                      <div style="display: block;"><%= u %></div>
+                    <% end %>  
+                  <% end %>
+                <% else %>
+                  <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
+                  <% @equipe.each do |u| %>
+                    <% if !working_users.include?(u) and !ausentes.include?(u) %>
+                      <div style="display: block;"><%= u %></div>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>  
+            <% end %>
+          </div>
+        </a>
+      </td>
+      <% if data.wday == 6 %>
+      </tr><tr>
+      <% end %>
+    <% end %>
+  </tr>
+</table>

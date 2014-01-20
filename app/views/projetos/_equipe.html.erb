@@ -1,0 +1,49 @@
+<div class="form-group">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <h3> Equipe </h3>
+        <input type='text' id='equipe_autocomplete' onfocus="set_autocomplete_equipe()"/>
+        <%= f.link_to_add '<i class="icon-plus-sign icon-2x"> </i>'.html_safe , :workons, :class=>"nohover" %>
+        <table>
+          <tr>
+            <th style="padding: 0px 20px;"> Nome </th>
+            <th></th>
+            <th> Remover </th>
+            <th></th>
+          </tr>
+          <%= f.fields_for :workons, :wrapper => false, :allow_destroy => true do |worker| %>
+            <tr class="fields">
+              <td style="padding: 0px 20px;">
+                <%= worker.object.try(:usuario).try(:nome) %>
+              </td>
+              <td style="padding: 0px 20px">
+                <%= worker.select :permissao_id, options_for_select(Permissao.all.collect{|p| [p.nome, p.id]},
+                  worker.object.permissao_id)  %>
+              </td>
+              <td style="margin-left: 10px">
+                <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
+              </td>
+              <td>
+                <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
+              </td>
+            </tr>
+          <% end %>
+          <tr id='novo_item'></tr>
+        </table>
+      </div>
+      <div class="col-md-offset-2 col-md-3">
+
+        <h3> Boards do Trello </h3>
+        <div class="loggedout">
+          <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
+        </div>
+        <div class="loggedin">
+          <div id="output" class="panel-scrollable" style="height: 200px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'nav_bar', locals: {f: f} %>
