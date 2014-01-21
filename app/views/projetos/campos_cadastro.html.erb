@@ -3,9 +3,9 @@
 </div>
 <div class="blue-line">  </div>
 
-<%= nested_form_for(@projeto,  :validate => true, :html => {"data-type" => :json}) do |f| %>
+<%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
   <div class="div_edit">
-    <%= f.fields_for :campo_projetos, :allow_destroy => true do |campo| %>
+    <%= f.fields_for :campos, :allow_destroy => true do |campo| %>
       <div class="form-group">
         <div class="container">
           <div class="row">
@@ -30,7 +30,7 @@
         </div>
       </div>
     <% end %>
-    <%= f.link_to_add 'Adicionar Campo', :campo_projetos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+    <%= f.link_to_add 'Adicionar Campo', :campos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
     <div class="form-group" style="background: none">
       <%= f.submit "Salvar", :class => "btn default-button"%>
       <%= link_to 'Cancelar', :back , :class => "btn default-button"%>

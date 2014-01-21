@@ -80,6 +80,7 @@
     font-family: Arial,Helvetica,sans-serif;
     color: white;
     border: 5px white solid;
+    background-color: white
 }
 
 .day-table a {
@@ -250,7 +251,7 @@
 .toolbar {
     background-color: white;
     padding: 5px 0;
-    margin: 0 45px;
+    margin: 0 15px;
     border: 2px solid grey;
     border-radius: 5px;
 }
@@ -632,4 +633,20 @@ table.dataTable thead th {
 
 .btn-cadastro:visited {
     color: #FFF;
+}
+
+.tab-content {
+    border: 1px solid #DDD;
+    border-radius: 0px 10px 10px 10px;
+    border-top: 0;
+    padding: 10px;
+    background-color: #F1F1F1
+}
+
+.nav-tabs>li.active>a {
+    background-color: #F1F1F1
+}
+
+.nav-tabs>li.active>a:hover {
+    background-color: #F1F1F1
 }

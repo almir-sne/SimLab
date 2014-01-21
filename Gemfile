@@ -67,4 +67,4 @@ gem "awesome_print"
 #gem 'rails-observers'
 #gem 'actionpack-page_caching'
 #gem 'actionpack-action_caching'
-gem 'cancan_strong_parameters'
+#gem 'cancan_strong_parameters'

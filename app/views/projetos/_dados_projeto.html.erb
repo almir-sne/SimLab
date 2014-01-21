@@ -1,0 +1,19 @@
+<div class="form-horizontal">
+  <h3> Dados do Projeto </h3>
+  <div class="form-group">
+    <%= f.label :nome, :class => "col-sm-2" %>
+    <%= f.text_field :nome, :class => "col-sm-9"%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :descricao, :class => "col-sm-2" %>
+    <%= f.text_area :descricao, :style => "height: 80px", :class => "col-sm-9"%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :data_de_inicio, :class => "col-sm-2" %>
+    <%= f.date_select :data_de_inicio, {}, :style => "width: 100px", :class => "col-sm-5" %>
+  </div>
+</div>
+
+<%= render partial: 'nav_bar', locals: {f: f} %>
