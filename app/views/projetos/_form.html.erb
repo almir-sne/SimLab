@@ -32,20 +32,7 @@
       </div>
     </div>
   </div>
-  
-  <div class="tab-pane" id="meusdados">
-    <%= f.fields_for :dados do |myfields| %>
-      <%= myfields.label myfields %>
-    <% end %>
-  </div>
-  
-  <div class="actions">
-      <%= f.submit "Salvar", :class => "btn default-button"%>
-      <%= link_to "Cancelar", projetos_path, :class => "btn default-button" %>
-    </div>
-</div>
-  
-</div>
+
 <% end %>
 
 <script>

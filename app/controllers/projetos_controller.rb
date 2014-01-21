@@ -169,8 +169,10 @@ class ProjetosController < ApplicationController
   # DELETE /projetos/1.json
   def destroy
     authorize! :destroy, Projeto
-    @projeto = Projeto.find(params[:id])
-    @projeto.destroy
+    if current_usuario.role == "admin"
+      @projeto = Projeto.find(params[:id])
+      @projeto.destroy
+    end
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }

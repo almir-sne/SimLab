@@ -1,7 +1,20 @@
-<% @projeto.campos.each do |campo| %>
-  <%= campo.nome %>
-  <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), :name => "dados[#{campo.id}]" %>
+<%= link_to "Novos Campos Dinâmicos", {controller: 'projetos', action: 'campos_cadastro', id: @projeto.id}, {class: 'btn default-button'} %>
+
+<% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
+  <div class="grey-form">
+    <h3><%= categoria %></h3>
+    <div class="container">
+      <br/>
+      <% campos_da_categoria.each do |campo| %>
+        <%= campo.nome %>
+        <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), {name: "dados[#{campo.id}]", width: '20'} %>
+        <br />
+      <% end %>
+    </div>
+    <br />
+  </div>  
 <% end %>
 
-
 <%= render partial: 'nav_bar', locals: {f: f} %>
+
+
