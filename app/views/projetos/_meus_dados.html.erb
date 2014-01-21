@@ -1,9 +1,14 @@
 <%= link_to "Novos Campos Dinâmicos", {controller: 'projetos', action: 'campos_cadastro', id: @projeto.id}, {class: 'btn default-button'} %>
 
+<div class="tabbable tabs-left">
+  <ul class="nav nav-tabs">
+  <% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
+    <li><a href="#<%= categoria %>" data-toggle="tab"><%= categoria %></a></li>
+  <% end %>
+  </ul>
+  <div class="tab-content">
 <% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
-  <div class="grey-form">
-    <h3><%= categoria %></h3>
-    <div class="container">
+    <div class="tab-pane" id="<%= categoria %>">
       <br/>
       <% campos_da_categoria.each do |campo| %>
         <%= campo.nome %>
@@ -12,8 +17,9 @@
       <% end %>
     </div>
     <br />
-  </div>  
-<% end %>
+<% end %> 
+  </div>
+</div>
 
 <%= render partial: 'nav_bar', locals: {f: f} %>
 
