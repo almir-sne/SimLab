@@ -56,12 +56,18 @@ function set_autocomplete_equipe() {
     });
 }
 
-$(".chosen-select").chosen({
+$(".usuario-select").chosen({
     width: "95%",
     no_results_text: "Nenhum resultado encontrado",
     placeholder_text_single: "Escolha um usuario"
 });
 
-$('.chosen-select').on('change', function(evt, params) {
+$('.usuario-select').on('change', function(evt, params) {
     $("#workon-add").click();
+});
+
+$('.coordenador-select').chosen({
+    width: "95%",
+    no_results_text: "Nenhum resultado encontrado",
+    placeholder_text_multiple: "Selecione os coordenadores"
 });

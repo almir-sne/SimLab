@@ -77,13 +77,14 @@ class ProjetosController < ApplicationController
       sort{|a, b| a.nome <=> b.nome}.
       map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.all.order(nome: :asc)
+    @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
     @hoje = Date.today
     @equipe = @projeto.usuarios.pluck(:nome).sort
     @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
     @fim = params[:fim].try(:to_date) || @hoje.end_of_month
     @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
     @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
 
   # POST /projetos

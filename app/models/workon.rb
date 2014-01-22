@@ -10,8 +10,8 @@ class Workon < ActiveRecord::Base
 
   accepts_nested_attributes_for :coordenacoes, :allow_destroy => true
   
-  #def coordenadores
-    #Usuario.joins(:coordenacoes).where(coordenacoes: {workon_id: self.id }).collect {|u| [u.nome, u.id]}
-  #end
+  def coordenadores_ids
+    coordenacoes.pluck(:usuario_id)
+  end
 
 end

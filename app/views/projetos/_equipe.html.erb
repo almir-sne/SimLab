@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-md-5">
     <h3> Equipe </h3>
-    <%= select_tag :usuarios, options_for_select([''] + @usuarios.collect {|u| [u.nome, u.id]}),
-      :class => "chosen-select" %>
+    <%= select_tag :usuarios, options_for_select([''] + @usuarios),
+      :class => "usuario-select chosen-select" %>
     <%= f.link_to_add ''.html_safe , :workons, :style => "display: none", :id => "workon-add" %>
     <table id="projeto-equipe">
       <tr>
         <th> Nome </th>
-        <th></th>
+        <th style="padding: 0px 20px"> Permissão </th>
         <th> Remover </th>
         <th></th>
       </tr>
@@ -17,13 +17,14 @@
             <%= worker.object.try(:usuario).try(:nome) %>
           </td>
           <td style="padding: 0px 20px">
-            <%= worker.select :permissao_id, options_for_select(Permissao.all.collect{|p| [p.nome, p.id]},
-              worker.object.permissao_id)  %>
+            <%= worker.select :permissao_id, options_for_select(@permissoes, worker.object.permissao_id) %>
           </td>
           <td style="margin-left: 10px">
             <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
           </td>
           <td>
+            <%#= worker.select :coordenacoes, options_for_select(@usuarios, worker.object.try(:coordenadores_ids)),
+              {}, {:class => 'coordenador-select chosen-select', :multiple => 'true'} %>
             <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
           </td>
         </tr>
