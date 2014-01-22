@@ -78,7 +78,7 @@ class AusenciasController < ApplicationController
       ausencia.update_attribute(:avaliador_id, current_user.id)
       ausencia.update_attribute(:horas, a[:horas])
     end
-    flash[:notice] = I18n.t("ausencia.validation.success")
+    flash[:notice] = I18n.t("ausencias.validation.success")
     redirect_to ausencias_path
   end
 
