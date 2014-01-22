@@ -1,37 +1,3 @@
-function pega_horas_dia()
-{
-    var totalHorasTrabalhadas = 0;
-    var primeiraEntrada = 0;
-    var entrada = 0;
-    var saida = 0;
-    $('.horario_select').each(
-            function(i, e) {
-                var entradaH = 0;
-                var entradaM = 0;
-                var saidaH = 0;
-                var saidaM = 0;
-                if ((e.className.indexOf('entrada_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-                    entradaH = parseInt(e.value);
-                    entradaM = parseInt(e.nextElementSibling.value);
-                    entrada = (entradaH * 60) + entradaM;
-                    if (i == 0) {
-                        primeiraEntrada = entrada;
-                    }
-                }
-                else if ((e.className.indexOf('saida_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-                    saidaH = parseInt(e.value);
-                    saidaM = parseInt(e.nextElementSibling.value);
-                    saida = (saidaH * 60) + saidaM;
-                    totalHorasTrabalhadas += (saida - entrada);
-                }
-            }
-    );
-    return {
-        totalIntervalo: (saida - primeiraEntrada - totalHorasTrabalhadas),
-        totalHorasDia: totalHorasTrabalhadas
-    };
-}
-
 function pega_horas_atividade() {
     var atividadeH = parseInt($("#dia_atividades_attributes_0_horas_4i").val());
     var atividadeM = parseInt($("#dia_atividades_attributes_0_horas_5i").val());

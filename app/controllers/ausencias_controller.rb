@@ -99,6 +99,6 @@ class AusenciasController < ApplicationController
 
   private
   def ausencia_params
-    params.require(:ausencia).permit(:id, :usuario_id, :horas, :abonada, :avaliador_id, :justificativa, :mensagem, :dia_id, :projeto_id, anexo: [:id, :arquivo])
+    params.require(:ausencia).permit(:id, :usuario_id, :horas, :abonada, :avaliador_id, :justificativa, :mensagem, :dia_id, :projeto_id, anexo: [:id, :arquivo, :usuario_id])
   end
 end
