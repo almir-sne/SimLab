@@ -189,15 +189,12 @@ class ProjetosController < ApplicationController
       format.js
     end
   end
-  
-  
 
   def campos_cadastro
     authorize! :create, Projeto
     @projeto = Projeto.find params[:id]
     @projeto.campos.build if @projeto.campos.blank?
   end
-
 
   def projetos_params
     params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, 

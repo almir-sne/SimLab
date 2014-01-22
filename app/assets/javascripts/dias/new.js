@@ -1,3 +1,4 @@
+recalculaHoras();
 checkTrello(getCards);
 $(document).on('nested:fieldAdded', function(event) {
     createSlider(event.field.find('.slider'));
@@ -12,12 +13,9 @@ initializeSliders();
 updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 ajustaAltura();
 
-function updateTags(obj)
-{   
+function updateTags(obj) {   
     var id_nome_string = obj.id.toString().replace("_card","");
-   
     box = $(obj).prev();
-    
     $.ajax({
         url: "/dias/cartao_tags",
         data: {cartao_id: id_nome_string},
@@ -34,8 +32,7 @@ function extractLast(term) {
     return split(term).pop();
 }
 
-function tag_autocomplete_apply()
-{
+function tag_autocomplete_apply() {
     $(".tag_autocomplete")
 // don't navigate away from the field on tab when selecting an item
             .bind("keydown", function(event) {
@@ -69,5 +66,9 @@ function tag_autocomplete_apply()
     });
 }
 
-
-
+function recalculaHoras() {
+    // updateAllSliders();
+    horas = pega_horas_dia();
+    $("#horas_do_dia").text(getTime(horas.totalHorasDia));
+    $("#dia_intervalo").text(getTime(horas.totalIntervalo));
+}
