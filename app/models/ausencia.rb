@@ -17,7 +17,7 @@ class Ausencia < ActiveRecord::Base
   belongs_to :projeto
   belongs_to :mes
   belongs_to :avaliador, :class_name => "Usuario"
-  has_one    :anexo
+  has_one    :anexo, :dependent => :destroy
 
   def self.por_periodo(inicio, fim, usuario_id)
     Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')

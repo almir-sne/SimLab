@@ -13,7 +13,7 @@ class Usuario < ActiveRecord::Base
   has_many :contratos
   has_many :coordenacoes
   has_many :ausencias, :through => :dias
-  has_many :anexos
+  has_many :anexos, :dependent => :destroy
   has_many :dias
   has_many :atividades
   has_many :registros
