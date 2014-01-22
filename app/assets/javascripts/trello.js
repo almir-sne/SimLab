@@ -327,7 +327,7 @@ function getBoards() {
             $boards.empty();
             $.each(boards, function(ix, board) {
                 var check;
-                $.each(segundaPraMim, function(index, pps) {
+                $.each($("#boards_ids").val().split(" "), function(index, pps) {
                     if (pps == board.id) {
                         check = true;
                     }

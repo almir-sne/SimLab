@@ -43,29 +43,6 @@ class ProjetosController < ApplicationController
     end
   end
 
-  # GET /projetos/1
-  # GET /projetos/1.json
-  def show
-    authorize! :read, Projeto
-    @projeto = Projeto.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @projeto }
-    end
-  end
-
-  # GET /projetos/new
-  # GET /projetos/new.json
-  def new
-    authorize! :create, Projeto
-    @projeto = Projeto.new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @projeto }
-    end
-  end
-
   # GET /projetos/1/edit
   def edit
     authorize! :read, Projeto
@@ -177,16 +154,6 @@ class ProjetosController < ApplicationController
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
-    end
-  end
-
-  def coordenadorform
-    @workon = Workon.find(params[:wrkn_id])
-    usuarios = Usuario.joins(:workons).where('usuarios.id != ? and workons.projeto_id = ?', @workon.usuario.id, @workon.projeto.id)
-    @user_list = usuarios.collect { |u| [u.nome, u.id]  }
-    respond_to do |format|
-      format.html
-      format.js
     end
   end
 

@@ -39,7 +39,3 @@
   </div>
 <% end %>
 
-<script>
-  var segundaPraMim = <%= @projeto.boards.collect {|b| b.board_id}.to_json.html_safe %>;
-</script>
-

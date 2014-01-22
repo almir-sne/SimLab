@@ -55,12 +55,6 @@ function mostraFilhos() {
     $("#pai").hide(200);
 }
 
-function set_autocomplete_equipe() {
-    $("#equipe_autocomplete").autocomplete({
-        source: users_projeto
-    });
-}
-
 $(".usuario-select").chosen({
     width: "95%",
     no_results_text: "Nenhum resultado encontrado",

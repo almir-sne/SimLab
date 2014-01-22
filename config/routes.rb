@@ -51,7 +51,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :projetos do
+  resources :projetos, :except => [:new, :show] do
     collection do
       get ':id/campos_cadastro' => "projetos#campos_cadastro"
       post :coordenadorform

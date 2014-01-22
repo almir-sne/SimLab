@@ -46,9 +46,5 @@ class Projeto < ActiveRecord::Base
     else
       sub_projetos.map{ |proj| proj.valor }.sum
     end
-  end
-
-  private
-  
-  
+  end  
 end
