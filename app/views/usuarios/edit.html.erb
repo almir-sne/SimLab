@@ -7,228 +7,52 @@
     <li><a href="#dadospessoais" data-toggle="tab">Dados Pessoais</a></li>
     <li><a href="#dadosbancarios" data-toggle="tab">Dados Bancários</a></li>
     <li><a href="#endereco" data-toggle="tab">Endereço</a></li>
-    <li><a href="#dadosprofissionais" data-toggle="tab">Dados Profissionais</a></li>
+    <% if can? :create, Usuario %>
+      <li><a href="#dadosprofissionais" data-toggle="tab">Dados Profissionais</a></li>
+    <% end %>
     <li><a href="#dadosacademicos" data-toggle="tab">Dados Acadêmicos</a></li>
     <li><a href="#anexos" data-toggle="tab">Anexos</a></li>
-    <li><a href="#configuracao" data-toggle="tab">Configuração</a></li>
+    <% if can? :create, Usuario %>
+      <li><a href="#configuracao" data-toggle="tab">Configuração</a></li>
+    <% end %>
   </ul>  
   <div class="tab-content">
     <div class="tab-pane active" id="dadospessoais">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <%= f.label :nome %>
-            <%= f.text_field :nome, :style => "width: 100%"%>
-          </div>
-          <div class="col-md-5 col-md-offset-1">
-            <%= f.label :email %>
-            <%= f.email_field :email, :autofocus => true, :style => "width: 85%" %>
-          </div>
-        </div>
+      <%= render :partial => 'dadospessoais', locals: {f: f} %>
+    </div>
 
-        <div class="row">
-          <div class="col-md-6">
-            <%= f.label :cpf %>
-            <%= f.text_field :cpf, class: 'cpf' %>
-              <%= f.label :data_de_nascimento, "Data de nascimento"%>
-              <%= f.date_select :data_de_nascimento, {start_year: 1940}, :style => "width: 100px" %>
-            </div>
-            <div class="col-md-5 col-md-offset-1">
-              <%= f.label :rg %>
-              <%= f.text_field :rg , class: 'rg' %>
-              </div>
-            </div>
+    <div class="tab-pane" id="dadosbancarios">
+      <%= render :partial => 'dadosbancarios', locals: {f: f} %>
+    </div>
 
-            <%= f.fields_for :telefones, :allow_destroy => true do |tel| %>
-              <div class="row">
-                <div class="col-md-1">
-                  <%= tel.label :ddd , "DDD"%>
-                  <%= tel.text_field :ddd, :style => "width: 35px;", class: 'ddd' %>
-                  </div>
-                  <div class="col-md-6">
-                    <%= tel.label :numero, "Telefone" %>
-                    <%= tel.text_field :numero, class: 'telefone' %>
-                      <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
-                    </div>
-                  </div>
-                <% end %>
-                <%= f.link_to_add 'Adicionar telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-              </div>
-            </div>
+    <div class="tab-pane" id="endereco">
+      <%= render :partial => 'endereco', locals: {f: f} %>            
+    </div>
 
-            <div class="tab-pane" id="dadosbancarios">
-              <div class="container">
-                <%= f.fields_for :contas, :allow_destroy => true do |c| %>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <%= c.label :banco %>
-                      <%= c.text_field :banco %>
-                    </div>
+    <% if can? :create, Usuario %>
+      <div class="tab-pane" id="dadosprofissionais">                       
+        <%= render :partial => 'dadosprofissionais', locals: {f: f} %>                
+      </div>
+    <% end %>
 
-                    <div class="col-md-4">
-                      <%= c.label :agencia %>
-                      <%= c.text_field :agencia, class: 'agencia' %>
-                      </div>
+    <div class="tab-pane" id="dadosacademicos">  
+      <%= render :partial => 'dadosacademicos', locals: {f: f} %>              
+    </div>
 
-                      <div class="col-md-4">
-                        <%= c.label :numero, "Conta" %>
-                        <%= c.text_field :numero, class: 'conta' %>
-                          <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover' %>
-                        </div>
-                      </div>
-                    <% end %>
-                    <%= f.link_to_add 'Adicionar conta', :contas, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-                  </div>
-                </div>
-
-                <div class="tab-pane" id="endereco">
-                  <div class="container">
-                    <%= f.fields_for :address do |builder| %>
-                      <%= render "/addresses/form", :f => builder %>
-                    <% end %>
-                  </div>
-                </div>
-
-                <% if can? :create, Usuario %>
-                  <div class="tab-pane" id="dadosprofissionais">                       
-                    <div class="container">
-                      <%= f.fields_for :contratos, :allow_destroy => true do |c| %>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <%= c.label :hora_mes %>
-                            <%= c.text_field :hora_mes, :style => "width: 50%" %>
-
-                            <%= c.label :valor_hora %>
-                            <%= c.text_field :valor_hora, :style => "width: 50%", class: 'dinheiro' %>
-
-                              <%= c.label :contratante %>
-                              <%= c.text_field :contratante, :style => "width: 100%" %>
-
-                              <%= c.label :dia_inicio_periodo %>
-                              <%= c.select :dia_inicio_periodo, (1..31), {},:style => "width: 75px" %>
-
-                            </div>
-                            <div class="col-md-4">
-                              <%= c.label :tipo, "Tipo de Contrato" %>
-                              <%= c.text_field :tipo, :style => "width: 50%" %>
-
-                              <%= c.label :funcao, "Função" %>
-                              <%= c.text_field :funcao, :style => "width: 50%" %>
-                            </div>
-                            <div class="col-md-5">
-                              <%= c.label :inicio, "Data de inicio do contrato"%>
-                              <%= c.date_select :inicio, {}, :style => "width: 100px" %>
-
-                              <%= c.label :fim, "Data de término do contrato" %>
-                              <%= c.date_select :fim, {}, :style => "width: 100px" %>
-
-                              <br/> <br/>
-                              <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
-                            </div>
-                          </div>
-                          <div class="grey-line"> </div>
-                        <% end %>
-                        <%= f.link_to_add 'Adicionar contrato', :contratos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-                      </div>
-                    </div>
-                  <% end %>
-
-                  <div class="tab-pane" id="dadosacademicos">  
-                    <div class="container">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <%= f.label :entrada_usp, "Entrada na USP" %>
-                          <%= f.date_select :entrada_usp, {start_year: 2000, discard_day: true}, :style => "width: 100px" %>
-                          <%= f.label :saida_usp, "Data ou previsão de formatura"%>
-                          <%= f.date_select :saida_usp, {end_year: 2020, discard_day: true}, :style => "width: 100px" %>
-                          <%= f.label :numero_usp, "Carteira de Identificação" %>
-                          <%= f.text_field :numero_usp, :style => "width: 50%" %>
-                        </div>
-                        <div class="col-md-6">
-                          <%= f.label :curso %>
-                          <%= f.text_field :curso, :style => "width: 50%" %>
-                          <%= f.label :formado, "Formado?" %>
-                          <%= f.label :sim, :class => "inline-label" %>
-                          <%= f.radio_button :formado, true, :class => "inline-label", :style => "margin: 0;" %>
-                          <%= f.label "Não", :class => "inline-label", :style => "margin-left: 20px;" %>
-                          <%= f.radio_button :formado, false, :style => "margin: 0;" %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="tab-pane" id="anexos"> 
-                    <div class="container">
-                      <%= f.fields_for :anexos, @uploads, :allow_destroy => true do |file| %>
-                        <%= file.hidden_field :data, :value => Date.today %>
-                        <div class="row">
-                          <div class="col-md-3">
-                            <%= file.label :nome %>
-                            <%= file.text_field :nome %>
-                          </div>
-                          <div class="col-md-3">
-                            <%= file.label :tipo %>
-                            <%= file.select :tipo, options_for_select(@types, file.object.tipo)  %>
-                          </div>
-                          <div class="col-md-3">
-                            <%= file.label :arquivo %>
-                            <%= file.file_field :arquivo %>
-                          </div>
-                          <!--
-                          <div class="col-md-1">
-                              file.label "Blob?" %>
-                              file.check_box :blob%>
-                           </div>
-                          -->
-                          <div class="col-md-1">
-                            <% unless file.object.arquivo_url.nil? %>
-                              <%= link_to File.basename(file.object.arquivo.url), "/uploads/#{file.object.id}/#{File.basename(file.object.arquivo.url)}" %>
-                            <% end %>
-                            <!--
-                             link_to url_for(:controller => "usuarios", :action => "show_anexo", :id => file.object.id) %>
-                            -->
-                          </div>
-                          <div class="col-md-1">
-                            <%= file.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
-                          </div>
-                        </div>
-                      <%end%>
-                      <%= f.link_to_add 'Adicionar anexo', :anexos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-                    </div>
-                  </div>
+    <div class="tab-pane" id="anexos"> 
+      <%= render :partial => 'anexos', locals: {f: f} %>               
+    </div>
 
 
-                  <% if can? :create, Usuario %>
-                    <div class="tab-pane" id="configuracao"> 
-                      <div class="container">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <%= f.label :role %>
-                            <%= f.select :role, options_for_select(["usuario normal", "diretor", "admin" ], @user.role) %>
-                            <%= f.label :status, "Status no Sistema" %>
-                            <%= f.label :ativo, :class => "inline-label" %>
-                            <%= f.radio_button :status, true, :class => "inline-label", :style => "margin: 0;" %>
-                            <%= f.label :inativo, :class => "inline-label", :style => "margin-left: 20px;" %>
-                            <%= f.radio_button :status, false, :style => "margin: 0;" %>
-                            <%= f.label :login_trello, "Login no Trello" %>
-                            <%= f.text_field :login_trello, :style => "width: 50%" %>
-                          </div>
+    <% if can? :create, Usuario %>
+      <div class="tab-pane" id="configuracao"> 
+         <%= render :partial => 'configuracao', locals: {f: f} %>             
+      </div>
+    <%end%>
+  </div>
 
-                          <div class="col-md-6">
-                            <%= f.label :projetos %>
-                            <% @user.projetos.each do |p| %>
-                              <%= p.nome %> <br/>
-                            <% end %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  <%end%>
-
-                </div>
-
-                <div class="grey-form" style="background: none">
-                  <%= f.submit "Salvar", :class => "btn default-button"%>
-                  <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
-                </div>
-              <% end %>
+  <div class="grey-form" style="background: none">
+    <%= f.submit "Salvar", :class => "btn default-button"%>
+    <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
+  </div>
+<% end %>

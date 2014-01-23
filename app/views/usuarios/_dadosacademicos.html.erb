@@ -1,0 +1,25 @@
+<div class="form-horizontal">
+  <div class="form-group">
+    <%= f.label :entrada_usp, "Entrada na USP", :class => "col-sm-2" %>
+    <%= f.date_select :entrada_usp, {start_year: 2000, discard_day: true}, :style => "width: 100px" %>
+  </div>
+  <div class="form-group">      
+    <%= f.label :saida_usp, "Data ou previsão de formatura", :class => "col-sm-2"%>
+    <%= f.date_select :saida_usp, {end_year: 2020, discard_day: true}, :style => "width: 100px" %>
+  </div>
+  <div class="form-group">  
+    <%= f.label :numero_usp, "Carteira de Identificação", :class => "col-sm-2"%>
+    <%= f.text_field :numero_usp, :class => "col-sm-9"%>
+  </div>
+  <div class="form-group">
+    <%= f.label :curso, :class => "col-sm-2" %>
+    <%= f.text_field :curso, :class => "col-sm-9"%>
+  </div>
+  <div class="form-group">
+    <%= f.label :formado, "Formado?", :class => "col-sm-2" %>
+    <%= f.label :sim, :class => "inline-label" %>
+    <%= f.radio_button :formado, true, :class => "inline-label", :style => "margin: 0;" %>
+    <%= f.label "Não", :class => "inline-label", :style => "margin-left: 20px;" %>
+    <%= f.radio_button :formado, false, :style => "margin: 0;" %>
+  </div>
+</div>

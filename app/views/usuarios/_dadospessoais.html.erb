@@ -1,0 +1,37 @@
+<div class="form-horizontal">
+  <div class="form-group">
+      <%= f.label :nome, :class => "col-sm-2"%>
+      <%= f.text_field :nome, :class => "col-sm-9"%>
+  </div>
+  <div class="form-group">
+     <%= f.label :email, :class => "col-sm-2"  %>
+     <%= f.email_field :email, :autofocus => true, :class => "col-sm-9"%>
+  </div>
+  <div class="form-group">
+      <%= f.label :cpf, :class => "col-sm-2"  %>
+      <%= f.text_field :cpf, class: 'cpf col-sm-9' %>
+  </div>
+  <div class="form-group">
+      <%= f.label :data_de_nascimento, "Data de nascimento", :class => "col-sm-2" %>
+      <%= f.date_select :data_de_nascimento, {start_year: 1940}%>
+  </div>
+  <div class="form-group">
+        <%= f.label :rg, :class => "col-sm-2"  %>
+        <%= f.text_field :rg , class: 'rg col-sm-9' %>
+  </div>
+  <br/>
+   <%= f.fields_for :telefones, :allow_destroy => true do |tel| %>
+      <div class="form-group">
+        <%= tel.label :ddd , "DDD", :class => "col-sm-2" %>
+        <%= tel.text_field :ddd, class: 'ddd col-sm-9' %>
+      </div>
+      <div class="form-group">
+        <%= tel.label :numero, "Telefone", :class => "col-sm-2"  %>
+        <%= tel.text_field :numero, class: 'telefone col-sm-9' %>
+      </div>
+      <div class="form-group">
+        <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover col-sm-2' %>
+      </div>
+   <% end %>
+   <%= f.link_to_add 'Adicionar telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+</div>
