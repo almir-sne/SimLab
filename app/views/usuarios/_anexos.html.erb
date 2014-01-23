@@ -1,0 +1,26 @@
+<div class="form-horizontal">
+  <%= f.fields_for :anexos, @uploads, :allow_destroy => true do |file| %>
+    <%= file.hidden_field :data, :value => Date.today %>
+    <div class="form-group">
+        <%= file.label :nome, :class => "col-sm-2" %>
+        <%= file.text_field :nome, :class => "col-sm-9" %>
+    </div>
+    <div class="form-group">
+        <%= file.label :tipo, :class => "col-sm-2" %>
+        <%= file.select :tipo, options_for_select(@types, file.object.tipo), :class => "col-sm-9"  %>
+    </div>
+    <div class="form-group">
+        <%= file.label :arquivo, :class => "col-sm-2" %>
+        <%= file.file_field :arquivo, :class => "col-sm-9" %>
+    </div>
+    <div class="form-group">
+        <% unless file.object.arquivo_url.nil? %>
+          <%= link_to File.basename(file.object.arquivo.url), "/uploads/#{file.object.id}/#{File.basename(file.object.arquivo.url)}", :class => "col-sm-2" %>
+        <% end %>
+    </div>
+    <div class="form-group">
+        <%= file.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover col-sm-2', :style => "display: block" %>
+    </div>
+  <%end%>
+  <%= f.link_to_add 'Adicionar anexo', :anexos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+</div>
