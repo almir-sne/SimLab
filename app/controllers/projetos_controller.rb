@@ -1,5 +1,14 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
+  before_filter :checa_autorizacao, :only => [:edit, :update, :destroy]
+
+  # fix temporário devido a problemas de compatibilidade com o cancan
+  def checa_autorizacao
+    @projeto = Projeto.find params[:id]
+    if !@projeto.autorizacao(current_user, params[:action])
+      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
+    end
+  end
 
   # GET /projetos
   # GET /projetos.json
@@ -147,10 +156,8 @@ class ProjetosController < ApplicationController
   # DELETE /projetos/1.json
   def destroy
     authorize! :destroy, Projeto
-    if current_usuario.role == "admin"
-      @projeto = Projeto.find(params[:id])
-      @projeto.destroy
-    end
+    @projeto = Projeto.find(params[:id])
+    @projeto.destroy
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }

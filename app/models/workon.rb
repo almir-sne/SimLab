@@ -13,7 +13,9 @@ class Workon < ActiveRecord::Base
   after_save :persist_coordenadores
 
   def persist_coordenadores
-    self.coordenacoes << @novos
+    if @novos
+      self.coordenacoes << @novos
+    end
   end
   
   def coordenadores_ids
