@@ -1,0 +1,14 @@
+<%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
+  <div class="par">
+    <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
+    <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+      :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+    <div class="slider slider-par">
+      <%= par.hidden_field :horas, :class => 'hora_field'%>
+      <div id="time"> </div>
+      <div id="slider"> </div>
+    </div>
+  </div>
+<% end %>
+
+<%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
