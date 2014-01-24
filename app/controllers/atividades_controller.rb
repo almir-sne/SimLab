@@ -40,7 +40,7 @@ class AtividadesController < ApplicationController
       @usuarios_opts = Usuario.select("nome, id").all(:order => "nome").collect { |u| [u.nome, u.id]  }
     else
       @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
-      @usuarios_opts = current_usuario.equipe_coordenada_por_projetos(projetos).collect{ |u| [u.nome, u.id] }
+      @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
     if params[:commit] == "limpar"

@@ -40,11 +40,11 @@
             <ul class="dropdown-menu">
               <li><a href="<%= dias_path(data: Date.today, usuario_id: current_usuario) %>">Calendario de Atividades</a></li>
               <li><a href="<%= periodos_dias_path %>">Meus Períodos</a></li>
-              <%if can? :manage, Atividade %>
-                <li class="navbar-section">Administração</li>
+              <li class="navbar-section">Administração</li>
+              <% if can? :manage, Ausencia %>
                 <li><a href="<%= ausencias_path %>">Ausências</a></li>
-                <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
               <% end %>
+              <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
             </ul>
           </li>
           <li>
@@ -65,11 +65,11 @@
 
               <li>
 
-              <% if can? :manage, :all %>
-                Key: <%=text_field_tag :key  %>
-                Token: <%= text_field_tag :token  %>
-                URL: <%= atualizar_tags_cartoes_dias_path() %>
-              <% end %>
+                <% if can? :manage, :all %>
+                  Key: <%=text_field_tag :key  %>
+                  Token: <%= text_field_tag :token  %>
+                  URL: <%= atualizar_tags_cartoes_dias_path() %>
+                <% end %>
               </li>
             </ul>
           </li>
@@ -131,8 +131,8 @@
     <%= yield %>
 
     <script>
-      var alt_role = "<%= alt_role_usuarios_path %>";
-      var userid = <%= current_usuario.id %>;
+    var alt_role = "<%= alt_role_usuarios_path %>";
+    var userid = <%= current_usuario.id %>;
     </script>
 
     <%= javascript_include_tag javascript_include_view_js %>
