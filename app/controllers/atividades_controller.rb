@@ -37,7 +37,7 @@ class AtividadesController < ApplicationController
     hoje = Date.today
     if current_usuario.role == "admin"
       @projetos_opts = Projeto.select("nome, id").all(:order => "nome").collect { |p| [p.nome, p.id]  }
-      @usuarios_opts = Usuario.select("nome, id").all(:order => "nome").collect { |u| [u.nome, u.id]  }
+      @usuarios_opts = Usuario.select("nome, id").where(status: true).order(:nome).collect { |u| [u.nome, u.id]  }
     else
       @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
       @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
