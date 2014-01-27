@@ -10,6 +10,7 @@ class ProjetosController < ApplicationController
     end
   end
 
+
   # GET /projetos
   # GET /projetos.json
   def index
@@ -139,7 +140,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-    
+
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -171,7 +172,7 @@ class ProjetosController < ApplicationController
   end
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, 
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
       workons_attributes: [:id, :usuario_id,:permissao_id, :_destroy, {:coordenacoes => []}],
       sub_projetos: [:id, :filho],
       campos_attributes: [:id, :categoria, :nome, :tipo, :formato, :_destroy]
