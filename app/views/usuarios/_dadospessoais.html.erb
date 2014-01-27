@@ -19,6 +19,7 @@
         <%= f.label :rg, :class => "col-sm-2"  %>
         <%= f.text_field :rg , class: 'rg col-sm-9' %>
   </div>
+  <div class="grey-line"></div>
   <br/>
    <%= f.fields_for :telefones, :allow_destroy => true do |tel| %>
       <div class="form-group">
@@ -32,6 +33,7 @@
       <div class="form-group">
         <%= tel.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover col-sm-2' %>
       </div>
+      <div class="grey-line"></div>
    <% end %>
    <%= f.link_to_add 'Adicionar telefone', :telefones, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
 </div>

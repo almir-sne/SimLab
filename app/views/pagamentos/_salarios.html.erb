@@ -1,0 +1,25 @@
+<table  class="list-table">
+  <tr>
+    <th> Data   </th>
+    <th> Fonte  </th>
+    <th> Motivo </th>
+    <th> Valor  </th>
+    <th> Anexo  </th>
+    <th></th>
+  </tr>
+  <% @pagamentos.each do |pagamento| %>
+      <tr>
+        <td><%= pagamento.data.to_s(:rfc822) %></td>
+        <td><%= pagamento.fonte              %></td>
+        <td><%= pagamento.motivo             %></td>
+        <td><%= pagamento.valor              %></td>
+        <td><%= link_to(
+          File.basename(pagamento.anexo.arquivo.url),
+          "/uploads/#{pagamento.anexo.id}/#{File.basename(pagamento.anexo.arquivo.url)}"
+          ) unless pagamento.anexo.nil? %></td>
+        <td><%= link_to '<i class="icon-trash"> </i>'.html_safe, pagamento_path(pagamento.id),
+          method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")},
+          class: 'nohover', title: "Excluir" %></td>
+      </tr>
+  <% end %>
+</table>
