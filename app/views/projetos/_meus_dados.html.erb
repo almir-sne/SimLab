@@ -17,7 +17,7 @@
       <% end %>
     </div>
     <br />
-<% end %> 
+<% end %>
   </div>
 </div>
 
@@ -26,9 +26,7 @@
     <% campos_da_categoria.each do |campo| %>
       $("[name='<%= "dados[#{campo.id}]" %>']").mask("<%= campo.formato %>");
     <% end %>
-  <% end %> 
+  <% end %>
 </script>
 
 <%= render partial: 'nav_bar', locals: {f: f} %>
-
-
