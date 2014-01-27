@@ -16,7 +16,12 @@
       <div class="form-group">
         <div class="col-sm-2">
           <%= campo.label :formato, "Máscara"%>
-          <i title="a para letras, 9 para numeros e * para qualquer coisa" class="icon-question-sign nohover" data-toggle="tooltip" href="#"></i>
+          <i title="'0'   : número obrigatório
+'9'   : número opcional
+'A'   : número ou letra
+'S'   : letra
+vazio :  qualquer coisa"
+  class="icon-question-sign nohover" data-toggle="tooltip" href="#"></i>
         </div>
         <%= campo.text_field :formato, :class => "formato col-sm-9" %>
       </div>
