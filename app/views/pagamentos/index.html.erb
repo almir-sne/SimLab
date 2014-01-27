@@ -10,62 +10,9 @@
 </ul>
 <div class="tab-content">
   <div class="tab-pane" id="usuarios">
-    <ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
-      <% @usuarios_nomes.each do |u| %>
-        <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
-      <% end %>
-    </ul>
+    <%= render :partial => 'usuarios'%>
   </div>
   <div class="tab-pane active" id="tudo">
-    <%= form_tag pagamentos_path, {:method => :get} do %>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3">
-            <%= select_tag(:ano, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
-          </div>
-
-          <div class="col-md-3">
-            <%= select_tag(:mes, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
-          </div>
-
-          <div class="col-md-3">
-            <%= select_tag(:dia, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <%= select_tag(:usuario_id, options_for_select(@users, @usuario), {:class => 'menu_select'}) %>
-          </div>
-          <div class="col-md-5">
-            <%= submit_tag('Filtra', {:class => 'btn default-button'}) %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="col-md-9">
-      <%= will_paginate @pagamentos, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
-    </div>
-    <table  class="list-table">
-      <tr>
-        <th> Data    </th>
-        <th> Usuário </th>
-        <th> Fonte   </th>
-        <th> Motivo  </th>
-        <th> Valor   </th>
-      </tr>
-      <% @pagamentos.each do |pagamento| %>
-          <tr>
-            <td><%= pagamento.data.to_s(:rfc822) %></td>
-            <td><%= pagamento.usuario.nome       %></td>
-            <td><%= pagamento.fonte              %></td>
-            <td><%= pagamento.motivo             %></td>
-            <td><%= pagamento.valor              %></td>
-          </tr>
-      <% end %>
-    </table>
-    <div class="col-md-9">
-      <%= will_paginate @pagamentos, :previous_label => t("messages.next"), :next_label => t("messages.previous") %>
-    </div>
+    <%= render :partial => 'tudo'%>
   </div>
 </div>
