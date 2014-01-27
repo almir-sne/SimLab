@@ -1,39 +1,41 @@
-<div class="container">
+<div class="form-horizontal">
   <%= f.fields_for :contratos, :allow_destroy => true do |c| %>
-    <div class="row">
-      <div class="col-md-4">
-        <%= c.label :hora_mes %>
-        <%= c.text_field :hora_mes, :style => "width: 50%" %>
-
-        <%= c.label :valor_hora %>
-        <%= c.text_field :valor_hora, :style => "width: 50%", class: 'dinheiro' %>
-
-          <%= c.label :contratante %>
-          <%= c.text_field :contratante, :style => "width: 100%" %>
-
-          <%= c.label :dia_inicio_periodo %>
-          <%= c.select :dia_inicio_periodo, (1..31), {},:style => "width: 75px" %>
-
-        </div>
-        <div class="col-md-4">
-          <%= c.label :tipo, "Tipo de Contrato" %>
-          <%= c.text_field :tipo, :style => "width: 50%" %>
-
-          <%= c.label :funcao, "Função" %>
-          <%= c.text_field :funcao, :style => "width: 50%" %>
-        </div>
-        <div class="col-md-5">
-          <%= c.label :inicio, "Data de inicio do contrato"%>
-          <%= c.date_select :inicio, {}, :style => "width: 100px" %>
-
-          <%= c.label :fim, "Data de término do contrato" %>
-          <%= c.date_select :fim, {}, :style => "width: 100px" %>
-
-          <br/> <br/>
-          <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "display: block" %>
-        </div>
+    <div class="form-group">
+      <%= c.label :hora_mes, :class => "col-sm-2" %>
+      <%= c.text_field :hora_mes%>
+    </div>
+    <div class="form-group">
+      <%= c.label :valor_hora, :class => "col-sm-2" %>
+      <%= c.text_field :valor_hora, class: 'dinheiro' %>
       </div>
-      <div class="grey-line"> </div>
- <% end %>
- <%= f.link_to_add 'Adicionar contrato', :contratos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-</div>
+      <div class="form-group">
+        <%= c.label :contratante, :class => "col-sm-2" %>
+        <%= c.text_field :contratante, class: "col-sm-9"%>
+        </div>
+        <div class="form-group">
+          <%= c.label :dia_inicio_periodo, :class => "col-sm-2" %>
+          <%= c.select :dia_inicio_periodo, (1..31), {}%>
+        </div>
+        <div class="form-group">
+          <%= c.label :tipo, "Tipo de Contrato", :class => "col-sm-2" %>
+          <%= c.text_field :tipo, class: "col-sm-9"%>
+          </div>
+          <div class="form-group">
+            <%= c.label :funcao, "Função", :class => "col-sm-2" %>
+            <%= c.text_field :funcao, class: "col-sm-9"%>
+            </div>
+            <div class="form-group">
+              <%= c.label :inicio, "Data de inicio do contrato", :class => "col-sm-2"%>
+              <%= c.date_select :inicio, {} %>
+            </div>
+            <div class="form-group">
+              <%= c.label :fim, "Data de término do contrato", :class => "col-sm-2" %>
+              <%= c.date_select :fim, {}%>
+            </div>
+            <div class="form-group">
+              <%= c.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover col-sm-2', :style => "display: block" %>
+            </div>
+            <div class="grey-line"> </div>
+          <% end %>
+          <%= f.link_to_add 'Adicionar contrato', :contratos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
+        </div>
