@@ -72,13 +72,13 @@
             <td>
               <%= atividade.observacao %>
               <% if atividade.cartao %>
-                <input type="hidden" class="card-placeholder" id="<%= atividade.trello_id %>"/></input>
+                <input type="hidden" class="card-placeholder card-default" id="<%= atividade.trello_id %>"/></input>
               <% end %>
 
             </td>
             <td>
               <% if atividade.try(:cartao).try(:pai) %>
-                <input type="hidden" class="card-placeholder father-abrev"
+                <input type="hidden" class="card-placeholder card-father"
                        id="<%= atividade.cartao.pai.trello_id %>">
                 </input>
               <% else %>

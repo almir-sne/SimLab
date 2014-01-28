@@ -19,7 +19,7 @@
     <%= javascript_include_tag "layouts/application.js" %>
     <%= csrf_meta_tags %>
   </head>
-  <body onload="checkTrello(loadSimpleCards)">
+  <body onload="checkTrello(loadTrelloData)">
     <nav class="navbar navbar-default" role="navigation" id="upper-bar">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -60,7 +60,7 @@
               <li> <%= link_to "Decks", decks_path %></li>
               <li class="navbar-section">Trello</li>
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
-              <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
+              <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadTrelloData)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
 
               <li>

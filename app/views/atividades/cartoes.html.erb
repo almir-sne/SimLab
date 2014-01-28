@@ -55,7 +55,7 @@
   </tr>
   <% @stats.each do |s| %>
     <tr>
-      <td> <input type="hidden" class="card-placeholder" id="<%= s[:cartao_id] %>"> </input> </td>
+      <td> <input type="hidden" class="card-placeholder card-default" id="<%= s[:cartao_id] %>"> </input> </td>
       <td> <%= s[:horas] %> </td>
       <td> <%= s[:num_atividades] %> </td>
       <td> <%= link_to '<i class="icon-list"></i>'.html_safe,
