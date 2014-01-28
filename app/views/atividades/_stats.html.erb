@@ -1,0 +1,14 @@
+<table  class="list-table">
+  <tr>
+    <th> Cartão </th>
+    <th> Horas Totais </th>
+    <th> Número de atividades </th>
+  </tr>
+  <% @stats.each do |s| %>
+    <tr>
+      <td> <input type="hidden" class="card-placeholder" id="<%= s[:cartao_id] %>"> </input> </td>
+      <td> <%= s[:horas] %> </td>
+      <td> <%= s[:num_atividades] %> </td>
+    </tr>
+  <% end %>
+</table>

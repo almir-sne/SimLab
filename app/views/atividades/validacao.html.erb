@@ -62,7 +62,7 @@
               <a href="<%= new_dia_path(:data=> dia.data, :usuario_id => dia.usuario.id) %>" target="_blank">
                 <p style="text-decoration: underline"> <%= dia.usuario.nome %> </p>
               </a>
-              <p> E: <%= dia.entrada %> S: <%= dia.saida %></p>
+              <p> E: <%= dia.entrada_formatada %> S: <%= dia.saida_formatada %></p>
               <p> <%= int_to_horas dia.horas %> horas </p>
               <p> <%= dia.horas_atividades_todas %> horas </p>
             </td>

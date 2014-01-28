@@ -1,7 +1,7 @@
 class Pagamento < ActiveRecord::Base
   belongs_to :usuario
   belongs_to :criador, :class_name => "Usuario"
-  has_one    :anexo
+  has_one    :anexo, :dependent => :destroy
 
   scope :periodos, lambda { |range| where(data: range)}
   scope :ano, lambda { |value| where(['extract(year from pagamentos.data) = ?', value]) if value > 0 }

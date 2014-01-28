@@ -4,7 +4,7 @@ class Projeto < ActiveRecord::Base
   validates :descricao,      :presence => true
 
   validates :nome,           :presence  => true,
-                             :uniqueness => true
+    :uniqueness => true
 
   belongs_to :super_projeto, :class_name => "Projeto"
   has_many :sub_projetos, :class_name => "Projeto", :foreign_key => "super_projeto_id", :dependent => :nullify
@@ -22,12 +22,12 @@ class Projeto < ActiveRecord::Base
   accepts_nested_attributes_for :dados, :allow_destroy => true
 
   #def coordenadores
-    #self.usuarios.includes(:workon).where("workons.coordenador" => true)
+  #self.usuarios.includes(:workon).where("workons.coordenador" => true)
   #end
 
   #def coordenadores
-     #self.usuarios.includes(:workon).where("workons.coordenador" => true) |
-       #(super_projeto.nil? ? [] : super_projeto.try(:usuarios).includes(:workon).where("workons.coordenador" => true))
+  #self.usuarios.includes(:workon).where("workons.coordenador" => true) |
+  #(super_projeto.nil? ? [] : super_projeto.try(:usuarios).includes(:workon).where("workons.coordenador" => true))
   #end
 
   def horas_totais
@@ -47,8 +47,37 @@ class Projeto < ActiveRecord::Base
       sub_projetos.map{ |proj| proj.valor }.sum
     end
   end
-
-  private
   
-  
+  # fix temporário devido a problemas de compatibilidade com o cancan
+  def autorizacao(usuario, acao)
+    if usuario.role == 'admin'
+      true
+    else
+      workon = workons.find_by(usuario_id: usuario.id)
+      if workon
+        case acao
+        when "destroy"
+          if workon.permissao.nome == "admin"
+            true
+          else
+            false
+          end
+        when "edit"
+          if workon
+            true
+          else
+            false
+          end
+        when "update"
+          if workon.permissao.nome == "admin" or workon.permissao.nome == "coordenador"
+            true
+          else
+            false
+          end
+        end
+      else
+        false
+      end
+    end
+  end
 end

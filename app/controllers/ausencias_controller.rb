@@ -23,13 +23,14 @@ class AusenciasController < ApplicationController
     if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
-        Anexo.new(
+        a = Anexo.new(
           :arquivo     => params[:anexo],
           :tipo        => "atestado",
           :data        => @ausencia.dia.data,
-          :usuario_id  => params[:usuario_id],
+          :usuario_id  => current_usuario.id,
           :ausencia_id => @ausencia.id
-        ).save
+        )
+        a.save
       end
     else
       flash[:error] = I18n.t("ausencias.create.failure")
@@ -77,7 +78,7 @@ class AusenciasController < ApplicationController
       ausencia.update_attribute(:avaliador_id, current_user.id)
       ausencia.update_attribute(:horas, a[:horas])
     end
-    flash[:notice] = I18n.t("ausencia.validation.success")
+    flash[:notice] = I18n.t("ausencias.validation.success")
     redirect_to ausencias_path
   end
 

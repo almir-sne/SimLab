@@ -1,0 +1,15 @@
+<%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+  :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+<%= render "mensagem", :atividade_form => atividade_form %>
+<%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+<%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+{}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
+<br/>
+
+<div class="slider slider-horas">
+  <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
+  <%= atividade_form.hidden_field :horas, :class => 'hora_field atividade_field'%>
+  <div id="time"></div>
+  <div id="slider"></div>
+</div>
+<%= atividade_form.hidden_field :trello_id, :class => 'cartao_field'%>

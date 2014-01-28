@@ -42,7 +42,7 @@ class Dia < ActiveRecord::Base
   end
 
   def entrada_formatada
-    if entrada.nil? and entrada != 0.0
+    if !entrada.nil? and entrada != 0.0
       entrada.strftime("%H:%M")
     else
       ""
@@ -50,7 +50,7 @@ class Dia < ActiveRecord::Base
   end
 
   def saida_formatada
-    if saida.nil? and saida != 0.0
+    if !saida.nil? and saida != 0.0
       saida.strftime("%H:%M")
     end
   end

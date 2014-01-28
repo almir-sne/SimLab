@@ -16,11 +16,13 @@ class UsuariosController < ApplicationController
   end
 
   def custom_create
+    authorize! :create, Usuario
     create
   end
 
   def create
     authorize! :create, Usuario
+    debugger
     @user = Usuario.new(usuario_params)
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")
@@ -96,14 +98,14 @@ class UsuariosController < ApplicationController
   private
   def usuario_params
     params.require(:usuario).permit(:email, :password, :password_confirmation, :remember_me, :nome,
-    :entrada_usp, :saida_usp, :cpf, :role, :address_id, :formado, :status, :data_de_nascimento, :rg,
-    :curso, :numero_usp, :login_trello,
-    anexos_attributes:    [:id, :data, :nome, :tipo, :arquivo, :_destroy],
-    contratos_attributes: [:id, :hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
-      :fim, :_destroy],
-    telefones_attributes: [:id, :ddd, :numero, :_destroy],
-    contas_attributes:    [:id, :banco, :agencia, :numero, :_destroy],
-    address_attributes:   [:id, :street, :bairro, :city, :state, :number, :complemento, :cep])
+      :entrada_usp, :saida_usp, :cpf, :role, :address_id, :formado, :status, :data_de_nascimento, :rg,
+      :curso, :numero_usp, :login_trello,
+      anexos_attributes:    [:id, :data, :nome, :tipo, :arquivo, :_destroy],
+      contratos_attributes: [:id, :hora_mes, :valor_hora, :contratante, :dia_inicio_periodo, :tipo, :funcao, :inicio,
+        :fim, :_destroy],
+      telefones_attributes: [:id, :ddd, :numero, :_destroy],
+      contas_attributes:    [:id, :banco, :agencia, :numero, :_destroy],
+      address_attributes:   [:id, :street, :bairro, :city, :state, :number, :complemento, :cep])
   end
 
 

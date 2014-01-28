@@ -1,5 +1,15 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
+  before_filter :checa_autorizacao, :only => [:edit, :update, :destroy]
+
+  # fix temporário devido a problemas de compatibilidade com o cancan
+  def checa_autorizacao
+    @projeto = Projeto.find params[:id]
+    if !@projeto.autorizacao(current_user, params[:action])
+      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
+    end
+  end
+
 
   # GET /projetos
   # GET /projetos.json
@@ -40,29 +50,6 @@ class ProjetosController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projetos }
-    end
-  end
-
-  # GET /projetos/1
-  # GET /projetos/1.json
-  def show
-    authorize! :read, Projeto
-    @projeto = Projeto.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @projeto }
-    end
-  end
-
-  # GET /projetos/new
-  # GET /projetos/new.json
-  def new
-    authorize! :create, Projeto
-    @projeto = Projeto.new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @projeto }
     end
   end
 
@@ -153,7 +140,7 @@ class ProjetosController < ApplicationController
     else
       @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
     end
-    
+
     failure ||= !(@projeto.update_attributes projetos_params)
     respond_to do |format|
       if !failure
@@ -170,23 +157,11 @@ class ProjetosController < ApplicationController
   # DELETE /projetos/1.json
   def destroy
     authorize! :destroy, Projeto
-    if current_usuario.role == "admin"
-      @projeto = Projeto.find(params[:id])
-      @projeto.destroy
-    end
+    @projeto = Projeto.find(params[:id])
+    @projeto.destroy
     respond_to do |format|
       format.html { redirect_to projetos_url }
       format.json { head :no_content }
-    end
-  end
-
-  def coordenadorform
-    @workon = Workon.find(params[:wrkn_id])
-    usuarios = Usuario.joins(:workons).where('usuarios.id != ? and workons.projeto_id = ?', @workon.usuario.id, @workon.projeto.id)
-    @user_list = usuarios.collect { |u| [u.nome, u.id]  }
-    respond_to do |format|
-      format.html
-      format.js
     end
   end
 
@@ -197,8 +172,8 @@ class ProjetosController < ApplicationController
   end
 
   def projetos_params
-    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id, 
-      workons_attributes: [:id, :usuario_id,:permissao_id, :_destroy],
+    params.require(:projeto).permit(:data_de_inicio, :descricao, :nome, :super_projeto_id,
+      workons_attributes: [:id, :usuario_id,:permissao_id, :_destroy, {:coordenacoes => []}],
       sub_projetos: [:id, :filho],
       campos_attributes: [:id, :categoria, :nome, :tipo, :formato, :_destroy]
     )

@@ -1,0 +1,15 @@
+<%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
+                      :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
+
+                    <div style="display: none">
+                      <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+                        &nbsp;Arraste o cartão pai aqui.
+                      </div>
+                      <div id="input">
+                        <% unless atividade_form.object.cartao.try(:pai).nil? %>
+
+                          <%= hidden_field_tag :cartao_pai, atividade_form.object.cartao.pai.trello_id,
+                            :class => 'cartao_field' %>
+                        <% end %>
+                      </div>
+                    </div>

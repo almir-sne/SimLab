@@ -37,7 +37,11 @@ SinLab::Application.routes.draw do
     get "meses/index"
   end
 
-  devise_for :usuarios
+  
+  #devise_for :users, :controllers => {:passwords => "users/passwords", :registrations => "users/registrations", :sessions => "users/sessions"}
+  
+  devise_for :usuarios, controllers: {registrations: "registrations"}
+  
   devise_scope :usuarios do
     get '/login' => 'devise/sessions#new'
     get '/logout' => 'devise/sessions#destroy'
@@ -51,7 +55,7 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :projetos do
+  resources :projetos, :except => [:new, :show] do
     collection do
       get ':id/campos_cadastro' => "projetos#campos_cadastro"
       post :coordenadorform

@@ -19,6 +19,11 @@ window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) 
         });
         tableData.text(nome);
         tableData.append(usuario_id_hidden_input);
+        a.find(".coordenador-select").chosen({
+            width: "95%",
+            no_results_text: "Nenhum resultado encontrado",
+            placeholder_text_multiple: "Coordenadores..."
+        });
         return a;
     }
 };
@@ -50,12 +55,6 @@ function mostraFilhos() {
     $("#pai").hide(200);
 }
 
-function set_autocomplete_equipe() {
-    $("#equipe_autocomplete").autocomplete({
-        source: users_projeto
-    });
-}
-
 $(".usuario-select").chosen({
     width: "95%",
     no_results_text: "Nenhum resultado encontrado",
@@ -69,5 +68,5 @@ $('.usuario-select').on('change', function(evt, params) {
 $('.coordenador-select').chosen({
     width: "95%",
     no_results_text: "Nenhum resultado encontrado",
-    placeholder_text_multiple: "Selecione os coordenadores"
+    placeholder_text_multiple: "Coordenadores..."
 });

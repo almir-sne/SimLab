@@ -204,32 +204,38 @@ class DiasController < ApplicationController
     data     = params[:data].nil? ? @today : Date.parse(params[:data])
     @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
     @tipo    = params[:tipo].blank? ? 'p' : params[:tipo]
-    if params[:inicio].nil? or params[:fim].nil?
-      if @tipo == 'p'
-        periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
-        @inicio = periodo.first
-        @fim = periodo.last
-      elsif @tipo == 'm'
-        @inicio = data.beginning_of_month
-        @fim = data.end_of_month
-      elsif @tipo == 's'
-        @inicio = data.beginning_of_week(:sunday)
-        @fim = data.end_of_week(:sunday)
-      end
+    
+    if (Usuario.find(@usuario.id).contrato_vigente_em(data).nil?)
+      redirect_to edit_usuario_path(:id => current_user.id)
     else
-      @inicio = Date.parse params[:inicio]
-      @fim = Date.parse params[:fim]
-    end
-    if can? :manage, :usuario
-      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-    end
-    @projetos          = @usuario.meus_projetos
-    @dias_periodo      = dias_no_periodo(@inicio, @fim)
-    @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
-    @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    @equipe            = @usuario.equipe
-    respond_to do |format|
-      format.html # index.html.erb
+      if params[:inicio].nil? or params[:fim].nil?
+        if @tipo == 'p'
+          periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
+          @inicio = periodo.first
+          @fim = periodo.last
+        elsif @tipo == 'm'
+          @inicio = data.beginning_of_month
+          @fim = data.end_of_month
+        elsif @tipo == 's'
+          @inicio = data.beginning_of_week(:sunday)
+          @fim = data.end_of_week(:sunday)
+        end
+      else
+        @inicio = Date.parse params[:inicio]
+        @fim = Date.parse params[:fim]
+      end
+      if can? :manage, :usuario
+        @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+      end
+      @projetos          = @usuario.meus_projetos
+    
+      @dias_periodo      = dias_no_periodo(@inicio, @fim)
+      @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+      @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+      @equipe            = @usuario.equipe
+      respond_to do |format|
+        format.html # index.html.erb
+      end
     end
   end
 
@@ -291,7 +297,7 @@ class DiasController < ApplicationController
   def dia_params
     params.require(:dia).permit(:data, :usuario_id, :cartao,
       atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy,
-          pares_attributes: [:id, :par_id, :_destroy, :horas]],
+        pares_attributes: [:id, :par_id, :_destroy, :horas]],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
 
@@ -318,6 +324,6 @@ class DiasController < ApplicationController
       hash[attribute + '(3i)'].to_i,
       hash[attribute + '(4i)'].to_i,
       hash[attribute + '(5i)'].to_i,
-    0)
+      0)
   end
 end

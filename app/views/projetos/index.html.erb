@@ -1,10 +1,10 @@
-<div class="blue-text" style="margin-left: 30px">
-  Projetos
+<div>
+  <h2 class="blue-text" style="display: inline; margin: 30px"> Projetos </h2>
   <%= select_tag "tipo", options_for_select(["super_projetos", "sub_projetos", "TODOS"], @tipo), :style => "float:right; margin-right: 10px" %>
 </div>
 <div class="blue-line">  </div>
 
-<div class="container" id="projetos">
+<div style="margin: 30px" id="projetos">
   <div class="row">
     <div class="col-md-4"><h5> Nome do projeto</h5></div>
     <div class="col-md-1"><h5> Data de início</h5></div>
@@ -67,5 +67,5 @@
 <%= render :partial => "modal"%>
 
 <script>
-  var projpath = <%= projetos_path %>;
+  var projpath = "<%= projetos_path %>";
 </script>

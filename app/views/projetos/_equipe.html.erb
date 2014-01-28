@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-7">
     <h3> Equipe </h3>
     <%= select_tag :usuarios, options_for_select([''] + @usuarios),
       :class => "usuario-select chosen-select" %>
@@ -22,19 +22,19 @@
           <td style="margin-left: 10px">
             <%= worker.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover" %>
           </td>
-          <td>
-            <%#= worker.select :coordenacoes, options_for_select(@usuarios, worker.object.try(:coordenadores_ids)),
+          <td style="width: 45%">
+            <%= worker.select :coordenacoes, options_for_select(@usuarios, worker.object.try(:coordenadores_ids)),
               {}, {:class => 'coordenador-select chosen-select', :multiple => 'true'} %>
-            <%= link_to "Adicionar Coordenadores", edit_workon_path(id: Workon.select(:id).joins(:usuario).where(:usuario => {:nome => worker.object.usuario.try(:nome)},:projeto_id => @projeto.id ).collect { |u| u.id }) %>
           </td>
         </tr>
       <% end %>
       <tr id='novo_item'></tr>
     </table>
   </div>
-  <div class="col-md-offset-2 col-md-3">
+  <div class="col-md-offset-1 col-md-3">
 
     <h3> Boards do Trello </h3>
+    <%= hidden_field_tag :boards_ids, @projeto.boards.pluck(:board_id) %>
     <div class="loggedout">
       <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
     </div>

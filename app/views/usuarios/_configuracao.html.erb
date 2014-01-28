@@ -1,0 +1,25 @@
+<div class="form-horizontal">
+  <div class="form-group">
+    <%= f.label :role, :class => "col-sm-2" %>
+    <%= f.select :role, options_for_select(["usuario normal", "diretor", "admin" ], @user.role) %>
+  </div>
+  <div class="form-group">   
+    <%= f.label :status, "Status no Sistema", :class => "col-sm-2" %>
+    <%= f.label :ativo, :class => "inline-label" %>
+    <%= f.radio_button :status, true, :class => "inline-label", :style => "margin: 0;" %>
+    <%= f.label :inativo, :class => "inline-label", :style => "margin-left: 20px;" %>
+    <%= f.radio_button :status, false, :style => "margin: 0;" %>
+  </div>
+  <div class="form-group">    
+    <%= f.label :login_trello, "Login no Trello", :class => "col-sm-2" %>
+    <%= f.text_field :login_trello, :style => "width: 50%" %>
+  </div>
+
+  <div class="form-group"> 
+    <%= f.label :projetos, :class => "col-sm-2"  %>
+    <% @user.projetos.each do |p| %>
+      <%= p.nome %> <br/>
+    <% end %>
+  </div>
+
+</div>
