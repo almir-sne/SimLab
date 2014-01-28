@@ -2,38 +2,35 @@
   Campos Do Projeto
 </div>
 <div class="blue-line">  </div>
-
 <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
-  <div class="div_edit">
+  <div class="form-horizontal" style="margin-left:15px; margin-top:15px">
     <%= f.fields_for :campos, :allow_destroy => true do |campo| %>
       <div class="form-group">
-        <div class="container">
-          <div class="row">
-            <div>
-              <%= campo.label :categoria %>
-              <%= campo.text_field :categoria, :style => "width: 60%; margin-left: 20px"%>
-            </div>
-            <div>
-              <%= campo.label :nome %>
-              <%= campo.text_field :nome, :style => "width: 60%; margin-left: 48px" %>
-              <%= campo.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover', :style => "margin-left: 10%" %>
-            </div>
-            <div>
-              <%= campo.label :formato %>
-              <%= campo.text_field :formato, :style => "width: 60%; margin-left: 48px" %>
-            </div>
-            <div>
-              <%= campo.label :tipo %>
-              <%= campo.select :tipo, (1..10)%>
-            </div>
-          </div>
-        </div>
+        <%= campo.label :categoria, :class => "col-sm-2"  %>
+        <%= campo.text_field :categoria, :class => "col-sm-9" %>
       </div>
+      <div class="form-group">
+        <%= campo.label :nome, :class => "col-sm-2"  %>
+        <%= campo.text_field :nome, :class => "col-sm-9"  %>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2">
+          <%= campo.label :formato, "Máscara"%>
+          <i title="'0'   : número obrigatório
+'9'   : número opcional
+'A'   : número ou letra
+'S'   : letra
+vazio :  qualquer coisa"
+  class="icon-question-sign nohover" data-toggle="tooltip" href="#"></i>
+        </div>
+        <%= campo.text_field :formato, :class => "formato col-sm-9" %>
+      </div>
+      <div class="form-group">
+        <%= campo.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class => 'nohover col-sm-2'%>
+      </div>
+      <div class="grey-line"> </div>
     <% end %>
     <%= f.link_to_add 'Adicionar Campo', :campos, :class => "btn default-button", :style => "margin-bottom: 20px;"%>
-    <div class="form-group" style="background: none">
-      <%= f.submit "Salvar", :class => "btn default-button"%>
-      <%= link_to 'Cancelar', :back , :class => "btn default-button"%>
-    </div>
   </div>
+  <%= render partial: 'nav_bar', locals: {f: f} %>
 <% end %>

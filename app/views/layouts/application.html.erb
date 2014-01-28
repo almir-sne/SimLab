@@ -62,15 +62,6 @@
               <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
               <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadTrelloData)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
-
-              <li>
-
-                <% if can? :manage, :all %>
-                  Key: <%=text_field_tag :key  %>
-                  Token: <%= text_field_tag :token  %>
-                  URL: <%= atualizar_tags_cartoes_dias_path() %>
-                <% end %>
-              </li>
             </ul>
           </li>
           <li class="dropdown">

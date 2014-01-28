@@ -1,0 +1,29 @@
+<%= form_tag cartoes_atividades_path, {:method => :get} do %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <%= select_tag(:ano, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:mes, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:dia, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <%= select_tag(:usuario_id, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+      </div>
+      <div class="col-md-3">
+        <%= select_tag(:projeto_id, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag('Filtra', {:class => 'btn default-button'}) %>
+      </div>
+    </div>
+  </div>
+<% end %>

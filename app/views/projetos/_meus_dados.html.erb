@@ -3,22 +3,27 @@
 <div class="tabbable tabs-left">
   <ul class="nav nav-tabs">
   <% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
-    <li><a href="#<%= categoria %>" data-toggle="tab"><%= categoria %></a></li>
+    <% cat = categoria.gsub( /\s/, '_' ) %>
+    <li><a href="#<%= cat %>" data-toggle="tab"><%= categoria %></a></li>
   <% end %>
   </ul>
   <div class="tab-content">
+
 <% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
-    <div class="tab-pane" id="<%= categoria %>">
-      <br/>
+    <% cat = categoria.gsub( /\s/, '_' ) %>
+    <div class="tab-pane" id="<%= cat %>">
+      <div class="form-horizontal">
       <% campos_da_categoria.each do |campo| %>
-        <%= campo.nome %>
-        <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), {name: "dados[#{campo.id}]", width: '20'} %>
-        <br />
+      <div class="form-group">
+        <%= label_tag campo.nome, campo.nome, {class: "col-sm-2"} %>
+        <%= text_field_tag campo.id, campo.dados_do_usuario(current_usuario), {name: "dados[#{campo.id}]"} %>
+      </div>
       <% end %>
+      </div>
     </div>
-    <br />
-<% end %> 
+<% end %>
   </div>
+
 </div>
 
 <script>
@@ -26,9 +31,7 @@
     <% campos_da_categoria.each do |campo| %>
       $("[name='<%= "dados[#{campo.id}]" %>']").mask("<%= campo.formato %>");
     <% end %>
-  <% end %> 
+  <% end %>
 </script>
 
 <%= render partial: 'nav_bar', locals: {f: f} %>
-
-
