@@ -191,9 +191,9 @@ class ProjetosController < ApplicationController
   end
 
   def campos_cadastro
-    authorize! :create, Projeto
+    authorize! :criar_campos, Usuario
     @projeto = Projeto.find params[:id]
-    @projeto.campos.build if @projeto.campos.blank?
+    @projeto.campos.build if @projeto.campos.blank? 
   end
 
   def projetos_params

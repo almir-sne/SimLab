@@ -20,9 +20,9 @@ class Ability
         can :update, :validations
       end
       can :create, Projeto
-      can :edit, Projeto, :workons => {:usuario_id => user.id}
-      can :manage, Projeto, :workons => {:usuario_id => user.id, :permissao => {:nome => "admin"}}
-      can :update, Projeto, :workons => {:usuario_id => user.id, :permissao => {:nome => "coordenador"}}
+      can :edit, Projeto, :workons => {:usuario_id => user.id}  
+      can :manage, Projeto, :workons => {:usuario_id => user.id, :permissao_id => 1}  
+      can :update, Projeto, :workons => {:usuario_id => user.id, :permissao_id => 2}
       can :download,            Anexo, :usuario_id => user.id
       can :read,                Usuario, :usuario_id => user.id
       can [:read,:create],      Dia, :usuario_id => user.id
