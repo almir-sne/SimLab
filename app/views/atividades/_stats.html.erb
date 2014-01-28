@@ -3,16 +3,12 @@
     <th> Cartão </th>
     <th> Horas Totais </th>
     <th> Número de atividades </th>
-    <th> Detalhes </th>
   </tr>
   <% @stats.each do |s| %>
     <tr>
       <td> <input type="hidden" class="card-placeholder" id="<%= s[:cartao_id] %>"> </input> </td>
       <td> <%= s[:horas] %> </td>
       <td> <%= s[:num_atividades] %> </td>
-      <td> <%= link_to '<i class="icon-list"></i>'.html_safe,
-            cartoes_listar_atividades_path(cartao_id: s[:cartao_id]), :class => "nohover" %>
-      </td>
     </tr>
   <% end %>
 </table>

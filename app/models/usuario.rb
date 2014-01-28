@@ -1,4 +1,5 @@
 class Usuario < ActiveRecord::Base
+  after_initialize :init
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -30,6 +31,10 @@ class Usuario < ActiveRecord::Base
 
   validates :nome, :presence => true,
     :uniqueness => true
+  
+  def init
+    self.role ||= "usuario normal"
+  end
 
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
