@@ -53,14 +53,12 @@
       <th> Número de atividades </th>
       <th> Detalhes </th>
     </tr>
-    <% @stats.each do |s| %>
+    <% @cartoes.each do |cartao| %>
       <tr>
-        <td> <input type="hidden" class="card-placeholder card-default" id="<%= s[:cartao_id] %>"> </input> </td>
-        <td> <%= s[:horas] %> </td>
-        <td> <%= s[:num_atividades] %> </td>
-        <td> <%= link_to '<i class="icon-list"></i>'.html_safe,
-            cartao_path(id: s[:cartao_id]), :class => "nohover" %>
-        </td>
+        <td> <%= hidden_field_tag cartao.trello_id, "", :class => "card-placeholder card-default" %> </td>
+        <td> <%= int_to_horas(cartao.horas_trabalhadas) %> </td>
+        <td> <%= cartao.atividades.count %> </td>
+        <td> <%= link_to '<i class="icon-list"></i>'.html_safe, cartao_path(cartao), :class => "nohover" %> </td>
       </tr>
     <% end %>
   </table>

@@ -1,0 +1,56 @@
+<div class="blue-text" style="margin-left: 30px">
+  Editando cartao
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div style="padding: 25px">
+      <div class="grey-form" style="padding: 15px">
+        <h4> Cartão </h4>
+        <%= hidden_field_tag @cartao.trello_id, "", :class => "card-placeholder card-default" %>
+      </div>
+      <%= form_for(@cartao) do |f| %>
+
+        <% if @cartao.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@cartao.errors.count, "error") %> prohibited this deck from being saved:</h2>
+            <ul>
+              <% @cartao.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="field" style="margin: 15px;">
+          <%= f.label :tags_string, "Tags" %> 
+          <%= f.text_field :tags_string %>
+        </div>
+
+        <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+          &nbsp;Arraste o cartão pai aqui.
+        </div>
+
+
+        <%= f.hidden_field :pai_trello_id %>
+        <div id="input-pai">
+          <% if @cartao.pai_trello_id %>
+            <%= hidden_field_tag @cartao.pai_trello_id, "", :class => "card-placeholder card-form" %>
+          <% end %>
+        </div>
+
+        <div id="lower-bar" class="navbar-fixed-bottom toolbar">
+          <%= hidden_field_tag :key  %>
+          <%= hidden_field_tag :token  %>
+          <%= f.submit :class => "btn default-button" %>
+          <%= link_to 'Voltar', decks_path, :class =>  "btn default-button" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <%= render :partial => '/shared/boards'%>
+  </div>
+</div>
+<br/> <br/> 
+
+

@@ -5,6 +5,7 @@ SinLab::Application.routes.draw do
   resources :cartoes, :except => [:destroy, :create, :new] do
     collection do
       post :atualizar_trello
+      get :find_or_create
     end
   end
 

@@ -86,52 +86,13 @@ function dropCard(event) {
     }
 }
 
-function insertFather(atividadeDiv, cartao_id) {
-    var input = atividadeDiv.find("#input");
-    $.ajax({
-        url: "/dias/cartao_pai",
-        data: {cartao_id: cartao_id},
-        success: function(result) {
-            input.empty();
-            $("<input>").attr({
-                id: "cartao_pai",
-                value: result,
-                type: "hidden",
-                name: "cartao[" + cartao_id + "][cartao_pai]"
-            }).appendTo(input);
-            loadCardById(input, result);
-        }
-    });
-}
-
-function loadCardById(div, card_id) {
-    $(".trelloprogress").show();
-    Trello.get("/cards/" + card_id, function(card) {
-        $("<a>").attr({
-            href: card.url,
-            id: card.id,
-            target: "_blank",
-            draggable: true,
-            style: "width: 100%",
-            ondragstart: "dragCard(event)"
-        }).addClass("card filter " + card.idBoard).text(card.name).appendTo(div);
-        $(".trelloprogress").hide();
-    });
-}
-
 function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
-    var target = $(event.target.parentElement).find("#input");
+    var target = $(event.target.parentElement).find("#input-pai");
     var pai = $("#" + data).clone();
-    var card = $(event.target).parents("#atividade-form").find(".cartao_field")[0].value;
+    $("#cartao_pai_trello_id").val(data);
     target.empty();
-    $("<input>").attr({
-        id: "cartao_pai",
-        value: data,
-        type: "hidden",
-        name: "cartao[" + card + "][cartao_pai]"
-    }).appendTo(target);
     pai.appendTo(target);
 }
 

@@ -18,6 +18,9 @@
     </div>
     <%= atividade_form.hidden_field :trello_id, :class => 'card-placeholder card-form', :id => atividade_form.object.trello_id%>
 
+    
+    <%= link_to "Editar cartão", find_or_create_cartoes_path(trello_id: atividade_form.object.trello_id), target: "_blank"  %> <br/>
+
     <hr style="margin-top: 0px; margin-bottom: 0px;">
 
     <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
@@ -42,22 +45,7 @@
     <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
 
     <hr style="margin-top: 0px; margin-bottom: 0px;">
-
-    <% tags = get_string_tags(atividade_form.object.cartao) %>
-    Editar tags: <%= text_field_tag :tags,"", {class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();",
-        value: tags, name: "cartao[#{atividade_form.object.try(:cartao).try(:trello_id)}][tags]"} %> 
-      <%= link_to('Resetar Tags','javascript:void(0)',
-        {:id => (atividade_form.object.try(:cartao).try(:trello_id)).to_s + "_card",
-          :class => "_card", :onclick => 'updateTags(this);'}) %>
-
-      <hr style="margin-top: 0px; margin-bottom: 0px;">
-
-      <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
-        :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
-
-      
-
-    </div>
-  <% end %>
-  <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
-    :style => "display: none", :id => "nova_atividade" %>
+  </div>
+<% end %>
+<%= f.link_to_add "Nova Atividade", :atividades, :class => "btn default-button",
+  :style => "display: none", :id => "nova_atividade" %>
