@@ -6,7 +6,7 @@
 
 <div class="grey-form" style="padding: 15px">
   <h4> Cartão </h4>
-  <input type="hidden" class="card-placeholder card-default" id="<%= @cartao_id %>">
+  <%= hidden_field_tag @cartao_id, "", :class => "card-placeholder card-default" %>
 </div>
 
 
@@ -15,10 +15,9 @@
     <th> Data       </th>
     <th> Usuário    </th>
     <th> Projeto    </th>
-    <th> Observações   </th>
+    <th> Observações</th>
     <th> Horas      </th>
     <th> Aprovado?  </th>
-    <th> Mensagem   </th>
   </tr>
 
   <% @atividades.each do |atividade| %>
@@ -26,12 +25,9 @@
       <td><%= atividade.data.strftime("%d/%m/%Y")                                        %></td>
       <td><%= atividade.usuario.nome                                                     %></td>
       <td><%= atividade.projeto.nome                                                     %></td>
-      <td>
-        <%= atividade.observacao                                                       %> <br/>
-      </td>
+      <td><%= atividade.observacao                                                       %></td>
       <td><%= atividade.formata_duracao                                                  %></td>
       <td> <%= atividade.aprovacao? ? "Sim" : "Não"%>      </td>
-      <td><%= atividade.mensagem %></td>
     </tr>
   <% end %>
 </table>

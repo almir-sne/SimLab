@@ -1,0 +1,66 @@
+<div class="blue-text" style="margin-left: 30px">
+  Estatísticas de cartões do Trello
+</div>
+
+<%= form_tag cartoes_path, {:method => :get} do %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <%= select_tag(:ano, options_for_select(@anos, @ano), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:mes, options_for_select(@meses, @mes), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:dia, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <%= select_tag(:usuario_id, options_for_select(@usuarios, @usuario), {:class => 'menu_select'}) %>
+      </div>
+      <div class="col-md-3">
+        <%= select_tag(:projeto_id, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag('Filtra', {:class => 'btn default-button'}) %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="blue-line">  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3" style="padding: 15px;">
+      <%= form_tag atualizar_trello_cartoes_path  do %>
+        <%= hidden_field_tag :key  %>
+        <%= hidden_field_tag :token  %>
+        <%= submit_tag 'Sincronizar horas do Trello', data: {confirm: "Esta operação pode demorar pois depende do Trello. Continuar?"}, class: 'btn default-button' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <table  class="list-table">
+    <tr>
+      <th> Cartão </th>
+      <th> Horas Totais </th>
+      <th> Número de atividades </th>
+      <th> Detalhes </th>
+    </tr>
+    <% @stats.each do |s| %>
+      <tr>
+        <td> <input type="hidden" class="card-placeholder card-default" id="<%= s[:cartao_id] %>"> </input> </td>
+        <td> <%= s[:horas] %> </td>
+        <td> <%= s[:num_atividades] %> </td>
+        <td> <%= link_to '<i class="icon-list"></i>'.html_safe,
+            cartao_path(id: s[:cartao_id]), :class => "nohover" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>

@@ -1,15 +1,63 @@
-<%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
-  :class=>"nohover", :style => "float: right; margin-right: 10px" %>
-<%= render "mensagem", :atividade_form => atividade_form %>
-<%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-<%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
-{}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
-<br/>
+<%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
+  <div id="atividade-form">
+    <div class="grey-line"> </div>
 
-<div class="slider slider-horas">
-  <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
-  <%= atividade_form.hidden_field :horas, :class => 'hora_field atividade_field'%>
-  <div id="time"></div>
-  <div id="slider"></div>
-</div>
-<%= atividade_form.hidden_field :trello_id, :class => 'card-placeholder card-form', :id => atividade_form.object.trello_id%>
+    <%= atividade_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+      :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+    <%= render "mensagem", :atividade_form => atividade_form %>
+    <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+    <%= atividade_form.select :projeto_id, options_for_select(@projetos, atividade_form.object.projeto_id),
+    {}, {:class=>"projeto-seletor", :onchange => "filterCards(this);"}%>
+    <br/>
+
+    <div class="slider slider-horas">
+      <%= atividade_form.label :horas, "Tempo gasto na atividade", :class => 'inline-label' %>
+      <%= atividade_form.hidden_field :horas, :class => 'hora_field atividade_field'%>
+      <div id="time"></div>
+      <div id="slider"></div>
+    </div>
+    <%= atividade_form.hidden_field :trello_id, :class => 'card-placeholder card-form', :id => atividade_form.object.trello_id%>
+
+    <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+    <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
+      <div class="par">
+        <%= par.select :par_id, options_for_select(@equipe, par.object.par_id) %>
+        <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+          :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+        <div class="slider slider-par">
+          <%= par.hidden_field :horas, :class => 'hora_field'%>
+          <div id="time"> </div>
+          <div id="slider"> </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
+
+    <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+    <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
+        :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
+    <%= atividade_form.text_area :observacao, :style => "width: 85%; height: 40px; display: none" %>
+
+    <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+    <% tags = get_string_tags(atividade_form.object.cartao) %>
+    Editar tags: <%= text_field_tag :tags,"", {class: "tag_autocomplete", onfocus: "tag_autocomplete_apply();",
+        value: tags, name: "cartao[#{atividade_form.object.try(:cartao).try(:trello_id)}][tags]"} %> 
+      <%= link_to('Resetar Tags','javascript:void(0)',
+        {:id => (atividade_form.object.try(:cartao).try(:trello_id)).to_s + "_card",
+          :class => "_card", :onclick => 'updateTags(this);'}) %>
+
+      <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+      <%= link_to 'Inserir Novo Cartão Pai','javascript:void(0)', {:id => 'inserir_cartao',
+        :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'} %>
+
+      
+
+    </div>
+  <% end %>
+  <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
+    :style => "display: none", :id => "nova_atividade" %>

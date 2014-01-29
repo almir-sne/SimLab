@@ -51,5 +51,17 @@ class ApplicationController < ActionController::Base
     end
   end
   
-
+  def date_from_object(obj)
+    if obj.class == Date
+      obj
+    elsif obj.class == String
+      Date.parse(obj)
+    else
+      if Date.valid_date?(obj[:year].to_i, obj[:month].to_i, obj[:day].to_i)
+        Date.new(obj[:year].to_i, obj[:month].to_i, obj[:day].to_i)
+      else
+        Date.new(obj[:year].to_i, obj[:month].to_i, 1).at_end_of_month
+      end
+    end
+  end
 end

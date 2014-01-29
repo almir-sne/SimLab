@@ -1,6 +1,12 @@
 SinLab::Application.routes.draw do
 
   resources :decks
+  
+  resources :cartoes, :except => [:destroy, :create, :new] do
+    collection do
+      post :atualizar_trello
+    end
+  end
 
   resources :estimativas, :only => [:index, :create] do
     collection do
@@ -15,12 +21,9 @@ SinLab::Application.routes.draw do
   resources :atividades, :only => [] do
     collection do
       get  :validacao
-      get :cartoes
-      post :atualizar_cartoes
       post :aprovar
       post :mensagens
       post :enviar_mensagem
-      get "cartoes/listar" => "atividades#listar_atividades"
     end
   end
 

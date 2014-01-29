@@ -1,2 +1,0 @@
-class CampoDadoController < ApplicationController
-end
