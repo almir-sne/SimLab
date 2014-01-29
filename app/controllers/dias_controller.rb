@@ -120,7 +120,7 @@ class DiasController < ApplicationController
               tags_do_cartao.delete(tag);
             end
           end
-        end     
+        end
         pai = Cartao.find_or_create_by_trello_id(parametros["cartao_pai"])
         filho.pai = pai
         filho.save
@@ -203,39 +203,40 @@ class DiasController < ApplicationController
     @today   = Date.today
     data     = params[:data].nil? ? @today : Date.parse(params[:data])
     @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
-    @tipo    = params[:tipo].blank? ? 'p' : params[:tipo]
-    
-    if (Usuario.find(@usuario.id).contrato_vigente_em(data).nil?)
-      redirect_to edit_usuario_path(:id => current_user.id)
+    @tipo    = params[:tipo].blank? ? 'm' : params[:tipo]
+    if @usuario.contratos.count == 0
+      @tipo = 'm'
+    elsif params[:tipo].blank?
+      @tipo = 'p'
     else
-      if params[:inicio].nil? or params[:fim].nil?
-        if @tipo == 'p'
-          periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
-          @inicio = periodo.first
-          @fim = periodo.last
-        elsif @tipo == 'm'
-          @inicio = data.beginning_of_month
-          @fim = data.end_of_month
-        elsif @tipo == 's'
-          @inicio = data.beginning_of_week(:sunday)
-          @fim = data.end_of_week(:sunday)
-        end
-      else
-        @inicio = Date.parse params[:inicio]
-        @fim = Date.parse params[:fim]
+      @tipo = params[:tipo]
+    end
+    if params[:inicio].nil? or params[:fim].nil?
+      if @tipo == 'p'
+        periodo = @usuario.contrato_vigente_em(data).periodo_vigente(data)
+        @inicio = periodo.first
+        @fim = periodo.last
+      elsif @tipo == 'm'
+        @inicio = data.beginning_of_month
+        @fim = data.end_of_month
+      elsif @tipo == 's'
+        @inicio = data.beginning_of_week(:sunday)
+        @fim = data.end_of_week(:sunday)
       end
-      if can? :manage, :usuario
-        @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-      end
-      @projetos          = @usuario.meus_projetos
-    
-      @dias_periodo      = dias_no_periodo(@inicio, @fim)
-      @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
-      @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-      @equipe            = @usuario.equipe
-      respond_to do |format|
-        format.html # index.html.erb
-      end
+    else
+      @inicio = Date.parse params[:inicio]
+      @fim = Date.parse params[:fim]
+    end
+    if can? :manage, :usuario
+      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    end
+    @projetos          = @usuario.meus_projetos
+    @dias_periodo      = dias_no_periodo(@inicio, @fim)
+    @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+    @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @equipe            = @usuario.equipe
+    respond_to do |format|
+      format.html # index.html.erb
     end
   end
 
@@ -280,8 +281,8 @@ class DiasController < ApplicationController
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @projetos          = @usuario.meus_projetos
   end
-  
-  
+
+
 
   def cartao_pai
     cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])

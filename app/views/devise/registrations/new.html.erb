@@ -5,6 +5,7 @@
     :html => {:class => "form-horizontal"}) do |f| %>
     <%= devise_error_messages! %>
 
+    <%= f.hidden_field :role, value: "usuario normal"%>
     <div class="form-group">
       <div class="col-sm-5">
         <%= f.text_field :nome, :class => "form-control", :placeholder => "Nome" %>

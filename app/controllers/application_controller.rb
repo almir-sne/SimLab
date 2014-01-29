@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_filter :configure_permitted_parameters, if: :devise_controller?
   before_action :block_inactive
   protect_from_forgery
 
@@ -11,13 +12,13 @@ class ApplicationController < ActionController::Base
       "application"
     end
   end
-  
+
   def javascript_include_view_js
     if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js"
       return "/assets/" + params[:controller] + "/" + params[:action]
     end
   end
-  
+
   def current_user
     current_usuario
   end
@@ -35,12 +36,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) << :nome
+    devise_parameter_sanitizer.for(:sign_up) << :role
+  end
+
   private
-  
+
   def dias_no_periodo(inicio, fim)
     (inicio..fim).collect{|d| d.day}
   end
-  
+
   def to_boolean(string)
     if string.blank? or string == 'nil'
       return nil
@@ -50,7 +56,7 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-  
+
   def date_from_object(obj)
     if obj.class == Date
       obj
@@ -64,4 +70,5 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
 end
