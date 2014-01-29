@@ -1,5 +1,4 @@
 recalculaHoras();
-checkTrello(getCards);
 $(document).on('nested:fieldAdded', function(event) {
     createSlider(event.field.find('.slider'));
 });

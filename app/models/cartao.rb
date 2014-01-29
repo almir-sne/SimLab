@@ -8,18 +8,21 @@ class Cartao < ActiveRecord::Base
   has_and_belongs_to_many :tags
 
   accepts_nested_attributes_for :tags
-
-  def self.horas_trabalhadas(trello_id)
-    Cartao.where(trello_id: trello_id).last.atividades.sum(:duracao)/3600
-  end
-
-  def self.horas_trabalhadas_format(cid)
-    h = self.horas_trabalhadas(cid)
-    "#{h.to_i}:#{((h - h.to_i) * 60).round}"
+  
+  def horas_trabalhadas
+    atividades.sum(:duracao)
   end
 
   def rodada_aberta?
     !self.rodadas.where(fechada: false).blank?
+  end
+  
+  def pai_trello_id
+    self.pai.try(:trello_id)
+  end
+  
+  def pai_trello_id=(val)
+    self.pai = Cartao.find_or_create_by(trello_id: val)
   end
 
   def fechar_rodada(user)
@@ -38,9 +41,6 @@ class Cartao < ActiveRecord::Base
       regex_horas = /[ ][(]\d+[.]?\d*[)]$/
 
       horas_remoto = data["name"].match(regex_horas).to_s.match(/\d+[.]?\d*+/).to_s
-
-      tags_remoto = extract_tags(data["name"])
-
       horas_local = "%.1f" % Cartao.horas_trabalhadas(id)
       nome_novo = remove_tags(data["name"]);
       tags_texto = ""
@@ -77,5 +77,13 @@ class Cartao < ActiveRecord::Base
     else
       :error
     end
+  end
+  
+  def tags_string
+    tags.pluck(:nome).join(", ")
+  end
+  
+  def tags_string=(val)
+    self.tags = val.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
 end

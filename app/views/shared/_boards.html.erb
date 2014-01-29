@@ -4,10 +4,10 @@
   </a>
   <div class="collapse in" id="boards">
     <div class="row">
-      <% @projetos_boards.each_with_index do |board, index| %>
+      <% @boards.each_with_index do |board, index| %>
         <div class="col-md-4">
-          <%= check_box_tag board[0], board, false, onclick: "filterCards(this)"  %>
-          <%= hidden_field_tag :board_id, board[0], :class => "board-placeholder" %>
+          <%= check_box_tag board, board, false, onclick: "filterCards(this)"  %>
+          <%= hidden_field_tag :board_id, board, :class => "board-placeholder" %>
         </div>
         <% if (index + 1) % 3 == 0%>
         </div>
