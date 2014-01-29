@@ -1,4 +1,6 @@
-<%= link_to "Editar Campos", {controller: 'projetos', action: 'campos_cadastro', id: @projeto.id}, {class: 'btn default-button'} %>
+<% if can? :criar_campos, current_usuario %>
+  <%= link_to "Editar Campos", {controller: 'projetos', action: 'campos_cadastro', id: @projeto.id}, {class: 'btn default-button'} %>
+<% end %>
 
 <div class="tabbable tabs-left">
   <ul class="nav nav-tabs">
