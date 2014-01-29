@@ -59,10 +59,12 @@ class ProjetosController < ApplicationController
     @projeto = Projeto.find(params[:id])
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-      map{|filho| [filho.nome, filho.id]}
+        reject{|projeto| projeto == @projeto}.
+          map{|filho| [filho.nome, filho.id]}
     @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
       sort{|a, b| a.nome <=> b.nome}.
-      map{|proj| [proj.nome, proj.id]}
+        reject{|projeto| projeto == @projeto}.
+          map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
     @hoje = Date.today
@@ -125,20 +127,19 @@ class ProjetosController < ApplicationController
     end
     #lidar com subprojetos
     failure = false
+    raise "asd"
     if params[:super_projeto] == "true"
-      projetos_params.except! :super_projeto_id
-      subprojetos = params[:sub_projetos]
-      subprojetos.each do |index, sub|
+      @projeto.update super_projeto_id: nil
+      params[:sub_projetos].each do |index, sub|
         subprojeto = Projeto.find(sub["id"].to_i)
         if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
-          failure ||= !(subprojeto.update_attribute :super_projeto_id, nil)
-        elsif !(sub["filho"].nil?)
-          failure ||= !(subprojeto.update_attribute :super_projeto_id, @projeto.id)
+          failure ||= !(subprojeto.update super_projeto_id: nil)
+        else
+          failure ||= !(subprojeto.update super_projeto_id: @projeto.id)
         end
       end
-      @projeto.update_attribute :super_projeto_id, nil
     else
-      @projeto.sub_projetos.each{|sub| sub.update_attribute :super_projeto_id, nil}
+      @projeto.sub_projetos.each{|sub| sub.update super_projeto_id: nil}
     end
 
     failure ||= !(@projeto.update_attributes projetos_params)
@@ -168,7 +169,7 @@ class ProjetosController < ApplicationController
   def campos_cadastro
     authorize! :criar_campos, Usuario
     @projeto = Projeto.find params[:id]
-    @projeto.campos.build if @projeto.campos.blank? 
+    @projeto.campos.build if @projeto.campos.blank?
   end
 
   def projetos_params
