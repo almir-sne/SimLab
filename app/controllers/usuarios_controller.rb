@@ -93,7 +93,15 @@ class UsuariosController < ApplicationController
     end
     render json: ""
   end
+  
+  def coordenados
+    
+  end
 
+  def coordenadodados
+    @usuario = Usuario.find(params[:id])
+    @projeto = Projeto.find(params[:id_proj])
+  end
 
   private
   def usuario_params

@@ -52,6 +52,8 @@ SinLab::Application.routes.draw do
       post :custom_create
       get :get_id_by_nome
       get :alt_role
+      get :coordenados
+      get "coordenados/dados" => "usuarios#coordenadodados"
     end
   end
 
