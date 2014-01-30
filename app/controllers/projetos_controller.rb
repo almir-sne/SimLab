@@ -127,22 +127,25 @@ class ProjetosController < ApplicationController
     end
     #lidar com subprojetos
     failure = false
-    raise "asd"
     if params[:super_projeto] == "true"
-      @projeto.update super_projeto_id: nil
       params[:sub_projetos].each do |index, sub|
         subprojeto = Projeto.find(sub["id"].to_i)
         if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
           failure ||= !(subprojeto.update super_projeto_id: nil)
-        else
-          failure ||= !(subprojeto.update super_projeto_id: @projeto.id)
+        elsif !(sub["filho"].nil?)
+          if !subprojeto.sub_projetos.blank?
+            return (redirect_to :back, :alert => I18n.t("projetos.update.cant_be_sub", projeto_nome: subprojeto.nome ))
+          else
+            failure ||= !(subprojeto.update super_projeto_id: @projeto.id)
+          end
         end
       end
+      @projeto.update super_projeto_id: nil
     else
       @projeto.sub_projetos.each{|sub| sub.update super_projeto_id: nil}
     end
-
-    failure ||= !(@projeto.update_attributes projetos_params)
+    failure ||= !(@projeto.update (projetos_params))
+    @projeto.update super_projeto_id: nil if params[:super_projeto] == "true"
     respond_to do |format|
       if !failure
         format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
