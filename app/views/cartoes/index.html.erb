@@ -26,6 +26,10 @@
         <%= select_tag(:projeto_id, options_for_select(@projetos, @projeto), {:class => 'menu_select'}) %>
       </div>
       <div class="col-md-3">
+        <%= select_tag(:tag_id, options_for_select(@tags, @tag), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-1">
         <%= submit_tag('Filtra', {:class => 'btn default-button'}) %>
       </div>
     </div>
