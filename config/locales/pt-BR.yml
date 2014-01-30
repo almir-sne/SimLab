@@ -242,6 +242,7 @@ pt-BR:
     update:
       success: "Projeto atualizado com sucesso."
       failure: "Erro na atualização do projeto."
+      cant_be_sub: "O projeto %{projeto_nome} tem filhos!"
   atividades:
     create:
       success: "Atividade(s) criada(s) com sucesso!"
