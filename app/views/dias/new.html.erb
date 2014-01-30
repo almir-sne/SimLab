@@ -15,53 +15,17 @@
           <center>Arraste cartões do Trello aqui.</center>
         </div>
         <div class="panel-scrollable" id="atividade-panel">
-            <%= f.fields_for :atividades, :allow_destroy => true do |atividade_form| %>
-              <div id="atividade-form">
-                <div class="grey-line"> </div>
-                
-                <%= render :partial => 'atividade', locals: {atividade_form: atividade_form} %>
-                
-                <hr style="margin-top: 0px; margin-bottom: 0px;">
-                
-                <%= render :partial => 'pares', locals: {atividade_form: atividade_form} %> 
-                
-                <hr style="margin-top: 0px; margin-bottom: 0px;">
-                
-                <%= render :partial => 'observacao', locals: {atividade_form: atividade_form} %>
-                
-                <hr style="margin-top: 0px; margin-bottom: 0px;">
-                
-                <%= render :partial => 'tags', locals: {atividade_form: atividade_form} %>  
-                
-                <hr style="margin-top: 0px; margin-bottom: 0px;">
-                
-                <%= render :partial => 'pai', locals: {atividade_form: atividade_form} %>  
-
-              </div>
-            <% end %>
-            <%= f.link_to_add "Nova Atividade", :atividades, :class=>"btn default-button",
-                :style => "display: none", :id => "nova_atividade" %>
-            </div>
-          </div>
-          <div class="col-md-5">
-              <%= render :partial => 'boards'%>
-          </div>
+          <%= render :partial => 'atividade', locals: {f: f} %>
         </div>
       </div>
-      <div id="lower-bar" class="navbar-fixed-bottom toolbar">
-        <div style="width: 100%">
-          <div class="actions" style="float: left; margin-left: 10px;">
-            <!-- xi -->
-            <%= hidden_field_tag :key  %>
-            <%= hidden_field_tag :token  %>
-           
-            <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
-            <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
-          </div>
-        </div>
+      <div class="col-md-5">
+        <%= render :partial => '/shared/boards'%>
       </div>
-    <% end %>
+    </div>
+  </div>
+  <%= render :partial => 'nav_bar', locals: {f: f} %>
+<% end %>
 
-    <script>
-            var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
-    </script>
+<script>
+        var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
+</script>

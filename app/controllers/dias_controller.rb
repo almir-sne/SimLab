@@ -7,7 +7,7 @@ class DiasController < ApplicationController
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data] || Date.today.to_s
     @projetos = @usuario.meus_projetos
-    @projetos_boards = @usuario.boards.pluck(:board_id).uniq.collect {|b| [b,  Board.where(board_id: b).pluck(:projeto_id)]}
+    @boards = @usuario.boards.pluck(:board_id).uniq
     Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.where{autor_id != ati.usuario_id}.update_all :visto => true}
     respond_to do |format|
       format.js
@@ -93,95 +93,12 @@ class DiasController < ApplicationController
         end
       end
     end
-    unless params[:cartao].nil?
-      params[:cartao].each do |filho_id, parametros|
-        filho = Cartao.find_or_create_by_trello_id(filho_id)
-        if parametros["tags"]
-          tags_do_cartao = filho.tags
-          tags_form = parametros["tags"].split(",").collect{|n| n.strip}
-          tags_banco = tags_do_cartao.collect{|t| t.nome}
-          tags_a_adicionar = tags_form - tags_banco
-          tags_a_remover = tags_banco - tags_form
-          tags_a_adicionar.each do |tag_nome|
-            if !tag_nome.blank?
-              tag = Tag.find_by_nome tag_nome
-              if tag.blank?
-                tag = Tag.new(nome: tag_nome)
-                tag.save
-              end
-              if !tags_do_cartao.include?(tag)
-                tags_do_cartao << tag
-              end
-            end
-          end
-          tags_a_remover.each do |tag_nome|
-            tag = Tag.find_by_nome tag_nome
-            if !tag.blank?
-              tags_do_cartao.delete(tag);
-            end
-          end
-        end     
-        pai = Cartao.find_or_create_by_trello_id(parametros["cartao_pai"])
-        filho.pai = pai
-        filho.save
-        Cartao.update_on_trello(params[:key], params[:token], filho.trello_id, tags_do_cartao.collect{|t| t.nome})
-      end
-    end
     if dia_success and atividades_success and horarios_success and registro_success
       flash[:notice] = I18n.t("atividades.create.success")
     else
       flash[:error] = I18n.t("atividades.create.failure")
     end
     redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
-  end
-
-  def atualizar_tags_cartoes
-    if (!params[:key].blank? and !params[:token].blank?)
-      Cartao.all.each do |c|
-        my_card_master_id = c.trello_id
-        data = Cartao.get_trello_data(params[:key], params[:token], my_card_master_id)
-        unless (data == :error)
-
-          tags_list = extract_tags(data["name"])
-
-          tags_string = ""
-          tags_list.each do |t|
-            tags_string += t.to_s + ", "
-          end
-
-          tags_do_cartao = c.tags
-          tags_form = tags_string.split(",").collect{|n| n.strip}
-          tags_banco = tags_do_cartao.collect{|t| t.nome}
-          tags_a_adicionar = tags_form - tags_banco
-          tags_a_remover = tags_banco - tags_form
-          tags_a_adicionar.each do |tag_nome|
-            if !tag_nome.blank?
-              tag = Tag.find_by_nome tag_nome
-              if tag.blank?
-                tag = Tag.new(nome: tag_nome)
-                tag.save
-              end
-              if !tags_do_cartao.include?(tag)
-                tags_do_cartao << tag
-              end
-            end
-          end
-          tags_a_remover.each do |tag_nome|
-            tag = Tag.find_by_nome tag_nome
-            if !tag.blank?
-              tags_do_cartao.delete(tag);
-            end
-          end
-
-          if (tags_do_cartao.blank?)
-            puts "Cartão sem Tags"
-          else
-            puts tags_do_cartao.collect{|t| t.nome}.to_s
-          end
-        end
-      end
-    end
-    redirect_to :back
   end
 
   def destroy
@@ -203,39 +120,40 @@ class DiasController < ApplicationController
     @today   = Date.today
     data     = params[:data].nil? ? @today : Date.parse(params[:data])
     @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
-    @tipo    = params[:tipo].blank? ? 'p' : params[:tipo]
-    
-    if (Usuario.find(@usuario.id).contrato_vigente_em(data).nil?)
-      redirect_to edit_usuario_path(:id => current_user.id)
+    @tipo    = params[:tipo].blank? ? 'm' : params[:tipo]
+    if @usuario.contratos.count == 0
+      @tipo = 'm'
+    elsif params[:tipo].blank?
+      @tipo = 'p'
     else
-      if params[:inicio].nil? or params[:fim].nil?
-        if @tipo == 'p'
-          periodo = Usuario.find(@usuario.id).contrato_vigente_em(data).periodo_vigente(data)
-          @inicio = periodo.first
-          @fim = periodo.last
-        elsif @tipo == 'm'
-          @inicio = data.beginning_of_month
-          @fim = data.end_of_month
-        elsif @tipo == 's'
-          @inicio = data.beginning_of_week(:sunday)
-          @fim = data.end_of_week(:sunday)
-        end
-      else
-        @inicio = Date.parse params[:inicio]
-        @fim = Date.parse params[:fim]
+      @tipo = params[:tipo]
+    end
+    if params[:inicio].nil? or params[:fim].nil?
+      if @tipo == 'p'
+        periodo = @usuario.contrato_vigente_em(data).periodo_vigente(data)
+        @inicio = periodo.first
+        @fim = periodo.last
+      elsif @tipo == 'm'
+        @inicio = data.beginning_of_month
+        @fim = data.end_of_month
+      elsif @tipo == 's'
+        @inicio = data.beginning_of_week(:sunday)
+        @fim = data.end_of_week(:sunday)
       end
-      if can? :manage, :usuario
-        @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-      end
-      @projetos          = @usuario.meus_projetos
-    
-      @dias_periodo      = dias_no_periodo(@inicio, @fim)
-      @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
-      @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-      @equipe            = @usuario.equipe
-      respond_to do |format|
-        format.html # index.html.erb
-      end
+    else
+      @inicio = Date.parse params[:inicio]
+      @fim = Date.parse params[:fim]
+    end
+    if can? :manage, :usuario
+      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    end
+    @projetos          = @usuario.meus_projetos
+    @dias_periodo      = dias_no_periodo(@inicio, @fim)
+    @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+    @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @equipe            = @usuario.equipe
+    respond_to do |format|
+      format.html # index.html.erb
     end
   end
 
@@ -280,17 +198,6 @@ class DiasController < ApplicationController
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     @projetos          = @usuario.meus_projetos
   end
-  
-  
-
-  def cartao_pai
-    cartao = Cartao.find_or_create_by_trello_id(params[:cartao_id])
-    unless cartao.pai.blank?
-      render json: cartao.pai.trello_id.to_json
-    else
-      render json: "".to_json
-    end
-  end
 
   private
 
@@ -300,21 +207,6 @@ class DiasController < ApplicationController
         pares_attributes: [:id, :par_id, :_destroy, :horas]],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
-
-  def cartao_tags
-    cartao = Cartao.find_by_trello_id(params[:cartao_id])
-    unless cartao.blank?
-      tags = ""
-      cartao.tags.each do |t|
-        tags += t.nome + ", "
-      end
-      render json: tags.to_json
-    else
-      render json: "".to_json
-    end
-  end
-
-  private
 
   def convert_date(hash, date_symbol_or_string)
     attribute = date_symbol_or_string.to_s

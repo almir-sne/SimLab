@@ -1,33 +1,19 @@
-function getCards() {
-    updateLoggedIn();
-    
-    $("#output").empty();
-    $(".trelloprogress").show();
-    Trello.members.get("me", function(member) {
-        $(".fullName").each(function(i, e) {
-            $(e).text(member.fullName);
+function loadUserCards() {
+    var $cards = $("<div>").attr({
+        id: "card-list"
+    }).appendTo("#trello-card-list");
+    Trello.get("members/me/cards", function(cards) {
+        $cards.empty();
+        $.each(cards, function(ix, card) {
+            $("<a>").attr({
+                href: card.url,
+                id: card.id,
+                target: "_blank",
+                draggable: true,
+                style: "width: 100%; display: none",
+                ondragstart: "dragCard(event)"
+            }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
         });
-        var $cards = $("<div>").attr({
-            id: "card-list"
-        }).appendTo("#output");
-        
-        Trello.get("members/me/cards", function(cards) {
-            $cards.empty();
-            $.each(cards, function(ix, card) {
-                $("<a>").attr({
-                    href: card.url,
-                    id: card.id,
-                    target: "_blank",
-                    draggable: true,
-                    style: "width: 100%; display: none",
-                    ondragstart: "dragCard(event)"
-                }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
-            });
-        });
-        $(".trelloprogress").hide();
-        loadBoards();
-        getToken();
-        
     });
 }
 
@@ -94,58 +80,19 @@ function dropCard(event) {
             }
         });
         var field_name = "cartao[" + data + "][tags]";
-        tags.attr("name",field_name);
+        tags.attr("name", field_name);
         tag_link[0].id = card.attr("id") + "_card";
         insertFather(target, data);
     }
 }
 
-function insertFather(atividadeDiv, cartao_id) {
-    var input = atividadeDiv.find("#input");
-    $.ajax({
-        url: "/dias/cartao_pai",
-        data: {cartao_id: cartao_id},
-        success: function(result) {
-            input.empty();
-            $("<input>").attr({
-                id: "cartao_pai",
-                value: result,
-                type: "hidden",
-                name: "cartao[" + cartao_id + "][cartao_pai]"
-            }).appendTo(input);
-            loadCardById(input, result);
-        }
-    });
-}
-
-function loadCardById(div, card_id) {
-    $(".trelloprogress").show();
-    Trello.get("/cards/" + card_id, function(card) {
-        $("<a>").attr({
-            href: card.url,
-            id: card.id,
-            target: "_blank",
-            draggable: true,
-            style: "width: 100%",
-            ondragstart: "dragCard(event)"
-        }).addClass("card filter " + card.idBoard).text(card.name).appendTo(div);
-        $(".trelloprogress").hide();
-    });
-}
-
 function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
-    var target = $(event.target.parentElement).find("#input");
+    var target = $(event.target.parentElement).find("#input-pai");
     var pai = $("#" + data).clone();
-    var card = $(event.target).parents("#atividade-form").find(".cartao_field")[0].value;
+    $("#cartao_pai_trello_id").val(data);
     target.empty();
-    $("<input>").attr({
-        id: "cartao_pai",
-        value: data,
-        type: "hidden",
-        name: "cartao[" + card + "][cartao_pai]"
-    }).appendTo(target);
     pai.appendTo(target);
 }
 
@@ -153,96 +100,91 @@ function dragCard(ev) {
     ev.dataTransfer.setData("Text", ev.target.id);
 }
 
-function loadFormCards() {
-    $(".cartao_field").each(function(index, input) {
-        var card_id = input.value;
-        $(".trelloprogress").show();
-        Trello.get("/cards/" + card_id, function(card) {
-            $(input).after($("<a>").attr({
-                href: card.url,
-                id: card.id,
-                target: "_blank",
-                draggable: true,
-                style: "width: 100%",
-                ondragstart: "dragCard(event)"
-            }).addClass("card filter " + card.idBoard).text(card.name));
-            $(".trelloprogress").hide();
-        });
-    });
-}
-
-function loadSimpleCards() {
+function loadTrelloData() {
     updateLoggedIn();
     $(".trelloprogress").show();
     Trello.members.get("me", function(member) {
         $(".fullName").each(function(i, e) {
             $(e).text(member.fullName);
         });
+        if ($("#trello-card-list").size() > 0) {
+            loadUserCards();
+        }
         $(".card-placeholder").each(function(index, input) {
-            var parent = input.parentElement;
             var card_id = input.id;
             Trello.get("/cards/" + card_id, function(card) {
-                if (input.classList.contains("father-abrev")) {
-                    $("<a>").attr({
-                        href: card.url,
-                        title: card.name,
-                        target: "_blank"
-                    }).addClass("cardnaohover").text("SIM").appendTo(parent);
+                if (input.classList.contains("card-default")) {
+                    loadDefaultCard(input, card);
                 }
                 else {
-                    var div = $("<div>");
-                    div.addClass("nodrop");
-                    div.appendTo(parent);
-                    $("<a>").attr({
-                        href: card.url,
-                        target: "_blank"
-                    }).addClass("cardnaohover").text(card.name).appendTo(div);
-                    if (input.value > 0)
-                        $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
-                    if (input.classList.contains("with-description")) {
-                        $("<div>").attr({
-                            style: "color: black; margin: 10px"
-                        }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
-                    }
-
-                    $("<br/>").appendTo(div);
+                    loadCard(input, card);
                 }
-                $(input).detach();
-                
             });
         });
         $(".trelloprogress").hide();
         getToken();
         loadBoards();
-        loadAbrevCards();
         loadBoardLinks();
         loadBoardLists();
     });
 }
 
-function loadAbrevCards() {
-    $(".card-abrev").each(function(index, input) {
-        var parent = input.parentElement;
-        var card_id = input.id;
-        var proj_id = "proj" + $(input).attr("pid") + "_mark";
-        $(".trelloprogress").show();
-        Trello.get("/cards/" + card_id, function(card) {
-            var text = getTime(input.value).replace(" hora(s)", " - ");
-            if (card.name.length > 10)
-                text += card.name.substr(0, 10) + "...";
-            else
-                text += card.name;
-            $("<br/>").appendTo(parent);
-            $("<a>").attr({
-                href: card.url,
-                target: "_blank",
-                title: card.name,
-                class: proj_id
-            }).text(text).appendTo(parent);
-            $(input).detach();
-            $(".trelloprogress").hide();
-        });
+
+function loadCard(input, card) {
+    var link = $("<a>").attr({
+        href: card.url,
+        title: card.name,
+        target: "_blank"
     });
+    $(input).after(link);
+    if (input.classList.contains("card-father")) {
+        link.attr({
+            class: "cardnaohover"
+        }).text("SIM");
+        $(input).detach();
+    }
+    else if (input.classList.contains("card-abrev")) {
+        var proj_id = "proj" + $(input).attr("pid") + "_mark";
+        var text = getTime(input.value).replace(" hora(s)", " - ");
+        if (card.name.length > 15)
+            text += card.name.substr(0, 15) + "...";
+        else
+            text += card.name;
+        $(input).before($("<br/>"));
+        link.attr({
+            class: proj_id
+        }).text(text);
+        $(input).detach();
+    }
+    else if (input.classList.contains("card-form")) {
+        link.attr({
+            id: card.id,
+            draggable: true,
+            style: "width: 100%",
+            ondragstart: "dragCard(event)",
+            class: "card filter " + card.idBoard
+        }).text(card.name);
+    }
+}
+
+function loadDefaultCard(input, card) {
+    var div = $("<div>");
+    div.addClass("nodrop");
+    $(input).after(div);
+    $("<a>").attr({
+        href: card.url,
+        target: "_blank",
+        class: "cardnaohover"
+    }).text(card.name).appendTo(div);
+    if (input.value > 0)
+        $("<div>").attr({style: "color: black"}).text(getTime(input.value)).appendTo(div);
+    if (input.classList.contains("with-description")) {
+        $("<div>").attr({
+            style: "color: black; margin: 10px"
+        }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
+    }
+    $("<br/>").appendTo(div);
+    $(input).detach();
 }
 
 function loadBoards() {
@@ -317,7 +259,7 @@ function loadBoardLists() {
 }
 
 function getBoards() {
-    updateLoggedIn();    
+    updateLoggedIn();
     $("#output").empty();
     $(".trelloprogress").show();
     Trello.members.get("me", function(member) {
@@ -325,13 +267,8 @@ function getBoards() {
         var $boards = $("<div>").appendTo("#output");
         Trello.get("members/me/boards", function(boards) {
             $boards.empty();
+            var checked_boards = $("#boards_ids").val().split(" ")
             $.each(boards, function(ix, board) {
-                var check;
-                $.each($("#boards_ids").val().split(" "), function(index, pps) {
-                    if (pps == board.id) {
-                        check = true;
-                    }
-                });
                 if (board.closed == false) {
                     var div = $("<div>");
                     div.appendTo($boards);
@@ -339,7 +276,7 @@ function getBoards() {
                         type: "checkbox",
                         name: "trello[]",
                         value: board.id,
-                        checked: check
+                        checked: (checked_boards.indexOf(board.id) > -1)
                     }).appendTo(div);
                     $("<a>").attr({
                         href: board.url,

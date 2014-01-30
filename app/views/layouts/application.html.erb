@@ -19,7 +19,7 @@
     <%= javascript_include_tag "layouts/application.js" %>
     <%= csrf_meta_tags %>
   </head>
-  <body onload="checkTrello(loadSimpleCards)">
+  <body onload="checkTrello(loadTrelloData)">
     <nav class="navbar navbar-default" role="navigation" id="upper-bar">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -40,11 +40,17 @@
             <ul class="dropdown-menu">
               <li><a href="<%= dias_path(data: Date.today, usuario_id: current_usuario) %>">Calendario de Atividades</a></li>
               <li><a href="<%= periodos_dias_path %>">Meus Períodos</a></li>
-              <li class="navbar-section">Administração</li>
-              <% if can? :manage, Ausencia %>
+              <% valida_ausencia = (can? :manage, Ausencia) %>
+              <% valida_atividade = !(current_usuario.projetos_coordenados.count.blank? && current_usuario.equipe_coordenada.count == 0)%>
+              <% if valida_ausencia || valida_atividade %>
+                <li class="navbar-section">Administração</li>
+              <% end %>
+              <% if  valida_ausencia%>
                 <li><a href="<%= ausencias_path %>">Ausências</a></li>
               <% end %>
-              <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
+              <% if valida_atividade%>
+                <li><a href="<%= validacao_atividades_path %>">Validação de Atividades</a></li>
+              <% end %>
             </ul>
           </li>
           <li>
@@ -59,8 +65,8 @@
               <li> <%= link_to "Estimativas", estimativas_path %></li>
               <li> <%= link_to "Decks", decks_path %></li>
               <li class="navbar-section">Trello</li>
-              <li><a href="<%= cartoes_atividades_path %>">Estatísticas</a></li>
-              <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadSimpleCards)" >Conectar</a></li>
+              <li> <%= link_to "Cartões", cartoes_path %> </li>
+              <li class="loggedout"><a id="connectLink" onclick="loginTrello(loadTrelloData)" >Conectar</a></li>
               <li class="loggedin"><a onclick="logoutTrello()" >Log Out</a></li>
             </ul>
           </li>

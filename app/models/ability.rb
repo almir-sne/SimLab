@@ -8,6 +8,7 @@ class Ability
       can :manage, :all
     elsif user.role == "diretor"
       can :manage, Projeto
+      can :manage, Cartao
       can :manage, Ausencia
       can :manage, Atividade
       can [:create, :custom_create, :read ], Usuario
@@ -32,6 +33,7 @@ class Ability
       can :alt_role, Usuario
       can [:periodos, :listar], Pagamento, :usuario_id => user.id
       can [:destroy, :create, :show, :edit],  Ausencia
+      can [:index, :edit, :update], Cartao
     end
 
 
