@@ -16,17 +16,22 @@
         <% @atividade.mensagens.each do |m| %>
           <% if m.autor_id != current_usuario.id %>
             <div class="mensagem-border-coordenador">
-            <% else %>
-              <div class="mensagem-border-usuario">
-              <% end %>
+          <% else %>
+            <div class="mensagem-border-usuario">
+          <% end %>
               <div style="color: #3B0B17"><b><%= m.autor.try(:nome) %></b></div>
               <div><%= m.conteudo %></div>
               <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
             </div>
-          <% end %>
-
+        <% end %>
         <%= hidden_field_tag :atividade_id, @atividade.id %>
       </div>
+      <% for msg in @atividade.mensagens.reverse %>
+        <% if (msg.autor == current_usuario) && (msg.visto) %>
+          <div><i>ultima mensagem lida <%= msg.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
+          <%break%>
+        <%end%>
+      <%end%>
       <%= text_area_tag :mensagem, "", :style => "width: 100%" %>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
