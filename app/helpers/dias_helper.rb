@@ -152,5 +152,30 @@ module DiasHelper
     #precisa checar as ausencias futuras
     return dias_uteis
   end
+  
+  def monta_resumo_dia(data,uid)
+    usuario = can?(:manage, Dia)? Usuario.find(uid) : current_user
+    dia_selecionado = Dia.find_or_create_by_data_and_usuario_id(data, usuario.id)
+    horas = dia_selecionado.horas_atividades_todas 
+    intervalo = "00:00"
+    entrada = dia_selecionado.entrada_formatada.to_s
+    if (entrada == "")
+      entrada = "Não Informada"
+    end
+    saida = dia_selecionado.saida_formatada.to_s
+    if (saida == "")
+      saida = "Não Informada"
+    end
+    if (!dia_selecionado.intervalo.nil?)
+      intervalo = dia_selecionado.intervalo.strftime("%H:%M").to_s
+    end
+    resumo = "Resumo do Dia<br/>"
+    resumo += "Horas Trabalhadas: " + horas  + "<br/>"
+    resumo += "Entrada: " + entrada + "<br/>"
+    resumo += "Saída: " + saida + "<br/>"
+    resumo += "Intervalo: " + intervalo + "<br/>"
+
+    return resumo
+  end
 
 end
