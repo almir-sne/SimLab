@@ -30,10 +30,16 @@
         </div>
       <% end %>
 
+
       <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
       <%= atividade_form.select :projeto_id, options_for_select(projetos, atividade.projeto_id),
       {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); formChanged(this.form)"}%>
       <br/>
+      <div id="observacao-div" style="display: none">
+        <%= atividade_form.label :observacao, "Observação"  %>
+        <%= atividade_form.text_area :observacao, style: "width: 85%; height: 40px;",
+          onkeyup: "formChanged(this.form)" %>
+      </div>
 
       <div class="slider slider-horas">
         <%= atividade_form.label :minutos, "Tempo gasto na atividade", :class => 'inline-label' %>
@@ -42,10 +48,7 @@
         <div id="slider"></div>
       </div>
       <%= atividade_form.hidden_field :trello_id, :class => 'card-placeholder card-form', :id => atividade.trello_id %>
-
-      <%= link_to "Editar cartão", find_or_create_cartoes_path(trello_id: atividade.trello_id), target: "_blank"  %> <br/>
-
-      <hr style="margin-top: 0px; margin-bottom: 0px;">
+      <br/>
 
       <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
         <div class="par">
@@ -60,18 +63,17 @@
         </div>
       <% end %>
 
-      <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
-
-      <hr style="margin-top: 0px; margin-bottom: 0px;">
-
-      <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
-          :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
-      <%= atividade_form.text_area :observacao, style: "width: 85%; height: 40px; display: none", onkeyup: "formChanged(this.form)" %>
-
+      <%= atividade_form.link_to_add '<i class="icon-group icon-2x"> </i>'.html_safe,
+        :pares, title: "Inserir Novo Par", :class => "nohover" %>
+      <%= link_to '<i class="icon-edit icon-2x"> </i>'.html_safe, find_or_create_cartoes_path(trello_id: atividade.trello_id),
+        target: "_blank", title: "Editar cartão", :class => "nohover" %>
+      <%= link_to '<i class="icon-comment icon-2x "> </i>'.html_safe,'javascript:void(0)',
+        :onclick => 'toggleObservacao(this)', :title => 'Mostrar Observação', :class => 'nohover'%>
+      <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover" value="Salvar"></button>
+      
       <hr style="margin-top: 0px; margin-bottom: 0px;">
       <%= hidden_field_tag :key  %>
       <%= hidden_field_tag :token  %>
       <%= render partial: "/shared/form_status" %>
-      <%= atividade_form.submit "Salvar", :class => "btn default-button" %>
     </div>
   <% end %>

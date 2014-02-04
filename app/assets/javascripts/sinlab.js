@@ -28,8 +28,8 @@ function getFirstValid(seletor) {
     });
 }
 
-function toggleNext(obj) {
-    $(obj).next().toggle();
+function toggleObservacao(obj) {
+    $(obj).closest('form').find("#observacao-div").toggle();
 }
 
 function ajustaAltura() {
