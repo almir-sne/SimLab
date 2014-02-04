@@ -42,58 +42,7 @@ class DiasController < ApplicationController
         end
       end
     end
-    atividades_success = true
-    registro_success = true
-    unless dia_params[:atividades_attributes].nil?
-      dia_params[:atividades_attributes].each do |index, atividade_attr|
-        atividade = Atividade.find_by_id atividade_attr[:id].to_i
-        if atividade.blank?
-          atividade = Atividade.new
-        end
-        if atividade_attr["_destroy"] == "1" and !atividade.blank?
-          atividade.destroy()
-        else
-          atividade.attributes = {
-            :duracao => atividade_attr["horas"].to_i * 60,
-            :observacao => atividade_attr["observacao"],
-            :projeto_id => atividade_attr["projeto_id"],
-            :dia_id => dia.id,
-            :usuario_id => dia.usuario.id,
-            :aprovacao => nil,
-            :trello_id => atividade_attr["trello_id"],
-            :data => dia.data
-          }
-          reg = Registro.new :autor_id => current_user.id
-          reg.transforma_hash_em_modificacao atividade.changes
-          atividades_success = atividades_success and atividade.save
-          reg.atividade_id = atividade.id
-          unless reg.modificacao.blank?
-            registro_success = registro_success and reg.save
-          end
-          if(!(atividade_attr[:mensagem].blank?) && !(atividade_attr[:mensagem][:conteudo].blank?))
-            Mensagem.create(atividade_attr[:mensagem])
-          end
-          if atividade_attr["pares_attributes"]
-            atividade_attr["pares_attributes"].each do |index, par_attr|
-              par = Par.find_by_id par_attr[:id].to_i
-              if par.blank?
-                par = Par.new
-              end
-              if par_attr["_destroy"] == "1" and !par.blank?
-                par.destroy()
-              else
-                par.update_attributes(
-                  :duracao => par_attr["horas"].to_i * 60,
-                  :par_id => par_attr["par_id"].to_i,
-                  :atividade_id => atividade.id
-                )
-              end
-            end
-          end
-        end
-      end
-    end
-    if dia_success and atividades_success and horarios_success and registro_success
+    if dia_success
       flash[:notice] = I18n.t("atividades.create.success")
     else
       flash[:error] = I18n.t("atividades.create.failure")
@@ -105,15 +54,6 @@ class DiasController < ApplicationController
     dia = Dia.find params[:id]
     dia.destroy
     redirect_to :back
-  end
-
-  def editar_por_data
-    dia = Dia.find_by_data_and_usuario_id(params[:data], params[:usuario_id])
-    if (!dia.nil?)
-      redirect_to edit_dia_path(dia.id)
-    else
-      redirect_to new_dia_path
-    end
   end
 
   def index

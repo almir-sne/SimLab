@@ -1,0 +1,77 @@
+<%= nested_form_for atividade, html: {remote: true} do |atividade_form| %>
+  <div id="atividade-form">
+    <div class="grey-line"> </div>
+
+    <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, atividade,
+      class: "nohover", style: "float: right; margin-right: 10px",
+        method: :delete, remote: true, data: { confirm: 'Tem certeza?' } %>
+
+      <% mensagens = atividade_form.object.mensagens %>
+      <% unless mensagens.blank? %>
+        <div class="activity-message">
+          <table>
+            <% mensagens.each do |m| %>
+              <% if m.autor_id != current_usuario.id %>
+                <div class="mensagem-border-coordenador">
+                <% else %>
+                  <div class="mensagem-border-usuario">
+                  <% end %>
+                  <div style="color: #3B0B17"><b><%= m.autor.try(:nome) %></b></div>
+                  <div><%= m.conteudo %></div>
+                  <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
+                </div>
+              <%end%>
+          </table>
+          <%= atividade_form.fields_for Mensagem.new, :allow_destroy => true do |msg| %>
+            <%= msg.text_field :conteudo %>
+            <%= msg.hidden_field :atividade_id, :value =>  atividade_form.object.id%>
+            <%= msg.hidden_field :autor_id,     :value =>  atividade_form.object.usuario.id%>
+          <%end%>
+        </div>
+      <% end %>
+
+      <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
+      <%= atividade_form.select :projeto_id, options_for_select(projetos, atividade.projeto_id),
+      {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); formChanged(this.form)"}%>
+      <br/>
+
+      <div class="slider slider-horas">
+        <%= atividade_form.label :minutos, "Tempo gasto na atividade", :class => 'inline-label' %>
+        <%= atividade_form.hidden_field :minutos, :class => 'hora_field atividade_field'%>
+        <div id="time"></div>
+        <div id="slider"></div>
+      </div>
+      <%= atividade_form.hidden_field :trello_id, :class => 'card-placeholder card-form', :id => atividade.trello_id %>
+
+      <%= link_to "Editar cartão", find_or_create_cartoes_path(trello_id: atividade.trello_id), target: "_blank"  %> <br/>
+
+      <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+      <%= atividade_form.fields_for :pares, :allow_destroy => true do |par| %>
+        <div class="par">
+          <%= par.select :par_id, options_for_select(equipe, par.object.par_id), {}, {onchange: "formChanged(this.form)"} %>
+          <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
+            :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+          <div class="slider slider-par">
+            <%= par.hidden_field :horas, :class => 'hora_field'%>
+            <div id="time"> </div>
+            <div id="slider"> </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= atividade_form.link_to_add "Inserir Novo Par", :pares %> <br/>
+
+      <hr style="margin-top: 0px; margin-bottom: 0px;">
+
+      <%= link_to('Inserir Observação para Esta Atividade','javascript:void(0)', {:id => 'inserir_observ',
+          :style => "margin: 20px 0px" , :onclick => 'toggleNext(this)'}) %>
+      <%= atividade_form.text_area :observacao, style: "width: 85%; height: 40px; display: none", onkeyup: "formChanged(this.form)" %>
+
+      <hr style="margin-top: 0px; margin-bottom: 0px;">
+      <%= hidden_field_tag :key  %>
+      <%= hidden_field_tag :token  %>
+      <%= render partial: "/shared/form_status" %>
+      <%= atividade_form.submit "Salvar", :class => "btn default-button" %>
+    </div>
+  <% end %>

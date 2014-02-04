@@ -104,5 +104,43 @@ class AtividadesController < ApplicationController
       flash[:notice] = I18n.t("mensagem.create.failure")
     end
   end
+  
+  def ajax_form
+    dia = Dia.find params[:dia_id]
+    usuario = dia.usuario
+    @projetos = usuario.meus_projetos
+    @atividade = Atividade.new(dia_id: dia.id, data: dia.data, usuario_id: usuario.id)
+    @atividade.trello_id = params[:trello_id]
+    @atividade.projeto_id = @projetos.first[1]
+    @atividade.save
+    @equipe = usuario.equipe.collect{|u| [u.nome, u.id]}
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def destroy
+    atividade = Atividade.find(params[:id])
+    @atividade_id = atividade.id
+    atividade.destroy
 
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def update
+    @atividade = Atividade.find(params[:id])
+    respond_to do |format|
+      if @atividade.update_attributes atividade_params
+        @atividade.cartao.update_on_trello(params[:key], params[:token])
+        format.js
+      end
+    end
+  end
+  
+  private
+  def atividade_params
+    params.require(:atividade).permit(:projeto_id, :minutos, :trello_id, :observacao)
+  end
 end

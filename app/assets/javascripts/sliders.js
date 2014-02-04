@@ -33,6 +33,7 @@ function pega_horas_dia() {
 
 function slideTime(event, ui) {
     var parent = $(event.target).parent();
+    formChanged(parent.closest('form'));
     parent.find("#time").text(
             getTime(ui.value)
             );

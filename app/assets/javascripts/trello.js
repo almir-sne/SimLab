@@ -58,31 +58,25 @@ function dropCard(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var cartaoRepetido = false;
-    $(".fields:visible > .cartao_field").each(function(index, pps) {
+    $(".edit_atividade .card-form").each(function(index, pps) {
         if (data == pps.value) {
             cartaoRepetido = true;
         }
     });
     if (cartaoRepetido == false) {
-        $("#nova_atividade").click();
-        var target = $(".fields").last();
         var card = $("#" + data);
-        var input = $(target.find(".cartao_field")[0]);
-        input.after(card);
-        input.val(card.attr("id"));
-        var tags = $(".tag_autocomplete").last();
-        var tag_link = $("._card").last();
         $.ajax({
-            url: "/dias/cartao_tags",
-            data: {cartao_id: card.attr("id")},
+            type: "POST",
+            url: "/atividades/ajax_form",
+            data: {trello_id: card.attr("id"), dia_id: $("#dia_id").val()},
             success: function(result) {
-                tags.val(result);
+                $("#atividade-panel form").last().find(".card-form").after(card);
+                initializeSliders();
+            },
+            error: function(result) {
+                return false;
             }
         });
-        var field_name = "cartao[" + data + "][tags]";
-        tags.attr("name", field_name);
-        tag_link[0].id = card.attr("id") + "_card";
-        insertFather(target, data);
     }
 }
 
@@ -267,7 +261,7 @@ function getBoards() {
         var $boards = $("<div>").appendTo("#output");
         Trello.get("members/me/boards", function(boards) {
             $boards.empty();
-            var checked_boards = $("#boards_ids").val().split(" ")
+            var checked_boards = $("#boards_ids").val().split(" ");
             $.each(boards, function(ix, board) {
                 if (board.closed == false) {
                     var div = $("<div>");
@@ -294,6 +288,6 @@ function filterCards(obj) {
 }
 
 function getToken() {
-    $("#key").val(Trello.key);
-    $("#token").val(Trello.token);
+    $("input[name='key']").val(Trello.key);
+    $("input[name='token']").val(Trello.token);
 }

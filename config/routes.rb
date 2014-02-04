@@ -19,12 +19,13 @@ SinLab::Application.routes.draw do
     end
   end
 
-  resources :atividades, :only => [] do
+  resources :atividades, :only => [:update, :destroy] do
     collection do
       get  :validacao
       post :aprovar
       post :mensagens
       post :enviar_mensagem
+      post :ajax_form
     end
   end
 
@@ -35,11 +36,11 @@ SinLab::Application.routes.draw do
     end
   end
 
-  namespace :android do
-    resources :tokens,:only => [:create, :destroy]
-    get 'meses/:id/dias' => "meses#dias"
-    get "meses/index"
-  end
+#  namespace :android do
+#    resources :tokens,:only => [:create, :destroy]
+#    get 'meses/:id/dias' => "meses#dias"
+#    get "meses/index"
+#  end
 
 
   #devise_for :users, :controllers => {:passwords => "users/passwords", :registrations => "users/registrations", :sessions => "users/sessions"}
@@ -74,7 +75,6 @@ SinLab::Application.routes.draw do
 
   resources :dias do
     collection do
-      get :editar_por_data
       get :periodos
       get :cartao_pai
       get :cartao_tags
@@ -86,12 +86,6 @@ SinLab::Application.routes.draw do
     collection do
       post :validar
       post :ausencia
-    end
-  end
-
-  resources :resumo do
-    collection do
-      get :horas_por_mes_por_pessoa
     end
   end
 

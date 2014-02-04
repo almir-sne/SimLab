@@ -38,7 +38,7 @@ class CartoesController < ApplicationController
     @cartao = Cartao.find(params[:id])
     respond_to do |format|
       if @cartao.update_attributes cartao_params
-        artao.update_on_trello(params[:key], params[:token], @cartao.trello_id)
+        @cartao.update_on_trello(params[:key], params[:token])
         format.html { redirect_to edit_cartao_path(id: @cartao.trello_id), notice: 'Cartão atualizado com sucesso.' }
         format.json { head :no_content }
       else
@@ -49,9 +49,10 @@ class CartoesController < ApplicationController
   end
   
   def atualizar_trello
-    Cartao.order(:updated_at).pluck(:trello_id).each { |c| Cartao.update_on_trello(params[:key], params[:token], c) }
+    Cartao.order(:updated_at).each { |c| c.update_on_trello(params[:key], params[:token]) }
   end
   
+  private
   def cartao_params
     params.require(:cartao).permit(:tags_string, :pai_trello_id)
   end

@@ -29,17 +29,12 @@ class Atividade < ActiveRecord::Base
   validates :projeto_id, :presence => true
   validates :usuario_id, :presence => true
 
-  def horas
-    read_attribute(:duracao).blank? ? 0 : read_attribute(:duracao)/60
-  end
-
-  def bar_width
-    width = duracao.nil? ? "0" : (duracao / 360).to_s
-    width + "%"
-  end
-
   def minutos
-    duracao/60
+    duracao.blank? ? 0 : duracao/60
+  end
+  
+  def minutos=(minutos)
+    self.duracao = minutos.to_i * 60
   end
 
   def formata_duracao
@@ -61,6 +56,6 @@ class Atividade < ActiveRecord::Base
   end
 
   def trello_id=(cartao_id)
-    self.cartao = Cartao.find_or_create_by_trello_id(cartao_id) unless cartao_id.blank?
+    self.cartao = Cartao.find_or_create_by(trello_id: cartao_id) unless cartao_id.blank?
   end
 end

@@ -1,7 +1,12 @@
 recalculaHoras();
 $(document).on('nested:fieldAdded', function(event) {
     createSlider(event.field.find('.slider'));
+    formChanged(event.field.closest("form"));
 });
+$(document).on('nested:fieldRemoved', function(event) {
+    formChanged(event.field.closest("form"));
+});
+
 $('#boards').on('hidden', function() {
     ajustaAltura();
 });

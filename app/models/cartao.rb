@@ -35,30 +35,30 @@ class Cartao < ActiveRecord::Base
     end
   end
 
-  def self.update_on_trello(key, token, id, tags)
-    data = get_trello_data(key, token, id)
+  def update_on_trello(key, token)
+    data = get_trello_data(key, token)
     unless (data == :error)
       regex_horas = /[ ][(]\d+[.]?\d*[)]$/
 
       horas_remoto = data["name"].match(regex_horas).to_s.match(/\d+[.]?\d*+/).to_s
-      horas_local = "%.1f" % Cartao.horas_trabalhadas(id)
+      horas_local = "%.1f" % (horas_trabalhadas/3600)
       nome_novo = remove_tags(data["name"]);
       tags_texto = ""
       unless tags.nil?
         tags.each do |t|
-          tags_texto += "[" + t.to_s + "] "
+          tags_texto += "[" + t.nome + "] "
         end
         if (!tags_texto.blank?)
           nome_novo = tags_texto + " " + nome_novo
         end
       end
-
+      
       if (horas_remoto != horas_local)
         name = "#{nome_novo.sub(regex_horas, "")} (#{horas_local})"
       else
         name = nome_novo
       end
-      uri = URI('https://trello.com/1/cards/' + id + '/name')
+      uri = URI('https://trello.com/1/cards/' + trello_id + '/name')
       uri.query = URI.encode_www_form({:key => key, :token => token })
       req = Net::HTTP::Put.new(uri)
       req.set_form_data({"value" => name})
@@ -68,8 +68,8 @@ class Cartao < ActiveRecord::Base
     end
   end
 
-  def self.get_trello_data(key, token, id)
-    uri = URI('https://trello.com/1/cards/' + id)
+  def get_trello_data(key, token)
+    uri = URI('https://trello.com/1/cards/' + trello_id)
     uri.query = URI.encode_www_form({:key => key, :token => token })
     response = Net::HTTP.get_response(uri)
     if response.code == "200"

@@ -22,7 +22,6 @@ class UsuariosController < ApplicationController
 
   def create
     authorize! :create, Usuario
-    debugger
     @user = Usuario.new(usuario_params)
     if @user.save
       flash[:notice] = I18n.t("devise.registrations.signed_up_another")

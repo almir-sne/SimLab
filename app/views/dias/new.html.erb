@@ -1,30 +1,31 @@
-<%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
-  <%= hidden_field_tag :data, @data %>
-  <%= hidden_field_tag :dia_id, @dia.id %>
-  <%= hidden_field_tag :usuario_id, @usuario.id %>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-2">
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
+        <%= hidden_field_tag :data, @data %>
+        <%= hidden_field_tag :dia_id, @dia.id %>
+        <%= hidden_field_tag :usuario_id, @usuario.id %>
         <%= render :partial => 'horarios', locals: {f: f} %>
+        <%= render :partial => 'nav_bar', locals: {f: f} %>
+      <% end %>
+    </div>
+    <div class="col-md-5">
+      <h3 id="atividades-title">Atividades</h3>
+      <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 50px;">
+        <center>Arraste cartões do Trello aqui.</center>
       </div>
-      <div class="col-md-5">
-        <h3 id="atividades-title">Atividades</h3>
-        <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 100px;">
-          <br/>
-          <center>Arraste cartões do Trello aqui.</center>
-        </div>
-        <div class="panel-scrollable" id="atividade-panel">
-          <%= render :partial => 'atividade', locals: {f: f} %>
-        </div>
-      </div>
-      <div class="col-md-5">
-        <%= render :partial => '/shared/boards'%>
+      <div class="panel-scrollable" id="atividade-panel">
+        <% @dia.atividades.each do |atividade| %>
+          <%= render partial: '/atividades/form', locals: {atividade: atividade, equipe: @equipe, projetos: @projetos} %>
+        <% end %>
       </div>
     </div>
+    <div class="col-md-5">
+      <%= render :partial => '/shared/boards'%>
+    </div>
   </div>
-  <%= render :partial => 'nav_bar', locals: {f: f} %>
-<% end %>
+</div>
+
 
 <script>
         var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;

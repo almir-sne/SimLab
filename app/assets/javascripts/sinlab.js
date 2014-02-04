@@ -92,10 +92,10 @@ function ver_periodo_novo(obj)
     var orgurl = $(obj).attr("tpg");
     var inicio = $('#datepicker1').val();
     var fim = $('#datepicker2').val();
-    
+
     var finalurl = orgurl + "&inicio=" + inicio + "&fim=" + fim;
-    
-    $(obj).attr("href",finalurl);
+
+    $(obj).attr("href", finalurl);
 }
 
 function ver_periodo_novo_proj(obj)
@@ -103,13 +103,25 @@ function ver_periodo_novo_proj(obj)
     var orgurl = $(obj).attr("tpg");
     var inicio = $('#datepicker1').val();
     var fim = $('#datepicker2').val();
-    
+
     var finalurl = orgurl + "?inicio=" + inicio + "&fim=" + fim;
-    
-    $(obj).attr("href",finalurl);
+
+    $(obj).attr("href", finalurl);
 }
 
 $(function() {
     $("#datepicker1").datepicker({dateFormat: "yy-mm-dd"});
     $("#datepicker2").datepicker({dateFormat: "yy-mm-dd"});
 });
+
+function formChanged(form) {
+    $(form).data("changed", true);
+    $(form).find(".form-status .form-saved").hide();
+    $(form).find(".form-status .form-changed").show();
+}
+
+function formSaved(form) {
+    $(form).data("changed", false);
+    $(form).find(".form-status .form-saved").show();
+    $(form).find(".form-status .form-changed").hide();
+}
