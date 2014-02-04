@@ -31,7 +31,9 @@
 <script>
   <% @projeto.campos.group_by {|campo| campo.categoria }.each do |categoria, campos_da_categoria| %>
     <% campos_da_categoria.each do |campo| %>
-      $("[name='<%= "dados[#{campo.id}]" %>']").mask("<%= campo.formato %>");
+      <% if campo.formato != "" %>
+        $("[name='<%= "dados[#{campo.id}]" %>']").mask("<%= campo.formato %>");
+      <%  end %>
     <% end %>
   <% end %>
 </script>

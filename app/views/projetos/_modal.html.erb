@@ -10,6 +10,7 @@
             Nome do projeto deve ser único.
           </div>
         <div class="modal-body">
+          <%= f.hidden_field :super_projeto_id, value: nil %>
           <div class="field">
             <%= f.label :nome %>
             <%= f.text_field :nome%>

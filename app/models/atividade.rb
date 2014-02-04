@@ -5,6 +5,7 @@ class Atividade < ActiveRecord::Base
   scope :dia, lambda { |value| where(['extract(day from atividades.data) = ?', value]) if value > 0 }
   scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
+  scope :cartoes_tagados, lambda { |value| joins(:cartao).merge(Cartao.tags value) if value > 0}
   scope :aprovacao, lambda {|value|
     if value == 3 or value.nil?
       where('aprovacao is null')

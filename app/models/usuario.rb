@@ -1,5 +1,5 @@
 class Usuario < ActiveRecord::Base
-  after_initialize :init
+  before_save :default_values
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -30,9 +30,9 @@ class Usuario < ActiveRecord::Base
   has_many :projetos, :through => :workons
 
   validates :nome, :presence => true,
-    :uniqueness => true
-  
-  def init
+                   :uniqueness => true
+
+  def default_values
     self.role ||= "usuario normal"
   end
 

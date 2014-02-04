@@ -45,7 +45,7 @@ SinLab::Application.routes.draw do
 
   #devise_for :users, :controllers => {:passwords => "users/passwords", :registrations => "users/registrations", :sessions => "users/sessions"}
 
-  devise_for :usuarios, controllers: {registrations: "registrations"}
+  devise_for :usuarios, controllers: {usuarios: "usuarios"}
 
   devise_scope :usuarios do
     get '/login' => 'devise/sessions#new'

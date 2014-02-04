@@ -1,6 +1,8 @@
 class Cartao < ActiveRecord::Base
   validates :trello_id, :uniqueness => true, :presence => true
 
+  scope :tags, lambda { |value| joins(:tags).where(tags: { id: value }) }
+
   has_many :atividades
   has_many :rodadas
 
@@ -8,7 +10,7 @@ class Cartao < ActiveRecord::Base
   has_and_belongs_to_many :tags
 
   accepts_nested_attributes_for :tags
-  
+
   def horas_trabalhadas
     atividades.sum(:duracao)
   end
@@ -16,11 +18,11 @@ class Cartao < ActiveRecord::Base
   def rodada_aberta?
     !self.rodadas.where(fechada: false).blank?
   end
-  
+
   def pai_trello_id
     self.pai.try(:trello_id)
   end
-  
+
   def pai_trello_id=(val)
     self.pai = Cartao.find_or_create_by(trello_id: val)
   end
@@ -78,11 +80,11 @@ class Cartao < ActiveRecord::Base
       :error
     end
   end
-  
+
   def tags_string
     tags.pluck(:nome).join(", ")
   end
-  
+
   def tags_string=(val)
     self.tags = val.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
