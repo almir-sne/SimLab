@@ -89,4 +89,10 @@ class Cartao < ActiveRecord::Base
   def tags_string=(val)
     self.tags = val.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
+
+  def datas
+    datas = self.atividades.order :data
+    [datas.first.data, datas.last.data]
+  end
+
 end
