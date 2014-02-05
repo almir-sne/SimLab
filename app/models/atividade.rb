@@ -6,6 +6,7 @@ class Atividade < ActiveRecord::Base
   scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
   scope :cartoes_tagados, lambda { |value| joins(:cartao).merge(Cartao.tags value) if value > 0}
+  scope :cartoes_filhos, lambda { |value| joins(:cartao).merge(Cartao.filhos value) if value > -1}
   scope :aprovacao, lambda {|value|
     if value == 3 or value.nil?
       where('aprovacao is null')
@@ -33,7 +34,7 @@ class Atividade < ActiveRecord::Base
   def minutos
     duracao.blank? ? 0 : duracao/60
   end
-  
+
   def minutos=(minutos)
     self.duracao = minutos.to_i * 60
   end

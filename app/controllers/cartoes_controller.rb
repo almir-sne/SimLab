@@ -2,22 +2,26 @@ class CartoesController < ApplicationController
   load_and_authorize_resource
   def index
     hoje = Date.today()
-    @usuario  = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id].to_i
-    @usuarios = [["Usuários - Todos", -1]] + Usuario.order(:nome).collect { |p| [p.nome, p.id] }
-    @projeto  = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id].to_i
-    @projetos = [["Projetos - Todos", -1]] + Projeto.order(:nome).collect { |p| [p.nome, p.id] }
-    @dia      = params[:dia].blank? ? params[:dia] = -1 : params[:dia].to_i
-    @dias     = [["Dias - Todos", -1]] + (1..31).to_a
-    @ano      = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano].to_i
-    @anos     = [["Anos - Todos", -1]] + (2012..hoje.year).to_a
-    @mes      = params[:mes].blank? ? params[:mes] = -1 : params[:mes].to_i
-    @meses    = [["Meses - Todos", -1]] + (1..12).collect {|mes| [t("date.month_names")[mes], mes]}
-    @tags     = [["Tags - Todos", -1]] + Tag.order(:nome).collect { |p| [p.nome, p.id] }
-    @tag      = params[:tag_id].blank? ? params[:tag_id] = -1 : params[:tag_id].to_i
+    @usuario    = params[:usuario_id].blank? ? params[:usuario_id] = -1 : params[:usuario_id].to_i
+    @usuarios   = [["Usuários - Todos", -1]] + Usuario.order(:nome).collect { |p| [p.nome, p.id] }
+    @projeto    = params[:projeto_id].blank? ? params[:projeto_id] = -1 : params[:projeto_id].to_i
+    @projetos   = [["Projetos - Todos", -1]] + Projeto.order(:nome).collect { |p| [p.nome, p.id] }
+    @dia        = params[:dia].blank? ? params[:dia] = -1 : params[:dia].to_i
+    @dias       = [["Dias - Todos", -1]] + (1..31).to_a
+    @ano        = params[:ano].blank? ? params[:ano] = hoje.year : params[:ano].to_i
+    @anos       = [["Anos - Todos", -1]] + (2012..hoje.year).to_a
+    @mes        = params[:mes].blank? ? params[:mes] = -1 : params[:mes].to_i
+    @meses      = [["Meses - Todos", -1]] + (1..12).collect {|mes| [t("date.month_names")[mes], mes]}
+    @tags       = [["Tags - Todos", -1]] + Tag.order(:nome).collect { |p| [p.nome, p.id] }
+    @tag        = params[:tag_id].blank? ? params[:tag_id] = -1 : params[:tag_id].to_i
+    @cartao_pai = params[:cartao_pai].blank? ? params[:cartao_pai] = -1 : params[:cartao_pai].to_i
+    @cartoes_pais = [["Pais - Todos", 0]] + [["Pais - Nenhum", -1]] + Cartao.where(
+      id: Cartao.where{pai_id != nil}.select(:pai_id)).collect { |p| p.id }
 
     #TODO: Refatoração, filtro e scopes para cartao
     cartoes = Atividade.joins(:cartao).ano(@ano).mes(@mes).dia(@dia).projeto(@projeto).
-      usuario(@usuario).cartoes_tagados(@tag).where{cartao.trello_id != nil}.order("data desc").pluck("cartoes.id").uniq
+      usuario(@usuario).cartoes_tagados(@tag).where{cartao.trello_id != nil}.
+        cartoes_filhos(@cartao_pai).order("data desc").pluck("cartoes.id").uniq
     @cartoes = cartoes.collect {|id| Cartao.find id}
   end
 
@@ -53,7 +57,7 @@ class CartoesController < ApplicationController
   def atualizar_trello
     Cartao.order(:updated_at).each { |c| c.update_on_trello(params[:key], params[:token]) }
   end
-  
+
   private
   def cartao_params
     params.require(:cartao).permit(:tags_string, :pai_trello_id)

@@ -2,6 +2,7 @@ class Cartao < ActiveRecord::Base
   validates :trello_id, :uniqueness => true, :presence => true
 
   scope :tags, lambda { |value| joins(:tags).where(tags: { id: value }) }
+  scope :filhos, lambda { |pai| (pai == 0)? where{pai_id != nil} : where{pai_id == my{pai}} }
 
   has_many :atividades
   has_many :rodadas
@@ -54,7 +55,7 @@ class Cartao < ActiveRecord::Base
           nome_novo = tags_texto + " " + nome_novo
         end
       end
-      
+
       if (horas_remoto != horas_local)
         name = "#{nome_novo.sub(regex_horas, "")} (#{horas_local})"
       else
