@@ -188,11 +188,16 @@ function loadBoards() {
     $(".board-placeholder").each(function(index, input) {
         var board_id = input.value;
         $(".trelloprogress").show();
-        Trello.get("/boards/" + board_id, function(board) {
-            $(input).after(board.name);
-            $(input).detach();
-            $(".trelloprogress").hide();
-        });
+        Trello.get("/boards/" + board_id,
+                function(board) {
+                    $(input).after(board.name);
+                    $(input).detach();
+                    $(".trelloprogress").hide();
+                },
+                function(e) {
+                   $(input.parentElement).remove();
+                }
+        );
     });
 }
 

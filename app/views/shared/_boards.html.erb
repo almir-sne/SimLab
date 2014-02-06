@@ -11,10 +11,6 @@
           <%= check_box_tag board, board, false, onclick: "filterCards(this)"  %>
           <%= hidden_field_tag :board_id, board, :class => "board-placeholder" %>
         </div>
-        <% if (index + 1) % 3 == 0%>
-        </div>
-        <div class="row">
-        <% end %>
       <% end %>
     </div>
   </div>
