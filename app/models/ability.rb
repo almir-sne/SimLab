@@ -30,6 +30,7 @@ class Ability
       can [:destroy,:update],   Dia, :id => true, :id => user.id
       can :update,              [Usuario, Atividade],   :id => true, :id => user.id
       can :validacao,           Atividade
+      can :update,              Atividade, :usuario_id => user.id
       can :alt_role, Usuario
       can [:periodos, :listar], Pagamento, :usuario_id => user.id
       can [:destroy, :create, :show, :edit],  Ausencia

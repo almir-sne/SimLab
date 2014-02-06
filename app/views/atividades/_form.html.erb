@@ -31,8 +31,9 @@
       <% end %>
 
 
+      <% lista_projetos = (projetos << [atividade.projeto.nome, atividade.projeto.id]).uniq  %>
       <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
-      <%= atividade_form.select :projeto_id, options_for_select(projetos, atividade.projeto_id),
+      <%= atividade_form.select :projeto_id, options_for_select(lista_projetos, atividade.projeto_id),
       {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); formChanged(this.form)"}%>
       <br/>
 
