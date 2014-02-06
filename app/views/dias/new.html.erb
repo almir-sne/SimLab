@@ -1,13 +1,9 @@
 <div class="container">
   <div class="row">
     <div class="col-md-2">
-      <%= nested_form_for(@dia, :url => :dias, :method => :post) do |f| %>
-        <%= hidden_field_tag :data, @data %>
-        <%= hidden_field_tag :dia_id, @dia.id %>
-        <%= hidden_field_tag :usuario_id, @usuario.id %>
-        <%= render :partial => 'horarios', locals: {f: f} %>
-        <%= render :partial => 'nav_bar', locals: {f: f} %>
-      <% end %>
+      <div class="panel-scrollable" id="horarios-panel">
+        <%= render partial: 'form', locals: {dia: @dia, data: @data, usuario: @usuario} %>
+      </div>
     </div>
     <div class="col-md-5">
       <h3 id="atividades-title">Atividades</h3>
@@ -26,6 +22,7 @@
   </div>
 </div>
 
+<%= render :partial => 'nav_bar' %>
 
 <script>
         var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;

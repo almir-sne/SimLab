@@ -43,8 +43,6 @@ module DiasHelper
       string = string + " diautil"
     
     end
-
-
     string
   end
   

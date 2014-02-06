@@ -63,19 +63,6 @@ class Dia < ActiveRecord::Base
     ((saida - entrada) - read_attribute(:intervalo)) / 60
   end
 
-
-  def formata_intervalo
-    intervalo = read_attribute(:intervalo)
-    if (!read_attribute(:intervalo).nil?)
-      hora = (read_attribute(:intervalo) / 3600).to_i
-      minuto = (( read_attribute(:intervalo) % 3600) / 60).to_i
-      hora.to_s.rjust(2, '0') + ":" + minuto.to_s.rjust(2, '0')
-    else
-      "00:00"
-    end
-
-  end
-
   def horas_atividades_formato
     total_minutos_atividade = 0
     self.atividades.each do |atividade|
@@ -85,16 +72,6 @@ class Dia < ActiveRecord::Base
     end
     hh, mm = (total_minutos_atividade).divmod(60)
     ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
-  end
-
-  def horas_atividades
-    retorno = 0
-    self.atividades.each do |atividade|
-      if atividade.aprovacao
-        retorno = retorno + (atividade.horas.nil? ? 0 : atividade.horas.to_i)
-      end
-    end
-    retorno/3600
   end
 
   def horas_atividades_todas
@@ -120,18 +97,6 @@ class Dia < ActiveRecord::Base
       end
     end
     msgs.strip
-  end
-
-  def intervalo
-    unless read_attribute(:intervalo).blank?
-      Time.new(2000, 1, 1 ,0, 0, 0) + read_attribute(:intervalo)
-    else
-      Time.new(2000, 1, 1 ,0, 0, 0)
-    end
-  end
-
-  def tem_atividades?
-    return
   end
 
   private

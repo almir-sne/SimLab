@@ -36,9 +36,11 @@ function ajustaAltura() {
     var height1 = $(window).height() - $("#atividades-title").height() -
             $("#dropover").height() - $("#upper-bar").height() - 170;
     var height2 = $(window).height() - $("#upper-bar").height() - $("#boards").height()
-            - $("#collapse-button").height() - 150;
+            - $("#collapse-button").height() - 100;
+    var height3 = $(window).height() - $("#upper-bar").height() - 100;
     $("#atividade-panel").height(height1);
-    $("#output").animate({height: height2}, 400);
+    $("#trello-card-list").height(height2);
+    $("#horarios-panel").height(height3);
 }
 
 function toggleCollapse(obj) {
@@ -124,4 +126,21 @@ function formSaved(form) {
     $(form).data("changed", false);
     $(form).find(".form-status .form-saved").show();
     $(form).find(".form-status .form-changed").hide();
+    $(form).find(".form-status .form-spinner").hide();
 }
+
+function showSpinner(form) {
+    $(form).find(".form-status .form-spinner").show();
+}
+
+function checkForm() {
+    var changed = false;
+    $("form").each(function(i, e) {
+        if ($(e).data("changed"))
+            changed = true;
+    });
+    if (changed)
+        return "Há mudanças não salvas";
+    else
+        return null;
+};

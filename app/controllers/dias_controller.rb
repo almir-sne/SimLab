@@ -15,13 +15,13 @@ class DiasController < ApplicationController
     end
   end
 
-  def create
+  def update
     if params[:dia_id].blank?
-      dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
+      @dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
     else
-      dia = Dia.find(params[:dia_id])
+      @dia = Dia.find(params[:dia_id])
     end
-    dia_success = dia.update_attributes(
+    dia_success = @dia.update_attributes(
       :intervalo => (dia_params["intervalo(4i)"].to_f * 3600.0 +  dia_params["intervalo(5i)"].to_f * 60.0),
     )
     horarios_success = true
@@ -37,17 +37,16 @@ class DiasController < ApplicationController
           horarios_success = horarios_success and horario.update_attributes(
             :entrada => convert_date(dia_params[:horarios_attributes][lixo], "entrada"),
             :saida => convert_date(dia_params[:horarios_attributes][lixo], "saida"),
-            :dia_id => dia.id
+            :dia_id => @dia.id
           )
         end
       end
     end
-    if dia_success
-      flash[:notice] = I18n.t("atividades.create.success")
-    else
-      flash[:error] = I18n.t("atividades.create.failure")
+    respond_to do |format|
+      if dia_success and horarios_success
+        format.js
+      end
     end
-    redirect_to dias_path(data: dia.data, usuario: dia.usuario.id)
   end
 
   def destroy
