@@ -6,16 +6,20 @@ function loadUserCards() {
             e.click();
     });
     cardsList.empty();
+    var dontInclude = $("input.card-form").map(function() {
+        return $(this).val()
+    }).get();
     Trello.get("members/me/cards", function(cards) {
         $.each(cards, function(ix, card) {
-            $("<a>").attr({
-                href: card.url,
-                id: card.id,
-                target: "_blank",
-                draggable: true,
-                style: "width: 100%; display: none",
-                ondragstart: "dragCard(event)"
-            }).addClass("card filter " + card.idBoard).text(card.name).appendTo(cardsList);
+            if (dontInclude.indexOf(card.id) == -1)
+                $("<a>").attr({
+                    href: card.url,
+                    id: card.id,
+                    target: "_blank",
+                    draggable: true,
+                    style: "width: 100%; display: none",
+                    ondragstart: "dragCard(event)"
+                }).addClass("card filter " + card.idBoard).text(card.name).appendTo(cardsList);
         });
     });
 }
@@ -195,7 +199,7 @@ function loadBoards() {
                     $(".trelloprogress").hide();
                 },
                 function(e) {
-                   $(input.parentElement).remove();
+                    $(input.parentElement).remove();
                 }
         );
     });
