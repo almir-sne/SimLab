@@ -39,7 +39,7 @@ function ajustaAltura() {
             - $("#collapse-button").height() - 100;
     var height3 = $(window).height() - $("#upper-bar").height() - 100;
     $("#atividade-panel").height(height1);
-    $("#trello-card-list").height(height2);
+    $("#card-list").height(height2);
     $("#horarios-panel").height(height3);
 }
 

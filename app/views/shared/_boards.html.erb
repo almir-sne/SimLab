@@ -2,6 +2,8 @@
   <a id="collapse-button" data-toggle="collapse" data-target="#boards">
     Boards do Trello
   </a>
+  <button class="icon-refresh blank-button" id="trello-reload" type="button" title="Recarregar lista de cartões"
+          onclick="loadUserCards()"></button>
   <div class="collapse in" id="boards">
     <div class="row">
       <% @boards.each_with_index do |board, index| %>
@@ -16,5 +18,5 @@
       <% end %>
     </div>
   </div>
-  <div class="panel-scrollable" id="trello-card-list" ></div>
+  <div class="panel-scrollable" id="card-list" ></div>
 </div>

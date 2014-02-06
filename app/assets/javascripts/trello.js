@@ -1,9 +1,12 @@
 function loadUserCards() {
-    var $cards = $("<div>").attr({
-        id: "card-list"
-    }).appendTo("#trello-card-list");
+    var cardsList = $("#card-list");
+    // reseta lista de cartões
+    $("#boards :input").each(function(i, e) {
+        if (e.checked)
+            e.click();
+    });
+    cardsList.empty();
     Trello.get("members/me/cards", function(cards) {
-        $cards.empty();
         $.each(cards, function(ix, card) {
             $("<a>").attr({
                 href: card.url,
@@ -12,7 +15,7 @@ function loadUserCards() {
                 draggable: true,
                 style: "width: 100%; display: none",
                 ondragstart: "dragCard(event)"
-            }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
+            }).addClass("card filter " + card.idBoard).text(card.name).appendTo(cardsList);
         });
     });
 }
@@ -101,7 +104,7 @@ function loadTrelloData() {
         $(".fullName").each(function(i, e) {
             $(e).text(member.fullName);
         });
-        if ($("#trello-card-list").size() > 0) {
+        if ($("#card-list").size() > 0) {
             loadUserCards();
         }
         $(".card-placeholder").each(function(index, input) {

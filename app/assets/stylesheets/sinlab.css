@@ -655,3 +655,10 @@ table.dataTable thead th {
     color: red;
     display: none;
 }
+
+#trello-reload {
+    padding: 5px 10px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 0 5px;
+}
