@@ -92,7 +92,8 @@ class Cartao < ActiveRecord::Base
 
   def datas
     datas = self.atividades.order :data
-    [datas.first.data, datas.last.data]
+    datas.first.data.to_s.split("-").reverse.join("/") +" a " +
+     datas.last.data.to_s.split("-").reverse.join("/")
   end
 
 end

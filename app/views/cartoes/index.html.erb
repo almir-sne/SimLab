@@ -61,15 +61,16 @@
       <th> Cartão </th>
       <th> Data </th>
       <th> Horas Totais </th>
+      <th> Estimativa </th>
       <th> Número de atividades </th>
       <th> Detalhes </th>
     </tr>
     <% @cartoes.each do |cartao| %>
       <tr>
-        <%datas = cartao.datas%>
         <td> <%= hidden_field_tag cartao.trello_id, "", :class => "card-placeholder card-default" %> </td>
-        <td> <%= datas.first.to_s + " a " + datas.last.to_s %> </td>
+        <td> <%= cartao.datas%> </td>
         <td> <%= int_to_horas(cartao.horas_trabalhadas) %> </td>
+        <td> <%= cartao.estimativa.to_s %> </td>
         <td> <%= cartao.atividades.count %> </td>
         <td> <%= link_to '<i class="icon-list"></i>'.html_safe, cartao_path(cartao), :class => "nohover" %> </td>
       </tr>

@@ -1,7 +1,7 @@
 require 'holidays'
 require 'holidays/br'
 module DiasHelper
-  
+
   def get_string_tags(cartao)
     unless cartao.nil?
       string = ""
@@ -12,23 +12,23 @@ module DiasHelper
     end
     return ""
   end
-  
+
   def tem_reprovacao?(inicio, fim, usuario_id)
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
-  
+
   def tem_reprovacao_no_dia?(data, usuario_id)
     !Atividade.where(aprovacao: false, data: data, usuario_id: usuario_id).blank?
   end
-  
+
   def tem_ausencia?(inicio, fim, usuario_id)
     !Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).blank?
   end
-  
+
   def classe_do_dia(data, usuario_id)
     today = Date.today
     string = "day-link"
-    
+
     if (data == today)
       string = string + " hoje"
     elsif tem_ausencia_no_dia?(data, usuario_id)
@@ -41,15 +41,15 @@ module DiasHelper
       string = string + " fimdesemana"
     else
       string = string + " diautil"
-    
+
     end
     string
   end
-  
+
   def tem_ausencia_no_dia?(data, usuario_id)
     !Ausencia.joins(:dia).where(dia: {data: data, usuario_id: usuario_id}).blank?
   end
-  
+
   def periodo_link(inicio, fim, usuario_id, formato, mes = 0)
     if formato == "p"
     "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
@@ -59,7 +59,7 @@ module DiasHelper
     "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
     end
   end
-  
+
   #supondo que isso só seja chamado para o periodo atual
   def dias_uteis_restantes(fim, usuario_id)
     calcula_dias_uteis_restantes(fim, usuario_id).to_s
@@ -95,7 +95,7 @@ module DiasHelper
   def horas_contratadas(data, usuario_id)
     Usuario.find(usuario_id).horario_data(data)
   end
-  
+
   def calcula_horas_trabalhadas(inicio, fim, usuario_id)
     calcula_minutos_trabalhados(true, inicio, fim, usuario_id)/60
   end
@@ -127,7 +127,7 @@ module DiasHelper
     end
     return ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end
-  
+
   #pode ser ateh o fim do contrato ou do fim do mes
   def calcula_dias_uteis_restantes(fim, usuario_id)
     data = Date.today
@@ -150,11 +150,11 @@ module DiasHelper
     #precisa checar as ausencias futuras
     return dias_uteis
   end
-  
+
   def monta_resumo_dia(data,uid)
-    usuario = can?(:manage, Dia)? Usuario.find(uid) : current_user
+    usuario = can?(:manage, Dia)? Usuario.find(uid) : current_usuario
     dia_selecionado = Dia.find_or_create_by_data_and_usuario_id(data, usuario.id)
-    horas = dia_selecionado.horas_atividades_todas 
+    horas = dia_selecionado.horas_atividades_todas
     intervalo = "00:00"
     entrada = dia_selecionado.entrada_formatada.to_s
     if (entrada == "")
