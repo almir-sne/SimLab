@@ -22,7 +22,8 @@
               <%=  atividade.observacao%>
               <br />
               <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-              <input type="hidden" class="card-placeholder card-default" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+              <input type="hidden" class="card-placeholder card-default" id="<%= cartao_trello_id %>"
+                     value="<%= atividade.minutos %>"></input>
             </div>
           <% end %>
         </td>
