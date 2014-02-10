@@ -67,7 +67,7 @@ class Contrato < ActiveRecord::Base
     resposta
   end
 
-  def periodos_por_ano(ano)
+  def periodos_por_ano(ano = self.fim.year)
     resposta = Array.new
     i = 0
     periodo = periodo_vigente(self.inicio + i.month)

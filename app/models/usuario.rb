@@ -18,8 +18,8 @@ class Usuario < ActiveRecord::Base
   has_many :dias
   has_many :atividades
   has_many :registros
-  has_many :workon_coordenados, :through => :coordenacoes, :class_name => "Workon"
-
+  
+  
   accepts_nested_attributes_for :address,      :allow_destroy => true
   accepts_nested_attributes_for :telefones,    :allow_destroy => true
   accepts_nested_attributes_for :contas,       :allow_destroy => true
@@ -57,11 +57,11 @@ class Usuario < ActiveRecord::Base
     self.contratos.order(:fim).last
   end
 
-  def equipe
-    Usuario.joins(:workons).where(workons: {
-        projeto_id: self.projetos.to_a, usuario_id: Usuario.select(:id).where(status: true)
-      }).group(:id).order(:nome)
-  end
+  #def equipe
+    #Usuario.joins(:workons).where(workons: {
+        #projeto_id: self.projetos.to_a, usuario_id: Usuario.select(:id).where(status: true)
+      #}).group(:id).order(:nome)
+  #end
 
   def meus_projetos
     if (self.role == 'admin')
