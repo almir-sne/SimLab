@@ -14,52 +14,51 @@ class AtividadesController < ApplicationController
     if params[:commit] == "limpar"
       usuarios_ids = @usuarios_opts.collect{|u| u[1]}
       projetos_ids = @projetos_opts.collect{|u| u[1]}
-      @aprovacao = [true, false, nil]
       @inicio = hoje.at_beginning_of_month
       @fim = hoje.at_end_of_month
-      @aprovacoes_selected = @projetos_selected = @usuarios_selected = Array.new
+      @projetos_selected = @usuarios_selected = Array.new
+      @aprovacoes_selected = ['nil']
     else
       if params[:usuario_id].nil?
-        if cookies[:usuario_id].blank? or cookies[:usuario_id].class == String
+        if session[:usuario_id].blank?
           usuarios_ids = @usuarios_opts.collect{|u| u[1]}
           @usuarios_selected = Array.new
         else
-          @usuarios_selected = usuarios_ids = cookies[:usuario_id].collect{|id| id.to_i}
+          @usuarios_selected = usuarios_ids = session[:usuario_id].collect{|id| id.to_i}
         end
       else
         @usuarios_selected = usuarios_ids = params[:usuario_id].collect{|id| id.to_i}
       end
       if params[:projeto_id].nil?
-        if cookies[:projeto_id].blank? or cookies[:projeto_id].class == String
+        if session[:projeto_id].blank?
           projetos_ids = @projetos_opts.collect{|u| u[1]}
           @projetos_selected = Array.new
         else
-          @projetos_selected = projetos_ids = cookies[:projeto_id].collect{|id| id.to_i}
+          @projetos_selected = projetos_ids = session[:projeto_id].collect{|id| id.to_i}
         end
       else
         @projetos_selected = projetos_ids = params[:projeto_id].collect{|id| id.to_i}
       end
       if params[:aprovacao].nil?
-        if cookies[:aprovacao].blank? or cookies[:aprovacao].class == String
-          aprovacoes_ids = [true, false, nil]
-          @aprovacoes_selected = Array.new
+        if session[:aprovacao].blank?
+          @aprovacoes_selected = ['nil']
         else
-          @aprovacoes_selected = aprovacoes_ids = cookies[:aprovacao].collect{|id| to_boolean(id) }
+          @aprovacoes_selected = session[:aprovacao]
         end
       else
-        @aprovacoes_selected = aprovacoes_ids = params[:aprovacao].collect{|id| to_boolean(id) }
+        @aprovacoes_selected = params[:aprovacao]
       end
-      @inicio = date_from_object(params[:inicio] || cookies[:inicio] || hoje.at_beginning_of_month)
-      @fim = date_from_object(params[:fim] || cookies[:fim] || hoje.at_end_of_month)
+      @inicio = date_from_object(params[:inicio] || session[:inicio] || hoje.at_beginning_of_month)
+      @fim = date_from_object(params[:fim] || session[:fim] || hoje.at_end_of_month)
     end
-    cookies[:usuario_id] = @usuarios_selected
-    cookies[:projeto_id] = @projetos_selected
-    cookies[:aprovacao] = @aprovacoes_selected
-    cookies[:fim] = @fim
-    cookies[:inicio] = @inicio
+    session[:usuario_id] = @usuarios_selected
+    session[:projeto_id] = @projetos_selected
+    session[:aprovacao] = @aprovacoes_selected
+    session[:fim] = @fim
+    session[:inicio] = @inicio
     @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids,
-      aprovacao: aprovacoes_ids, data: @inicio..@fim).order(:data).group_by{|x| x.dia}
-    @total_horas = ((@atividades.values.flatten.collect{|atividade| atividade.duracao}.sum.to_f)/3600).round(2)
+      aprovacao: @aprovacoes_selected.collect{|x| to_boolean x}, data: @inicio..@fim).order(:data)
+    @total_horas = (@atividades.sum(:duracao)/3600).round(2)
   end
 
   def aprovar
