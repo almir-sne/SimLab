@@ -2,6 +2,8 @@
   <a id="collapse-button" data-toggle="collapse" data-target="#boards">
     Boards do Trello
   </a>
+  <button class="icon-refresh blank-button" id="trello-reload" type="button" title="Recarregar lista de cartões"
+          onclick="loadUserCards()"></button>
   <div class="collapse in" id="boards">
     <div class="row">
       <% @boards.each_with_index do |board, index| %>
@@ -9,12 +11,8 @@
           <%= check_box_tag board, board, false, onclick: "filterCards(this)"  %>
           <%= hidden_field_tag :board_id, board, :class => "board-placeholder" %>
         </div>
-        <% if (index + 1) % 3 == 0%>
-        </div>
-        <div class="row">
-        <% end %>
       <% end %>
     </div>
   </div>
-  <div class="panel-scrollable" id="trello-card-list" ></div>
+  <div class="panel-scrollable" id="card-list" ></div>
 </div>

@@ -16,4 +16,6 @@ $(".day-calendario td").hover(
 $("a.day-link").on("dragstart", function(e) {
     return false;
 });
+
+$('.tooltipconfig').tooltip({html: true})
   

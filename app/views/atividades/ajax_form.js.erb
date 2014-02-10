@@ -1,0 +1,2 @@
+$("#atividade-panel").append("<%= escape_javascript(render(partial: "form",
+    locals: {atividade: @atividade, equipe: @equipe, projetos: @projetos})).html_safe %>");

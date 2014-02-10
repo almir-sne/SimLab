@@ -325,18 +325,14 @@
 .trello-dropover {
     background-color: #EEE;
     border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 20px;
-    margin: 10px;
-    width: 90%;
-    line-height: 30px;
+    padding: 25px;
 }
 
 .par {
     background-color: #eee;
     border-radius: 10px;
     padding: 10px;
-    margin: 20px;
+    margin: 20px 0;
 }
 
 .modal {
@@ -649,4 +645,20 @@ table.dataTable thead th {
 
 .nav-tabs>li.active>a:hover {
     background-color: #F1F1F1
+}
+
+.form-saved {
+    color: green;
+}
+
+.form-changed {
+    color: red;
+    display: none;
+}
+
+#trello-reload {
+    padding: 5px 10px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 0 5px;
 }

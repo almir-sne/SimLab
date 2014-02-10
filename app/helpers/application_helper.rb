@@ -4,7 +4,7 @@ module ApplicationHelper
   end
   
   def int_to_horas(h)
-    h = h/3600.0
+    h = h.to_i/3600.0
     "#{h.to_i}:#{pad ((h - h.to_i) * 60).round}"
   end
   

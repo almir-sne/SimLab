@@ -1,11 +1,6 @@
 <div id="lower-bar" class="navbar-fixed-bottom toolbar">
   <div style="width: 100%">
     <div class="actions" style="float: left; margin-left: 10px;">
-      <!-- xi -->
-      <%= hidden_field_tag :key  %>
-      <%= hidden_field_tag :token  %>
-
-      <%= f.submit "Ok", :class => "btn default-button", :onclick => "return validateSliders()" %>
       <%= link_to "Voltar", dias_path(data: @data, usuario_id: current_usuario), :class => "btn default-button" %>
     </div>
   </div>

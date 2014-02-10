@@ -1,18 +1,25 @@
 function loadUserCards() {
-    var $cards = $("<div>").attr({
-        id: "card-list"
-    }).appendTo("#trello-card-list");
+    var cardsList = $("#card-list");
+    // reseta lista de cartões
+    $("#boards :input").each(function(i, e) {
+        if (e.checked)
+            e.click();
+    });
+    cardsList.empty();
+    var dontInclude = $("input.card-form").map(function() {
+        return $(this).val()
+    }).get();
     Trello.get("members/me/cards", function(cards) {
-        $cards.empty();
         $.each(cards, function(ix, card) {
-            $("<a>").attr({
-                href: card.url,
-                id: card.id,
-                target: "_blank",
-                draggable: true,
-                style: "width: 100%; display: none",
-                ondragstart: "dragCard(event)"
-            }).addClass("card filter " + card.idBoard).text(card.name).appendTo($cards);
+            if (dontInclude.indexOf(card.id) == -1)
+                $("<a>").attr({
+                    href: card.url,
+                    id: card.id,
+                    target: "_blank",
+                    draggable: true,
+                    style: "width: 100%; display: none",
+                    ondragstart: "dragCard(event)"
+                }).addClass("card filter " + card.idBoard).text(card.name).appendTo(cardsList);
         });
     });
 }
@@ -58,31 +65,25 @@ function dropCard(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var cartaoRepetido = false;
-    $(".fields:visible > .cartao_field").each(function(index, pps) {
+    $(".edit_atividade .card-form").each(function(index, pps) {
         if (data == pps.value) {
             cartaoRepetido = true;
         }
     });
     if (cartaoRepetido == false) {
-        $("#nova_atividade").click();
-        var target = $(".fields").last();
         var card = $("#" + data);
-        var input = $(target.find(".cartao_field")[0]);
-        input.after(card);
-        input.val(card.attr("id"));
-        var tags = $(".tag_autocomplete").last();
-        var tag_link = $("._card").last();
         $.ajax({
-            url: "/dias/cartao_tags",
-            data: {cartao_id: card.attr("id")},
+            type: "POST",
+            url: "/atividades/ajax_form",
+            data: {trello_id: card.attr("id"), dia_id: $("#dia_id").val()},
             success: function(result) {
-                tags.val(result);
+                $("#atividade-panel form").last().find(".card-form").after(card);
+                initializeSliders();
+            },
+            error: function(result) {
+                return false;
             }
         });
-        var field_name = "cartao[" + data + "][tags]";
-        tags.attr("name", field_name);
-        tag_link[0].id = card.attr("id") + "_card";
-        insertFather(target, data);
     }
 }
 
@@ -107,7 +108,7 @@ function loadTrelloData() {
         $(".fullName").each(function(i, e) {
             $(e).text(member.fullName);
         });
-        if ($("#trello-card-list").size() > 0) {
+        if ($("#card-list").size() > 0) {
             loadUserCards();
         }
         $(".card-placeholder").each(function(index, input) {
@@ -191,11 +192,16 @@ function loadBoards() {
     $(".board-placeholder").each(function(index, input) {
         var board_id = input.value;
         $(".trelloprogress").show();
-        Trello.get("/boards/" + board_id, function(board) {
-            $(input).after(board.name);
-            $(input).detach();
-            $(".trelloprogress").hide();
-        });
+        Trello.get("/boards/" + board_id,
+                function(board) {
+                    $(input).after(board.name);
+                    $(input).detach();
+                    $(".trelloprogress").hide();
+                },
+                function(e) {
+                    $(input.parentElement).remove();
+                }
+        );
     });
 }
 
@@ -267,7 +273,7 @@ function getBoards() {
         var $boards = $("<div>").appendTo("#output");
         Trello.get("members/me/boards", function(boards) {
             $boards.empty();
-            var checked_boards = $("#boards_ids").val().split(" ")
+            var checked_boards = $("#boards_ids").val().split(" ");
             $.each(boards, function(ix, board) {
                 if (board.closed == false) {
                     var div = $("<div>");
@@ -294,6 +300,6 @@ function filterCards(obj) {
 }
 
 function getToken() {
-    $("#key").val(Trello.key);
-    $("#token").val(Trello.token);
+    $("input[name='key']").val(Trello.key);
+    $("input[name='token']").val(Trello.token);
 }

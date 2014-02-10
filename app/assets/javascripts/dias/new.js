@@ -1,7 +1,12 @@
 recalculaHoras();
 $(document).on('nested:fieldAdded', function(event) {
+    formChanged(event.field.closest("form"));
     createSlider(event.field.find('.slider'));
 });
+$(document).on('nested:fieldRemoved', function(event) {
+    formChanged(event.field.closest("form"));
+});
+
 $('#boards').on('hidden', function() {
     ajustaAltura();
 });
@@ -12,8 +17,8 @@ initializeSliders();
 updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
 ajustaAltura();
 
-function updateTags(obj) {   
-    var id_nome_string = obj.id.toString().replace("_card","");
+function updateTags(obj) {
+    var id_nome_string = obj.id.toString().replace("_card", "");
     box = $(obj).prev();
     $.ajax({
         url: "/dias/cartao_tags",
@@ -71,3 +76,11 @@ function recalculaHoras() {
     $("#horas_do_dia").text(getTime(horas.totalHorasDia));
     $("#dia_intervalo").text(getTime(horas.totalIntervalo));
 }
+
+$(window).on('resize', function() {
+    ajustaAltura();
+});
+
+window.onbeforeunload = function(e) {
+    return checkForm();
+};

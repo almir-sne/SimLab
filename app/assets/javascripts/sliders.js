@@ -33,6 +33,7 @@ function pega_horas_dia() {
 
 function slideTime(event, ui) {
     var parent = $(event.target).parent();
+    formChanged(parent.closest('form'));
     parent.find("#time").text(
             getTime(ui.value)
             );
@@ -102,7 +103,7 @@ function initSlider(div, time, max_time) {
         min: 0,
         max: max_time,
         value: parseFloat(time),
-        step: 10,
+        step: 5,
         slide: slideTime,
         orientation: "horizontal",
         range: "min"
@@ -126,8 +127,6 @@ function pad(str, max) {
     return str.length < max ? pad("0" + str, max) : str;
 }
 
-//essa função não faz sentido
-//rezende
 function projetosVazios() {
     var vazios = false;
     $(".fields:visible > .projeto-seletor").each(function(i, e) {

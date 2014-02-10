@@ -28,17 +28,19 @@ function getFirstValid(seletor) {
     });
 }
 
-function toggleNext(obj) {
-    $(obj).next().toggle();
+function toggleObservacao(obj) {
+    $(obj).closest('form').find("#observacao-div").toggle();
 }
 
 function ajustaAltura() {
     var height1 = $(window).height() - $("#atividades-title").height() -
             $("#dropover").height() - $("#upper-bar").height() - 170;
     var height2 = $(window).height() - $("#upper-bar").height() - $("#boards").height()
-            - $("#collapse-button").height() - 150;
+            - $("#collapse-button").height() - 100;
+    var height3 = $(window).height() - $("#upper-bar").height() - 100;
     $("#atividade-panel").height(height1);
-    $("#output").animate({height: height2}, 400);
+    $("#card-list").height(height2);
+    $("#horarios-panel").height(height3);
 }
 
 function toggleCollapse(obj) {
@@ -92,10 +94,10 @@ function ver_periodo_novo(obj)
     var orgurl = $(obj).attr("tpg");
     var inicio = $('#datepicker1').val();
     var fim = $('#datepicker2').val();
-    
+
     var finalurl = orgurl + "&inicio=" + inicio + "&fim=" + fim;
-    
-    $(obj).attr("href",finalurl);
+
+    $(obj).attr("href", finalurl);
 }
 
 function ver_periodo_novo_proj(obj)
@@ -103,13 +105,42 @@ function ver_periodo_novo_proj(obj)
     var orgurl = $(obj).attr("tpg");
     var inicio = $('#datepicker1').val();
     var fim = $('#datepicker2').val();
-    
+
     var finalurl = orgurl + "?inicio=" + inicio + "&fim=" + fim;
-    
-    $(obj).attr("href",finalurl);
+
+    $(obj).attr("href", finalurl);
 }
 
 $(function() {
     $("#datepicker1").datepicker({dateFormat: "yy-mm-dd"});
     $("#datepicker2").datepicker({dateFormat: "yy-mm-dd"});
 });
+
+function formChanged(form) {
+    $(form).data("changed", true);
+    $(form).find(".form-status .form-saved").hide();
+    $(form).find(".form-status .form-changed").show();
+}
+
+function formSaved(form) {
+    $(form).data("changed", false);
+    $(form).find(".form-status .form-saved").show();
+    $(form).find(".form-status .form-changed").hide();
+    $(form).find(".form-status .form-spinner").hide();
+}
+
+function showSpinner(form) {
+    $(form).find(".form-status .form-spinner").show();
+}
+
+function checkForm() {
+    var changed = false;
+    $("form").each(function(i, e) {
+        if ($(e).data("changed"))
+            changed = true;
+    });
+    if (changed)
+        return "Há mudanças não salvas";
+    else
+        return null;
+};

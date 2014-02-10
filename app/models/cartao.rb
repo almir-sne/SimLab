@@ -1,6 +1,9 @@
 class Cartao < ActiveRecord::Base
   validates :trello_id, :uniqueness => true, :presence => true
 
+  scope :tags, lambda { |value| joins(:tags).where(tags: { id: value }) }
+  scope :filhos, lambda { |pai| (pai == 0)? where{pai_id != nil} : where{pai_id == my{pai}} }
+
   has_many :atividades
   has_many :rodadas
 
@@ -8,7 +11,7 @@ class Cartao < ActiveRecord::Base
   has_and_belongs_to_many :tags
 
   accepts_nested_attributes_for :tags
-  
+
   def horas_trabalhadas
     atividades.sum(:duracao)
   end
@@ -16,11 +19,11 @@ class Cartao < ActiveRecord::Base
   def rodada_aberta?
     !self.rodadas.where(fechada: false).blank?
   end
-  
+
   def pai_trello_id
     self.pai.try(:trello_id)
   end
-  
+
   def pai_trello_id=(val)
     self.pai = Cartao.find_or_create_by(trello_id: val)
   end
@@ -35,18 +38,18 @@ class Cartao < ActiveRecord::Base
     end
   end
 
-  def self.update_on_trello(key, token, id, tags)
-    data = get_trello_data(key, token, id)
+  def update_on_trello(key, token)
+    data = get_trello_data(key, token)
     unless (data == :error)
       regex_horas = /[ ][(]\d+[.]?\d*[)]$/
 
       horas_remoto = data["name"].match(regex_horas).to_s.match(/\d+[.]?\d*+/).to_s
-      horas_local = "%.1f" % Cartao.horas_trabalhadas(id)
+      horas_local = "%.1f" % (horas_trabalhadas/3600)
       nome_novo = remove_tags(data["name"]);
       tags_texto = ""
       unless tags.nil?
         tags.each do |t|
-          tags_texto += "[" + t.to_s + "] "
+          tags_texto += "[" + t.nome + "] "
         end
         if (!tags_texto.blank?)
           nome_novo = tags_texto + " " + nome_novo
@@ -58,7 +61,7 @@ class Cartao < ActiveRecord::Base
       else
         name = nome_novo
       end
-      uri = URI('https://trello.com/1/cards/' + id + '/name')
+      uri = URI('https://trello.com/1/cards/' + trello_id + '/name')
       uri.query = URI.encode_www_form({:key => key, :token => token })
       req = Net::HTTP::Put.new(uri)
       req.set_form_data({"value" => name})
@@ -68,8 +71,8 @@ class Cartao < ActiveRecord::Base
     end
   end
 
-  def self.get_trello_data(key, token, id)
-    uri = URI('https://trello.com/1/cards/' + id)
+  def get_trello_data(key, token)
+    uri = URI('https://trello.com/1/cards/' + trello_id)
     uri.query = URI.encode_www_form({:key => key, :token => token })
     response = Net::HTTP.get_response(uri)
     if response.code == "200"
@@ -78,12 +81,19 @@ class Cartao < ActiveRecord::Base
       :error
     end
   end
-  
+
   def tags_string
     tags.pluck(:nome).join(", ")
   end
-  
+
   def tags_string=(val)
     self.tags = val.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
+
+  def datas
+    datas = self.atividades.order :data
+    datas.first.data.to_s.split("-").reverse.join("/") +" a " +
+     datas.last.data.to_s.split("-").reverse.join("/")
+  end
+
 end
