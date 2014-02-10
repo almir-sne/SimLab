@@ -34,9 +34,9 @@ class Ausencia < ActiveRecord::Base
 
   def segundos
     if read_attribute(:horas).nil?
-      h = dia.usuario.horario_data(dia.data)/20 * 3600
+      dia.usuario.horario_data(dia.data).to_f/20 * 3600
     else
-      h = read_attribute(:horas)
+      read_attribute(:horas)
     end
   end
 
