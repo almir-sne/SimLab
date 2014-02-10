@@ -14,7 +14,7 @@
         <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
         <td><%= dia.entrada_formatada %></td>
         <td><%= dia.saida_formatada %></td>
-        <td><%= (dia.intervalo.nil?) ? "" : dia.intervalo.strftime("%H:%M") %></td>
+        <td><%= int_to_horas dia.intervalo %></td>
         <td style="width: 60%; border: none">
           <% dia.atividades.each do |atividade| %>
             <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
