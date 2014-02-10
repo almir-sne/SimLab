@@ -2,7 +2,7 @@
   <%= hidden_field_tag :atividade_id, atividade.id %>
 
   <%= link_to "".html_safe, mensagens_atividades_path(:atividade_id => atividade.id),
-    :class => "icon-envelope", :method => "post", :remote => "true" %>
+    :class => "icon-envelope nohover", :method => "post", :remote => "true" %>
 
   <%= button_tag "", :name => "aprovacao", :value=> true,
     :class => "blank-button icon-ok #{'ok-button' if atividade.aprovacao == true}" %>
