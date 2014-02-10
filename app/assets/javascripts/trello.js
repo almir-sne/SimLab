@@ -91,7 +91,7 @@ function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var target = $(event.target.parentElement).find("#input-pai");
-    var pai = $("#" + data).clone();
+    var pai = $("#card-list #" + data).clone();
     $("#cartao_pai_trello_id").val(data);
     target.empty();
     pai.appendTo(target);
