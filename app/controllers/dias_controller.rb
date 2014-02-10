@@ -90,7 +90,7 @@ class DiasController < ApplicationController
     @dias_periodo      = dias_no_periodo(@inicio, @fim)
     @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    @equipe            = @usuario.equipe
+    #@equipe            = @usuario.equipe
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -114,28 +114,30 @@ class DiasController < ApplicationController
       data_inicial = (@today - 1.month).sunday
       contrato = @usuario.contratos.where('extract(year from inicio) <= ? or extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
       @intervalo = Array.new
-      fim = @today + 2.week
-      while data_inicial < fim do
+      fim_do_ano = @today.at_end_of_year
+      fim_do_contrato = contrato.fim
+      while data_inicial < fim_do_ano and data_inicial < fim_do_contrato do
         @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
         data_inicial = data_inicial + 1.week
       end
     elsif @tipo == 'p'
       contrato = @usuario.contratos.where('extract(year from inicio) <= ? and extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
-      if (!contrato.blank?)
+      if contrato.blank?
+        @intervalo = @usuario.contrato_atual.periodos_por_ano
+        flash.now[:notice] = I18n.t("dias.periodos.inexistente")      
+      else
         if params[:inicio].blank? and params[:fim].blank?
           @intervalo = contrato.periodos_por_ano(@ano.to_i)
         else
           @intervalo = contrato.periodos_entre_datas(params[:inicio].to_date,params[:fim].to_date)
         end
-      else
-        @intervalo = nil
       end
     end
     #if can? :manage, :usuario
     #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
     #end
     @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-    @projetos          = @usuario.meus_projetos
+    @projetos = @usuario.meus_projetos
   end
 
   private
