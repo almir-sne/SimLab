@@ -26,7 +26,7 @@
       <td><%= atividade.usuario.nome               %></td>
       <td><%= atividade.projeto.nome               %></td>
       <td><%= atividade.observacao                 %></td>
-      <td><%= atividade.formata_duracao            %></td>
+      <td><%= int_to_horas atividade.duracao       %></td>
       <td><%= atividade.aprovacao? ? "Sim" : "Não" %></td>
     </tr>
   <% end %>

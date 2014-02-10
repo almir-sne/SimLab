@@ -39,10 +39,6 @@ class Atividade < ActiveRecord::Base
     self.duracao = minutos.to_i * 60
   end
 
-  def formata_duracao
-    Time.at(duracao).utc.strftime("%H:%M")
-  end
-
   def cor_status
     if self.aprovacao == true
       "green-background"
