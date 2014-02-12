@@ -47,7 +47,7 @@ class Projeto < ActiveRecord::Base
       sub_projetos.map{ |proj| proj.valor }.sum
     end
   end
-  
+
   # fix temporário devido a problemas de compatibilidade com o cancan
   def autorizacao(usuario, acao)
     if usuario.role == 'admin'
@@ -80,4 +80,9 @@ class Projeto < ActiveRecord::Base
       end
     end
   end
+
+  def admins_ids
+    workons.joins(:permissao).where{permissao.nome == "admin"}.map{|workon| workon.usuario_id}
+  end
+
 end

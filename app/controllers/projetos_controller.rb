@@ -170,9 +170,12 @@ class ProjetosController < ApplicationController
   end
 
   def campos_cadastro
-    authorize! :criar_campos, Usuario
     @projeto = Projeto.find params[:id]
-    @projeto.campos.build if @projeto.campos.blank?
+    if((current_usuario.role == "admin") || !(@projeto.admins_ids.include? current_usuario.id) )
+      redirect_to :back, notice: "Você não está autorizado a executar essa operação"
+    else
+      @projeto.campos.build if @projeto.campos.blank?
+    end
   end
 
   private
