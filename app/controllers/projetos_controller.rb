@@ -9,6 +9,7 @@ class ProjetosController < ApplicationController
       redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
       false
     end
+    true
   end
 
 
