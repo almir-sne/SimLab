@@ -17,8 +17,9 @@
         <%= select_tag(:dia, options_for_select(@dias, @dia), {:class => 'menu_select'}) %>
       </div>
 
-      <div class="col-md-3">
-        <%= select_tag(:cartao_pai, options_for_select(@cartoes_pais, @cartao_pai), {:class => 'menu_select'}) %>
+      <div class="col-md-3" id="cartao_pai_select">
+        <%= hidden_field_tag :cartoes_pais_ids, @cartoes_pais %>
+        <%= hidden_field_tag :cartoes_pais_trello_ids, @cartoes_pais_trello_ids %>
       </div>
     </div>
 
@@ -51,28 +52,28 @@
         <%= hidden_field_tag :key  %>
         <%= hidden_field_tag :token  %>
         <%= submit_tag 'Sincronizar horas do Trello', data: {confirm: "Esta operação pode demorar pois depende do Trello. Continuar?"}, class: 'btn default-button' %>
-        <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
+</div>
 
-  <table  class="list-table">
+<table  class="list-table">
+  <tr>
+    <th> Cartão </th>
+    <th> Data </th>
+    <th> Horas Totais </th>
+    <th> Estimativa </th>
+    <th> Número de atividades </th>
+    <th> Detalhes </th>
+  </tr>
+  <% @cartoes.each do |cartao| %>
     <tr>
-      <th> Cartão </th>
-      <th> Data </th>
-      <th> Horas Totais </th>
-      <th> Estimativa </th>
-      <th> Número de atividades </th>
-      <th> Detalhes </th>
+      <td> <%= hidden_field_tag cartao.trello_id, "", :class => "card-placeholder card-default" %> </td>
+      <td> <%= cartao.datas%> </td>
+      <td> <%= int_to_horas(cartao.horas_trabalhadas) %> </td>
+      <td> <%= cartao.estimativa.to_s %> </td>
+      <td> <%= cartao.atividades.count %> </td>
+      <td> <%= link_to '<i class="icon-list"></i>'.html_safe, cartao_path(cartao), :class => "nohover" %> </td>
     </tr>
-    <% @cartoes.each do |cartao| %>
-      <tr>
-        <td> <%= hidden_field_tag cartao.trello_id, "", :class => "card-placeholder card-default" %> </td>
-        <td> <%= cartao.datas%> </td>
-        <td> <%= int_to_horas(cartao.horas_trabalhadas) %> </td>
-        <td> <%= cartao.estimativa.to_s %> </td>
-        <td> <%= cartao.atividades.count %> </td>
-        <td> <%= link_to '<i class="icon-list"></i>'.html_safe, cartao_path(cartao), :class => "nohover" %> </td>
-      </tr>
-    <% end %>
-  </table>
+  <% end %>
+</table>

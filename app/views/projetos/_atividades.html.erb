@@ -1,0 +1,112 @@
+<%= form_tag filtra_atividades_projetos_path do %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <%= text_field_tag "inicio", Date.today.strftime("%d/%m/%Y"), id: "dataInicio", style: "width:100px", class: 'menu_select'%>
+        a <%= text_field_tag "fim", Date.today.strftime("%d/%m/%Y"), id: "dataFim", style: "width:100px"%>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:usuario_id, options_for_select(@usuarios_select), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+        <%= select_tag(:aprovacao, options_for_select(@aprovacoes), {:class => 'menu_select'}) %>
+      </div>
+
+      <div class="col-md-3">
+       <%= submit_tag('Filtra', {:class => 'btn default-button'})%>
+      </div>
+    </div>
+  </div>
+<%end%>
+
+<div id="lista">
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th> Data               </th>
+        <th> Usuário            </th>
+        <th> Duração            </th>
+        <th> Detalhes           </th>
+        <th> Possui cartão pai? </th>
+        <th> Parceiro(s)        </th>
+        <th> Status             </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lista_atividades.each do |dia, atividades| %>
+        <% atividades.each do |atividade| %>
+          <tr>
+            <td><%= dia.data.strftime("%d/%m/%Y") %></td>
+            <td style="width: 150px;">
+              <%= link_to dia.usuario.nome, new_dia_path(data: dia.data, usuario_id: dia.usuario.id),
+                target:"_blank", style:"text-decoration: underline" %>
+              <p> E: <%= dia.entrada_formatada %> S: <%= dia.saida_formatada %></p>
+              <p> <%= int_to_horas dia.horas %> horas </p>
+              <p> <%= dia.horas_atividades_todas %> horas </p>
+            </td>
+            <td><%= atividade.formata_duracao %></td>
+            <td>
+              <%= atividade.observacao %>
+              <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-default") if atividade.cartao%>
+            </td>
+            <td>
+              <% if atividade.try(:cartao).try(:pai) %>
+                <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-father")%>
+              <% else %>
+                NÃO
+              <% end %>
+            </td>
+            <td>
+              <% atividade.pares.each do |parceiro| %>
+                <p>
+                  <%= parceiro.par.nome %>
+                  <%= int_to_horas(parceiro.duracao) %>
+                </p>
+              <% end %>
+            </td>
+            <td style="width: 150px;">
+              <% if atividade.aprovacao %>
+                Aprovada
+              <% elsif atividade.aprovacao.nil? %>
+                Não Vista
+              <% else %>
+                Reprovada
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+$('#data-table').dataTable({
+      "sDom": 'RC<"clear">lfrtip',
+      "oColVis": {
+        "buttonText": "Exibir/esconder colunas"
+      },
+      "oLanguage": {
+        "sZeroRecords": "Nenhum dado encontrado",
+        "sInfo": "Exibindo _START_ de _END_ de _TOTAL_ entrada(s)",
+        "sInfoEmpty": "Exibindo 0 de 0 de 0 entradas",
+        "sInfoFiltered": "(filtrado de _MAX_ de entrada(s))",
+        "sSearch": "Buscar:",
+        "sLengthMenu": 'Mostrar <select>'+
+        '<option value="10">10</option>'+
+        '<option value="30">30</option>'+
+        '<option value="50">50</option>'+
+        '<option value="-1">Todas</option>'+
+        '</select> Atividades',
+        "oPaginate": {
+          "sNext": "Próxima",
+          "sPrevious": "Anterior"
+        }
+      }
+  });
+$("#dataInicio").datepicker({dateFormat: "dd/mm/yy"});
+$("#dataFim").datepicker({dateFormat: "dd/mm/yy"});
+</script>
