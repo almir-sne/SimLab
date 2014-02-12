@@ -46,7 +46,7 @@
               <p> <%= int_to_horas dia.horas %> horas </p>
               <p> <%= dia.horas_atividades_todas %> horas </p>
             </td>
-            <td><%= atividade.formata_duracao %></td>
+            <td><%= int_to_horas atividade.duracao %></td>
             <td>
               <%= atividade.observacao %>
               <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-default") if atividade.cartao%>

@@ -1,12 +1,13 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
-  before_filter :checa_autorizacao, :only => [:edit, :update, :destroy]
+  before_filter :checa_autorizacao, :only => [:edit, :destroy]
 
   # fix temporário devido a problemas de compatibilidade com o cancan
   def checa_autorizacao
     @projeto = Projeto.find params[:id]
     if !@projeto.autorizacao(current_user, params[:action])
       redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
+      false
     end
   end
 
@@ -57,6 +58,8 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
+    @autorizado = (@projeto.autorizacao(current_usuario, "update") ||
+      !((@projeto.workons.select{|z| z.coordenadores_ids.include? current_usuario.id}).blank?))
     edit_attr
   end
 
@@ -78,9 +81,10 @@ class ProjetosController < ApplicationController
   # PATCH /projetos/1
   # PATCH /projetos/1.json
   def update
-    authorize! :update, Projeto
     @projeto = Projeto.find(params[:id])
     if params[:commit] == "Filtra"
+      @autorizado = (@projeto.autorizacao(current_usuario, "update") ||
+        !((@projeto.workons.select{|z| z.coordenadores_ids.include? current_usuario.id}).blank?))
       edit_attr
       inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : params[:inicio].split("/").reverse.join("-").to_date
       fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : params[:fim].split("/").reverse.join("-").to_date
@@ -88,6 +92,8 @@ class ProjetosController < ApplicationController
         aprovacao(params[:aprovacao].to_i).limit(100).group_by{|atividade| atividade.dia}
       render :edit
     else
+      authorize! :update, Projeto
+      return unless checa_autorizacao
       boards = @projeto.boards.to_a
       #lidar com boards
       unless params[:trello].blank?
@@ -180,7 +186,7 @@ class ProjetosController < ApplicationController
     def edit_attr
       @usuarios_select = @projeto.usuarios.map{|user| [user.nome, user.id] }.unshift(["Usuário - Todos", -1])
       @aprovacoes = [["Aprovacao - Todas", 2], ["Aprovada", 1], ["Reprovada", 0], ["Não Vista", nil]]
-      @lista_atividades = @projeto.atividades.limit(100).group_by{|atividade| atividade.dia}
+      @lista_atividades = @projeto.atividades.limit(100).group_by{|atividade| atividade.dia} if @autorizado
       @filhos_for_select  = Projeto.all.sort{ |projeto|
         @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
           reject{|projeto| projeto == @projeto}.

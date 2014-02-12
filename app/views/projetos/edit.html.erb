@@ -8,16 +8,18 @@
   <div class="div_edit" style="margin: 10px;">
 
     <ul class="nav nav-tabs" style="margin-right: 10px;">
-      <li><a href="#ausencias" data-toggle="tab">Ausências</a></li>
+      <li class="active"><a href="#ausencias" data-toggle="tab">Ausências</a></li>
       <li><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
       <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
       <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
       <li><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
-      <li class="active"><a href="#atividades" data-toggle="tab">Atividades</a></li>
+      <% if @autorizado %>
+        <li><a href="#atividades" data-toggle="tab">Atividades</a></li>
+      <% end %>
     </ul>
 
     <div class="tab-content">
-      <div class="tab-pane" id="ausencias">
+      <div class="tab-pane active" id="ausencias">
         <%= render :partial => 'ausencias' %>
       </div>
 
@@ -37,9 +39,11 @@
         <%= render partial: 'meus_dados', locals: {f: f} %>
       </div>
 
-      <div class="tab-pane active" id="atividades">
-        <%= render partial: 'atividades', locals: {f: f} %>
-      </div>
+      <% if @autorizado %>
+        <div class="tab-pane" id="atividades">
+          <%= render partial: 'atividades', locals: {f: f} %>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>
