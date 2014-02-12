@@ -1,7 +1,7 @@
 <%= render partial: 'navegacao' %>
 
 <div id="lista" style="width: 100%; float: right;">
-  <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :inicio => @inicio, :fim => @fim, :origin => "i", :view => "periodo"} %>
+  <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :inicio => @inicio, :fim => @fim, :origin => "i", :view => "periodo"} %>  
   <div id="pagetabs">
   <ul class="nav nav-tabs fix-color" id="myTab">
     <li class="active"><a href="#periodos">Calendário</a></li>
@@ -10,7 +10,7 @@
   </ul>
   <br/>
   <div class="tab-content">
-
+  
     <div class="tab-pane" id="ausencias_tab">
       <%= render "ausencias"%>
     </div>
@@ -40,7 +40,8 @@
                 </ul>
               </div>
               <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
-                 class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip" title="<%= monta_resumo_dia(dia,@usuario.id) %>">
+                 class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip"
+                 title="<%= monta_resumo_dia(dia,@usuario.id) %>">
                 <div class='panel-scrollable' style='height: 100px'>
                   <%= dia.strftime("%d/%b") %>
                   <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
@@ -50,7 +51,8 @@
                   <% unless @dias[dia].blank? %>
                     <% @dias[dia][0].atividades.each do |atividade| %>
                       <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-                      <input type="hidden" class="card-placeholder card-abrev" id="<%= cartao_trello_id %>" pid="<%= atividade.projeto_id %>" value="<%= atividade.duracao/60 %>"></input>
+                      <input type="hidden" class="card-placeholder card-abrev" id="<%= cartao_trello_id %>"
+                             pid="<%= atividade.projeto_id %>" value="<%= atividade.minutos %>"></input>
                     <% end %>
                   <% end %>
                 </div>

@@ -29,12 +29,12 @@ class Ability
       can [:read,:create],      Dia, :usuario_id => user.id
       can [:destroy,:update],   Dia, :id => true, :usuario_id => user.id
       can :update,              Usuario,   :id => true, :id => user.id
-      can [:validacao, :ajax_form], Atividade
+      can [:validacao, :ajax_form, :aprovar, :enviar_mensagem, :mensagens], Atividade
       can [:update, :destroy],  Atividade, :usuario_id => user.id
       can :alt_role, Usuario
       can [:periodos, :listar], Pagamento, :usuario_id => user.id
       can [:destroy, :create, :show, :edit],  Ausencia
-      can [:index, :edit, :update], Cartao
+      can [:index, :edit, :update, :find_or_create], Cartao
     end
 
 

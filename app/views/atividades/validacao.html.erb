@@ -52,23 +52,22 @@
       </tr>
     </thead>
     <tbody>
-      <% @atividades.each do |dia, atividades| %>
-        <% atividades.each do |atividade| %>
+      <% @atividades.each do |atividade| %>
           <tr>
             <td >
-              <%= dia.data.strftime("%d/%m/%Y") %>
+              <%= atividade.data.strftime("%d/%m/%Y") %>
             </td>
             <td  style="width: 150px;">
-              <a href="<%= new_dia_path(:data=> dia.data, :usuario_id => dia.usuario.id) %>" target="_blank">
-                <p style="text-decoration: underline"> <%= dia.usuario.nome %> </p>
+              <a href="<%= new_dia_path(:data=> atividade.data, :usuario_id => atividade.usuario_id) %>" target="_blank">
+                <p style="text-decoration: underline"> <%= atividade.usuario.nome %> </p>
               </a>
-              <p> E: <%= dia.entrada_formatada %> S: <%= dia.saida_formatada %></p>
-              <p> <%= int_to_horas dia.horas %> horas </p>
-              <p> <%= dia.horas_atividades_todas %> horas </p>
+              <p> E: <%= atividade.dia.entrada_formatada %> S: <%= atividade.dia.saida_formatada %></p>
+              <p> <%= int_to_horas atividade.dia.horas %> horas </p>
+              <p> <%= atividade.dia.horas_atividades_todas %> horas </p>
             </td>
 
             <td><%= atividade.try(:projeto).try(:nome) %> </td>
-            <td><%= atividade.formata_duracao %> </td>
+            <td><%= int_to_horas atividade.duracao %> </td>
             <td>
               <%= atividade.observacao %>
               <% if atividade.cartao %>
@@ -99,7 +98,6 @@
               </div>
             </td>
           </tr>
-        <% end %>
       <% end %>
     </tbody>
   </table>

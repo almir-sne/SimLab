@@ -46,7 +46,7 @@ class CartoesController < ApplicationController
     respond_to do |format|
       if @cartao.update_attributes cartao_params
         @cartao.update_on_trello(params[:key], params[:token])
-        format.html { redirect_to edit_cartao_path(id: @cartao.trello_id), notice: 'Cartão atualizado com sucesso.' }
+        format.html { redirect_to edit_cartao_path(id: @cartao.id), notice: 'Cartão atualizado com sucesso.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

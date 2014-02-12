@@ -98,6 +98,16 @@ class Dia < ActiveRecord::Base
     end
     msgs.strip
   end
+  
+  def intervalo
+    x = 0
+    horarios.order(:entrada).each_with_index do |horario, index|
+      if horarios[index + 1]
+        x += horarios[index + 1].entrada.seconds_since_midnight - horario.saida.seconds_since_midnight
+      end
+    end
+    x
+  end
 
   private
   def validar_horas

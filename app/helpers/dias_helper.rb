@@ -52,11 +52,11 @@ module DiasHelper
 
   def periodo_link(inicio, fim, usuario_id, formato, mes = 0)
     if formato == "p"
-    "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
-      "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)}</b>"
+      "#{inicio.strftime("%d/%m")} - #{fim.strftime("%d/%m")}  <br/> <br/>" +
+        "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)}</b>"
     elsif formato == "m"
       "<b> #{t('date.month_names')[mes]} <br/> <br/> </b>" +
-    "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
+        "#{horas_trabalhadas_aprovadas(inicio, fim, usuario_id)} </b>"
     end
   end
 
@@ -155,7 +155,6 @@ module DiasHelper
     usuario = can?(:manage, Dia)? Usuario.find(uid) : current_usuario
     dia_selecionado = Dia.find_or_create_by_data_and_usuario_id(data, usuario.id)
     horas = dia_selecionado.horas_atividades_todas
-    intervalo = "00:00"
     entrada = dia_selecionado.entrada_formatada.to_s
     if (entrada == "")
       entrada = "Não Informada"
@@ -164,15 +163,17 @@ module DiasHelper
     if (saida == "")
       saida = "Não Informada"
     end
-    if (!dia_selecionado.intervalo.nil?)
-      intervalo = dia_selecionado.intervalo.strftime("%H:%M").to_s
+    intervalo = dia_selecionado.intervalo
+    if intervalo > 0
+      intervalo = int_to_horas intervalo
+    else
+      intervalo = "Não Informado"
     end
     resumo = "Resumo do Dia<br/>"
-    resumo += "Horas Trabalhadas: " + horas  + "<br/>"
-    resumo += "Entrada: " + entrada + "<br/>"
-    resumo += "Saída: " + saida + "<br/>"
-    resumo += "Intervalo: " + intervalo + "<br/>"
-
+    resumo += "Horas Trabalhadas: #{horas} <br/>"
+    resumo += "Entrada: #{entrada} <br/>"
+    resumo += "Saída: #{saida} <br/>"
+    resumo += "Intervalo: #{intervalo} <br/>"
     return resumo
   end
 

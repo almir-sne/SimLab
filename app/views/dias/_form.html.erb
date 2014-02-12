@@ -4,22 +4,31 @@
   <%= hidden_field_tag :usuario_id, usuario.id %>
 
   <%= f.fields_for :horarios do |horario_form| %>
+
     <%= horario_form.label :entrada %>
     <br />
     <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;',
       :onchange => "recalculaHoras(); formChanged(this.form)", :class => 'horario_select entrada_horario' %>
-    <br />
+    <div>
+      <%= horario_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover",
+        :style => "float: right; margin-right: 10px" %>
+    </div>
     <%= horario_form.label :saida %>
     <br />
     <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;',
       :onchange => "recalculaHoras(); formChanged(this.form)", :class => "horario_select saida_horario" %>
     <br />
-    <%= horario_form.link_to_remove '<i class="icon-trash"> </i>'.html_safe, :class=>"nohover",
-      :style => "float: right; margin-right: 10px" %>
+    <br />
   <% end %>
 
-  <%= f.link_to_add 'Novo Horário' , :horarios, {:class => "nohover", id: "novo-horario-link"} %>
+  <%= f.link_to_add '<i class="icon-time icon-2x"></i> Novo Intervalo'.html_safe , :horarios,
+    {:class => "nohover", id: "novo-horario-link"} %>
   <br /><br />
+
+  <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover"
+          value="Salvar" onclick="return validateSliders();"></button>
+  <%= render partial: "/shared/form_status" %>
+  
   Intervalo:
   <div id="dia_intervalo">
     <%= int_to_horas(@dia.intervalo) %> horas
@@ -34,7 +43,5 @@
   <div id="horas_atividades">
     <%= @dia.horas_atividades_todas  %> horas 
   </div>
-  <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover"
-          value="Salvar" onclick="return validateSliders();"></button>
-  <%= render partial: "/shared/form_status" %>
+
 <% end %>

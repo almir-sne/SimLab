@@ -18,8 +18,8 @@ class Usuario < ActiveRecord::Base
   has_many :dias
   has_many :atividades
   has_many :registros
-  has_many :workon_coordenados, :through => :coordenacoes, :class_name => "Workon"
-
+  
+  
   accepts_nested_attributes_for :address,      :allow_destroy => true
   accepts_nested_attributes_for :telefones,    :allow_destroy => true
   accepts_nested_attributes_for :contas,       :allow_destroy => true

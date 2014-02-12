@@ -14,7 +14,7 @@
         <td style="width: 11%"><%= "#{dia.data.day} / #{dia.data.month} (#{t("date.abbr_day_names")[dia.data.wday]})"%></td>
         <td><%= dia.entrada_formatada %></td>
         <td><%= dia.saida_formatada %></td>
-        <td><%= (dia.intervalo.nil?) ? "" : Time.at(dia.intervalo).utc.strftime("%H:%M") %></td>
+        <td><%= int_to_horas dia.intervalo %></td>
         <td style="width: 60%; border: none">
           <% dia.atividades.each do |atividade| %>
             <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
@@ -22,7 +22,8 @@
               <%=  atividade.observacao%>
               <br />
               <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-              <input type="hidden" class="card-placeholder card-default" id="<%= cartao_trello_id %>" value="<%= atividade.duracao/60 %>"></input>
+              <input type="hidden" class="card-placeholder card-default" id="<%= cartao_trello_id %>"
+                     value="<%= atividade.minutos %>"></input>
             </div>
           <% end %>
         </td>

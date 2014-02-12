@@ -228,6 +228,10 @@ pt-BR:
       projeto:
         descricao: "Descrição"
 
+
+  dias:
+    periodos:
+      inexistente: "Não existem períodos cadastrados"
   unauthorized:
     manage:
       all: "Você não está autorizado a acessar esse recurso"
