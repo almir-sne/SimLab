@@ -31,10 +31,10 @@ window.NestedFormEvents.prototype.insertFields = function(content, assoc, link) 
 checkTrello(getBoards);
 
 $(document).ready(function() {
-    if ($("input[name='super_projeto']:checked").val() == "true")
-        mostraFilhos();
-    else
-        mostraPai();
+  if ($("input[name='super_projeto']:checked").val() == "true")
+      mostraFilhos();
+  else
+      mostraPai();
 })
 
 $("#super_projeto_true").click(function() {

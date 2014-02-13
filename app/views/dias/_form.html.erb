@@ -24,6 +24,10 @@
   <%= f.link_to_add '<i class="icon-time icon-2x"></i> Novo Intervalo'.html_safe , :horarios,
     {:class => "nohover", id: "novo-horario-link"} %>
   <br /><br />
+
+  <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover"
+          value="Salvar" onclick="return validateSliders();"></button>
+  <%= render partial: "/shared/form_status" %>
   
   Intervalo:
   <div id="dia_intervalo">

@@ -1,4 +1,4 @@
-<% if can? :criar_campos, current_usuario %>
+<% if( (can? :criar_campos, current_usuario) || @projeto.admins_ids.include?(current_usuario.id))%>
   <%= link_to "Editar Campos", {controller: 'projetos', action: 'campos_cadastro', id: @projeto.id}, {class: 'btn default-button'} %>
 <% end %>
 

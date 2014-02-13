@@ -15,8 +15,9 @@ class CartoesController < ApplicationController
     @tags       = [["Tags - Todos", -1]] + Tag.order(:nome).collect { |p| [p.nome, p.id] }
     @tag        = params[:tag_id].blank? ? params[:tag_id] = -1 : params[:tag_id].to_i
     @cartao_pai = params[:cartao_pai].blank? ? params[:cartao_pai] = -1 : params[:cartao_pai].to_i
-    @cartoes_pais = [["Pais - Todos", 0]] + [["Pais - Nenhum", -1]] + Cartao.where(
-      id: Cartao.where{pai_id != nil}.select(:pai_id)).collect { |p| p.id }
+    cartoes_pais =  Cartao.where(id: Cartao.where{pai_id != nil}.select(:pai_id))
+    @cartoes_pais = cartoes_pais.collect { |p| p.id }
+    @cartoes_pais_trello_ids = cartoes_pais.collect { |p| p.trello_id }
 
     #TODO: Refatoração, filtro e scopes para cartao
     cartoes = Atividade.joins(:cartao).ano(@ano).mes(@mes).dia(@dia).projeto(@projeto).

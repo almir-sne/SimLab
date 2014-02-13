@@ -13,6 +13,9 @@
       <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
       <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
       <li><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
+      <% if @autorizado %>
+        <li><a href="#atividades" data-toggle="tab">Atividades</a></li>
+      <% end %>
     </ul>
 
     <div class="tab-content">
@@ -35,7 +38,12 @@
       <div class="tab-pane" id="meusdados">
         <%= render partial: 'meus_dados', locals: {f: f} %>
       </div>
+
+      <% if @autorizado %>
+        <div class="tab-pane" id="atividades">
+          <%= render partial: 'atividades', locals: {f: f} %>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>
-
