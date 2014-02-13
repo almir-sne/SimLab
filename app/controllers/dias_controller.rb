@@ -56,41 +56,78 @@ class DiasController < ApplicationController
   end
 
   def index
-    @today   = Date.today
-    data     = params[:data].nil? ? @today : Date.parse(params[:data])
     @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
-    @tipo    = params[:tipo].blank? ? 'm' : params[:tipo]
-    if @usuario.contratos.count == 0
-      @tipo = 'm'
-    elsif params[:tipo].blank?
-      @tipo = 'p'
-    else
-      @tipo = params[:tipo]
-    end
-    if params[:inicio].nil? or params[:fim].nil?
-      if @tipo == 'p'
-        periodo = @usuario.contrato_vigente_em(data).periodo_vigente(data)
-        @inicio = periodo.first
-        @fim = periodo.last
-      elsif @tipo == 'm'
-        @inicio = data.beginning_of_month
-        @fim = data.end_of_month
-      elsif @tipo == 's'
-        @inicio = data.beginning_of_week(:sunday)
-        @fim = data.end_of_week(:sunday)
-      end
-    else
+    @tipo = params[:tipo] || 'm'
+    if params[:inicio]
       @inicio = Date.parse params[:inicio]
-      @fim = Date.parse params[:fim]
+      @fim = Date.parse params[:fim] if params[:fim]
+    else
+      @inicio = Date.today.at_beginning_of_month
+      @fim = Date.today.at_end_of_month
     end
+    
+    case params[:toggle]
+    when 's'
+      @tipo = 's'
+      @fim = @inicio.at_end_of_week(:sunday)
+      @inicio = @inicio.at_beginning_of_week(:sunday)
+    when 'p'
+      @tipo = 'p'
+      periodo = @usuario.contrato_vigente_em(@inicio).periodo_vigente(@inicio)
+      @fim = periodo.last
+      @inicio = periodo.first
+    when 'm'
+      @tipo = 'm'
+      @fim = @inicio.at_end_of_month
+      @inicio = @inicio.at_beginning_of_month
+    end
+ 
+    case params[:commit]
+    when 'previous_mes'
+      @tipo = 'm'
+      @fim = @inicio.last_month.at_end_of_month
+      @inicio = @inicio.last_month.at_beginning_of_month
+    when 'next_mes'
+      @tipo = 'm'
+      @fim = @inicio.next_month.at_end_of_month
+      @inicio = @inicio.next_month.at_beginning_of_month
+    when 'previous_ano'
+      @tipo = 'm'
+      @fim = @inicio.last_year.at_end_of_month
+      @inicio = @inicio.last_year.at_beginning_of_month
+    when 'next_ano'
+      @tipo = 'm'
+      @fim = @inicio.next_year.at_end_of_month
+      @inicio = @inicio.next_year.at_beginning_of_month
+    when 'next_semana'
+      @tipo = 's'
+      @fim = @inicio.next_week(:sunday).at_end_of_week(:sunday)
+      @inicio = @inicio.next_week(:sunday).at_beginning_of_week(:sunday)
+    when 'previous_semana'
+      @tipo = 's'
+      @fim = @inicio.last_week(:sunday).at_end_of_week(:sunday)
+      @inicio = @inicio.last_week(:sunday).at_beginning_of_week(:sunday)
+    when 'next_periodo'
+      @tipo = 'p'
+      @inicio = @inicio.next_month
+      periodo = @usuario.contrato_vigente_em(@inicio).periodo_vigente(@inicio)
+      @fim = periodo.last
+      @inicio = periodo.first
+    when 'previous_periodo'
+      @tipo = 'p'
+      @inicio = @inicio.last_month
+      periodo = @usuario.contrato_vigente_em(@inicio).periodo_vigente(@inicio)
+      @fim = periodo.last
+      @inicio = periodo.first
+    end
+
     if can? :manage, :usuario
-      @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+      @usuarios = Usuario.por_status
     end
     @projetos          = @usuario.meus_projetos
     @dias_periodo      = dias_no_periodo(@inicio, @fim)
     @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
-    #@equipe            = @usuario.equipe
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -98,16 +135,15 @@ class DiasController < ApplicationController
 
   def periodos
     @today = Date.today
-    if params[:usuario_id].nil?
-      @usuario = current_user
-    else
-      @usuario = Usuario.find(params[:usuario_id])
+    @usuario = (params[:usuario_id].nil? || cannot?(:manage, Dia)) ? current_user : Usuario.find(params[:usuario_id])
+    @ano = (params[:ano] || Date.today.year).to_i
+    @tipo = params[:toggle] || params[:tipo] || 'm'
+    case params[:commit]
+     when 'previous_ano'
+      @ano = @ano - 1
+    when 'next_ano'
+      @ano = @ano + 1
     end
-    @tipo = params[:tipo] || 'p'
-    if (params[:date])
-      date_year = params[:data].to_date.year
-    end
-    @ano = date_year || params[:ano] || Date.today.year
     if @tipo == 'm'
       @intervalo = (1..12).collect{|m| {inicio: Date.new(@ano.to_i, m, 1), fim: Date.new(@ano.to_i, m, 1).at_end_of_month}}
     elsif @tipo == 's'
@@ -133,10 +169,9 @@ class DiasController < ApplicationController
         end
       end
     end
-    #if can? :manage, :usuario
-    #@usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
-    #end
-    @usuarios = Usuario.order(:nome).collect{|u| [u.nome,u.id]}
+    if can? :manage, :usuario
+      @usuarios = Usuario.por_status
+    end
     @projetos = @usuario.meus_projetos
   end
 
@@ -147,7 +182,7 @@ class DiasController < ApplicationController
       atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy,
         pares_attributes: [:id, :par_id, :_destroy, :horas],
         mensagem: [:conteudo, :atividade_id, :autor_id]
-        ],
+      ],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
 

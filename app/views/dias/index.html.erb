@@ -1,86 +1,84 @@
 <%= render partial: 'navegacao' %>
 
 <div id="lista" style="width: 100%; float: right;">
-  <%= render :partial => 'topbar', :locals =>{:tipo => params[:tipo], :inicio => @inicio, :fim => @fim, :origin => "i", :view => "periodo"} %>  
+  <%= render :partial => 'index_topbar' %>
   <div id="pagetabs">
-  <ul class="nav nav-tabs fix-color" id="myTab">
-    <li class="active"><a href="#periodos">Calendário</a></li>
-    <li><a href="#atividades">Atividades</a></li>
-    <li><a href="#ausencias_tab">Ausências</a></li>
-  </ul>
-  <br/>
-  <div class="tab-content">
-  
-    <div class="tab-pane" id="ausencias_tab">
-      <%= render "ausencias"%>
-    </div>
-
-    <div class="tab-pane active" id="periodos">
-      <table class="day-table day-calendario" style="width: 100%">
-        <tr>
-          <% t("date.abbr_day_names").each do |p| %>
-            <th><%= p %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% dia_da_semana = 0 %>
-          <% while @inicio.wday != dia_da_semana %>
-            <% dia_da_semana = dia_da_semana + 1 %>
-            <td></td>
-          <% end %>
-          <% (@inicio..@fim).each do |dia| %>
-            <td>
-              <div class="dropdown toggle">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
-                  <i class="icon-collapse"></i>
-                </a>
-                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-                  <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
-                  <%= link_to "Cadastrar Ausência", new_ausencia_path(data: dia, usuario_id: @usuario.id, tipo: @tipo), :class => "submenu day-link blue-link" %>
-                </ul>
-              </div>
-              <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
-                 class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip"
-                 title="<%= monta_resumo_dia(dia,@usuario.id) %>">
-                <div class='panel-scrollable' style='height: 100px'>
-                  <%= dia.strftime("%d/%b") %>
-                  <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
-                    <br/>
-                    Ausência Registrada
-                  <% end %>
-                  <% unless @dias[dia].blank? %>
-                    <% @dias[dia][0].atividades.each do |atividade| %>
-                      <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
-                      <input type="hidden" class="card-placeholder card-abrev" id="<%= cartao_trello_id %>"
-                             pid="<%= atividade.projeto_id %>" value="<%= atividade.minutos %>"></input>
-                    <% end %>
-                  <% end %>
-                </div>
-              </a>
-            </td>
-            <% if dia.wday == 6 %>
-            </tr><tr>
+    <ul class="nav nav-tabs fix-color" id="myTab">
+      <li class="active"><a href="#periodos">Calendário</a></li>
+      <li><a href="#atividades">Atividades</a></li>
+      <li><a href="#ausencias_tab">Ausências</a></li>
+    </ul>
+    <br/>
+    <div class="tab-content">
+      <div class="tab-pane active" id="periodos">
+        <table class="day-table day-calendario" style="width: 100%">
+          <tr>
+            <% t("date.abbr_day_names").each do |p| %>
+              <th><%= p %></th>
             <% end %>
-          <% end %>
-        </tr>
-      </table>
-    </div>
+          </tr>
+          <tr>
+            <% dia_da_semana = 0 %>
+            <% while @inicio.wday != dia_da_semana %>
+              <% dia_da_semana = dia_da_semana + 1 %>
+              <td></td>
+            <% end %>
+            <% (@inicio..@fim).each do |dia| %>
+              <td>
+                <div class="dropdown toggle">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration: none">
+                    <i class="icon-collapse"></i>
+                  </a>
+                  <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                    <%= link_to "Atividades...", new_dia_path(:data=> dia, :usuario_id => @usuario.id), :class => "submenu day-link blue-link" %>
+                    <%= link_to "Cadastrar Ausência", new_ausencia_path(data: dia, usuario_id: @usuario.id, tipo: @tipo), :class => "submenu day-link blue-link" %>
+                  </ul>
+                </div>
+                <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
+                   class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip"
+                   title="<%= monta_resumo_dia(dia,@usuario.id) %>">
+                  <div class='panel-scrollable' style='height: 100px'>
+                    <%= dia.strftime("%d/%b") %>
+                    <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
+                      <br/>
+                      Ausência Registrada
+                    <% end %>
+                    <% unless @dias[dia].blank? %>
+                      <% @dias[dia][0].atividades.each do |atividade| %>
+                        <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
+                        <input type="hidden" class="card-placeholder card-abrev" id="<%= cartao_trello_id %>"
+                               pid="<%= atividade.projeto_id %>" value="<%= atividade.minutos %>"></input>
+                             <% end %>
+                           <% end %>
+                  </div>
+                </a>
+              </td>
+              <% if dia.wday == 6 %>
+              </tr><tr>
+              <% end %>
+            <% end %>
+          </tr>
+        </table>
+      </div>
 
-    <div class="tab-pane" id="atividades">
-      <%= render "atividades" %>
-    </div>
+      <div class="tab-pane" id="atividades">
+        <%= render "atividades" %>
+      </div>
 
+      <div class="tab-pane" id="ausencias_tab">
+        <%= render "ausencias"%>
+      </div>
+    </div>
   </div>
-</div>
- <table>
-     <tr>
-       <td>LEGENDA: </td>
-       <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td><td style="width: 10px;"></td>
-       <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td><td style="width: 10px;"></td>
-       <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td>
-       <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>
-       <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td>
-       <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td>
+  <table>
+    <tr>
+      <td>LEGENDA: </td>
+      <td><div class="hoje" style="width: 10px; height: 10px"></div></td><td>Hoje</td><td style="width: 10px;"></td>
+      <td><div class="reprovacao" style="width: 10px; height: 10px"></div></td><td>Dia com Atividade Reprovada</td><td style="width: 10px;"></td>
+      <td><div class="ausencia" style="width: 10px; height: 10px"></div></td><td>Dia com Ausência Cadastrada</td><td style="width: 10px;"></td>
+      <td><div class="diautil" style="width: 10px; height: 10px"></div></td><td>Dias Úteis</td><td style="width: 10px;"></td>
+      <td><div class="feriado" style="width: 10px; height: 10px"></div></td><td>Feriado</td><td style="width: 10px;"></td>
+      <td><div class="fimdesemana" style="width: 10px; height: 10px"></div></td><td>Fim de Semana</td><td style="width: 10px;"></td>
     </tr>
- </table>
+  </table>
 </div>

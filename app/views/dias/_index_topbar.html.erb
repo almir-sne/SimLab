@@ -1,0 +1,91 @@
+<%= form_tag dias_path, {method: :get} do %>
+  <div class="row">
+    <div class="col-md-9">
+      <button id="show-navegacao" onclick="showNavegacao();" class="nav-button" type="button">
+        <i class="icon-angle-right icon-2x"></i>
+      </button> 
+      <button id="hide-navegacao" onclick="hideNavegacao()" class="nav-button"  style="display: none" type="button">
+        <i class="icon-angle-left icon-2x"></i>
+      </button>
+
+      <%= link_to '<i class="icon-home icon-3x"> </i>'.html_safe, root_path, :class => 'nohover' %>
+
+      <div style="display: inline; margin: 20px;">
+        <% if @tipo == 'm' %>
+          <button class="blank-button" value='previous_mes' type="submit" name="commit">
+            <i class="icon-arrow-left"></i>
+          </button>
+          <%= @inicio.strftime("%b") %>
+          <button class="blank-button" value='next_mes' type="submit" name="commit">
+            <i class="icon-arrow-right"></i>
+          </button>
+
+          <button class="blank-button" value='previous_ano' type="submit" name="commit">
+            <i class="icon-arrow-left"></i>
+          </button>
+          <%= @inicio.year %>
+          <button class="blank-button" value='next_ano' type="submit" name="commit">
+            <i class="icon-arrow-right"></i>
+          </button>
+
+          <%= hidden_field_tag :inicio, @inicio.strftime("%d/%m/%Y") %>
+          <%= hidden_field_tag :fim, @fim.strftime("%d/%m/%Y") %>
+        <% elsif @tipo == 's' %>
+          <button class="blank-button" value='previous_semana' type="submit" name="commit">
+            <i class="icon-arrow-left"></i>
+          </button>
+          Semanas
+          <button class="blank-button" value='next_semana' type="submit" name="commit">
+            <i class="icon-arrow-right"></i>
+          </button>
+          <%= hidden_field_tag :inicio, @inicio.strftime("%d/%m/%Y") %>
+          <%= hidden_field_tag :fim, @fim.strftime("%d/%m/%Y") %>
+        <% else %>
+          <button class="blank-button" value='previous_periodo' type="submit" name="commit">
+            <i class="icon-arrow-left"></i>
+          </button>
+
+          <%= text_field_tag :inicio, @inicio.strftime("%d/%m/%Y"), size: 10, :class => 'datepicker' %> a
+          <%= text_field_tag :fim, @fim.strftime("%d/%m/%Y"), size: 10, :class => 'datepicker' %>
+
+          <button class="blank-button" value='next_periodo' type="submit" name="commit">
+            <i class="icon-arrow-right"></i>
+          </button>
+          <%= submit_tag "Ver Novo Periodo", :class => "blank-button" %>
+        <% end %>
+
+        <% if can? :manage, :usuario %>
+          <%= select_tag :usuario_id, grouped_options_for_select(@usuarios, @usuario.id),
+            :prompt => "Escolha um usuario", :onchange => "this.form.submit()", :style => "margin: 10px" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <%= hidden_field_tag :tipo, @tipo %>
+      <table>
+        <tr>
+          <td>
+            <%= button_tag '[Periodos]', :class => (@tipo == 'p' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 'p' %>
+          </td>
+          <td>
+            <%= button_tag '[Meses]', :class => (@tipo == 'm' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 'm' %>
+          </td>
+          <td>
+            <%= button_tag '[Semanas]', :class => (@tipo == 's' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 's' %>
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td> <%= link_to "[Anual]", periodos_dias_path(ano: @inicio.year, usuario_id: @usuario.id, tipo: @tipo),
+              :class => 'nohover', :style => "margin: 10px" %></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+<% end %>
