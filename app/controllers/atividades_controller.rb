@@ -132,7 +132,6 @@ class AtividadesController < ApplicationController
     @atividade = Atividade.find(params[:id])
     respond_to do |format|
       if @atividade.update_attributes atividade_params
-        @atividade.cartao.update_on_trello(params[:key], params[:token])
         format.js
       end
     end

@@ -1,2 +1,3 @@
 var form = $("<%= "#edit_atividade_#{@atividade.id}" %>");
 formSaved(form);
+updateTimeOnTrello("<%= @atividade.trello_id %>");

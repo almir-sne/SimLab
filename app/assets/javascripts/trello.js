@@ -303,3 +303,44 @@ function getToken() {
     $("input[name='key']").val(Trello.key);
     $("input[name='token']").val(Trello.token);
 }
+
+function updateTimeOnTrello(card_id) {
+    Trello.get("/cards/" + card_id, function(card) {
+        var regex_tags = /[\[][^\[\]]*[\]]/g;
+        var tags = card.name.match(regex_tags);
+        var regex_time = /[(]\d+[.]?\d*[)]$/;
+        var time = card.name.match(regex_time)[0];
+        var new_name = card.name.replace(regex_tags, '').replace(time, '').trim();
+
+        $.ajax({
+            url: '/cartoes/dados.json',
+            type: "GET",
+            dataType: "json",
+            data: {trello_id: card.id, tags: tags},
+            success: function(data) {
+                if (data != "erro") {
+                    new_name = "[" + data.tags.join("][") + "] " + new_name + " (" + (data.horas) + ")";
+                    if (card.name != new_name)
+                        Trello.put('/cards/' + card_id + '/', {name: new_name});
+                }
+                else
+                    elert("Erro durante atualização do cartão no Trello")
+            }
+        });
+    });
+}
+
+function updateTagsOnTrello(card_id) {
+    var tags = $("#cartao_tags_string").val().split(/[,][ ]*/);
+    Trello.get("/cards/" + card_id, function(card) {
+        var regex_tags = /[\[][^\[\]]*[\]]/g;
+        var new_name = card.name.replace(regex_tags, '').trim();
+        new_name = "[" + tags.join("][") + "] " + new_name;
+        if (card.name != new_name)
+            Trello.put('/cards/' + card_id + '/', {name: new_name}, function(data) {
+                document.location.reload(true);
+            });
+        else
+            document.location.reload(true);
+    });
+}

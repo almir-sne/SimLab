@@ -22,7 +22,7 @@ class CartoesController < ApplicationController
     #TODO: Refatoração, filtro e scopes para cartao
     cartoes = Atividade.joins(:cartao).ano(@ano).mes(@mes).dia(@dia).projeto(@projeto).
       usuario(@usuario).cartoes_tagados(@tag).where{cartao.trello_id != nil}.
-        cartoes_filhos(@cartao_pai).order("data desc").pluck("cartoes.id").uniq
+      cartoes_filhos(@cartao_pai).order("data desc").pluck("cartoes.id").uniq
     @cartoes = cartoes.collect {|id| Cartao.find id}
   end
 
@@ -45,9 +45,7 @@ class CartoesController < ApplicationController
     @cartao = Cartao.find(params[:id])
     respond_to do |format|
       if @cartao.update_attributes cartao_params
-        @cartao.update_on_trello(params[:key], params[:token])
-        format.html { redirect_to edit_cartao_path(id: @cartao.id), notice: 'Cartão atualizado com sucesso.' }
-        format.json { head :no_content }
+        format.js
       else
         format.html { render action: "edit" }
         format.json { render json: @cartao.errors, status: :unprocessable_entity }
@@ -55,8 +53,18 @@ class CartoesController < ApplicationController
     end
   end
 
-  def atualizar_trello
-    Cartao.order(:updated_at).each { |c| c.update_on_trello(params[:key], params[:token]) }
+#  def atualizar_trello
+#    Cartao.order(:updated_at).each { |c| c.update_on_trello(params[:key], params[:token]) }
+#  end
+  
+  def dados
+    c = Cartao.find_by trello_id: params[:trello_id]
+    c.tags_string = params[:tags].join("").gsub(/\]\[/, ",").gsub(/[\[\]]/, "")
+    if c
+      render json: {horas: "%.1f" % (c.horas_trabalhadas/3600), estimativa: c.estimativa, tags: c.tags.pluck(:nome)}
+    else
+      render json: :erro
+    end
   end
 
   private
