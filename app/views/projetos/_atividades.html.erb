@@ -1,6 +1,8 @@
-<%= form_tag filtra_atividades_projetos_path do %>
+<%= form_tag atividades_projetos_path do %>
   <div class="container">
     <div class="row">
+      <%= hidden_field_tag :id, @projeto.id %>
+
       <div class="col-md-3">
         <%= text_field_tag "inicio", Date.today.strftime("%d/%m/%Y"), id: "dataInicio", style: "width:100px", class: 'menu_select'%>
         a <%= text_field_tag "fim", Date.today.strftime("%d/%m/%Y"), id: "dataFim", style: "width:100px"%>
@@ -35,7 +37,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @lista_atividades.each do |dia, atividades| %>
+      <% @lista_atividades.group_by{|atividade| atividade.dia}.each do |dia, atividades| %>
         <% atividades.each do |atividade| %>
           <tr>
             <td><%= dia.data.strftime("%d/%m/%Y") %></td>
