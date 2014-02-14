@@ -59,9 +59,29 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
-    @autorizado = (@projeto.autorizacao(current_usuario, "update") ||
-      !((@projeto.workons.select{|z| z.coordenadores_ids.include? current_usuario.id}).blank?))
-    edit_attr
+    @autorizado = atividades_podem_ser_vistas_por? current_usuario
+    if @autorizado
+      @lista_atividades = Atividade.where(id: params[:lista_atv])
+    end
+    @usuarios_select = @projeto.usuarios.map{|user| [user.nome, user.id] }.unshift(["Usuário - Todos", -1])
+    @aprovacoes = [["Aprovacao - Todas", 2], ["Aprovada", 1], ["Reprovada", 0], ["Não Vista", nil]]
+    @filhos_for_select  = Projeto.all.sort{ |projeto|
+      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
+        reject{|projeto| projeto == @projeto}.
+          map{|filho| [filho.nome, filho.id]}
+    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+      sort{|a, b| a.nome <=> b.nome}.
+        reject{|projeto| projeto == @projeto}.
+          map{|proj| [proj.nome, proj.id]}
+    @eh_super_projeto = @projeto.super_projeto.blank?
+    @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
+    @hoje = Date.today
+    @equipe = @projeto.usuarios.pluck(:nome).sort
+    @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
+    @fim = params[:fim].try(:to_date) || @hoje.end_of_month
+    @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
 
   # POST /projetos
@@ -79,80 +99,78 @@ class ProjetosController < ApplicationController
     end
   end
 
+  def atividades
+    @projeto = Projeto.find(params[:id])
+    inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : Date.parse(params[:inicio])
+    fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : Date.parse(params[:fim])
+    @lista_atividades = @projeto.atividades.periodo(inicio .. fim ).usuario(params[:usuario_id].to_i).
+      aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
+    redirect_to(edit_projeto_path(id: params[:id], lista_atv: @lista_atividades) )
+  end
+
   # PATCH /projetos/1
   # PATCH /projetos/1.json
   def update
     @projeto = Projeto.find(params[:id])
-    if params[:commit] == "Filtra"
-      @autorizado = (@projeto.autorizacao(current_usuario, "update") ||
-        !((@projeto.workons.select{|z| z.coordenadores_ids.include? current_usuario.id}).blank?))
-      edit_attr
-      inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : params[:inicio].split("/").reverse.join("-").to_date
-      fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : params[:fim].split("/").reverse.join("-").to_date
-      @lista_atividades = @projeto.atividades.periodo(inicio .. fim ).usuario(params[:usuario_id].to_i).
-        aprovacao(params[:aprovacao].to_i).limit(100).group_by{|atividade| atividade.dia}
-      render :edit
+    authorize! :update, Projeto
+    return unless checa_autorizacao
+    boards = @projeto.boards.to_a
+    #lidar com boards
+    unless params[:trello].blank?
+      params[:trello].each do |id|
+        repetido = false
+        boards.each_with_index do |c, i|
+          if id == c.board_id
+            repetido = true
+            boards.delete_at i
+          end
+        end
+        unless repetido
+          board = Board.new
+          board.projeto = @projeto
+          board.board_id = id
+          board.save
+        end
+      end
+    end
+    unless params[:dados].blank?
+      params[:dados].each do |campo_id, valor|
+        dado = Dado.find_or_create_by(campo_id: campo_id, usuario_id: current_user.id)
+        dado.valor = valor
+        dado.save
+      end
+    end
+    boards.each do |b|
+      b.destroy
+    end
+    #lidar com subprojetos
+    failure = false
+    if params[:super_projeto] == "true"
+      params[:sub_projetos].each do |index, sub|
+        subprojeto = Projeto.find(sub["id"].to_i)
+        if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
+          failure ||= !(subprojeto.update super_projeto_id: nil)
+        elsif !(sub["filho"].nil?)
+          if !subprojeto.sub_projetos.blank?
+            return (redirect_to :back, :alert => I18n.t("projetos.update.cant_be_sub", projeto_nome: subprojeto.nome ))
+          else
+            failure ||= !(subprojeto.update super_projeto_id: @projeto.id)
+          end
+        end
+      end
+      @projeto.update super_projeto_id: nil
     else
-      authorize! :update, Projeto
-      return unless checa_autorizacao
-      boards = @projeto.boards.to_a
-      #lidar com boards
-      unless params[:trello].blank?
-        params[:trello].each do |id|
-          repetido = false
-          boards.each_with_index do |c, i|
-            if id == c.board_id
-              repetido = true
-              boards.delete_at i
-            end
-          end
-          unless repetido
-            board = Board.new
-            board.projeto = @projeto
-            board.board_id = id
-            board.save
-          end
-        end
-      end
-      unless params[:dados].blank?
-        params[:dados].each do |campo_id, valor|
-          dado = Dado.find_or_create_by(campo_id: campo_id, usuario_id: current_user.id)
-          dado.valor = valor
-          dado.save
-        end
-      end
-      boards.each do |b|
-        b.destroy
-      end
-      #lidar com subprojetos
-      failure = false
-      if params[:super_projeto] == "true"
-        params[:sub_projetos].each do |index, sub|
-          subprojeto = Projeto.find(sub["id"].to_i)
-          if sub["filho"].nil? && subprojeto.super_projeto_id == @projeto.id
-            failure ||= !(subprojeto.update super_projeto_id: nil)
-          elsif !(sub["filho"].nil?)
-            if !subprojeto.sub_projetos.blank?
-              return (redirect_to :back, :alert => I18n.t("projetos.update.cant_be_sub", projeto_nome: subprojeto.nome ))
-            else
-              failure ||= !(subprojeto.update super_projeto_id: @projeto.id)
-            end
-          end
-        end
-        @projeto.update super_projeto_id: nil
+      @projeto.sub_projetos.each{|sub| sub.update super_projeto_id: nil}
+    end
+    failure ||= !(@projeto.update (projetos_params))
+    @projeto.update super_projeto_id: nil if params[:super_projeto] == "true"
+    respond_to do |format|
+      if !failure
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
+        format.json { head :no_content }
       else
-        @projeto.sub_projetos.each{|sub| sub.update super_projeto_id: nil}
-      end
-      failure ||= !(@projeto.update (projetos_params))
-      @projeto.update super_projeto_id: nil if params[:super_projeto] == "true"
-      respond_to do |format|
-        if !failure
-          format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.success") }
-          format.json { head :no_content }
-        else
-          format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }
-          format.json { render json: @projeto.errors, status: :unprocessable_entity }
-        end
+        format.html { redirect_to edit_projeto_path(@projeto), notice: I18n.t("projetos.update.failure") }
+        format.json { render json: @projeto.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -187,27 +205,9 @@ class ProjetosController < ApplicationController
       )
     end
 
-    def edit_attr
-      @usuarios_select = @projeto.usuarios.map{|user| [user.nome, user.id] }.unshift(["Usuário - Todos", -1])
-      @aprovacoes = [["Aprovacao - Todas", 2], ["Aprovada", 1], ["Reprovada", 0], ["Não Vista", nil]]
-      @lista_atividades = @projeto.atividades.limit(100).group_by{|atividade| atividade.dia} if @autorizado
-      @filhos_for_select  = Projeto.all.sort{ |projeto|
-        @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-          reject{|projeto| projeto == @projeto}.
-            map{|filho| [filho.nome, filho.id]}
-      @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
-        sort{|a, b| a.nome <=> b.nome}.
-          reject{|projeto| projeto == @projeto}.
-            map{|proj| [proj.nome, proj.id]}
-      @eh_super_projeto = @projeto.super_projeto.blank?
-      @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
-      @hoje = Date.today
-      @equipe = @projeto.usuarios.pluck(:nome).sort
-      @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
-      @fim = params[:fim].try(:to_date) || @hoje.end_of_month
-      @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
-      @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
-      @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
+    def atividades_podem_ser_vistas_por?(usuario)
+      (@projeto.autorizacao(usuario, "update") ||
+        !((@projeto.workons.select{|z| z.coordenadores_ids.include? usuario.id}).blank?))
     end
 
 end
