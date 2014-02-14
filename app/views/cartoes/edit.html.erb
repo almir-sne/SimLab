@@ -6,7 +6,7 @@
     <div style="padding: 25px">
       <div class="grey-form" style="padding: 15px">
         <h4> Cartão </h4>
-        <%= hidden_field_tag @cartao.trello_id, "", :class => "card-placeholder card-default" %>
+        <%= hidden_field_tag @cartao.trello_id, "", :class => "card-placeholder card-default get-tags" %>
       </div>
       <%= form_for(@cartao, html: {remote: true}) do |f| %>
         <% if @cartao.errors.any? %>

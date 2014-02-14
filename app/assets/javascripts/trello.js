@@ -184,6 +184,9 @@ function loadDefaultCard(input, card) {
             style: "color: black; margin: 10px"
         }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
     }
+    if (input.classList.contains("get-tags")) {
+        mergeTags(card.name);
+    }
     $("<br/>").appendTo(div);
     $(input).detach();
 }
@@ -343,4 +346,13 @@ function updateTagsOnTrello(card_id) {
         else
             document.location.reload(true);
     });
+}
+
+function mergeTags(name) {
+    var regex_tags = /[\[][^\[\]]*[\]]/g;
+    var card_tags = name.match(regex_tags);
+    $(card_tags).each(function (i, e) {card_tags[i] = e.replace(/[\]\[]/g, '')});
+    var input_tags = $("#cartao_tags_string").val().split(/[,][ ]*/);
+    var concat = $.unique(input_tags.concat(card_tags));
+    $("#cartao_tags_string").val(concat.join(", "))
 }
