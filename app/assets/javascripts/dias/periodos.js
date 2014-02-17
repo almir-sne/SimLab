@@ -4,6 +4,6 @@ $('#myTab a').click(function(e) {
 });
 
 $(function() {
-$( "#datepicker1" ).datepicker();
-$( "#datepicker2" ).datepicker();
+  $( "#datepicker1" ).datepicker();
+  $( "#datepicker2" ).datepicker();
 });
