@@ -34,7 +34,7 @@ class Ability
       can :alt_role, Usuario
       can [:periodos, :listar], Pagamento, :usuario_id => user.id
       can [:destroy, :create, :show, :edit],  Ausencia
-      can [:index, :edit, :update, :find_or_create], Cartao
+      can [:index, :edit, :update, :find_or_create, :dados], Cartao
     end
 
 

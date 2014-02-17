@@ -71,7 +71,6 @@
 
 .month-table a:hover {
     color: inherit;
-    background-color: inherit;
 }
 
 .day-table td {
@@ -455,11 +454,6 @@ ul .submenu {
     padding-top: 10px
 }
 
-.month-table td.today {
-    border-collapse: separate;
-    border: 16px solid #FF00CC;
-}
-
 .ausencia {
     background-color: #666666;
 }
@@ -510,6 +504,14 @@ ul .submenu {
 
 .blue-link {
     background: rgb(33, 147, 189);
+}
+
+.today {
+    background: #FF00CC
+}
+
+.today:hover {
+    background: #D500AA
 }
 
 .blue-link:hover {
@@ -655,4 +657,8 @@ table.dataTable thead th {
     background-color: #EEE;
     border-radius: 10px 10px 0px 0px;
     margin: 0 5px;
+}
+
+.selected {
+    font-weight: bold;
 }

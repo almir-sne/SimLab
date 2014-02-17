@@ -6,6 +6,7 @@ SinLab::Application.routes.draw do
     collection do
       post :atualizar_trello
       get :find_or_create
+      get :dados
     end
   end
 
@@ -66,7 +67,7 @@ SinLab::Application.routes.draw do
     collection do
       get ':id/campos_cadastro' => "projetos#campos_cadastro"
       post :coordenadorform
-      match ':id/edit' => 'projetos#update', :via => :put, :as => :filtra_atividades
+      post  :atividades
     end
   end
 

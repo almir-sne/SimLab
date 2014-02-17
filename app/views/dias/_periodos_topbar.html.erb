@@ -1,0 +1,54 @@
+<%= form_tag periodos_dias_path, {method: :get} do %>
+  <div class="row">
+    <div class="col-md-9">
+      <button id="show-navegacao" onclick="showNavegacao();" class="nav-button" type="button">
+        <i class="icon-angle-right icon-2x"></i>
+      </button> 
+      <button id="hide-navegacao" onclick="hideNavegacao()" class="nav-button"  style="display: none" type="button">
+        <i class="icon-angle-left icon-2x"></i>
+      </button>
+
+      <%= link_to '<i class="icon-home icon-3x"> </i>'.html_safe, root_path, :class => 'nohover' %>
+
+      <div style="display: inline; margin: 20px;">
+        <%= button_tag '<i class="icon-arrow-left"></i>'.html_safe, :class => "blank-button",
+          name: 'commit', value: "previous_ano" %>
+        <%= @ano %>
+        <%= button_tag '<i class="icon-arrow-right"></i>'.html_safe, :class => "blank-button",
+          name: 'commit', value: "next_ano" %>
+        <%= hidden_field_tag :ano, @ano %>
+        <% if can? :manage, :usuario %>
+          <%= select_tag :usuario_id, grouped_options_for_select(@usuarios, @usuario.id),
+            :prompt => "Escolha um usuario", :onchange => "this.form.submit()", :style => "margin: 10px" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <%= hidden_field_tag :tipo, @tipo %>
+      <table>
+        <tr>
+          <td>
+            <%= button_tag '[Periodos]', :class => (@tipo == 'p' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 'p' %>
+          </td>
+          <td>
+            <%= button_tag '[Meses]', :class => (@tipo == 'm' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 'm' %>
+          </td>
+          <td>
+            <%= button_tag '[Semanas]', :class => (@tipo == 's' ? 'blank-button selected' : "blank-button"),
+              name: 'toggle', value: 's' %>
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td> <%= link_to "[Anual]", dias_path(usuario_id: @usuario.id, tipo: @tipo),
+              :class => 'nohover', :style => "margin: 10px; font-weight: bold" %></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+<% end %>

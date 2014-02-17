@@ -41,7 +41,18 @@ module DiasHelper
       string = string + " fimdesemana"
     else
       string = string + " diautil"
-
+    end
+    string
+  end
+  
+  def classe_do_periodo(inicio, fim, usuario_id)
+    string = "month-link "
+    if tem_reprovacao?(inicio, fim, usuario_id)
+      string += "red-link"
+    elsif (inicio..fim).include?(Date.today)
+      string += "today"
+    else
+      string += "blue-link"
     end
     string
   end

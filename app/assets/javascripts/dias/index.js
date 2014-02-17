@@ -18,4 +18,5 @@ $("a.day-link").on("dragstart", function(e) {
 });
 
 $('.tooltipconfig').tooltip({html: true})
-  
+
+$(".datepicker").datepicker({dateFormat: "dd/mm/yy"});

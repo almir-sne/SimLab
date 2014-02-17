@@ -6,10 +6,9 @@
     <div style="padding: 25px">
       <div class="grey-form" style="padding: 15px">
         <h4> Cartão </h4>
-        <%= hidden_field_tag @cartao.trello_id, "", :class => "card-placeholder card-default" %>
+        <%= hidden_field_tag @cartao.trello_id, "", :class => "card-placeholder card-default get-tags" %>
       </div>
-      <%= form_for(@cartao) do |f| %>
-
+      <%= form_for(@cartao, html: {remote: true}) do |f| %>
         <% if @cartao.errors.any? %>
           <div id="error_explanation">
             <h2><%= pluralize(@cartao.errors.count, "error") %> prohibited this deck from being saved:</h2>
@@ -30,7 +29,6 @@
           &nbsp;Arraste o cartão pai aqui.
         </div>
 
-
         <%= f.hidden_field :pai_trello_id %>
         <div id="input-pai">
           <% if @cartao.pai_trello_id %>
@@ -39,8 +37,6 @@
         </div>
 
         <div id="lower-bar" class="navbar-fixed-bottom toolbar">
-          <%= hidden_field_tag :key  %>
-          <%= hidden_field_tag :token  %>
           <%= f.submit :class => "btn default-button" %>
           <%= link_to 'Voltar', decks_path, :class =>  "btn default-button" %>
         </div>

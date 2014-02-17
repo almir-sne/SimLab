@@ -30,7 +30,7 @@ class Usuario < ActiveRecord::Base
   has_many :projetos, :through => :workons
 
   validates :nome, :presence => true,
-                   :uniqueness => true
+    :uniqueness => true
 
   def default_values
     self.role ||= "usuario normal"
@@ -69,5 +69,12 @@ class Usuario < ActiveRecord::Base
     else
       self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
     end
+  end
+  
+  def self.por_status
+    usuarios = Usuario.order(:nome).pluck([:nome, :status, :id]).group_by{|x| x[1]}
+    usuarios["Ativo"] = usuarios.delete(true)
+    usuarios["Inativo"] = usuarios.delete(false)
+    usuarios
   end
 end
