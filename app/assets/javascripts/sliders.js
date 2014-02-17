@@ -3,23 +3,27 @@ function pega_horas_dia() {
     var primeiraEntrada = 0;
     var entrada = 0;
     var saida = 0;
-    $('.horario_select').each(
+    var entrada_a;
+    var saida_a;
+    $('.horario_picker').each(
             function(i, e) {
                 var entradaH = 0;
                 var entradaM = 0;
                 var saidaH = 0;
                 var saidaM = 0;
-                if ((e.className.indexOf('entrada_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-                    entradaH = parseInt(e.value);
-                    entradaM = parseInt(e.nextElementSibling.value);
+                if (e.className.indexOf('entrada_horario') != -1 ) {
+                    entrada_a = e.value.split(":");
+                    entradaH = parseInt(entrada_a[0]);
+                    entradaM = parseInt(entrada_a[1]);
                     entrada = (entradaH * 60) + entradaM;
                     if (i == 0) {
                         primeiraEntrada = entrada;
                     }
                 }
-                else if ((e.className.indexOf('saida_horario') != -1) && (e.id.indexOf('4i') != -1)) {
-                    saidaH = parseInt(e.value);
-                    saidaM = parseInt(e.nextElementSibling.value);
+                else if (e.className.indexOf('saida_horario') != -1) {
+                    saida_a = e.value.split(":");
+                    saidaH = parseInt(saida_a[0]);
+                    saidaM = parseInt(saida_a[1]);
                     saida = (saidaH * 60) + saidaM;
                     totalHorasTrabalhadas += (saida - entrada);
                 }
@@ -65,7 +69,7 @@ function updateHorasAtividades(val, max, div) {
 
 function sumSliders() {
     var val = 0;
-    $(".fields:visible > #atividade-form > .slider > .hora_field").each(function(i, e) {
+    $("#atividade-form > .slider > .hora_field").each(function(i, e) {
         val += parseInt(e.value);
     });
     return val;
@@ -84,7 +88,11 @@ function initializeSliders() {
 }
 
 function createSlider(sliderParent) {
-    var time = sliderParent.find(".hora_field")[0].value;
+    var time = 0;
+    a = sliderParent.find(".hora_field");
+    if (a[0] != undefined) {
+      time = a[0].value;
+    }
     var max;
     if (sliderParent.parent().attr("class") == "par")
         max = $(sliderParent).parents("#atividade-form").find(".atividade_field")[0].value;
