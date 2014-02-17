@@ -90,11 +90,16 @@ function dropCard(event) {
 function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
-    var target = $(event.target.parentElement).find("#input-pai");
+    var target = $("#input-pai");
     var pai = $("#card-list #" + data).clone();
     $("#cartao_pai_trello_id").val(data);
     target.empty();
     pai.appendTo(target);
+}
+
+function removePai() {
+    $("#cartao_pai_trello_id").val("");
+    $("#input-pai").empty();
 }
 
 function dragCard(ev) {

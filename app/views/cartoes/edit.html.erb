@@ -25,8 +25,15 @@
           <%= f.text_field :tags_string %>
         </div>
 
-        <div class="trello-dropover" style="width: 80%;" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
-          &nbsp;Arraste o cartão pai aqui.
+        <div class="row">
+          <div class="col-md-8 trello-dropover" style="margin-left: 20px" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+            &nbsp;Arraste o cartão pai aqui.
+          </div>
+          <div class="col-md-3">
+            <button type="button"class="blank-button" onclick="removePai()" title="Remover cartão pai">
+              <i class="icon-trash icon-2x"> </i>
+            </button>
+          </div>
         </div>
 
         <%= f.hidden_field :pai_trello_id %>
