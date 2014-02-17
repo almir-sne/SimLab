@@ -59,7 +59,7 @@ class CartoesController < ApplicationController
   
   def dados
     c = Cartao.find_by trello_id: params[:trello_id]
-    c.tags_string = params[:tags].join("").gsub(/\]\[/, ",").gsub(/[\[\]]/, "")
+    c.tags_string = params[:tags].join("").gsub(/\]\[/, ",").gsub(/[\[\]]/, "") unless params[:tags].blank?
     if c
       render json: {horas: "%.1f" % (c.horas_trabalhadas/3600), estimativa: c.estimativa, tags: c.tags.pluck(:nome)}
     else

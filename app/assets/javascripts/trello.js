@@ -320,9 +320,9 @@ function updateTimeOnTrello(card_id) {
         var regex_time = /[(]\d+[.]?\d*[)]$/;
         var time = card.name.match(regex_time)
         if (time)
-            time = time[0]
+            time = time[0];
         else
-            time = ""
+            time = "";
         var new_name = card.name.replace(regex_tags, '').replace(time, '').trim();
 
         $.ajax({
