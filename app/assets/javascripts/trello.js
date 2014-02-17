@@ -323,7 +323,8 @@ function updateTimeOnTrello(card_id) {
             data: {trello_id: card.id, tags: tags},
             success: function(data) {
                 if (data != "erro") {
-                    new_name = "[" + data.tags.join("][") + "] " + new_name + " (" + (data.horas) + ")";
+                    new_name = ("[" + data.tags.join("][") + "] " + new_name +
+                            " (" + (data.horas) + ")").replace("[] ", "");
                     if (card.name != new_name)
                         Trello.put('/cards/' + card_id + '/', {name: new_name});
                 }
@@ -339,7 +340,7 @@ function updateTagsOnTrello(card_id) {
     Trello.get("/cards/" + card_id, function(card) {
         var regex_tags = /[\[][^\[\]]*[\]]/g;
         var new_name = card.name.replace(regex_tags, '').trim();
-        new_name = "[" + tags.join("][") + "] " + new_name;
+        new_name = ("[" + tags.join("][") + "] " + new_name).replace("[] ", "");
         if (card.name != new_name)
             Trello.put('/cards/' + card_id + '/', {name: new_name}, function(data) {
                 document.location.reload(true);
