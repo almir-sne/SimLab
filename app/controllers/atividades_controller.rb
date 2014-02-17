@@ -19,33 +19,21 @@ class AtividadesController < ApplicationController
       @projetos_selected = @usuarios_selected = Array.new
       @aprovacoes_selected = ['nil']
     else
-      if params[:usuario_id].nil?
-        if session[:usuario_id].blank?
+      if params[:usuario_id].nil? and params[:projeto_id].nil? and params[:aprovacao].nil?
+        @usuarios_selected = usuarios_ids = session[:usuario_id].to_a.collect{|id| id.to_i}
+        @projetos_selected = projetos_ids = session[:projeto_id].to_a.collect{|id| id.to_i}
+        @aprovacoes_selected = session[:aprovacao]
+      else
+        if params[:usuario_id].nil?
           usuarios_ids = @usuarios_opts.collect{|u| u[1]}
-          @usuarios_selected = Array.new
         else
-          @usuarios_selected = usuarios_ids = session[:usuario_id].collect{|id| id.to_i}
+          @usuarios_selected = usuarios_ids = params[:usuario_id].collect{|id| id.to_i}
         end
-      else
-        @usuarios_selected = usuarios_ids = params[:usuario_id].collect{|id| id.to_i}
-      end
-      if params[:projeto_id].nil?
-        if session[:projeto_id].blank?
+        if params[:projeto_id].nil?
           projetos_ids = @projetos_opts.collect{|u| u[1]}
-          @projetos_selected = Array.new
         else
-          @projetos_selected = projetos_ids = session[:projeto_id].collect{|id| id.to_i}
+          @projetos_selected = projetos_ids = params[:projeto_id].collect{|id| id.to_i}
         end
-      else
-        @projetos_selected = projetos_ids = params[:projeto_id].collect{|id| id.to_i}
-      end
-      if params[:aprovacao].nil?
-        if session[:aprovacao].blank?
-          @aprovacoes_selected = ['nil']
-        else
-          @aprovacoes_selected = session[:aprovacao]
-        end
-      else
         @aprovacoes_selected = params[:aprovacao]
       end
       @inicio = date_from_object(params[:inicio] || session[:inicio] || hoje.at_beginning_of_month)
@@ -57,7 +45,7 @@ class AtividadesController < ApplicationController
     session[:fim] = @fim
     session[:inicio] = @inicio
     @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids,
-      aprovacao: @aprovacoes_selected.collect{|x| to_boolean x}, data: @inicio..@fim).order(:data)
+      data: @inicio..@fim).aprovacao(@aprovacoes_selected.to_a.collect{|x| to_boolean x}).order(:data)
     @total_horas = (@atividades.sum(:duracao)/3600).round(2)
   end
 
