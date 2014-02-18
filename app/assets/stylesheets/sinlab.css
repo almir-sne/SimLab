@@ -1,70 +1,3 @@
-.top-nav {
-    width: 50%;
-    border: none;
-    box-shadow: none;
-    background-color: #000000;
-}
-
-.top-nav li {
-    font-size: 14px;
-    font-family: Arial,Helvetica,sans-serif;
-    padding: 0px;
-    color: #000000;
-}
-
-.top-nav a {
-    width: 100%;
-    background-color: #FFFFFF;
-}
-
-.top-nav a:hover {
-    background-color: #2193BD !important;
-}
-
-.month-table td {
-    margin: 5px !important;
-    font-size: 25px;
-    font-family: Arial,Helvetica,sans-serif;
-    color: #FFFFFF;
-    text-align: center;
-    vertical-align: middle;
-    border: 15px #FFFFFF solid;
-    width: 15%;
-}
-
-.month-table a, .month-table a:hover, .day-table a, .blue-text a {
-    color: inherit;
-}
-
-.day-table td {
-    height: 100px;
-    font-size: 15px;
-    font-family: Arial,Helvetica,sans-serif;
-    color: #FFFFFF;
-    border: 5px #FFFFFF solid;
-    background-color: #FFFFFF
-}
-
-.day-table .toggle {
-    float: right;
-    padding: 6%;
-    display: none;
-}
-
-.day-table a:hover {
-    color: inherit;
-    background-color: inherit;
-}
-
-.day-table th {
-    font-size: 20px;
-    font-family: Arial,Helvetica,sans-serif;
-    width: 5%;
-    background-color: gainsboro;
-    padding: 5px;
-    border: 5px solid #FFFFFF;
-}
-
 .blue-line {
     width: 98%;
     background-color: #2193BD;
@@ -154,22 +87,6 @@
     margin-right: 10px
 }
 
-.month-link {
-    width: 100%;
-    display: block;
-    height: 100%;
-    padding: 30% 0;
-}
-
-.month-link:hover, .day-link:hover {
-    text-decoration: none
-}
-
-.day-link {
-    display: block;
-    height: 100%;
-}
-
 .menu_select {
     width: 90%;
     margin: 10px;
@@ -200,51 +117,6 @@
     color: #000000;
     margin: 2px;
     border-radius: 5px
-}
-
-.loggedin {
-    display: none;
-}
-
-#output {
-    padding: 10px;
-}
-
-.card {
-    display: inline-table;
-    width: 90%;
-    padding: 2px;
-    margin: 2px;
-    background-color: #eee
-}
-
-.card:visited, .cardnaohover:visited, .pagination a:hover {
-    color: #000000;
-}
-
-.card:hover {
-    background-color: #2193BD !important;
-    text-decoration: none;
-    color: #FFFFFF;
-}
-
-.cardnaohover { 
-    display: inline-table;
-    width: 90%;
-    padding: 2px;
-    margin: 2px;
-}
-
-.cardnaohover:hover { 
-    background-color: inherit;
-    color: #000000;
-    text-decoration: none;
-}
-
-.trello-dropover {
-    background-color: #EEE;
-    border-radius: 10px;
-    padding: 25px;
 }
 
 .par {
@@ -294,15 +166,6 @@
     margin: 10px;
 }
 
-.nodrop {
-    background-color: inherit;
-    margin-bottom: 10px;
-}
-
-.nodrop > .card {
-    background-color: #FFFFFF;
-}
-
 .ok {
     color: green
 }
@@ -317,25 +180,6 @@
 
 .pagination {
     margin: 15px;
-}
-
-#boards {
-    background-color: #EEE;
-    border-radius: 0px 10px 10px 10px;
-    padding: 0 10px;
-    margin: 0px 10px 10px 10px;
-}
-
-#collapse-button {
-    padding: 5px;
-    background-color: #EEE;
-    border-radius: 10px 10px 0px 0px;
-    margin: 10px;
-}
-
-#collapse-button:hover, .nav-tabs>li>a:hover {
-    cursor: pointer;
-    color: #000000;
 }
 
 ul .submenu {
@@ -354,95 +198,6 @@ ul .submenu {
 
 #projetos .projetos-body {
     padding-top: 10px
-}
-
-.ausencia {
-    background-color: #666666;
-}
-
-.ausencia:hover {
-    background-color: #444444 !important;
-}
-
-.reprovacao {
-    background-color: #CC0000;
-}
-
-.reprovacao:hover {
-    background-color: #B10000 !important;
-}
-
-.hoje {
-    background: #FF00FF;
-}
-
-.hoje:hover {
-    background-color: #EF11EF !important;
-}
-
-.feriado {
-    background: #009600;
-}
-
-.feriado:hover {
-    background-color: #008600 !important;
-}
-
-.fimdesemana {
-    background: #006464;
-}
-
-.fimdesemana:hover {
-    background-color: #005454 !important;
-}
-
-.diautil, .blue-link {
-    background: #2193BD;
-}
-
-.diautil:hover, .blue-link:hover {
-    background-color: #007099 !important;
-}
-
-.today {
-    background: #FF00CC
-}
-
-.today:hover {
-    background: #D500AA
-}
-
-.red-link {
-    background-color: #CC0000;
-}
-
-.red-link:hover {
-    background-color: #B10000 !important;
-}
-
-.rodada {
-    cursor: pointer;
-    text-decoration: underline
-}
-
-.estimativa {
-    width: 90px;
-    height: 125px;
-    border-radius: 10px;
-    background-color: #A1D6FF;
-    font-weight: bold;
-}
-
-.estimativa:hover {
-    background-color: #1298FF;
-}
-
-.estimativa:focus {
-    outline: none;
-}
-
-.estimativa-selecionada {
-    background-color: #56B5FF;
 }
 
 .nav-button {
@@ -536,13 +291,6 @@ table.dataTable thead th {
 .form-changed {
     color: red;
     display: none;
-}
-
-#trello-reload {
-    padding: 5px 10px;
-    background-color: #EEE;
-    border-radius: 10px 10px 0px 0px;
-    margin: 0 5px;
 }
 
 .selected {
