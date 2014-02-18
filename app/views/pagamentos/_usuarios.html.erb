@@ -1,5 +1,5 @@
-    <ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
-      <% @usuarios_nomes.each do |u| %>
-        <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
-      <% end %>
-    </ul>
+<ul class="top-nav dropdown-menu" style="display: block; position: static; margin-left: 15px">
+  <% @usuarios_nomes.each do |u| %>
+    <li> <%= link_to u.nome, periodos_pagamentos_path(:usuario_id => u.id), :class => "nav-links" %> </li>
+  <% end %>
+</ul>

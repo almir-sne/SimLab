@@ -2,74 +2,37 @@
     width: 50%;
     border: none;
     box-shadow: none;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: #000000;
 }
 
 .top-nav li {
     font-size: 14px;
     font-family: Arial,Helvetica,sans-serif;
     padding: 0px;
-    color: black;
+    color: #000000;
 }
 
 .top-nav a {
     width: 100%;
-    background-color: white;
+    background-color: #FFFFFF;
 }
 
 .top-nav a:hover {
-    background-color: rgb(33, 147, 189) !important;
-}
-
-.top-user {
-    font-size: 14px;
-    font-family: Arial,Helvetica,sans-serif;
-    line-height: 25px;
-}
-
-.top-user a:hover {
-    color: black;
-    background: none;
-}
-
-.top-table {
-    border: rgb(33, 147, 189) 1px solid;
-    float: right;
-    margin-right: 15px;
-}
-
-.top-table .saldo {
-    color: white;
-    font-size: 24px;
-    background-color: rgb(33, 147, 189);
-    font-family: Arial,Helvetica,sans-serif;
-    padding: 30px 10px;
-}
-
-.top-table .data {
-    font-weight: bold;
-    font-size: 35px;
-    border-bottom: rgb(33, 147, 189) 1px solid;
-    padding: 10px 30px;
-    text-align: center;
+    background-color: #2193BD !important;
 }
 
 .month-table td {
     margin: 5px !important;
     font-size: 25px;
     font-family: Arial,Helvetica,sans-serif;
-    color: white;
+    color: #FFFFFF;
     text-align: center;
     vertical-align: middle;
-    border: 15px white solid;
+    border: 15px #FFFFFF solid;
     width: 15%;
 }
 
-.month-table a {
-    color: inherit;
-}
-
-.month-table a:hover {
+.month-table a, .month-table a:hover, .day-table a, .blue-text a {
     color: inherit;
 }
 
@@ -77,13 +40,9 @@
     height: 100px;
     font-size: 15px;
     font-family: Arial,Helvetica,sans-serif;
-    color: white;
-    border: 5px white solid;
-    background-color: white
-}
-
-.day-table a {
-    color: inherit;
+    color: #FFFFFF;
+    border: 5px #FFFFFF solid;
+    background-color: #FFFFFF
 }
 
 .day-table .toggle {
@@ -103,19 +62,19 @@
     width: 5%;
     background-color: gainsboro;
     padding: 5px;
-    border: 5px solid white;
+    border: 5px solid #FFFFFF;
 }
 
 .blue-line {
     width: 98%;
-    background-color: rgb(33, 147, 189);
+    background-color: #2193BD;
     height: 2px;
     margin-left: 15px;
 }
 
 .grey-line {
     width: 98%;
-    background-color: rgb(180, 180, 180);
+    background-color: #2193BD;
     height: 2px;
     margin: 10px 0px;
 }
@@ -123,7 +82,7 @@
 .blue-text {
     font-size: 35px;
     font-family: Arial,Helvetica,sans-serif;
-    color: rgb(33, 147, 189);
+    color: #2193BD;
     padding: 25px 0px;
     font-weight: bold;
     margin-left: 15px;
@@ -138,7 +97,7 @@
     font-family: Arial,Helvetica,sans-serif;
     font-size: 15px;
     padding: 10px 15px;
-    border-bottom: 2px solid rgb(180, 180, 180);
+    border-bottom: 2px solid #B4B4B4;
 }
 
 .list-table th{
@@ -152,7 +111,7 @@
     background: none;
     border-radius: 0;
     background-color: #DBDBDB;
-    color: black !important;
+    color: #000000 !important;
     text-shadow: none;
     font-size: 17px;
     padding: 2px 20px;
@@ -160,12 +119,6 @@
 
 .default-button:hover {
     background-color: #B4B4B4;
-}
-
-.blue-background {
-    background-color: rgb(168, 212, 229);
-    text-align: center;
-    padding: 10px 10px;
 }
 
 .red-background {
@@ -184,12 +137,8 @@
     overflow-y: auto;
 }
 
-.blue-text a {
-    color: inherit;
-}
-
 .blue-text a:hover {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: #000000;
     color: inherit;
 }
 
@@ -197,17 +146,12 @@
     background-color: inherit;
     color: inherit;
     text-decoration: none;
-    color: rgb(168, 212, 229);
+    color: #A8D4E5;
 }
 
 .inline-label {
     display: inline;
     margin-right: 10px
-}
-
-.inline-form {
-    display: inline;
-    padding: 0;
 }
 
 .month-link {
@@ -217,7 +161,7 @@
     padding: 30% 0;
 }
 
-.month-link:hover {
+.month-link:hover, .day-link:hover {
     text-decoration: none
 }
 
@@ -226,20 +170,12 @@
     height: 100%;
 }
 
-.day-link:hover {
-    text-decoration: none
-}
-
 .menu_select {
     width: 90%;
     margin: 10px;
 }
 
-.search-field{
-    height: 30px !important;
-}
-
-.default{
+.search-field, .default {
     height: 30px !important;
 }
 
@@ -248,7 +184,7 @@
 }
 
 .toolbar {
-    background-color: white;
+    background-color: #FFFFFF;
     padding: 5px 0;
     margin: 0 15px;
     border: 2px solid grey;
@@ -260,26 +196,14 @@
 }
 
 .alert {
-    background-color: rgb(168, 212, 229);
+    background-color: #A8D4E5;
     color: #000000;
     margin: 2px;
     border-radius: 5px
 }
 
-.loggedout {
-}
 .loggedin {
     display: none;
-}
-
-#header {
-    padding: 4px;
-    border-bottom: 1px solid #000;
-    background: #eee;
-}
-
-#disconnect {
-    cursor: pointer
 }
 
 #output {
@@ -294,14 +218,14 @@
     background-color: #eee
 }
 
-.card:visited {
-    color: black;
+.card:visited, .cardnaohover:visited, .pagination a:hover {
+    color: #000000;
 }
 
 .card:hover {
-    background-color: rgb(33, 147, 189) !important;
+    background-color: #2193BD !important;
     text-decoration: none;
-    color: white;
+    color: #FFFFFF;
 }
 
 .cardnaohover { 
@@ -311,13 +235,9 @@
     margin: 2px;
 }
 
-.cardnaohover:visited {
-    color: black;
-}
-
 .cardnaohover:hover { 
     background-color: inherit;
-    color: black;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -374,17 +294,13 @@
     margin: 10px;
 }
 
-.card-slider {
-    padding: 5px;
-}
-
 .nodrop {
     background-color: inherit;
     margin-bottom: 10px;
 }
 
 .nodrop > .card {
-    background-color: white;
+    background-color: #FFFFFF;
 }
 
 .ok {
@@ -395,26 +311,12 @@
     color: red
 }
 
-.typeahead {
-    max-height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.default-date {
-    width: 70px;
-}
-
 .grey-form input[type="text"] {
     width: 90%;
 }
 
 .pagination {
     margin: 15px;
-}
-
-.pagination a:hover {
-    color: black;
 }
 
 #boards {
@@ -433,7 +335,7 @@
 
 #collapse-button:hover, .nav-tabs>li>a:hover {
     cursor: pointer;
-    color: black;
+    color: #000000;
 }
 
 ul .submenu {
@@ -475,35 +377,31 @@ ul .submenu {
 }
 
 .hoje:hover {
-    background-color: #FF11FF !important;
+    background-color: #EF11EF !important;
 }
 
 .feriado {
-    background: rgb(0,150,0);
+    background: #009600;
 }
 
 .feriado:hover {
-    background-color: rgb(0,150,0) !important;
+    background-color: #008600 !important;
 }
 
 .fimdesemana {
-    background: rgb(0,100,100);
+    background: #006464;
 }
 
 .fimdesemana:hover {
-    background-color: rgb(0,100,100) !important;
+    background-color: #005454 !important;
 }
 
-.diautil {
-    background: rgb(33, 147, 189);
+.diautil, .blue-link {
+    background: #2193BD;
 }
 
-.diautil:hover {
-    background-color: rgb(0, 112, 153) !important;
-}
-
-.blue-link {
-    background: rgb(33, 147, 189);
+.diautil:hover, .blue-link:hover {
+    background-color: #007099 !important;
 }
 
 .today {
@@ -512,10 +410,6 @@ ul .submenu {
 
 .today:hover {
     background: #D500AA
-}
-
-.blue-link:hover {
-    background-color: rgb(0, 112, 153) !important;
 }
 
 .red-link {
@@ -590,28 +484,24 @@ table.dataTable thead th {
     border-left: 1px solid #000;
 }
 
-.mensagem-border-coordenador {
+.mensagem-border-coordenador, .mensagem-border-usuario {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px; 
-    background-color: #E0E6F8;
     margin: 1px;
     width: 80%;
-    float: left;
     text-align:justify;
     text-justify:inter-word;
 }
 
+.mensagem-border-coordenador {
+    background-color: #E0E6F8;
+    float: left;
+}
+
 .mensagem-border-usuario {
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px; 
     background-color: #D8F6CE;
-    margin: 1px;
-    width: 80%;
     float: right;
-    text-align:justify;
-    text-justify:inter-word;
 }
 
 .navbar-section {
@@ -635,11 +525,7 @@ table.dataTable thead th {
     background-color: #F1F1F1
 }
 
-.nav-tabs>li.active>a {
-    background-color: #F1F1F1
-}
-
-.nav-tabs>li.active>a:hover {
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover {
     background-color: #F1F1F1
 }
 
