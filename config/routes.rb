@@ -7,6 +7,7 @@ SinLab::Application.routes.draw do
       post :atualizar_trello
       get :find_or_create
       get :dados
+      get :tags
     end
   end
 
