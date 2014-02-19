@@ -35,7 +35,7 @@
                   </ul>
                 </div>
                 <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
-                   class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip"
+                   class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip" data-placement="top"
                    title="<%= monta_resumo_dia(dia,@usuario.id) %>">
                   <div class='panel-scrollable' style='height: 100px'>
                     <%= dia.strftime("%d/%b") %>
