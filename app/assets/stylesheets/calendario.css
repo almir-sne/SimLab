@@ -9,7 +9,8 @@
     width: 15%;
 }
 
-.month-table a, .month-table a:hover, .day-table a, .blue-text a {
+.month-table a, .month-table a:hover, .month-table a:visited, .day-table a,
+.day-table a:visited, .blue-text a {
     color: inherit;
 }
 
