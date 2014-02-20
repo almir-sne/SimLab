@@ -15,7 +15,7 @@ class DiasController < ApplicationController
   end
 
   def update
-    if params[:dia_id].blank?
+    if params[:dia_id].blank? 
       @dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
     else
       @dia = Dia.find(params[:dia_id])
@@ -34,8 +34,8 @@ class DiasController < ApplicationController
           horario.destroy()
         else
           horarios_success = horarios_success and horario.update_attributes(
-            :entrada => convert_date(dia_params[:horarios_attributes][lixo], "entrada"),
-            :saida => convert_date(dia_params[:horarios_attributes][lixo], "saida"),
+            :entrada => convert_date(@dia.data, dia_params[:horarios_attributes][lixo][:entrada]),
+            :saida => convert_date(@dia.data, dia_params[:horarios_attributes][lixo][:saida]),
             :dia_id => @dia.id
           )
         end
@@ -184,15 +184,22 @@ class DiasController < ApplicationController
       ],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
-
-  def convert_date(hash, date_symbol_or_string)
-    attribute = date_symbol_or_string.to_s
-    return DateTime.new(
-      hash[attribute + '(1i)'].to_i,
-      hash[attribute + '(2i)'].to_i,
-      hash[attribute + '(3i)'].to_i,
-      hash[attribute + '(4i)'].to_i,
-      hash[attribute + '(5i)'].to_i,
-      0)
-  end
+  
+  def convert_date(data, hora_string)
+    horario = hora_string.split(':')
+    banana = DateTime.new(data.year, data.month, data.day, horario[0].to_i, horario[1].to_i)
+    return banana
+  end  
+  
+  
+  #def convert_date(hash, date_symbol_or_string)
+    #attribute = date_symbol_or_string.to_s
+    #return DateTime.new(
+      #hash[attribute + '(1i)'].to_i,
+      #hash[attribute + '(2i)'].to_i,
+      #hash[attribute + '(3i)'].to_i,
+      #hash[attribute + '(4i)'].to_i,
+      #hash[attribute + '(5i)'].to_i,
+      #0)
+  #end
 end

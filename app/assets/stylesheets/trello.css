@@ -1,0 +1,104 @@
+.loggedin {
+    display: none;
+}
+
+#output {
+    padding: 10px;
+}
+
+.card {
+    display: inline-table;
+    width: 90%;
+    padding: 2px;
+    margin: 2px;
+    background-color: #eee
+}
+
+.card:visited, .cardnaohover:visited, .pagination a:hover {
+    color: #000000;
+}
+
+.card:hover {
+    background-color: #2193BD !important;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.cardnaohover { 
+    display: inline-table;
+    width: 90%;
+    padding: 2px;
+    margin: 2px;
+}
+
+.cardnaohover:hover { 
+    background-color: inherit;
+    color: #000000;
+    text-decoration: none;
+}
+
+.trello-dropover {
+    background-color: #EEE;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.nodrop {
+    background-color: inherit;
+    margin-bottom: 10px;
+}
+
+.nodrop > .card {
+    background-color: #FFFFFF;
+}
+
+#boards {
+    background-color: #EEE;
+    border-radius: 0px 10px 10px 10px;
+    padding: 0 10px;
+    margin: 0px 10px 10px 10px;
+}
+
+#collapse-button {
+    padding: 5px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 10px;
+}
+
+#collapse-button:hover, .nav-tabs>li>a:hover {
+    cursor: pointer;
+    color: #000000;
+}
+
+.rodada {
+    cursor: pointer;
+    text-decoration: underline
+}
+
+.estimativa {
+    width: 90px;
+    height: 125px;
+    border-radius: 10px;
+    background-color: #A1D6FF;
+    font-weight: bold;
+}
+
+.estimativa:hover {
+    background-color: #1298FF;
+}
+
+.estimativa:focus {
+    outline: none;
+}
+
+.estimativa-selecionada {
+    background-color: #56B5FF;
+}
+
+#trello-reload {
+    padding: 5px 10px;
+    background-color: #EEE;
+    border-radius: 10px 10px 0px 0px;
+    margin: 0 5px;
+}

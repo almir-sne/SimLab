@@ -90,11 +90,16 @@ function dropCard(event) {
 function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
-    var target = $(event.target.parentElement).find("#input-pai");
+    var target = $("#input-pai");
     var pai = $("#card-list #" + data).clone();
     $("#cartao_pai_trello_id").val(data);
     target.empty();
     pai.appendTo(target);
+}
+
+function removePai() {
+    $("#cartao_pai_trello_id").val("");
+    $("#input-pai").empty();
 }
 
 function dragCard(ev) {
@@ -184,6 +189,9 @@ function loadDefaultCard(input, card) {
             style: "color: black; margin: 10px"
         }).html(card.desc.replace(/\n/g, "<br/>")).appendTo(div);
     }
+    if (input.classList.contains("get-tags")) {
+        mergeTags(card.name);
+    }
     $("<br/>").appendTo(div);
     $(input).detach();
 }
@@ -197,6 +205,7 @@ function loadBoards() {
                     $(input).after(board.name);
                     $(input).detach();
                     $(".trelloprogress").hide();
+                    ajustaAltura();
                 },
                 function(e) {
                     $(input.parentElement).remove();
@@ -309,7 +318,11 @@ function updateTimeOnTrello(card_id) {
         var regex_tags = /[\[][^\[\]]*[\]]/g;
         var tags = card.name.match(regex_tags);
         var regex_time = /[(]\d+[.]?\d*[)]$/;
-        var time = card.name.match(regex_time)[0];
+        var time = card.name.match(regex_time)
+        if (time)
+            time = time[0];
+        else
+            time = "";
         var new_name = card.name.replace(regex_tags, '').replace(time, '').trim();
 
         $.ajax({
@@ -319,7 +332,8 @@ function updateTimeOnTrello(card_id) {
             data: {trello_id: card.id, tags: tags},
             success: function(data) {
                 if (data != "erro") {
-                    new_name = "[" + data.tags.join("][") + "] " + new_name + " (" + (data.horas) + ")";
+                    new_name = ("[" + data.tags.join("][") + "] " + new_name +
+                            " (" + (data.horas) + ")").replace("[] ", "");
                     if (card.name != new_name)
                         Trello.put('/cards/' + card_id + '/', {name: new_name});
                 }
@@ -335,7 +349,7 @@ function updateTagsOnTrello(card_id) {
     Trello.get("/cards/" + card_id, function(card) {
         var regex_tags = /[\[][^\[\]]*[\]]/g;
         var new_name = card.name.replace(regex_tags, '').trim();
-        new_name = "[" + tags.join("][") + "] " + new_name;
+        new_name = ("[" + tags.join("][") + "] " + new_name).replace("[] ", "");
         if (card.name != new_name)
             Trello.put('/cards/' + card_id + '/', {name: new_name}, function(data) {
                 document.location.reload(true);
@@ -343,4 +357,15 @@ function updateTagsOnTrello(card_id) {
         else
             document.location.reload(true);
     });
+}
+
+function mergeTags(name) {
+    var regex_tags = /[\[][^\[\]]*[\]]/g;
+    var card_tags = name.match(regex_tags);
+    $(card_tags).each(function(i, e) {
+        card_tags[i] = e.replace(/[\]\[]/g, '')
+    });
+    var input_tags = $("#cartao_tags_string").val().split(/[,][ ]*/);
+    var concat = $.unique(input_tags.concat(card_tags));
+    $("#cartao_tags_string").val(concat.join(", "))
 }

@@ -1,121 +1,13 @@
-.top-nav {
-    width: 50%;
-    border: none;
-    box-shadow: none;
-    background-color: rgba(0, 0, 0, 0);
-}
-
-.top-nav li {
-    font-size: 14px;
-    font-family: Arial,Helvetica,sans-serif;
-    padding: 0px;
-    color: black;
-}
-
-.top-nav a {
-    width: 100%;
-    background-color: white;
-}
-
-.top-nav a:hover {
-    background-color: rgb(33, 147, 189) !important;
-}
-
-.top-user {
-    font-size: 14px;
-    font-family: Arial,Helvetica,sans-serif;
-    line-height: 25px;
-}
-
-.top-user a:hover {
-    color: black;
-    background: none;
-}
-
-.top-table {
-    border: rgb(33, 147, 189) 1px solid;
-    float: right;
-    margin-right: 15px;
-}
-
-.top-table .saldo {
-    color: white;
-    font-size: 24px;
-    background-color: rgb(33, 147, 189);
-    font-family: Arial,Helvetica,sans-serif;
-    padding: 30px 10px;
-}
-
-.top-table .data {
-    font-weight: bold;
-    font-size: 35px;
-    border-bottom: rgb(33, 147, 189) 1px solid;
-    padding: 10px 30px;
-    text-align: center;
-}
-
-.month-table td {
-    margin: 5px !important;
-    font-size: 25px;
-    font-family: Arial,Helvetica,sans-serif;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-    border: 15px white solid;
-    width: 15%;
-}
-
-.month-table a {
-    color: inherit;
-}
-
-.month-table a:hover {
-    color: inherit;
-}
-
-.day-table td {
-    height: 100px;
-    font-size: 15px;
-    font-family: Arial,Helvetica,sans-serif;
-    color: white;
-    border: 5px white solid;
-    background-color: white
-}
-
-.day-table a {
-    color: inherit;
-}
-
-.day-table .toggle {
-    float: right;
-    padding: 6%;
-    display: none;
-}
-
-.day-table a:hover {
-    color: inherit;
-    background-color: inherit;
-}
-
-.day-table th {
-    font-size: 20px;
-    font-family: Arial,Helvetica,sans-serif;
-    width: 5%;
-    background-color: gainsboro;
-    padding: 5px;
-    border: 5px solid white;
-}
-
 .blue-line {
     width: 98%;
-    background-color: rgb(33, 147, 189);
+    background-color: #2193BD;
     height: 2px;
     margin-left: 15px;
 }
 
 .grey-line {
     width: 98%;
-    background-color: rgb(180, 180, 180);
+    background-color: #2193BD;
     height: 2px;
     margin: 10px 0px;
 }
@@ -123,7 +15,7 @@
 .blue-text {
     font-size: 35px;
     font-family: Arial,Helvetica,sans-serif;
-    color: rgb(33, 147, 189);
+    color: #2193BD;
     padding: 25px 0px;
     font-weight: bold;
     margin-left: 15px;
@@ -138,7 +30,7 @@
     font-family: Arial,Helvetica,sans-serif;
     font-size: 15px;
     padding: 10px 15px;
-    border-bottom: 2px solid rgb(180, 180, 180);
+    border-bottom: 2px solid #B4B4B4;
 }
 
 .list-table th{
@@ -152,7 +44,7 @@
     background: none;
     border-radius: 0;
     background-color: #DBDBDB;
-    color: black !important;
+    color: #000000 !important;
     text-shadow: none;
     font-size: 17px;
     padding: 2px 20px;
@@ -160,12 +52,6 @@
 
 .default-button:hover {
     background-color: #B4B4B4;
-}
-
-.blue-background {
-    background-color: rgb(168, 212, 229);
-    text-align: center;
-    padding: 10px 10px;
 }
 
 .red-background {
@@ -184,12 +70,8 @@
     overflow-y: auto;
 }
 
-.blue-text a {
-    color: inherit;
-}
-
 .blue-text a:hover {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: #000000;
     color: inherit;
 }
 
@@ -197,7 +79,7 @@
     background-color: inherit;
     color: inherit;
     text-decoration: none;
-    color: rgb(168, 212, 229);
+    color: #A8D4E5;
 }
 
 .inline-label {
@@ -205,41 +87,12 @@
     margin-right: 10px
 }
 
-.inline-form {
-    display: inline;
-    padding: 0;
-}
-
-.month-link {
-    width: 100%;
-    display: block;
-    height: 100%;
-    padding: 30% 0;
-}
-
-.month-link:hover {
-    text-decoration: none
-}
-
-.day-link {
-    display: block;
-    height: 100%;
-}
-
-.day-link:hover {
-    text-decoration: none
-}
-
 .menu_select {
     width: 90%;
     margin: 10px;
 }
 
-.search-field{
-    height: 30px !important;
-}
-
-.default{
+.search-field, .default {
     height: 30px !important;
 }
 
@@ -248,7 +101,7 @@
 }
 
 .toolbar {
-    background-color: white;
+    background-color: #FFFFFF;
     padding: 5px 0;
     margin: 0 15px;
     border: 2px solid grey;
@@ -260,71 +113,10 @@
 }
 
 .alert {
-    background-color: rgb(168, 212, 229);
+    background-color: #A8D4E5;
     color: #000000;
     margin: 2px;
     border-radius: 5px
-}
-
-.loggedout {
-}
-.loggedin {
-    display: none;
-}
-
-#header {
-    padding: 4px;
-    border-bottom: 1px solid #000;
-    background: #eee;
-}
-
-#disconnect {
-    cursor: pointer
-}
-
-#output {
-    padding: 10px;
-}
-
-.card {
-    display: inline-table;
-    width: 90%;
-    padding: 2px;
-    margin: 2px;
-    background-color: #eee
-}
-
-.card:visited {
-    color: black;
-}
-
-.card:hover {
-    background-color: rgb(33, 147, 189) !important;
-    text-decoration: none;
-    color: white;
-}
-
-.cardnaohover { 
-    display: inline-table;
-    width: 90%;
-    padding: 2px;
-    margin: 2px;
-}
-
-.cardnaohover:visited {
-    color: black;
-}
-
-.cardnaohover:hover { 
-    background-color: inherit;
-    color: black;
-    text-decoration: none;
-}
-
-.trello-dropover {
-    background-color: #EEE;
-    border-radius: 10px;
-    padding: 25px;
 }
 
 .par {
@@ -374,19 +166,6 @@
     margin: 10px;
 }
 
-.card-slider {
-    padding: 5px;
-}
-
-.nodrop {
-    background-color: inherit;
-    margin-bottom: 10px;
-}
-
-.nodrop > .card {
-    background-color: white;
-}
-
 .ok {
     color: green
 }
@@ -395,45 +174,12 @@
     color: red
 }
 
-.typeahead {
-    max-height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.default-date {
-    width: 70px;
-}
-
 .grey-form input[type="text"] {
     width: 90%;
 }
 
 .pagination {
     margin: 15px;
-}
-
-.pagination a:hover {
-    color: black;
-}
-
-#boards {
-    background-color: #EEE;
-    border-radius: 0px 10px 10px 10px;
-    padding: 0 10px;
-    margin: 0px 10px 10px 10px;
-}
-
-#collapse-button {
-    padding: 5px;
-    background-color: #EEE;
-    border-radius: 10px 10px 0px 0px;
-    margin: 10px;
-}
-
-#collapse-button:hover, .nav-tabs>li>a:hover {
-    cursor: pointer;
-    color: black;
 }
 
 ul .submenu {
@@ -452,103 +198,6 @@ ul .submenu {
 
 #projetos .projetos-body {
     padding-top: 10px
-}
-
-.ausencia {
-    background-color: #666666;
-}
-
-.ausencia:hover {
-    background-color: #444444 !important;
-}
-
-.reprovacao {
-    background-color: #CC0000;
-}
-
-.reprovacao:hover {
-    background-color: #B10000 !important;
-}
-
-.hoje {
-    background: #FF00FF;
-}
-
-.hoje:hover {
-    background-color: #FF11FF !important;
-}
-
-.feriado {
-    background: rgb(0,150,0);
-}
-
-.feriado:hover {
-    background-color: rgb(0,150,0) !important;
-}
-
-.fimdesemana {
-    background: rgb(0,100,100);
-}
-
-.fimdesemana:hover {
-    background-color: rgb(0,100,100) !important;
-}
-
-.diautil {
-    background: rgb(33, 147, 189);
-}
-
-.diautil:hover {
-    background-color: rgb(0, 112, 153) !important;
-}
-
-.blue-link {
-    background: rgb(33, 147, 189);
-}
-
-.today {
-    background: #FF00CC
-}
-
-.today:hover {
-    background: #D500AA
-}
-
-.blue-link:hover {
-    background-color: rgb(0, 112, 153) !important;
-}
-
-.red-link {
-    background-color: #CC0000;
-}
-
-.red-link:hover {
-    background-color: #B10000 !important;
-}
-
-.rodada {
-    cursor: pointer;
-    text-decoration: underline
-}
-
-.estimativa {
-    width: 90px;
-    height: 125px;
-    border-radius: 10px;
-    background-color: #A1D6FF;
-    font-weight: bold;
-}
-
-.estimativa:hover {
-    background-color: #1298FF;
-}
-
-.estimativa:focus {
-    outline: none;
-}
-
-.estimativa-selecionada {
-    background-color: #56B5FF;
 }
 
 .nav-button {
@@ -590,28 +239,24 @@ table.dataTable thead th {
     border-left: 1px solid #000;
 }
 
-.mensagem-border-coordenador {
+.mensagem-border-coordenador, .mensagem-border-usuario {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px; 
-    background-color: #E0E6F8;
     margin: 1px;
     width: 80%;
-    float: left;
     text-align:justify;
     text-justify:inter-word;
 }
 
+.mensagem-border-coordenador {
+    background-color: #E0E6F8;
+    float: left;
+}
+
 .mensagem-border-usuario {
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px; 
     background-color: #D8F6CE;
-    margin: 1px;
-    width: 80%;
     float: right;
-    text-align:justify;
-    text-justify:inter-word;
 }
 
 .navbar-section {
@@ -635,11 +280,7 @@ table.dataTable thead th {
     background-color: #F1F1F1
 }
 
-.nav-tabs>li.active>a {
-    background-color: #F1F1F1
-}
-
-.nav-tabs>li.active>a:hover {
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover {
     background-color: #F1F1F1
 }
 
@@ -652,13 +293,12 @@ table.dataTable thead th {
     display: none;
 }
 
-#trello-reload {
-    padding: 5px 10px;
-    background-color: #EEE;
-    border-radius: 10px 10px 0px 0px;
-    margin: 0 5px;
-}
-
 .selected {
     font-weight: bold;
 }
+
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }

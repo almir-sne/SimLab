@@ -34,10 +34,10 @@ function toggleObservacao(obj) {
 
 function ajustaAltura() {
     var height1 = $(window).height() - $("#atividades-title").height() -
-            $("#dropover").height() - $("#upper-bar").height() - 170;
+            $("#dropover").height() - $("#upper-bar").height() - 200;
     var height2 = $(window).height() - $("#upper-bar").height() - $("#boards").height()
-            - $("#collapse-button").height() - 100;
-    var height3 = $(window).height() - $("#upper-bar").height() - 100;
+            - $("#collapse-button").height() - 140;
+    var height3 = $(window).height() - $("#upper-bar").height() - 120;
     $("#atividade-panel").height(height1);
     $("#card-list").height(height2);
     $("#horarios-panel").height(height3);

@@ -7,15 +7,32 @@ $(document).on('nested:fieldRemoved', function(event) {
     formChanged(event.field.closest("form"));
 });
 
+function createTimePicker(obj) {
+  $(obj).timepicker({
+    showPeriodLabels: false
+  });
+}
+
+$('.timepicker').timepicker({
+    showPeriodLabels: false
+});
+
+//$('.timepicker').on('shown', function() {
+  //$(this).timepicker({
+   // showPeriodLabels: false
+ // });
+//});
+
 $('#boards').on('hidden', function() {
     ajustaAltura();
 });
+
 $('#boards').on('shown', function() {
     ajustaAltura();
 });
+
 initializeSliders();
 updateHorasAtividades(sumSliders(), pega_horas_dia().totalHorasDia, $("#horas_atividades"));
-ajustaAltura();
 
 function updateTags(obj) {
     var id_nome_string = obj.id.toString().replace("_card", "");

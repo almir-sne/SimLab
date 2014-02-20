@@ -6,17 +6,17 @@
   <%= f.fields_for :horarios do |horario_form| %>
 
     <%= horario_form.label :entrada %>
-    <br />
-    <%= horario_form.time_select :entrada, {minute_step: 5}, :style => 'width: 55px;',
-      :onchange => "recalculaHoras(); formChanged(this.form)", :class => 'horario_select entrada_horario' %>
-    <div>
-      <%= horario_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe, :class=>"nohover",
-        :style => "float: right; margin-right: 10px" %>
-    </div>
+    <%= horario_form.text_field :entrada, style: 'width: 55px;', class: 'timepicker horario_picker entrada_horario',
+        onfocus: "createTimePicker(this)", onchange: "recalculaHoras(); formChanged(this.form)",
+        value: horario_form.object.entrada.strftime('%H:%M') %> <br/>
     <%= horario_form.label :saida %>
-    <br />
-    <%= horario_form.time_select :saida, {minute_step: 5}, :style => 'width: 55px;',
-      :onchange => "recalculaHoras(); formChanged(this.form)", :class => "horario_select saida_horario" %>
+    <%= horario_form.text_field :saida, style: 'width: 55px;', class: 'timepicker horario_picker saida_horario',
+        onfocus: "createTimePicker(this)", onchange: "recalculaHoras(); formChanged(this.form)",
+        value: horario_form.object.saida.strftime('%H:%M') %>
+    <div>
+      <%= horario_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,  
+      :class=>"nohover", :style => "float: right; margin-right: 10px" %>
+    </div>
     <br />
     <br />
   <% end %>
@@ -41,7 +41,7 @@
   <br/>
   Horas em atividades:
   <div id="horas_atividades">
-    <%= @dia.horas_atividades_todas  %> horas 
+    <%= @dia.horas_atividades_todas  %> horas
   </div>
 
 <% end %>
