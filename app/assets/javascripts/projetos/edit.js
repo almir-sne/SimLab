@@ -70,3 +70,28 @@ $('.coordenador-select').chosen({
     no_results_text: "Nenhum resultado encontrado",
     placeholder_text_multiple: "Coordenadores..."
 });
+$('#data-table').dataTable({
+      "sDom": 'RC<"clear">lfrtip',
+      "oColVis": {
+        "buttonText": "Exibir/esconder colunas"
+      },
+      "oLanguage": {
+        "sZeroRecords": "Nenhum dado encontrado",
+        "sInfo": "Exibindo _START_ de _END_ de _TOTAL_ entrada(s)",
+        "sInfoEmpty": "Exibindo 0 de 0 de 0 entradas",
+        "sInfoFiltered": "(filtrado de _MAX_ de entrada(s))",
+        "sSearch": "Buscar:",
+        "sLengthMenu": 'Mostrar <select>'+
+        '<option value="10">10</option>'+
+        '<option value="30">30</option>'+
+        '<option value="50">50</option>'+
+        '<option value="-1">Todas</option>'+
+        '</select> Atividades',
+        "oPaginate": {
+          "sNext": "Próxima",
+          "sPrevious": "Anterior"
+        }
+      }
+  });
+$("#dataInicio").datepicker({dateFormat: "dd/mm/yy"});
+$("#dataFim").datepicker({dateFormat: "dd/mm/yy"});

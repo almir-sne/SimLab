@@ -11,20 +11,20 @@ class AtividadesController < ApplicationController
       @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
-    
+
     @usuarios_selected = session[:usuario_id]
     @projetos_selected = session[:projeto_id]
     @aprovacoes_selected = session[:aprovacao]
     @fim = date_from_object(session[:fim] || hoje.at_end_of_month)
     @inicio = date_from_object(session[:inicio] || hoje.at_beginning_of_month)
-    
+
     usuarios_ids = @usuarios_selected || @usuarios_opts.collect{|u| u[1]}
     projetos_ids = @projetos_selected || @projetos_opts.collect{|u| u[1]}
     @atividades = Atividade.where(usuario_id: usuarios_ids, projeto_id: projetos_ids,
       data: @inicio..@fim).aprovacao(@aprovacoes_selected.to_a.collect{|x| to_boolean x}).order(:data)
     @total_horas = (@atividades.sum(:duracao)/3600).round(2)
   end
-  
+
   def filtrar
     if params[:commit] == "limpar"
       session[:usuario_id] = nil
@@ -83,7 +83,7 @@ class AtividadesController < ApplicationController
       flash[:notice] = I18n.t("mensagem.create.failure")
     end
   end
-  
+
   def ajax_form
     dia = Dia.find params[:dia_id]
     usuario = dia.usuario
@@ -97,7 +97,7 @@ class AtividadesController < ApplicationController
       format.js
     end
   end
-  
+
   def destroy
     atividade = Atividade.find(params[:id])
     @atividade_id = atividade.id
@@ -107,16 +107,19 @@ class AtividadesController < ApplicationController
       format.js
     end
   end
-  
+
   def update
     @atividade = Atividade.find(params[:id])
+    @atividade.assign_attributes atividade_params
+    reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+    reg.transforma_hash_em_modificacao @atividade.changes
     respond_to do |format|
-      if @atividade.update_attributes atividade_params
+      if @atividade.save and reg.save
         format.js
       end
     end
   end
-  
+
   private
   def atividade_params
     params.require(:atividade).permit(:projeto_id, :minutos, :trello_id, :observacao)
