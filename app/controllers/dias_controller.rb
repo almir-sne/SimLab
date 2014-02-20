@@ -8,7 +8,6 @@ class DiasController < ApplicationController
     @data = params[:data] || Date.today.to_s
     @projetos = @usuario.meus_projetos
     @boards = @usuario.boards.pluck(:board_id).uniq
-    Atividade.where(:dia_id => @dia.id).all.each{ |ati| ati.mensagens.where{autor_id != ati.usuario_id}.update_all :visto => true}
     respond_to do |format|
       format.js
       format.html
@@ -65,7 +64,7 @@ class DiasController < ApplicationController
       @inicio = Date.today.at_beginning_of_month
       @fim = Date.today.at_end_of_month
     end
-    
+
     case params[:toggle]
     when 's'
       @tipo = 's'
@@ -81,7 +80,7 @@ class DiasController < ApplicationController
       @fim = @inicio.at_end_of_month
       @inicio = @inicio.at_beginning_of_month
     end
- 
+
     case params[:commit]
     when 'previous_mes'
       @tipo = 'm'
@@ -160,7 +159,7 @@ class DiasController < ApplicationController
       contrato = @usuario.contratos.where('extract(year from inicio) <= ? and extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
       if contrato.blank?
         @intervalo = @usuario.contrato_atual.periodos_por_ano
-        flash.now[:notice] = I18n.t("dias.periodos.inexistente")      
+        flash.now[:notice] = I18n.t("dias.periodos.inexistente")
       else
         if params[:inicio].blank? and params[:fim].blank?
           @intervalo = contrato.periodos_por_ano(@ano.to_i)

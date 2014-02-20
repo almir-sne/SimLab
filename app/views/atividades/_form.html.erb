@@ -6,31 +6,6 @@
       class: "nohover", style: "float: right; margin-right: 10px",
         method: :delete, remote: true, data: { confirm: 'Tem certeza?' } %>
 
-      <% mensagens = atividade_form.object.mensagens %>
-      <% unless mensagens.blank? %>
-        <div class="activity-message">
-          <table>
-            <% mensagens.each do |m| %>
-              <% if m.autor_id != current_usuario.id %>
-                <div class="mensagem-border-coordenador">
-                <% else %>
-                  <div class="mensagem-border-usuario">
-                  <% end %>
-                  <div style="color: #3B0B17"><b><%= m.autor.try(:nome) %></b></div>
-                  <div><%= m.conteudo %></div>
-                  <div><i><%= m.created_at.strftime("%d/%b/%Y at %k:%M:%S") %></i></div>
-                </div>
-              <%end%>
-          </table>
-          <%= atividade_form.fields_for Mensagem.new, :allow_destroy => true do |msg| %>
-            <%= msg.text_field :conteudo %>
-            <%= msg.hidden_field :atividade_id, :value =>  atividade_form.object.id%>
-            <%= msg.hidden_field :autor_id,     :value =>  atividade_form.object.usuario.id%>
-          <%end%>
-        </div>
-      <% end %>
-
-
       <% lista_projetos = (projetos << [atividade.projeto.nome, atividade.projeto.id]).uniq  %>
       <%= atividade_form.label :projeto_id, :class => 'inline-label' %>
       <%= atividade_form.select :projeto_id, options_for_select(lista_projetos, atividade.projeto_id),
@@ -68,9 +43,17 @@
       <%= atividade_form.link_to_add '<i class="icon-group icon-2x"> </i>'.html_safe,
         :pares, title: "Inserir Novo Par", :class => "nohover" %>
       <%= link_to '<i class="icon-edit icon-2x"> </i>'.html_safe, find_or_create_cartoes_path(trello_id: atividade.trello_id),
-        target: "_blank", title: "Editar cartão", :class => "nohover" %>
+        target: "_blank", title: "Editar cartão", class: "nohover" %>
       <%= link_to '<i class="icon-comment icon-2x "> </i>'.html_safe,'javascript:void(0)',
-        :onclick => 'toggleObservacao(this)', :title => 'Mostrar Observação', :class => 'nohover'%>
+        onclick: 'toggleObservacao(this)', title: 'Mostrar Observação', class: 'nohover'%>
+
+       <% mensagem_params = {method: "post", remote: "true", title: 'Ver mensagens',class: 'nohover', id: 'mensagem'}%>
+       <% mensagem_params.merge!(style: 'color:#FF0000') if atividade.existe_mensagem_nao_vista_por(current_usuario.id)%>
+
+      <%= link_to '<i class="icon-envelope icon-2x"> </i>'.html_safe, mensagens_atividades_path(
+        atividade_id: atividade.id), mensagem_params%>
+      <%#,  %>
+
       <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover" onclick="showSpinner(this.form)" value="Salvar"></button>
 
       <hr style="margin-top: 0px; margin-bottom: 0px;">

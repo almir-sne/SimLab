@@ -56,4 +56,9 @@ class Atividade < ActiveRecord::Base
   def trello_id=(cartao_id)
     self.cartao = Cartao.find_or_create_by(trello_id: cartao_id) unless cartao_id.blank?
   end
+
+  def existe_mensagem_nao_vista_por(user_id)
+    !mensagens.where(visto: false).where{autor_id != my{user_id}}.empty?
+  end
+
 end

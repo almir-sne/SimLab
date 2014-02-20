@@ -103,7 +103,7 @@ class AtividadesController < ApplicationController
       flash[:notice] = I18n.t("mensagem.create.failure")
     end
   end
-  
+
   def ajax_form
     dia = Dia.find params[:dia_id]
     usuario = dia.usuario
@@ -117,7 +117,7 @@ class AtividadesController < ApplicationController
       format.js
     end
   end
-  
+
   def destroy
     atividade = Atividade.find(params[:id])
     @atividade_id = atividade.id
@@ -127,16 +127,19 @@ class AtividadesController < ApplicationController
       format.js
     end
   end
-  
+
   def update
     @atividade = Atividade.find(params[:id])
+    @atividade.assign_attributes atividade_params
+    reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+    reg.transforma_hash_em_modificacao @atividade.changes
     respond_to do |format|
-      if @atividade.update_attributes atividade_params
+      if @atividade.save and reg.save
         format.js
       end
     end
   end
-  
+
   private
   def atividade_params
     params.require(:atividade).permit(:projeto_id, :minutos, :trello_id, :observacao)

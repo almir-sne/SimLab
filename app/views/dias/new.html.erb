@@ -23,7 +23,9 @@
 </div>
 
 <%= render :partial => 'nav_bar' %>
+<div class="modal fade" id="mensagens" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true" style="outline: none; overflow: hidden;"></div>
 
 <script>
-        var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
+var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
 </script>
