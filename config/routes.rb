@@ -28,6 +28,7 @@ SinLab::Application.routes.draw do
       post :mensagens
       post :enviar_mensagem
       post :ajax_form
+      post :filtrar
     end
   end
 

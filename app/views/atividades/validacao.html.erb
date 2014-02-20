@@ -3,7 +3,7 @@
     <i class="icon-double-angle-left"></i> Esconder
   </button>
   <br/>
-  <%= form_tag validacao_atividades_path, {method: :get} do %>
+  <%= form_tag filtrar_atividades_path do %>
     <div class="menu_select">
       <%= select_date @inicio, {:use_short_month => true, :prefix => 'inicio'},
         {:onchange => "this.form.submit()"} %>
