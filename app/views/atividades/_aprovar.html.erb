@@ -1,8 +1,10 @@
 <%= form_tag aprovar_atividades_path, :remote => true do %>
   <%= hidden_field_tag :atividade_id, atividade.id %>
 
-  <%= link_to "".html_safe, mensagens_atividades_path(:atividade_id => atividade.id),
-    :class => "icon-envelope nohover", :method => "post", :remote => "true" %>
+  <% mensagem_params = {method: "post", remote: "true", title: 'Ver mensagens',class: 'icon-envelope nohover'}%>
+  <% mensagem_params.merge!(style: 'color:#FF0000') if atividade.existe_mensagem_nao_vista_por(current_usuario.id)%>
+
+  <%= link_to "".html_safe, mensagens_atividades_path(:atividade_id => atividade.id),mensagem_params %>
 
   <%= button_tag "", :name => "aprovacao", :value=> true,
     :class => "blank-button icon-ok #{'ok-button' if atividade.aprovacao == true}" %>
