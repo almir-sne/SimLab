@@ -114,7 +114,7 @@
     <% end %>
     <br/>
     <br/>
-    <%= form_tag concluir_estimativas_path do %>
+    <%= form_tag concluir_estimativas_path, remote: true do %>
       <%= hidden_field_tag :cartao_id, @cartao.id %>
       <%= text_field_tag :estimativa_final, @cartao.estimativa %>
       <%= submit_tag "Enviar estimativa final", :class => "btn default-button", :confirm => "Tem certeza?" %>

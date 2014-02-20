@@ -117,8 +117,6 @@ class AtividadesController < ApplicationController
     end
   end
   
-  
-  
   private
   def atividade_params
     params.require(:atividade).permit(:projeto_id, :minutos, :trello_id, :observacao)
