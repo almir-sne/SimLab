@@ -1,0 +1,25 @@
+<h3> Relacionamento de projetos </h3>
+<div class="row">
+  <div class=" col-md-6">
+  <% label "Status", '' %>
+  <% if @eh_super_projeto %> 
+    Super-Projeto
+  <% else %>
+    Sub-Projeto
+  <% end %>
+  <br />
+  
+  <% if @eh_super_projeto %> 
+    <table>
+      <tr>
+        <th><%= f.label "Filhos" %></th>
+      </tr>
+      <% Projeto.where(super_projeto_id: @projeto.id).each do |p| %>
+        <tr>
+          <td><%= p.nome %></td>
+        </tr>
+      <% end %>
+  <% end %>
+    </table>
+  </div>
+</div>

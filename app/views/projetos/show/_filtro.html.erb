@@ -1,0 +1,107 @@
+<div id="navegacao" style="width: 15%; float: left;">
+  <button onclick="hideNavegacao()" class="nav-button" style="float: right">
+    <i class="icon-double-angle-left"></i> Esconder
+  </button>
+  <br/>
+  <%= form_tag validacao_atividades_path, {method: :get} do %>
+    <div class="menu_select">
+      <%= select_date @inicio, {:use_short_month => true, :prefix => 'inicio'},
+        {:onchange => "this.form.submit()"} %>
+      <%= select_date @fim, {:use_short_month => true, :prefix => 'fim'},
+        {:onchange => "this.form.submit()"} %>
+    </div>
+    Projetos:
+    <%= select_tag('projeto_id[]', options_for_select(@projetos_opts, @projetos_selected),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
+    Usuarios:
+    <%= select_tag('usuario_id[]', options_for_select(@usuarios_opts, @usuarios_selected),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
+    Aprovações:
+    <%= select_tag('aprovacao[]', options_for_select(@aprovacoes_opts, @aprovacoes_selected),
+      {:class => 'menu_select chosen-select', :onchange => "this.form.submit()", :multiple => 'true'}) %>
+
+    <%= button_tag "Limpar Filtro", :value => "limpar", :name => "commit",
+      :class => "nav-button", :style => "margin: 10px" %>
+
+    <button type="button" class="blank-button" onClick="document.location.reload(true)">
+      <i class="icon-refresh"></i>
+    </button>
+    <p class="menu_select">
+      <b> <%=  @total_horas %> horas exibidas </b>
+    </p>
+  <% end %>
+</div>
+
+<div id="lista" style="width: 85%; float: right;">
+  <button id="show-navegacao" onclick="showNavegacao();" class="nav-button" style="visibility: hidden">
+    Mostrar Navegação <i class="icon-double-angle-right"></i>
+  </button>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th> Data       </th>
+        <th> Usuário    </th>
+        <th> Projeto    </th>
+        <th> Duração    </th>
+        <th> Detalhes   </th>
+        <th> Possui cartão pai? </th>
+        <th> Parceiro(s)</th>
+        <th> Status     </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @atividades.each do |atividade| %>
+          <tr>
+            <td >
+              <%= atividade.data.strftime("%d/%m/%Y") %>
+            </td>
+            <td  style="width: 150px;">
+              <a href="<%= new_dia_path(:data=> atividade.data, :usuario_id => atividade.usuario_id) %>" target="_blank">
+                <p style="text-decoration: underline"> <%= atividade.usuario.nome %> </p>
+              </a>
+              <p> E: <%= atividade.dia.entrada_formatada %> S: <%= atividade.dia.saida_formatada %></p>
+              <p> <%= int_to_horas atividade.dia.horas %> horas </p>
+              <p> <%= atividade.dia.horas_atividades_todas %> horas </p>
+            </td>
+
+            <td><%= atividade.try(:projeto).try(:nome) %> </td>
+            <td><%= int_to_horas atividade.duracao %> </td>
+            <td>
+              <%= atividade.observacao %>
+              <% if atividade.cartao %>
+                <input type="hidden" class="card-placeholder card-default" id="<%= atividade.trello_id %>"/></input>
+              <% end %>
+
+            </td>
+            <td>
+              <% if atividade.try(:cartao).try(:pai) %>
+                <input type="hidden" class="card-placeholder card-father"
+                       id="<%= atividade.cartao.pai.trello_id %>">
+                </input>
+              <% else %>
+                <div> NÃO </div>
+              <% end %>
+            </td>
+            <td>
+              <% atividade.pares.each do |par| %>
+                <p>
+                  <%= par.par.nome %>
+                  <%= int_to_horas(par.duracao) %>
+                </p>
+              <% end %>
+            </td>
+            <td style="width: 150px;">
+              <div id="<%= atividade.id %>">
+                <%= render :partial => 'aprovar', :locals => {:atividade => atividade}  %>
+              </div>
+            </td>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="mensagens" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="outline: none; overflow: hidden;">
+
+</div>

@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-12">
+    <h3> Equipe </h3>
+    <table id="projeto-equipe">
+      <tr>
+        <th> Nome </th>
+      </tr>
+      <tr class="fields">
+        <td>
+            <% @projeto.usuarios.each do |u| %>
+              <%= u.nome %>
+              <br />
+            <% end %>
+        </td>
+      </tr>  
+    </table>
+  </div>
+</div>
