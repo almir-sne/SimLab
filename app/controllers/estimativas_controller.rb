@@ -37,9 +37,11 @@ class EstimativasController < ApplicationController
   end
   
   def concluir
-    cartao = Cartao.find params[:cartao_id]
-    cartao.estimativa = params[:estimativa_final]
-    cartao.save
-    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
+    @cartao = Cartao.find params[:cartao_id]
+    @cartao.estimativa = params[:estimativa_final]
+    @cartao.save
+    respond_to do |format|
+      format.js
+    end
   end
 end

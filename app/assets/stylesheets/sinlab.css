@@ -296,3 +296,9 @@ table.dataTable thead th {
 .selected {
     font-weight: bold;
 }
+
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
