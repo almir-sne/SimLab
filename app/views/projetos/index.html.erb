@@ -21,12 +21,7 @@
               <a data-toggle="collapse" onclick="toggleCollapse(this)" class="nohover" style="padding-left: 10px" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
                 <i class="icon-chevron-sign-right"></i>
               </a>
-
-              <% if (can? :read, super_e_subs[0]) %>
-                <%= link_to super_e_subs[0].nome, edit_projeto_path(super_e_subs[0])%>
-              <%  else %>
-                <%= super_e_subs[0].nome%>
-              <% end %>
+              <%= link_to super_e_subs[0].nome, projeto_path(super_e_subs[0])%>
             </div>
             <div class="col-md-1"><%=super_e_subs[0].data_de_inicio%></div>
             <div class="col-md-1"><%=super_e_subs[0].horas_totais%></div>
@@ -34,7 +29,11 @@
             <div class="col-md-4"><%=super_e_subs[0].descricao%></div>
             <div class="col-md-1">
               <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(super_e_subs[0].id),
-                method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px"%>
+              method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px"%>
+              <% if (can? :read, super_e_subs[0]) %>
+                <%= link_to '', edit_projeto_path(super_e_subs[0]), :class => 'icon-edit icon-2x nohover'%>
+              <% end %>
+              
             </div>
           </div>
         </div>
@@ -42,7 +41,7 @@
           <%super_e_subs[1].each do |sub|%>
             <div class="accordion-inner" style="padding: 0px; padding-top: 5px">
               <div class="row projetos-body">
-                <div class="col-md-4" style="padding-left: 25px;"><%= link_to sub.nome, edit_projeto_path(sub)%></div>
+                <div class="col-md-4" style="padding-left: 25px;"><%= link_to sub.nome, projeto_path(sub)%></div>
                 <div class="col-md-1"><%=sub.data_de_inicio%></div>
                 <div class="col-md-1"><%=sub.horas_totais%></div>
                 <div class="col-md-1"><%=sub.valor%></div>
@@ -50,7 +49,10 @@
                 <div class="col-md-1">
                   <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(sub.id),
                     method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")},
-                    class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px"%>
+                    class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px" %>
+                  <% if (can? :read, sub) %>
+                    <%= link_to '', edit_projeto_path(sub), :class => 'icon-edit icon-2x nohover'%>
+                  <% end %> 
                 </div>
               </div>
             </div>

@@ -59,12 +59,6 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
-    @autorizado = atividades_podem_ser_vistas_por? current_usuario
-    if @autorizado
-      @lista_atividades = Atividade.where(id: params[:lista_atv])
-    end
-    @usuarios_select = @projeto.usuarios.map{|user| [user.nome, user.id] }.unshift(["Usuário - Todos", -1])
-    @aprovacoes = [["Aprovacao - Todas", 2], ["Aprovada", 1], ["Reprovada", 0], ["Não Vista", nil]]
     @filhos_for_select  = Projeto.all.sort{ |projeto|
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
         reject{|projeto| projeto == @projeto}.
@@ -76,10 +70,27 @@ class ProjetosController < ApplicationController
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
     @hoje = Date.today
+    @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
+  end
+  
+  def show
+    authorize! :read, Projeto
+    @hoje = Date.today
+    @inicio = params[:inicio].blank? ? @hoje.beginning_of_month : (Date.parse(params[:inicio]))
+    @fim = params[:fim].blank? ? @hoje.end_of_month : (Date.parse(params[:fim]))
+    @projeto = Projeto.find(params[:id])
+    @filhos_for_select  = Projeto.all.sort{ |projeto|
+      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
+        reject{|projeto| projeto == @projeto}.
+          map{|filho| [filho.nome, filho.id]}
+    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+      sort{|a, b| a.nome <=> b.nome}.
+        reject{|projeto| projeto == @projeto}.
+          map{|proj| [proj.nome, proj.id]}
+    @eh_super_projeto = @projeto.super_projeto.blank?
+    @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
+    @ausencias = Ausencia.joins(:dia).where(dia: {data: @hoje.beginning_of_month..@hoje.end_of_month}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
     @equipe = @projeto.usuarios.pluck(:nome).sort
-    @inicio = params[:inicio].try(:to_date) || @hoje.beginning_of_month
-    @fim = params[:fim].try(:to_date) || @hoje.end_of_month
-    @ausencias = Ausencia.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
     @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
     @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
@@ -103,9 +114,8 @@ class ProjetosController < ApplicationController
     @projeto = Projeto.find(params[:id])
     inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : Date.parse(params[:inicio])
     fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : Date.parse(params[:fim])
-    @lista_atividades = @projeto.atividades.periodo(inicio .. fim ).usuario(params[:usuario_id].to_i).
-      aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
-    redirect_to(edit_projeto_path(id: params[:id], lista_atv: @lista_atividades) )
+    @lista_atividades = @projeto.atividades.periodo(inicio .. fim ).usuario(params[:usuario_id].to_i).aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
+    redirect_to(projeto_path(id: params[:id], lista_atv: @lista_atividades) )
   end
 
   # PATCH /projetos/1
