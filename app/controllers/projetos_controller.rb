@@ -1,6 +1,6 @@
 class ProjetosController < ApplicationController
   before_action :authenticate_usuario!
-  before_filter :checa_autorizacao, :only => [:edit, :destroy]
+  before_filter :checa_autorizacao, :only => [:edit, :destroy, :update]
 
   # fix temporário devido a problemas de compatibilidade com o cancan
   def checa_autorizacao
@@ -123,7 +123,6 @@ class ProjetosController < ApplicationController
   def update
     @projeto = Projeto.find(params[:id])
     authorize! :update, Projeto
-    return unless checa_autorizacao
     boards = @projeto.boards.to_a
     #lidar com boards
     unless params[:trello].blank?
