@@ -33,9 +33,9 @@
           <%= par.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,
             :class=>"nohover", :style => "float: right; margin-right: 10px" %>
           <div class="slider slider-par">
-            <%= par.hidden_field :horas, :class => 'hora_field'%>
-            <div id="time"> </div>
-            <div id="slider"> </div>
+            <%= par.hidden_field :duracao, :class => 'hora_field'%>
+            <div id="time"></div>
+            <div id="slider"></div>
           </div>
         </div>
       <% end %>

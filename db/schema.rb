@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140117182659) do
+ActiveRecord::Schema.define(version: 20140221202326) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -52,12 +52,6 @@ ActiveRecord::Schema.define(version: 20140117182659) do
     t.integer  "cartao_id"
   end
 
-  create_table "atividades_tags", id: false, force: true do |t|
-    t.integer "id"
-    t.integer "atividade_id"
-    t.integer "tag_id"
-  end
-
   create_table "ausencias", force: true do |t|
     t.string   "justificativa"
     t.boolean  "abonada"
@@ -75,22 +69,6 @@ ActiveRecord::Schema.define(version: 20140117182659) do
     t.string   "board_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "campo_dados", force: true do |t|
-    t.integer "campo_id"
-    t.text    "dado"
-    t.integer "usuario_id"
-  end
-
-  create_table "campo_projetos", force: true do |t|
-    t.text     "nome"
-    t.integer  "tipo"
-    t.text     "formato"
-    t.integer  "projeto_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "categoria"
   end
 
   create_table "campos", force: true do |t|
@@ -248,6 +226,7 @@ ActiveRecord::Schema.define(version: 20140117182659) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.integer  "super_projeto_id"
+    t.boolean  "ativo"
   end
 
   create_table "registros", force: true do |t|
@@ -323,6 +302,7 @@ ActiveRecord::Schema.define(version: 20140117182659) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "permissao_id"
+    t.boolean  "ativo"
   end
 
 end

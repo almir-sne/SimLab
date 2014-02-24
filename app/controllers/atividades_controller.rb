@@ -106,7 +106,7 @@ class AtividadesController < ApplicationController
     respond_to do |format|
       format.js
     end
-  end
+  end 
 
   def update
     @atividade = Atividade.find(params[:id])
@@ -122,6 +122,6 @@ class AtividadesController < ApplicationController
 
   private
   def atividade_params
-    params.require(:atividade).permit(:projeto_id, :minutos, :trello_id, :observacao)
+    params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :duracao, :_destroy])
   end
 end
