@@ -2,7 +2,15 @@ class Cartao < ActiveRecord::Base
   validates :trello_id, :uniqueness => true, :presence => true
 
   scope :tags, lambda { |value| joins(:tags).where(tags: { id: value }) }
-  scope :filhos, lambda { |pai| (pai == 0)? where{pai_id != nil} : where{pai_id == my{pai}} }
+  scope :filhos, lambda { |pai|
+    if pai == 0
+      where{pai_id != nil}
+    elsif pai == -1
+      where{pai_id == nil}
+    else
+      where{pai_id == my{pai}}
+    end
+  }
 
   has_many :atividades
   has_many :rodadas
