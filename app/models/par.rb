@@ -1,12 +1,11 @@
 class Par < ActiveRecord::Base
   belongs_to :par, :class_name => "Usuario"
   
-  def horas
-    unless read_attribute(:duracao).blank?
-      read_attribute(:duracao)/60
-    else
-      0
-    end
+  def minutos
+    duracao.blank? ? 0 : duracao/60
   end
 
+  def minutos=(minutos)
+    self.duracao = minutos.to_i * 60
+  end
 end
