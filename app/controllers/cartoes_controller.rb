@@ -52,16 +52,15 @@ class CartoesController < ApplicationController
       end
     end
   end
-
-  #  def atualizar_trello
-  #    Cartao.order(:updated_at).each { |c| c.update_on_trello(params[:key], params[:token]) }
-  #  end
   
   def dados
     c = Cartao.find_by trello_id: params[:trello_id]
-    c.tags_string = params[:tags].join("").gsub(/\]\[/, ",").gsub(/[\[\]]/, "") unless params[:tags].blank?
+    if !params[:tags].blank? and params[:merge_tags] == "true"
+      c.tags = (c.tags + params[:tags].collect{|t| Tag.find_or_create_by nome: t.gsub(/[\[\]]/, "")}).uniq
+    end
     if c
-      render json: {horas: "%.1f" % (c.horas_trabalhadas/3600), estimativa: c.estimativa, tags: c.tags.pluck(:nome)}
+      render json: {horas: "%.1f" % (c.horas_trabalhadas/3600), estimativa: c.estimativa,
+        tags: c.tags.pluck(:nome), pai: c.pai.try(:trello_id), filhos: c.filhos.pluck(:trello_id)}
     else
       render json: :erro
     end

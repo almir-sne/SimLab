@@ -6,6 +6,7 @@ class Cartao < ActiveRecord::Base
 
   has_many :atividades
   has_many :rodadas
+  has_many :filhos, :class_name => "Cartao", :foreign_key => "pai_id", :dependent => :nullify
 
   belongs_to :pai, :class_name => "Cartao"
   has_and_belongs_to_many :tags
@@ -43,7 +44,7 @@ class Cartao < ActiveRecord::Base
   end
 
   def tags_string=(val)
-    self.tags = val.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
+    self.tags = val.strip.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
 
   def datas
