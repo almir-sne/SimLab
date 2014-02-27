@@ -3,9 +3,10 @@ function pega_horas_dia() {
     var primeiraEntrada = 0;
     var entrada = 0;
     var saida = 0;
+    var intervalo = 0;
     var entrada_a;
     var saida_a;
-    $('.horario_picker').each(
+    $('.horario_picker:visible').each(
             function(i, e) {
                 var entradaH = 0;
                 var entradaM = 0;
@@ -29,8 +30,13 @@ function pega_horas_dia() {
                 }
             }
     );
+    intervalo = saida - primeiraEntrada - totalHorasTrabalhadas;
+    if (intervalo < 0)
+        intervalo = 0;
+    if (totalHorasTrabalhadas < 0)
+        totalHorasTrabalhadas = 0;
     return {
-        totalIntervalo: (saida - primeiraEntrada - totalHorasTrabalhadas),
+        totalIntervalo: intervalo,
         totalHorasDia: totalHorasTrabalhadas
     };
 }
@@ -144,11 +150,36 @@ function projetosVazios() {
     return vazios;
 }
 
+function string_to_minutos(string) {
+    array = string.split(":");
+    return (parseInt(array[0])*60 + parseInt(array[1]));    
+}
+
 function validateSliders() {
-    if (projetosVazios()) {
-        alert("Nenhum projeto selecionado");
-        return false;
-    }
-    return true;
+    var horarios_a = $('.horario_picker:visible') ;
+    var status_return = true;
+    horarios_a.each (
+        function(i, e) {
+            if (e.className.indexOf('entrada_horario') != -1 ) {
+                entrada_minutos = string_to_minutos(e.value);
+                saida_depois_minutos = string_to_minutos(horarios_a[i+1].value);
+                if (entrada_minutos >= saida_depois_minutos) {
+                    if (status_return == true) {
+                        alert('Horário de entrada deve ser menor que horário de saída');
+                    }                       
+                    status_return = false;
+                }
+                if (i != 0) {
+                    saida_antes_minutos = string_to_minutos(horarios_a[i-1].value);
+                    if (entrada_minutos <= saida_antes_minutos) {
+                        if (status_return == true)
+                            alert('Novo horário de entrada deve ser maior que o horário de saída anterior');        
+                        status_return = false;
+                    }
+                }
+            }
+        }
+  );
+  return status_return;
 }
 
