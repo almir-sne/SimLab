@@ -6,7 +6,7 @@ class Atividade < ActiveRecord::Base
   scope :projeto, lambda { |value| where(['projeto_id = ?', value]) if value > 0 }
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
   scope :cartoes_tagados, lambda { |value| joins(:cartao).merge(Cartao.tags value) if value > 0}
-  scope :cartoes_filhos, lambda { |value| joins(:cartao).merge(Cartao.filhos value) if value > -1}
+  scope :cartoes_filhos, lambda { |value| joins(:cartao).merge(Cartao.filhos value)}
   scope :aprovacao, lambda {|value| where(aprovacao: value) unless value.blank?}
 
   belongs_to :cartao
