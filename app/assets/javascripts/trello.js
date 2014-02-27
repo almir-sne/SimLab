@@ -316,7 +316,7 @@ function getToken() {
     $("input[name='token']").val(Trello.token);
 }
 
-function updateTrelloData(card_id, mergeTags, reload) {
+function updateTrelloData(card_id, mergeTags, showAlert) {
     var regex_tags = /[\[][^\[\]]*[\]]/g;
     var tags = null;
     Trello.get("/cards/" + card_id, function(card) {
@@ -332,12 +332,12 @@ function updateTrelloData(card_id, mergeTags, reload) {
                         Trello.get("/cards/" + data.pai, function(pai) {
                             updateFather(card.shortUrl, data.pai);
                             putOnTrello(card, {estimativa: data.estimativa,
-                                pai: pai.url, horas: data.horas, tags: data.tags, reload: reload});
+                                pai: pai.url, horas: data.horas, tags: data.tags, showAlert: showAlert});
                         });
                     }
                     else
                         putOnTrello(card, {estimativa: data.estimativa,
-                            horas: data.horas, tags: data.tags, reload: reload});
+                            horas: data.horas, tags: data.tags, showAlert: showAlert});
                 }
                 else
                     alert("Erro durante atualização do cartão no Trello");
@@ -379,7 +379,7 @@ function removeFromChecklist(card_url, father_id) {
         if (filhosList)
             $(filhosList.checkItems).each(function(i, e) {
                 if (e.name == card_url)
-                     Trello.delete("/checklists/" + filhosList.id + "/checkItems/" + e.id);
+                    Trello.delete("/checklists/" + filhosList.id + "/checkItems/" + e.id);
             });
     });
 }
@@ -394,16 +394,16 @@ function putOnTrello(card, params) {
     if (params.horas)
         new_name = new_name + " (" + params.horas + ")";
     if (card.name != new_name || new_desc != card.desc)
-        Trello.put('/cards/' + card.id + '/', {name: new_name, desc: new_desc}, function() {
-            if (params.reload)
-                document.location.reload(true);
-        });
+        Trello.put('/cards/' + card.id + '/', {name: new_name, desc: new_desc});
+    if (params.showAlert)
+        alert("Cartão atualizado com sucesso!");
 }
 
-function newDesc(old_desc, estimate, father_url) {
+function newDesc(old_desc, estimate, father_url, time) {
     var new_desc = old_desc;
     var regex_estimate = /\n{Estimativa:.*}/;
     var regex_father = /\n{Cartão PAI:.*}/;
+    var regex_time = /\n{Horas totais dos filhos:.*}/;
     new_desc = new_desc.replace(/[-]{35}(.|\s)*/, "");
     new_desc = new_desc.trim() + "\n-----------------------------------\n{SIMLAB}";
     if (estimate) {
@@ -414,8 +414,13 @@ function newDesc(old_desc, estimate, father_url) {
         new_desc = new_desc.replace(regex_father, '').trim() +
                 "\n{Cartão PAI: " + father_url + "}";
     }
+//    if (time) {
+//        new_desc = new_desc.replace(regex_time, '').trim() +
+//                "\n{Horas totais dos filhos:: " + time + "}";
+//    }
     return new_desc;
 }
+
 
 function mergeTags(name) {
     var regex_tags = /[\[][^\[\]]*[\]]/g;
