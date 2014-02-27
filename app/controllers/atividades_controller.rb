@@ -105,15 +105,18 @@ class AtividadesController < ApplicationController
     respond_to do |format|
       format.js
     end
-  end 
+  end
 
   def update
     @atividade = Atividade.find(params[:id])
     @atividade.assign_attributes atividade_params
-    reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-    reg.transforma_hash_em_modificacao @atividade.changes
+    unless @atividade.changes.blank?
+      reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+      reg.transforma_hash_em_modificacao @atividade.changes
+      reg.save
+    end
     respond_to do |format|
-      if @atividade.save and reg.save
+      if @atividade.save
         format.js
       end
     end
