@@ -6,7 +6,7 @@ class DiasController < ApplicationController
     @dia = Dia.find_or_create_by_data_and_usuario_id(params[:data], @usuario.id)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
     @data = params[:data] || Date.today.to_s
-    @projetos = @usuario.meus_projetos
+    @projetos = @usuario.meus_projetos_array
     @boards = @usuario.boards.pluck(:board_id).uniq
     respond_to do |format|
       format.js
@@ -123,7 +123,7 @@ class DiasController < ApplicationController
     if can? :manage, :usuario
       @usuarios = Usuario.por_status
     end
-    @projetos          = @usuario.meus_projetos
+    @projetos          = @usuario.meus_projetos_array
     @dias_periodo      = dias_no_periodo(@inicio, @fim)
     @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
@@ -171,7 +171,7 @@ class DiasController < ApplicationController
     if can? :manage, :usuario
       @usuarios = Usuario.por_status
     end
-    @projetos = @usuario.meus_projetos
+    @projetos = @usuario.meus_projetos_array
   end
 
   private

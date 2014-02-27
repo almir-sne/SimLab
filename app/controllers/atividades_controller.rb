@@ -87,7 +87,7 @@ class AtividadesController < ApplicationController
   def ajax_form
     dia = Dia.find params[:dia_id]
     usuario = dia.usuario
-    @projetos = usuario.meus_projetos
+    @projetos = usuario.meus_projetos_array
     @atividade = Atividade.new(dia_id: dia.id, data: dia.data, usuario_id: usuario.id)
     @atividade.trello_id = params[:trello_id]
     @atividade.projeto_id = @projetos.first[1]
@@ -102,7 +102,6 @@ class AtividadesController < ApplicationController
     atividade = Atividade.find(params[:id])
     @atividade_id = atividade.id
     atividade.destroy
-
     respond_to do |format|
       format.js
     end
