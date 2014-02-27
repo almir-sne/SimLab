@@ -1,8 +1,10 @@
 recalculaHoras();
+
 $(document).on('nested:fieldAdded', function(event) {
     formChanged(event.field.closest("form"));
     createSlider(event.field.find('.slider'));
 });
+
 $(document).on('nested:fieldRemoved', function(event) {
     formChanged(event.field.closest("form"));
 });
@@ -16,12 +18,6 @@ function createTimePicker(obj) {
 $('.timepicker').timepicker({
     showPeriodLabels: false
 });
-
-//$('.timepicker').on('shown', function() {
-  //$(this).timepicker({
-   // showPeriodLabels: false
- // });
-//});
 
 $('#boards').on('hidden', function() {
     ajustaAltura();
