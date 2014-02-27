@@ -7,6 +7,8 @@ class Cartao < ActiveRecord::Base
       where{pai_id != nil}
     elsif pai == -1
       where{pai_id == nil}
+    elsif pai == -2
+      #nada
     else
       where{pai_id == my{pai}}
     end

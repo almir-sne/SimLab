@@ -443,13 +443,18 @@ function selectPais(){
   select.setAttribute("class", "menu_select");
 
   option = document.createElement("option");
+  option.setAttribute("value", "-2");
+  option.innerHTML = "Pais - TODOS";
+  select.appendChild(option);
+
+  option = document.createElement("option");
   option.setAttribute("value", "0");
-  option.innerHTML = "Pais - Todos";
+  option.innerHTML = "Com Pais";
   select.appendChild(option);
 
   option = document.createElement("option");
   option.setAttribute("value", "-1");
-  option.innerHTML = "Pais - Nenhum";
+  option.innerHTML = "Sem Pais";
   select.appendChild(option);
 
   for(i=0; i<cartoes_pais.length; i++){
