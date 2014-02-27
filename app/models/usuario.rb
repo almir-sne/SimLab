@@ -63,11 +63,11 @@ class Usuario < ActiveRecord::Base
       }).group(:id).order(:nome)
   end
 
-  def meus_projetos
-    if (self.role == 'admin')
-      Projeto.order(:nome).collect {|p| [p.nome, p.id ] }
+  def meus_projetos_array
+    if self.role == 'admin'
+      Projeto.ativo.order(nome: :asc).pluck([:nome, :id])
     else
-      self.projetos.where("super_projeto_id is not null").order(:nome).collect {|p| [p.nome, p.id ] }
+      self.projetos.where("super_projeto_id is not null").merge(Projeto.ativo).order(:nome).pluck([:nome, :id])
     end
   end
   

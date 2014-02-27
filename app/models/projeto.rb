@@ -20,7 +20,9 @@ class Projeto < ActiveRecord::Base
   accepts_nested_attributes_for :sub_projetos, :reject_if => lambda { |a| a[:content].blank? }
   accepts_nested_attributes_for :campos, :allow_destroy => true
   accepts_nested_attributes_for :dados, :allow_destroy => true
-
+  scope :ativo, where(ativo: true)
+  scope :inativo, where(ativo: false)
+  
   #def coordenadores
   #self.usuarios.includes(:workon).where("workons.coordenador" => true)
   #end

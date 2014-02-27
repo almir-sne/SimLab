@@ -14,6 +14,14 @@
     <%= f.label :data_de_inicio, :class => "col-sm-2" %>
     <%= f.date_select :data_de_inicio, {}, :style => "width: 100px", :class => "col-sm-5" %>
   </div>
+  
+  <div class="form-group">
+    <%= f.label :ativo, :class => "col-sm-2" %>
+    <%= f.radio_button :ativo, true, :style => "width: 100px"   %>
+    <%= f.label 'Ativo' %>
+    <%= f.radio_button :ativo, false, :style => "width: 100px" %>
+    <%= f.label 'Inativo' %>  
+  </div>
 </div>
 
 <%= render partial: 'nav_bar', locals: {f: f} %>

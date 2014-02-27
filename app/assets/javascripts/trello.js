@@ -13,7 +13,7 @@ function loadUserCards() {
         $.each(cards, function(ix, card) {
             if (dontInclude.indexOf(card.id) == -1)
                 $("<a>").attr({
-                    href: card.url,
+                    href: card.shortUrl,
                     id: card.id,
                     target: "_blank",
                     draggable: true,
@@ -98,6 +98,9 @@ function dropPai(event) {
 }
 
 function removePai() {
+    var father_id = $("#cartao_pai_trello_id").val();
+    var card_url = $(".cardnaohover")[0].href;
+    removeFromChecklist(card_url, father_id);
     $("#cartao_pai_trello_id").val("");
     $("#input-pai").empty();
 }
@@ -141,7 +144,7 @@ function loadTrelloData() {
 
 function loadCard(input, card) {
     var link = $("<a>").attr({
-        href: card.url,
+        href: card.shortUrl,
         title: card.name,
         target: "_blank"
     });
@@ -181,7 +184,7 @@ function loadDefaultCard(input, card) {
     div.addClass("nodrop");
     $(input).after(div);
     $("<a>").attr({
-        href: card.url,
+        href: card.shortUrl,
         target: "_blank",
         class: "cardnaohover"
     }).text(card.name).appendTo(div);
@@ -257,7 +260,7 @@ function loadBoardLists() {
                     var tr = $("<tr>");
                     var td = $("<td>");
                     $("<a>").attr({
-                        href: card.url,
+                        href: card.shortUrl,
                         id: card.id,
                         target: "_blank"
                     }).text(card.name).appendTo(td);
@@ -316,31 +319,28 @@ function getToken() {
     $("input[name='token']").val(Trello.token);
 }
 
-function updateTimeOnTrello(card_id) {
+function updateTrelloData(card_id, mergeTags, reload) {
+    var regex_tags = /[\[][^\[\]]*[\]]/g;
+    var tags = null;
     Trello.get("/cards/" + card_id, function(card) {
-        var regex_tags = /[\[][^\[\]]*[\]]/g;
-        var regex_time = /[(]\d+[.]?\d*[)]$/;
-        var regex_estimate = /{Estimativa:.*}/;
-        var tags = card.name.match(regex_tags);
-        var new_name = card.name.replace(regex_tags, '').replace(regex_time, '').trim();
-
+        tags = card.name.match(regex_tags);
         $.ajax({
             url: '/cartoes/dados.json',
             type: "GET",
             dataType: "json",
-            data: {trello_id: card.id, tags: tags},
+            data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
             success: function(data) {
                 if (data != "erro") {
-                    var new_desc = card.desc;
-                    if (data.estimativa)
-                        new_desc = new_desc.replace(regex_estimate, '') +
-                                "\n\n{Estimativa: " + data.estimativa + "}";
-                    if (data.tags.length > 0)
-                        new_name = "[" + data.tags.join("][") + "] " + new_name;
-                    if (data.horas)
-                        new_name = new_name + " (" + (data.horas) + ")";
-                    if (card.name != new_name || new_desc != card.desc)
-                        Trello.put('/cards/' + card_id + '/', {name: new_name, desc: new_desc});
+                    if (data.pai) {
+                        Trello.get("/cards/" + data.pai, function(pai) {
+                            updateFather(card.shortUrl, data.pai);
+                            putOnTrello(card, {estimativa: data.estimativa,
+                                pai: pai.url, horas: data.horas, tags: data.tags, reload: reload});
+                        });
+                    }
+                    else
+                        putOnTrello(card, {estimativa: data.estimativa,
+                            horas: data.horas, tags: data.tags, reload: reload});
                 }
                 else
                     alert("Erro durante atualização do cartão no Trello");
@@ -349,19 +349,75 @@ function updateTimeOnTrello(card_id) {
     });
 }
 
-function updateTagsOnTrello(card_id) {
-    var tags = $("#cartao_tags_string").val().split(/[,][ ]*/);
-    Trello.get("/cards/" + card_id, function(card) {
-        var regex_tags = /[\[][^\[\]]*[\]]/g;
-        var new_name = card.name.replace(regex_tags, '').trim();
-        new_name = ("[" + tags.join("][") + "] " + new_name).replace("[] ", "");
-        if (card.name != new_name)
-            Trello.put('/cards/' + card_id + '/', {name: new_name}, function(data) {
-                document.location.reload(true);
+function updateFather(card_url, father_id) {
+    Trello.get("/cards/" + father_id + "/checklists", function(lists) {
+        var filhosList = null;
+        $(lists).each(function(i, e) {
+            if (e.name == "FILHOS")
+                filhosList = e;
+        });
+        if (!filhosList)
+            Trello.post("/checklists/", {name: "FILHOS", idCard: father_id}, function(list) {
+                Trello.post("/checklists/" + list.id + "/checkItems", {name: card_url});
             });
-        else
-            document.location.reload(true);
+        else {
+            var exists = false;
+            $(filhosList.checkItems).each(function(i, e) {
+                if (e.name == card_url)
+                    exists = true;
+            });
+            if (!exists)
+                Trello.post("/checklists/" + filhosList.id + "/checkItems", {name: card_url});
+        }
     });
+}
+
+function removeFromChecklist(card_url, father_id) {
+    Trello.get("/cards/" + father_id + "/checklists", function(lists) {
+        var filhosList = null;
+        $(lists).each(function(i, e) {
+            if (e.name == "FILHOS")
+                filhosList = e;
+        });
+        if (filhosList)
+            $(filhosList.checkItems).each(function(i, e) {
+                if (e.name == card_url)
+                     Trello.delete("/checklists/" + filhosList.id + "/checkItems/" + e.id);
+            });
+    });
+}
+
+function putOnTrello(card, params) {
+    var regex_tags = /\[.*\]/;
+    var regex_time = /[(]\d+[.]?\d*[)]$/;
+    var new_name = card.name.replace(regex_tags, '').replace(regex_time, '').trim();
+    var new_desc = newDesc(card.desc, params.estimativa, params.pai);
+    if (params.tags.length > 0)
+        new_name = "[" + params.tags.join("][") + "] " + new_name;
+    if (params.horas)
+        new_name = new_name + " (" + params.horas + ")";
+    if (card.name != new_name || new_desc != card.desc)
+        Trello.put('/cards/' + card.id + '/', {name: new_name, desc: new_desc}, function() {
+            if (params.reload)
+                document.location.reload(true);
+        });
+}
+
+function newDesc(old_desc, estimate, father_url) {
+    var new_desc = old_desc;
+    var regex_estimate = /\n{Estimativa:.*}/;
+    var regex_father = /\n{Cartão PAI:.*}/;
+    new_desc = new_desc.replace(/[-]{35}(.|\s)*/, "");
+    new_desc = new_desc.trim() + "\n-----------------------------------\n{SIMLAB}";
+    if (estimate) {
+        new_desc = new_desc.replace(regex_estimate, '').trim() +
+                "\n{Estimativa: " + estimate + "}";
+    }
+    if (father_url) {
+        new_desc = new_desc.replace(regex_father, '').trim() +
+                "\n{Cartão PAI: " + father_url + "}";
+    }
+    return new_desc;
 }
 
 function mergeTags(name) {

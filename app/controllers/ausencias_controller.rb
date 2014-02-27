@@ -12,14 +12,15 @@ class AusenciasController < ApplicationController
     else
       usuario = current_usuario
     end
-    @dia      = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), usuario.id )
-    @ausencia = Ausencia.find_or_initialize_by_dia_id_and_projeto_id(@dia.id, params[:projeto_id].try(:to_i))
+    @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: usuario.id)
+    @ausencia = Ausencia.find_or_initialize_by(dia_id: @dia.id, projeto_id: params[:projeto_id].try(:to_i))
     @tipo     = params[:tipo]
-    @projetos = usuario.projetos.map{|proj| [proj.nome, proj.id]}
+    @projetos = usuario.projetos.merge(Projeto.ativo).pluck([:nome, :id])
   end
 
   def create
-    @ausencia = Ausencia.find_or_initialize_by_dia_id_and_projeto_id(params[:ausencia][:dia_id], params[:ausencia][:projeto_id])
+    @ausencia = Ausencia.find_or_initialize_by(dia_id: params[:ausencia][:dia_id], 
+                projeto_id: params[:ausencia][:projeto_id])
     if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")
       unless params[:anexo].nil?
