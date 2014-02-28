@@ -114,20 +114,30 @@ class AtividadesController < ApplicationController
   def update
     @atividade = Atividade.find(params[:id])
     @atividade.assign_attributes atividade_params
-    unless @atividade.changes.blank?
-      reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-      reg.transforma_hash_em_modificacao @atividade.changes
-      reg.save
+    @error_message = ""
+    if (@atividade.projeto.tags_obrigatorio and @atividade.cartao.tags.blank?)
+      @error_message += "O projeto selecionado exige que o cartão tenha tags. "
     end
-    respond_to do |format|
-      if @atividade.save
-        format.js
+    if (@atividade.projeto.pai_obrigatorio and @atividade.cartao.pai.blank?)
+      @error_message += "O projeto selecionado exige que o cartão tenha pai. "
+    end
+    
+    if @error_message.blank?
+      unless @atividade.changes.blank?
+        reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+        reg.transforma_hash_em_modificacao @atividade.changes
+        reg.save
       end
+      @atividade.save
+    end
+
+    respond_to do |format|
+      format.js
     end
   end
+end
 
-  private
-  def atividade_params
-    params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
-  end
+private
+def atividade_params
+  params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
 end

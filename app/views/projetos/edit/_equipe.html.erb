@@ -31,17 +31,4 @@
       <tr id='novo_item'></tr>
     </table>
   </div>
-  <div class="col-md-offset-1 col-md-3">
-
-    <h3> Boards do Trello </h3>
-    <%= hidden_field_tag :boards_ids, @projeto.boards.pluck(:board_id) %>
-    <div class="loggedout">
-      <a class="btn default-button" id="connectLink" onclick="loginTrello(getBoards)"> Conectar ao Trello</a>
-    </div>
-    <div class="loggedin">
-      <div id="output" class="panel-scrollable" style="height: 200px"></div>
-    </div>
-  </div>
 </div>
-
-<%= render partial: 'nav_bar', locals: {f: f} %>

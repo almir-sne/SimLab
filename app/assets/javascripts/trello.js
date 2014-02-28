@@ -410,7 +410,7 @@ function newDesc(old_desc, estimate, father, time) {
     new_desc = new_desc.replace(/[-]{35}(.|\s)*/, "");
     if (time == null && father == null && estimate == null)
         return new_desc;
-    new_desc = new_desc.trim() + "\n-----------------------------------\n{SIMLAB}";
+    new_desc = new_desc.trim() + "\n\n-----------------------------------\n{SIMLAB}";
     if (estimate) {
         new_desc = new_desc.replace(regex_estimate, '').trim() +
                 "\n{Estimativa: " + estimate + "}";

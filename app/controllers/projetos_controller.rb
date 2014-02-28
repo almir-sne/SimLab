@@ -208,6 +208,7 @@ class ProjetosController < ApplicationController
   private
     def projetos_params
       params.require(:projeto).permit(:ativo, :data_de_inicio, :descricao, :nome, :super_projeto_id,
+        :tags_obrigatorio, :pai_obrigatorio,
         workons_attributes: [:id, :usuario_id,:permissao_id, :_destroy, {:coordenacoes => []}],
         sub_projetos: [:id, :filho],
         campos_attributes: [:id, :categoria, :nome, :tipo, :formato, :_destroy]
