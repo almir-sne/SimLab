@@ -34,6 +34,7 @@ class Usuario < ActiveRecord::Base
 
   def default_values
     self.role ||= "usuario normal"
+    self.status ||= true
   end
 
   def projetos_coordenados
