@@ -10,8 +10,9 @@
       <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
       <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
       <li><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
-      </ul>
-     
+      <li><a href="#configcartoes" data-toggle="tab">Configurações de cartões</a></li>
+    </ul>
+
     <div class="tab-content">
       <div class="tab-pane active" id="dadosproj">
         <%= render partial: 'projetos/edit/dados_projeto', locals: {f: f} %>
@@ -28,7 +29,11 @@
       <div class="tab-pane" id="meusdados">
         <%= render partial: 'projetos/edit/meus_dados', locals: {f: f} %>
       </div>
+
+      <div class="tab-pane" id="configcartoes">
+        <%= render partial: 'projetos/edit/configuracoes_cartoes', locals: {f: f} %>
+      </div>
     </div>
+    <%= render partial: 'nav_bar', locals: {f: f} %>
   <% end %>
-    
 </div>
