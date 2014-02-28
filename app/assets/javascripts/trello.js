@@ -331,9 +331,14 @@ function updateTrelloData(card_id, mergeTags, showAlert) {
             success: function(data) {
                 if (data != "erro") {
                     if (data.pai)
-                        updateTrelloData(data.pai, true, false);
-                    putOnTrello(card, {estimativa: data.estimativa, pai: data.pai, horas_filhos: data.horas_filhos,
-                        horas: data.horas, tags: data.tags, showAlert: showAlert});
+                        Trello.get("/cards/" + data.pai, function(pai) {
+                            updateTrelloData(data.pai, true, false);
+                            putOnTrello(card, {estimativa: data.estimativa, pai: pai, horas_filhos: data.horas_filhos,
+                                horas: data.horas, tags: data.tags, showAlert: showAlert});
+                        });
+                    else
+                        putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
+                            horas: data.horas, tags: data.tags, showAlert: showAlert});
                 }
                 else
                     alert("Erro durante atualização do cartão no Trello");
@@ -342,15 +347,15 @@ function updateTrelloData(card_id, mergeTags, showAlert) {
     });
 }
 
-function updateFatherCheckist(card_url, father_id) {
-    Trello.get("/cards/" + father_id + "/checklists", function(lists) {
+function updateFatherCheckist(card_url, father) {
+    Trello.get("/cards/" + father.id + "/checklists", function(lists) {
         var filhosList = null;
         $(lists).each(function(i, e) {
             if (e.name == "FILHOS")
                 filhosList = e;
         });
         if (!filhosList)
-            Trello.post("/checklists/", {name: "FILHOS", idCard: father_id}, function(list) {
+            Trello.post("/checklists/", {name: "FILHOS", idCard: father.id}, function(list) {
                 Trello.post("/checklists/" + list.id + "/checkItems", {name: card_url});
             });
         else {
@@ -386,7 +391,7 @@ function putOnTrello(card, params) {
     var new_name = card.name.replace(regex_tags, '').replace(regex_time, '').trim();
     var new_desc = newDesc(card.desc, params.estimativa, params.pai, params.horas_filhos);
     if (params.pai)
-        updateFatherCheckist(card.shortUrl, params.pai)
+        updateFatherCheckist(card.shortUrl, params.pai);
     if (params.tags.length > 0)
         new_name = "[" + params.tags.join("][") + "] " + new_name;
     if (params.horas)
@@ -397,20 +402,22 @@ function putOnTrello(card, params) {
         alert("Cartão atualizado com sucesso!");
 }
 
-function newDesc(old_desc, estimate, father_url, time) {
+function newDesc(old_desc, estimate, father, time) {
     var new_desc = old_desc;
     var regex_estimate = /\n{Estimativa:.*}/;
     var regex_father = /\n{Cartão PAI:.*}/;
     var regex_time = /\n{Horas totais dos filhos:.*}/;
     new_desc = new_desc.replace(/[-]{35}(.|\s)*/, "");
+    if (time == null && father == null && estimate == null)
+        return new_desc;
     new_desc = new_desc.trim() + "\n-----------------------------------\n{SIMLAB}";
     if (estimate) {
         new_desc = new_desc.replace(regex_estimate, '').trim() +
                 "\n{Estimativa: " + estimate + "}";
     }
-    if (father_url) {
+    if (father) {
         new_desc = new_desc.replace(regex_father, '').trim() +
-                "\n{Cartão PAI: " + father_url + "}";
+                "\n{Cartão PAI: " + father.shortUrl + "}";
     }
     if (time) {
         new_desc = new_desc.replace(regex_time, '').trim() +

@@ -62,5 +62,13 @@ class Cartao < ActiveRecord::Base
     datas.first.data.to_s.split("-").reverse.join("/") +" a " +
      datas.last.data.to_s.split("-").reverse.join("/")
   end
-
+  
+  def horas_filhos
+    horas = filhos.joins(:atividades).sum(:duracao)/3600
+    if horas > 0
+      "%.1f" % horas
+    else
+      nil
+    end
+  end
 end
