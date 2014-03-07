@@ -135,6 +135,10 @@ function showSpinner(form) {
     $(form).find(".form-status .form-spinner").show();
 }
 
+function hideSpinner(form) {
+    $(form).find(".form-status .form-spinner").hide();
+}
+
 function checkForm() {
     var changed = false;
     $("form").each(function(i, e) {

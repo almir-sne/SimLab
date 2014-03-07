@@ -1,7 +1,8 @@
+var form = $("<%= "#edit_atividade_#{@atividade.id}" %>");
 <% if @error_message.blank? %>
-  var form = $("<%= "#edit_atividade_#{@atividade.id}" %>");
   formSaved(form);
   updateTrelloData("<%= @atividade.trello_id %>", true, false);
 <% else %>
+  hideSpinner(form);
   alert('<%= @error_message %> Clique em "Editar cartão" para solucionar o problema e tente novamente.');
 <% end %>
