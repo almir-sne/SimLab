@@ -7,7 +7,7 @@ class Usuario < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   has_one  :address, :dependent => :destroy
-  has_many :boards, :through => :projetos
+  #has_many :boards, :through => :projetos, -> { where ativo: true }
   has_many :workons, :dependent => :destroy
   has_many :telefones, :dependent => :destroy
   has_many :contas, :dependent => :destroy
@@ -18,7 +18,7 @@ class Usuario < ActiveRecord::Base
   has_many :dias
   has_many :atividades
   has_many :registros
-  
+  has_many :boards, -> { where projetos: { ativo: true} }, :through => :projetos
   
   accepts_nested_attributes_for :address,      :allow_destroy => true
   accepts_nested_attributes_for :telefones,    :allow_destroy => true
@@ -31,12 +31,12 @@ class Usuario < ActiveRecord::Base
 
   validates :nome, :presence => true,
     :uniqueness => true
-
+      
   def default_values
     self.role ||= "usuario normal"
     self.status ||= true
   end
-
+   
   def projetos_coordenados
     Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
   end
@@ -66,9 +66,9 @@ class Usuario < ActiveRecord::Base
 
   def meus_projetos_array
     if self.role == 'admin'
-      Projeto.ativo.order(nome: :asc).pluck([:nome, :id])
+      Projeto.ativos.order(nome: :asc).pluck([:nome, :id])
     else
-      self.projetos.where("super_projeto_id is not null").merge(Projeto.ativo).order(:nome).pluck([:nome, :id])
+      self.projetos.merge(Projeto.filhos).merge(Projeto.ativos).order(:nome).pluck([:nome, :id])
     end
   end
   

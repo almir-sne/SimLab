@@ -89,9 +89,13 @@ class AtividadesController < ApplicationController
     usuario = dia.usuario
     @projetos = usuario.meus_projetos_array
     @atividade = Atividade.new(dia_id: dia.id, data: dia.data, usuario_id: usuario.id)
+    debugger
     @atividade.trello_id = params[:trello_id]
+    debugger
     @atividade.projeto_id = @projetos.first[1]
+    debugger
     @atividade.save
+    debugger
     @equipe = usuario.equipe.collect{|u| [u.nome, u.id]}
     respond_to do |format|
       format.js
