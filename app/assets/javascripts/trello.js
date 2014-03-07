@@ -331,14 +331,9 @@ function updateTrelloData(card_id, mergeTags, showAlert) {
             success: function(data) {
                 if (data != "erro") {
                     if (data.pai)
-                        Trello.get("/cards/" + data.pai, function(pai) {
-                            updateTrelloData(data.pai, true, false);
-                            putOnTrello(card, {estimativa: data.estimativa, pai: pai, horas_filhos: data.horas_filhos,
-                                horas: data.horas, tags: data.tags, showAlert: showAlert});
-                        });
-                    else
-                        putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
-                            horas: data.horas, tags: data.tags, showAlert: showAlert});
+                        updateTrelloData(data.pai, true, false);
+                    putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
+                        horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
                 }
                 else
                     alert("Erro durante atualização do cartão no Trello");
@@ -347,7 +342,7 @@ function updateTrelloData(card_id, mergeTags, showAlert) {
     });
 }
 
-function updateFatherCheckist(card_url, father) {
+function updateFatherChecklist(filhos_list, father) {
     Trello.get("/cards/" + father.id + "/checklists", function(lists) {
         var filhosList = null;
         $(lists).each(function(i, e) {
@@ -356,17 +351,25 @@ function updateFatherCheckist(card_url, father) {
         });
         if (!filhosList)
             Trello.post("/checklists/", {name: "FILHOS", idCard: father.id}, function(list) {
-                Trello.post("/checklists/" + list.id + "/checkItems", {name: card_url});
+                updateChecklist(list, filhos_list);
             });
         else {
+            updateChecklist(filhosList, filhos_list);
+        }
+    });
+}
+
+function updateChecklist(list, elements) {
+    $(elements).each(function(i, e) {
+        Trello.get("/cards/" + e, function(card) {
             var exists = false;
-            $(filhosList.checkItems).each(function(i, e) {
-                if (e.name == card_url)
+            $(list.checkItems).each(function(i, link) {
+                if (link == card.shortUrl)
                     exists = true;
             });
             if (!exists)
-                Trello.post("/checklists/" + filhosList.id + "/checkItems", {name: card_url});
-        }
+                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl});
+        });
     });
 }
 
@@ -390,8 +393,8 @@ function putOnTrello(card, params) {
     var regex_time = /[(]\d+[.]?\d*[)]$/;
     var new_name = card.name.replace(regex_tags, '').replace(regex_time, '').trim();
     var new_desc = newDesc(card.desc, params.estimativa, params.pai, params.horas_filhos);
-    if (params.pai)
-        updateFatherCheckist(card.shortUrl, params.pai);
+    if (params.filhos.length > 0)
+        updateFatherChecklist(params.filhos, card);
     if (params.tags.length > 0)
         new_name = "[" + params.tags.join("][") + "] " + new_name;
     if (params.horas)
