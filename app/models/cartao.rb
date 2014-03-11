@@ -59,8 +59,7 @@ class Cartao < ActiveRecord::Base
 
   def datas
     datas = self.atividades.order :data
-    datas.first.data.to_s.split("-").reverse.join("/") +" a " +
-     datas.last.data.to_s.split("-").reverse.join("/")
+    datas.first.data.to_s + " a " + datas.last.data.to_s
   end
   
   def horas_filhos

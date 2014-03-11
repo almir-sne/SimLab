@@ -53,6 +53,11 @@ class Usuario < ActiveRecord::Base
     contrato = contratos.where("inicio <= ? and fim >= ?", data, data).first
     contrato ||= contratos.last
   end
+  
+  def existe_contrato_em(data)
+    contrato = contratos.where("inicio <= ? and fim >= ?", data, data)
+    return !contrato.blank?
+  end
 
   def contrato_atual
     self.contratos.order(:fim).last
