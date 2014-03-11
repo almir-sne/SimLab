@@ -364,7 +364,7 @@ function updateChecklist(list, elements) {
         Trello.get("/cards/" + e, function(card) {
             var exists = false;
             $(list.checkItems).each(function(i, link) {
-                if (link == card.shortUrl)
+                if (link.name == card.shortUrl)
                     exists = true;
             });
             if (!exists)
