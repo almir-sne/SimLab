@@ -29,8 +29,7 @@ class Usuario < ActiveRecord::Base
 
   has_many :projetos, :through => :workons
 
-  validates :nome, :presence => true,
-    :uniqueness => true
+  validates :nome, presence: true, uniqueness: true
       
   def default_values
     self.role ||= "usuario normal"
@@ -38,11 +37,11 @@ class Usuario < ActiveRecord::Base
   end
    
   def projetos_coordenados
-    Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
+    Projeto.joins(:workons).where(ativo: true, workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
   end
 
   def equipe_coordenada
-    Usuario.where(id: Workon.where(id: coordenacoes.pluck(:workon_id)).pluck(:usuario_id), status: true).uniq
+    Usuario.where(id: Workon.where(ativo: true, id: coordenacoes.pluck(:workon_id)).pluck(:usuario_id), status: true).uniq
   end
 
   def horario_data(data)

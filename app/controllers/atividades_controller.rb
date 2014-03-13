@@ -4,11 +4,11 @@ class AtividadesController < ApplicationController
   def validacao
     hoje = Date.today
     if current_usuario.role == "admin"
-      @projetos_opts = Projeto.select("nome, id").all(:order => "nome").collect { |p| [p.nome, p.id]  }
-      @usuarios_opts = Usuario.select("nome, id").where(status: true).order(:nome).collect { |u| [u.nome, u.id]  }
+      @projetos_opts = Projeto.ativos.order(:nome).pluck(:nome, :id)
+      @usuarios_opts = Usuario.where(status: true).order(:nome).pluck(:nome, :id)
     else
-      @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
-      @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
+      @projetos_opts = current_usuario.projetos_coordenados.pluck(:nome, :id)
+      @usuarios_opts = current_usuario.equipe_coordenada.pluck(:nome, :id)
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
 
