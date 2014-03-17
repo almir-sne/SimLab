@@ -4,11 +4,11 @@ class AtividadesController < ApplicationController
   def validacao
     hoje = Date.today
     if current_usuario.role == "admin"
-      @projetos_opts = Projeto.select("nome, id").all(:order => "nome").collect { |p| [p.nome, p.id]  }
-      @usuarios_opts = Usuario.select("nome, id").where(status: true).order(:nome).collect { |u| [u.nome, u.id]  }
+      @projetos_opts = Projeto.ativos.order(:nome).pluck(:nome, :id)
+      @usuarios_opts = Usuario.where(status: true).order(:nome).pluck(:nome, :id)
     else
-      @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
-      @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
+      @projetos_opts = current_usuario.projetos_coordenados.pluck(:nome, :id)
+      @usuarios_opts = current_usuario.equipe_coordenada.pluck(:nome, :id)
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
 
@@ -127,15 +127,30 @@ class AtividadesController < ApplicationController
         registro_par.save
       end
     end
-    respond_to do |format|
-      if @atividade.save
-        format.js
+    @error_message = ""
+    if (@atividade.projeto.tags_obrigatorio and @atividade.cartao.tags.blank?)
+      @error_message += "O projeto selecionado exige que o cartão tenha tags. "
+    end
+    if (@atividade.projeto.pai_obrigatorio and @atividade.cartao.pai.blank?)
+      @error_message += "O projeto selecionado exige que o cartão tenha pai. "
+    end
+
+    if @error_message.blank?
+      unless @atividade.changes.blank?
+        reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+        reg.transforma_hash_em_modificacao @atividade.changes
+        reg.save
       end
+      @atividade.save
+    end
+
+    respond_to do |format|
+      format.js
     end
   end
+end
 
-  private
-  def atividade_params
-    params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
-  end
+private
+def atividade_params
+  params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
 end

@@ -11,7 +11,7 @@
       <%= atividade_form.select :projeto_id, options_for_select(lista_projetos, atividade.projeto_id),
       {}, {:class=>"projeto-seletor", :onchange => "filterCards(this); formChanged(this.form)"}%>
       <br/>
-
+  
       <div class="slider slider-horas">
         <%= atividade_form.label :minutos, "Tempo gasto na atividade", :class => 'inline-label' %>
         <%= atividade_form.hidden_field :minutos, :class => 'hora_field atividade_field'%>

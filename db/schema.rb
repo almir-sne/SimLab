@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140221202326) do
+ActiveRecord::Schema.define(version: 20140310181432) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -52,6 +52,12 @@ ActiveRecord::Schema.define(version: 20140221202326) do
     t.integer  "cartao_id"
   end
 
+  create_table "atividades_tags", id: false, force: true do |t|
+    t.integer "id"
+    t.integer "atividade_id"
+    t.integer "tag_id"
+  end
+
   create_table "ausencias", force: true do |t|
     t.string   "justificativa"
     t.boolean  "abonada"
@@ -69,6 +75,22 @@ ActiveRecord::Schema.define(version: 20140221202326) do
     t.string   "board_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "campo_dados", force: true do |t|
+    t.integer "campo_id"
+    t.text    "dado"
+    t.integer "usuario_id"
+  end
+
+  create_table "campo_projetos", force: true do |t|
+    t.text     "nome"
+    t.integer  "tipo"
+    t.text     "formato"
+    t.integer  "projeto_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "categoria"
   end
 
   create_table "campos", force: true do |t|
@@ -223,10 +245,12 @@ ActiveRecord::Schema.define(version: 20140221202326) do
     t.text     "descricao"
     t.float    "valor"
     t.integer  "horas_totais"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "super_projeto_id"
     t.boolean  "ativo"
+    t.boolean  "tags_obrigatorio", default: false
+    t.boolean  "pai_obrigatorio",  default: false
   end
 
   create_table "registros", force: true do |t|
@@ -299,10 +323,12 @@ ActiveRecord::Schema.define(version: 20140221202326) do
   create_table "workons", force: true do |t|
     t.integer  "projeto_id"
     t.integer  "usuario_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "permissao_id"
     t.boolean  "ativo"
+    t.boolean  "mostrar_ausencia", default: true
+    t.date     "data_inicio",      default: '2014-03-11'
   end
 
 end

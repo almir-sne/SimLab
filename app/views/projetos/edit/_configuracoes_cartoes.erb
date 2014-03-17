@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-5">
+    <%= f.label :tags_obrigatorio, "Tags obrigatórias no cartão?" %>
+    <%= f.check_box :tags_obrigatorio %>
+    <br/>
+    <%= f.label :pai_obrigatorio, "Cartão pai obrigatório?" %>
+    <%= f.check_box :pai_obrigatorio %>
+  </div>
+  <div class="col-md-offset-1 col-md-4">
+    <h3> Boards do Trello </h3>
+    <%= hidden_field_tag :boards_ids, @projeto.boards.pluck(:board_id) %>
+    <div class="loggedin">
+      <div id="output" class="panel-scrollable" style="height: 200px"></div>
+    </div>
+  </div>
+</div>

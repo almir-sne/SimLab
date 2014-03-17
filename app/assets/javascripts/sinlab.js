@@ -113,11 +113,6 @@ function ver_periodo_novo_proj(obj)
     $(obj).attr("href", finalurl);
 }
 
-$(function() {
-    $("#datepicker1").datepicker({dateFormat: "yy-mm-dd"});
-    $("#datepicker2").datepicker({dateFormat: "yy-mm-dd"});
-});
-
 function formChanged(form) {
     $(form).data("changed", true);
     $(form).find(".form-status .form-saved").hide();
@@ -133,6 +128,10 @@ function formSaved(form) {
 
 function showSpinner(form) {
     $(form).find(".form-status .form-spinner").show();
+}
+
+function hideSpinner(form) {
+    $(form).find(".form-status .form-spinner").hide();
 }
 
 function checkForm() {

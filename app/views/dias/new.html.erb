@@ -1,31 +1,25 @@
-<div style="padding: 20px">
-  <div class="row">
-    <div class="col-md-2">
-      <div class="panel-scrollable" id="horarios-panel">
-        <%= render partial: 'form', locals: {dia: @dia, data: @data, usuario: @usuario} %>
-      </div>
+<div class="row" style="padding: 20px">
+  <div class="col-md-2">
+    <div class="panel-scrollable" id="horarios-panel">
+      <%= render partial: 'form', locals: {dia: @dia, data: @data, usuario: @usuario} %>
     </div>
-    <div class="col-md-5">
-      <h3 id="atividades-title">Atividades</h3>
-      <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 50px;">
-        <center>Arraste cartões do Trello aqui.</center>
-      </div>
-      <div class="panel-scrollable" id="atividade-panel">
-        <% @dia.atividades.each do |atividade| %>
-          <%= render partial: '/atividades/form', locals: {atividade: atividade, equipe: @equipe, projetos: @projetos} %>
-        <% end %>
-      </div>
+  </div>
+  <div class="col-md-5">
+    <h3 id="atividades-title">Atividades</h3>
+    <div class="trello-dropover" id="dropover" ondrop="dropCard(event)" ondragover="allowDrop(event)" style="min-height: 50px;">
+      <center>Arraste cartões do Trello aqui.</center>
     </div>
-    <div class="col-md-5">
-      <%= render :partial => '/shared/boards'%>
+    <div class="panel-scrollable" id="atividade-panel">
+      <% @dia.atividades.each do |atividade| %>
+        <%= render partial: '/atividades/form', locals: {atividade: atividade, equipe: @equipe, projetos: @projetos} %>
+      <% end %>
     </div>
+  </div>
+  <div class="col-md-5">
+    <%= render :partial => '/shared/boards'%>
   </div>
 </div>
 
 <%= render :partial => 'nav_bar' %>
 <div class="modal fade" id="mensagens" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true" style="outline: none; overflow: hidden;"></div>
-
-<script>
-var availableTags = <%= raw Tag.all.collect{ |t| t.nome } %>;
-</script>
+     aria-hidden="true" style="outline: none; overflow: hidden;"></div>

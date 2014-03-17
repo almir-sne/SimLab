@@ -59,7 +59,8 @@ class CartoesController < ApplicationController
     end
     if c
       render json: {horas: "%.1f" % (c.horas_trabalhadas/3600), estimativa: c.estimativa,
-        tags: c.tags.pluck(:nome), pai: c.pai.try(:trello_id), filhos: c.filhos.pluck(:trello_id)}
+        tags: c.tags.pluck(:nome), pai: c.pai.try(:trello_id), filhos: c.filhos.pluck(:trello_id),
+        horas_filhos: c.horas_filhos}
     else
       render json: :erro
     end

@@ -1,13 +1,8 @@
 function loadUserCards() {
     var cardsList = $("#card-list");
-    // reseta lista de cartões
-    $("#boards :input").each(function(i, e) {
-        if (e.checked)
-            e.click();
-    });
     cardsList.empty();
     var dontInclude = $("input.card-form").map(function() {
-        return $(this).val()
+        return $(this).val();
     }).get();
     Trello.get("members/me/cards", function(cards) {
         $.each(cards, function(ix, card) {
@@ -20,6 +15,10 @@ function loadUserCards() {
                     style: "width: 100%; display: none",
                     ondragstart: "dragCard(event)"
                 }).addClass("card filter " + card.idBoard).text(card.name).appendTo(cardsList);
+        });
+        $("#boards :input").each(function(i, e) {
+            if (e.checked)
+                filterCards(e);
         });
     });
 }
@@ -131,7 +130,7 @@ function loadTrelloData() {
             });
         });
         $(".trelloprogress").hide();
-        if($("#cartoes_pais_ids").size() > 0) {
+        if ($("#cartoes_pais_ids").size() > 0) {
             selectPais();
         }
         getToken();
@@ -319,7 +318,7 @@ function getToken() {
     $("input[name='token']").val(Trello.token);
 }
 
-function updateTrelloData(card_id, mergeTags, reload) {
+function updateTrelloData(card_id, mergeTags, showAlert) {
     var regex_tags = /[\[][^\[\]]*[\]]/g;
     var tags = null;
     Trello.get("/cards/" + card_id, function(card) {
@@ -331,16 +330,10 @@ function updateTrelloData(card_id, mergeTags, reload) {
             data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
             success: function(data) {
                 if (data != "erro") {
-                    if (data.pai) {
-                        Trello.get("/cards/" + data.pai, function(pai) {
-                            updateFather(card.shortUrl, data.pai);
-                            putOnTrello(card, {estimativa: data.estimativa,
-                                pai: pai.url, horas: data.horas, tags: data.tags, reload: reload});
-                        });
-                    }
-                    else
-                        putOnTrello(card, {estimativa: data.estimativa,
-                            horas: data.horas, tags: data.tags, reload: reload});
+                    if (data.pai)
+                        updateTrelloData(data.pai, true, false);
+                    putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
+                        horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
                 }
                 else
                     alert("Erro durante atualização do cartão no Trello");
@@ -349,26 +342,34 @@ function updateTrelloData(card_id, mergeTags, reload) {
     });
 }
 
-function updateFather(card_url, father_id) {
-    Trello.get("/cards/" + father_id + "/checklists", function(lists) {
+function updateFatherChecklist(filhos_list, father) {
+    Trello.get("/cards/" + father.id + "/checklists", function(lists) {
         var filhosList = null;
         $(lists).each(function(i, e) {
             if (e.name == "FILHOS")
                 filhosList = e;
         });
         if (!filhosList)
-            Trello.post("/checklists/", {name: "FILHOS", idCard: father_id}, function(list) {
-                Trello.post("/checklists/" + list.id + "/checkItems", {name: card_url});
+            Trello.post("/checklists/", {name: "FILHOS", idCard: father.id}, function(list) {
+                updateChecklist(list, filhos_list);
             });
         else {
+            updateChecklist(filhosList, filhos_list);
+        }
+    });
+}
+
+function updateChecklist(list, elements) {
+    $(elements).each(function(i, e) {
+        Trello.get("/cards/" + e, function(card) {
             var exists = false;
-            $(filhosList.checkItems).each(function(i, e) {
-                if (e.name == card_url)
+            $(list.checkItems).each(function(i, link) {
+                if (link.name == card.shortUrl)
                     exists = true;
             });
             if (!exists)
-                Trello.post("/checklists/" + filhosList.id + "/checkItems", {name: card_url});
-        }
+                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl});
+        });
     });
 }
 
@@ -382,7 +383,7 @@ function removeFromChecklist(card_url, father_id) {
         if (filhosList)
             $(filhosList.checkItems).each(function(i, e) {
                 if (e.name == card_url)
-                     Trello.delete("/checklists/" + filhosList.id + "/checkItems/" + e.id);
+                    Trello.delete("/checklists/" + filhosList.id + "/checkItems/" + e.id);
             });
     });
 }
@@ -391,34 +392,43 @@ function putOnTrello(card, params) {
     var regex_tags = /\[.*\]/;
     var regex_time = /[(]\d+[.]?\d*[)]$/;
     var new_name = card.name.replace(regex_tags, '').replace(regex_time, '').trim();
-    var new_desc = newDesc(card.desc, params.estimativa, params.pai);
+    var new_desc = newDesc(card.desc, params.estimativa, params.pai, params.horas_filhos);
+    if (params.filhos.length > 0)
+        updateFatherChecklist(params.filhos, card);
     if (params.tags.length > 0)
         new_name = "[" + params.tags.join("][") + "] " + new_name;
     if (params.horas)
         new_name = new_name + " (" + params.horas + ")";
     if (card.name != new_name || new_desc != card.desc)
-        Trello.put('/cards/' + card.id + '/', {name: new_name, desc: new_desc}, function() {
-            if (params.reload)
-                document.location.reload(true);
-        });
+        Trello.put('/cards/' + card.id + '/', {name: new_name, desc: new_desc});
+    if (params.showAlert)
+        alert("Cartão atualizado com sucesso!");
 }
 
-function newDesc(old_desc, estimate, father_url) {
+function newDesc(old_desc, estimate, father, time) {
     var new_desc = old_desc;
     var regex_estimate = /\n{Estimativa:.*}/;
     var regex_father = /\n{Cartão PAI:.*}/;
+    var regex_time = /\n{Horas totais dos filhos:.*}/;
     new_desc = new_desc.replace(/[-]{35}(.|\s)*/, "");
-    new_desc = new_desc.trim() + "\n-----------------------------------\n{SIMLAB}";
+    if (time == null && father == null && estimate == null)
+        return new_desc;
+    new_desc = new_desc.trim() + "\n\n-----------------------------------\n{SIMLAB}";
     if (estimate) {
         new_desc = new_desc.replace(regex_estimate, '').trim() +
                 "\n{Estimativa: " + estimate + "}";
     }
-    if (father_url) {
+    if (father) {
         new_desc = new_desc.replace(regex_father, '').trim() +
-                "\n{Cartão PAI: " + father_url + "}";
+                "\n{Cartão PAI: " + father.shortUrl + "}";
+    }
+    if (time) {
+        new_desc = new_desc.replace(regex_time, '').trim() +
+                "\n{Horas totais dos filhos: " + time + "}";
     }
     return new_desc;
 }
+
 
 function mergeTags(name) {
     var regex_tags = /[\[][^\[\]]*[\]]/g;
@@ -431,40 +441,40 @@ function mergeTags(name) {
     $("#cartao_tags_string").val(concat.join(", "));
 }
 
-function selectPais(){
+function selectPais() {
 
-  var select = document.createElement("select");
-  var cartoes_pais = $("#cartoes_pais_ids").val().split(" ");
-  var cartoes_pais_trello = $("#cartoes_pais_trello_ids").val().split(" ");
-  var cartoes_pais_opcoes = new Array();
+    var select = document.createElement("select");
+    var cartoes_pais = $("#cartoes_pais_ids").val().split(" ");
+    var cartoes_pais_trello = $("#cartoes_pais_trello_ids").val().split(" ");
+    var cartoes_pais_opcoes = new Array();
 
-  select.setAttribute("name", "cartao_pai");
-  select.setAttribute("id", "cartao_pai");
-  select.setAttribute("class", "menu_select");
+    select.setAttribute("name", "cartao_pai");
+    select.setAttribute("id", "cartao_pai");
+    select.setAttribute("class", "menu_select");
 
-  option = document.createElement("option");
-  option.setAttribute("value", "-2");
-  option.innerHTML = "Pais - TODOS";
-  select.appendChild(option);
+    option = document.createElement("option");
+    option.setAttribute("value", "-2");
+    option.innerHTML = "Pais - TODOS";
+    select.appendChild(option);
 
-  option = document.createElement("option");
-  option.setAttribute("value", "0");
-  option.innerHTML = "Com Pais";
-  select.appendChild(option);
+    option = document.createElement("option");
+    option.setAttribute("value", "0");
+    option.innerHTML = "Com Pais";
+    select.appendChild(option);
 
-  option = document.createElement("option");
-  option.setAttribute("value", "-1");
-  option.innerHTML = "Sem Pais";
-  select.appendChild(option);
+    option = document.createElement("option");
+    option.setAttribute("value", "-1");
+    option.innerHTML = "Sem Pais";
+    select.appendChild(option);
 
-  for(i=0; i<cartoes_pais.length; i++){
-    Trello.get("/cards/" + cartoes_pais_trello[i], function(card){
-      cartoes_pais_opcoes[i] = document.createElement("option");
-      cartoes_pais_opcoes[i].setAttribute("value", cartoes_pais[i]);
-      cartoes_pais_opcoes[i].innerHTML = card.name;
-      select.appendChild(cartoes_pais_opcoes[i]);
-    })
-  }
+    for (i = 0; i < cartoes_pais.length; i++) {
+        Trello.get("/cards/" + cartoes_pais_trello[i], function(card) {
+            cartoes_pais_opcoes[i] = document.createElement("option");
+            cartoes_pais_opcoes[i].setAttribute("value", cartoes_pais[i]);
+            cartoes_pais_opcoes[i].innerHTML = card.name;
+            select.appendChild(cartoes_pais_opcoes[i]);
+        })
+    }
 
-  document.getElementById("cartao_pai_select").appendChild(select);
+    document.getElementById("cartao_pai_select").appendChild(select);
 }
