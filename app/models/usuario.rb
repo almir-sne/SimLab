@@ -29,8 +29,7 @@ class Usuario < ActiveRecord::Base
 
   has_many :projetos, :through => :workons
 
-  validates :nome, :presence => true,
-    :uniqueness => true
+  validates :nome, :presence => true, :uniqueness => true
       
   def default_values
     self.role ||= "usuario normal"
@@ -38,7 +37,7 @@ class Usuario < ActiveRecord::Base
   end
    
   def projetos_coordenados
-    Projeto.joins(:workons).where(workons: {id: Workon.select(:id).joins(:coordenacoes).where(coordenacoes: {usuario_id: self})}).group("projetos.id")
+    Projeto.joins(:workons).where(workons: {usuario_id: 17, permissao_id: Permissao.find_by(nome: ['admin', 'coordenador'])})
   end
 
   def equipe_coordenada

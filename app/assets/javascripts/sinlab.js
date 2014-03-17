@@ -81,7 +81,7 @@ function showNavegacao() {
 // http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').
-            exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+            exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
 }
 
 function mudaUsuario(obj) {
@@ -144,4 +144,17 @@ function checkForm() {
         return "Há mudanças não salvas";
     else
         return null;
-};
+}
+
+function updateUsuarios(selector) {
+//    spinner
+    $.ajax({
+        type: "POST",
+        url: "/reunioes/usuarios",
+        data: {projeto_id: selector.value}
+    });
+}
+
+function setChecked(checkbox) {
+    $("table td input[type='checkbox']").prop('checked', checkbox.checked)
+}

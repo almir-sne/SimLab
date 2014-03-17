@@ -1,0 +1,25 @@
+<% if usuarios %>
+<table style="width: 100%">
+    <tr>
+      <th> <input type="checkbox" onchange="setChecked(this)"> </th>
+      <th> Nome </th>
+      <th> Horas</th>
+    </tr>
+
+    <% usuarios.each do |usuario| %>
+      <tr>
+        <td style="width: 10%"> <%= check_box_tag "participantes[#{usuario.id}][check]", true, false %> </td>
+        <td style="width: 70%"> <%= usuario.nome  %> </td>
+        <td style="width: 20%"> <%= text_field_tag "participantes[#{usuario.id}][horas]", "1:00" %>  </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br/>
+  <br/>
+  <br/>
+
+<% else %>
+  Projeto selecionado não tem usuarios cadastrados.
+
+<% end %>

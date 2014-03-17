@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140310181432) do
+ActiveRecord::Schema.define(version: 20140314201338) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -225,6 +225,14 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "participantes", force: true do |t|
+    t.integer  "reuniao_id"
+    t.integer  "usuario_id"
+    t.integer  "duracao"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "permissoes", force: true do |t|
     t.string   "nome"
     t.datetime "created_at"
@@ -259,6 +267,15 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.integer  "atividade_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+  end
+
+  create_table "reunioes", force: true do |t|
+    t.integer  "projeto_id"
+    t.integer  "criador_id"
+    t.datetime "inicio"
+    t.boolean  "concluida"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rodadas", force: true do |t|

@@ -1,0 +1,31 @@
+<div class="blue-text" style="margin-left: 30px">
+  Listando reuniões
+</div>
+
+<table class="list-table">
+  <thead>
+    <tr>
+      <th>Criador</th>
+      <th>Inicio</th>
+      <th>Concluida</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reunioes.each do |reuniao| %>
+      <tr>
+        <td><%= reuniao.criador.nome %></td>
+        <td><%= reuniao.inicio %></td>
+        <td><%= reuniao.concluida ? "Sim" : "Não" %></td>
+        <td><%= link_to 'Editar', edit_reuniao_path(reuniao) %></td>
+        <td><%= link_to 'Remover', reuniao, method: :delete, data: { confirm: 'Tem certeza?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Criar reunião', new_reuniao_path, :style => "padding: 10px" %>
