@@ -120,9 +120,6 @@ class AtividadesController < ApplicationController
     mudanças.each do |mudança|
       unless mudança.blank?
         registro_par = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-        puts"|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-        puts registro_par.inspect
-        puts"|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
         registro_par.par_mudança_em_modificação mudança
         registro_par.save
       end
@@ -134,23 +131,16 @@ class AtividadesController < ApplicationController
     if (@atividade.projeto.pai_obrigatorio and @atividade.cartao.pai.blank?)
       @error_message += "O projeto selecionado exige que o cartão tenha pai. "
     end
-
-    if @error_message.blank?
-      unless @atividade.changes.blank?
-        reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-        reg.transforma_hash_em_modificacao @atividade.changes
-        reg.save
+    if @atividade.save
+      respond_to do |format|
+        format.js
       end
-      @atividade.save
-    end
-
-    respond_to do |format|
-      format.js
     end
   end
-end
 
-private
-def atividade_params
-  params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
+  private
+  def atividade_params
+    params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
+  end
+
 end

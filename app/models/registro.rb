@@ -76,7 +76,7 @@ class Registro < ActiveRecord::Base
         end
       when "duracao"
         if valores.first.nil?
-          log << " adicionou " + Time.at(valores.first).utc.strftime("%H:%M") + " a um pareamento,"
+          log << " adicionou " + Time.at(valores.last).utc.strftime("%H:%M") + " a um pareamento,"
         else
           log << (" atualizou a duração de " + Time.at(valores.first).utc.strftime("%H:%M") +
             " para " + Time.at(valores.last).utc.strftime("%H:%M") + " em um pareamento,")
