@@ -51,7 +51,7 @@ class AtividadesController < ApplicationController
       @atividade.aprovacao = params[:aprovacao]
     end
     reg = Registro.new(autor_id: @user.id, atividade_id: @atividade.id)
-    reg.transforma_hash_em_modificacao @atividade.changes
+    reg.atividade_mudanças_em_modificação @atividade.changes
     @atividade.save and reg.save
     respond_to do |format|
       format.js
@@ -110,10 +110,22 @@ class AtividadesController < ApplicationController
   def update
     @atividade = Atividade.find(params[:id])
     @atividade.assign_attributes atividade_params
-    unless @atividade.changes.blank?
-      reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-      reg.transforma_hash_em_modificacao @atividade.changes
-      reg.save
+    mudanças = @atividade.changes
+    unless mudanças.blank?
+      registro_atividades = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+      registro_atividades.atividade_mudanças_em_modificação mudanças
+      registro_atividades.save
+    end
+    mudanças = @atividade.pares.map{|par| par.changes}
+    mudanças.each do |mudança|
+      unless mudança.blank?
+        registro_par = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+        puts"|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+        puts registro_par.inspect
+        puts"|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+        registro_par.par_mudança_em_modificação mudança
+        registro_par.save
+      end
     end
     respond_to do |format|
       if @atividade.save
