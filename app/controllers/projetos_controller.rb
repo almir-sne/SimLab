@@ -6,7 +6,7 @@ class ProjetosController < ApplicationController
   def checa_autorizacao
     @projeto = Projeto.find params[:id]
     if !@projeto.autorizacao(current_user, params[:action])
-      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
+      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação!"
       false
     end
     true
@@ -72,7 +72,7 @@ class ProjetosController < ApplicationController
     @hoje = Date.today
     @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
-  
+
   def show
     authorize! :read, Projeto
     @hoje = Date.today
@@ -201,10 +201,10 @@ class ProjetosController < ApplicationController
 
   def campos_cadastro
     @projeto = Projeto.find params[:id]
-    if((current_usuario.role == "admin") || !(@projeto.admins_ids.include? current_usuario.id) )
-      redirect_to :back, notice: "Você não está autorizado a executar essa operação"
-    else
+    if((current_usuario.role == "admin") || (@projeto.admins_ids.include? current_usuario.id) )
       @projeto.campos.build if @projeto.campos.blank?
+    else
+      redirect_to :back, notice: "Você não está autorizado a executar essa operação"
     end
   end
 
