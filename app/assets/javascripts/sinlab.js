@@ -52,30 +52,20 @@ function toggleCollapse(obj) {
 
 function hideNavegacao() {
     var nav = $("#navegacao");
-//    nav.animate({width: "0%"});
-    //$("#lista").animate({width: "100%"});
     $("#lista").attr({style: "width: 100%;  float: right;"});
     nav.hide();
     $("#show-navegacao").attr({style: "display: inline;"});
     $("#hide-navegacao").attr({style: "display: none;"});
-//    var pnav = $("#prenavegacao");
-//    pnav.show();
-//    var p2nav = $("#prosnavegacao");
-//    p2nav.hide();
 }
 
 function showNavegacao() {
     var pnav = $("#prenavegacao");
     pnav.hide();
     var nav = $("#navegacao");
-//    nav.animate({width: "15%"});
-    //$("#lista").animate({width: "85%"});
     $("#lista").attr({style: "width: 85%;  float: right;"});
     nav.show();
     $("#show-navegacao").attr({style: "display: none;"});
     $("#hide-navegacao").attr({style: "display: inline;"});
-//    var p2nav = $("#prosnavegacao");
-//    p2nav.show();
 }
 
 // http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
@@ -147,11 +137,10 @@ function checkForm() {
 }
 
 function updateUsuarios(selector) {
-//    spinner
     $.ajax({
         type: "POST",
         url: "/reunioes/usuarios",
-        data: {projeto_id: selector.value}
+        data: {projeto_id: selector.value, reuniao_id: $("#reuniao_id").val()}
     });
 }
 

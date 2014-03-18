@@ -41,7 +41,7 @@ class ReunioesController < ApplicationController
   def update
     @reuniao.criador_id = current_user.id
     if @reuniao.update(reuniao_params)
-#      create_participantes(@reuniao, params[:participantes])
+      create_participantes(@reuniao, params[:participantes])
       redirect_to :back, notice: 'Reunião atualizada com sucesso.'
     else
       render action: 'edit'
@@ -56,6 +56,7 @@ class ReunioesController < ApplicationController
   
   def usuarios
     projeto = Projeto.find params[:projeto_id]
+    @reuniao = Reuniao.find params[:reuniao_id]
     @usuarios = projeto.usuarios
     respond_to do |format|
       format.js
@@ -74,6 +75,12 @@ class ReunioesController < ApplicationController
   end
     
   def create_participantes(reuniao, params)
+    reuniao.participantes.each do |p|
+      unless p.usuario.projetos.pluck(:id).include? reuniao.projeto_id
+        p.destroy
+      end
+    end
+    
     params.each do |index, vals|
       if vals[:check]
         p = Participante.find_or_create_by reuniao_id: reuniao.id, usuario_id: index
