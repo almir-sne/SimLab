@@ -1,6 +1,7 @@
 <div>
   Período
-  <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date.strftime("%d/%m/%Y") %>"> a <input type="text" id="datepicker2" size=10 value="<%= @hoje.end_of_month.to_date.strftime("%d/%m/%Y") %>"> 
+  <input type="text" id="datepicker1" size=10 value="<%= @inicio.to_date %>" class="datepicker">
+  a <input type="text" id="datepicker2" size=10 value="<%= @fim.to_date %>" class="datepicker"> 
   <a tpg="<%= projeto_path() %>" href="#" onclick="ver_periodo_novo_proj(this);">Ver Novo Periodo</a>
 </div>
 
@@ -21,27 +22,29 @@
       <td>
         <a href="#" class="day-link blue-link" ondragstart="return false" draggable="false" >
           <div class='panel-scrollable' style='height: 100px'>
-            <%= data.strftime("%d/%b") %>
+            <%= data.strftime("%d/%b/%Y") %>
             <% if !data.saturday? and !data.sunday? and !data.holiday?('br')%>
               <% unless @ausencias[data].nil? %>
-                <% @ausencias[data].collect{ |a| a.usuario.nome}.each do |nome| %>
-                  <% ausentes << nome %>
-                  <div style="display: block;"><b><%= nome %></b></div>
+                <% @ausencias[data].collect{ |a| a.usuario}.each do |usuario| %>
+                  <% ausentes << usuario %>
+                  <div style="display: block;"> <b> <%= usuario.nome %> </b> </div>
                 <% end %>
               <% end %>
 
-              <% if data < @hoje %>
+              <% if data < @hoje and @projeto.data_de_inicio <= data %>
                 <% if @atividades[data].nil? %>
-                  <% @equipe.each do |u| %>
-                    <% unless ausentes.include?(u) %>
-                      <div style="display: block;"><%= u %></div>
+                  <% @equipe.each do |workon| %>
+                    <% if !ausentes.include?(workon.usuario) and workon.data_inicio <= data and
+                        workon.usuario.existe_contrato_em(data) %>
+                      <div style="display: block;"><%= workon.usuario.nome %></div>
                     <% end %>  
                   <% end %>
                 <% else %>
                   <% working_users = @atividades[data].collect{|a| a.usuario.nome} %>
-                  <% @equipe.each do |u| %>
-                    <% if !working_users.include?(u) and !ausentes.include?(u) %>
-                      <div style="display: block;"><%= u %></div>
+                  <% @equipe.each do |workon| %>
+                    <% if !working_users.include?(workon.usuario) and !ausentes.include?(workon.usuario) and
+                        workon.data_inicio <= data and workon.usuario.existe_contrato_em(data) %>
+                      <div style="display: block;"> <%= workon.usuario.nome %> </div>
                     <% end %>
                   <% end %>
                 <% end %>

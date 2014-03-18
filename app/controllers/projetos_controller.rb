@@ -6,7 +6,7 @@ class ProjetosController < ApplicationController
   def checa_autorizacao
     @projeto = Projeto.find params[:id]
     if !@projeto.autorizacao(current_user, params[:action])
-      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação"
+      redirect_to projetos_path, notice: "Você não está autorizado a executar essa operação!"
       false
     end
     true
@@ -72,7 +72,7 @@ class ProjetosController < ApplicationController
     @hoje = Date.today
     @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
-  
+
   def show
     authorize! :read, Projeto
     @hoje = Date.today
@@ -89,9 +89,11 @@ class ProjetosController < ApplicationController
           map{|proj| [proj.nome, proj.id]}
     @eh_super_projeto = @projeto.super_projeto.blank?
     @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
-    @ausencias = Ausencia.joins(:dia).where(dia: {data: @hoje.beginning_of_month..@hoje.end_of_month}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
-    @equipe = @projeto.usuarios.pluck(:nome).sort
-    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @ausencias = Ausencia.joins(:dia).where(dia: {data: @hoje.beginning_of_month..@hoje.end_of_month},
+      projeto_id: @projeto.id).group_by{|x| x.dia.data}
+    @equipe = @projeto.workons.joins(:usuario).where(:mostrar_ausencia => true)
+    @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).
+      group_by{|x| x.dia.data}
     @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
   end
 
@@ -114,7 +116,8 @@ class ProjetosController < ApplicationController
     @projeto = Projeto.find(params[:id])
     inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : Date.parse(params[:inicio])
     fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : Date.parse(params[:fim])
-    @lista_atividades = @projeto.atividades.periodo(inicio .. fim ).usuario(params[:usuario_id].to_i).aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
+    @lista_atividades = @projeto.atividades.periodo(inicio..fim ).usuario(params[:usuario_id].to_i).
+      aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
     redirect_to(projeto_path(id: params[:id], lista_atv: @lista_atividades) )
   end
 
@@ -198,10 +201,10 @@ class ProjetosController < ApplicationController
 
   def campos_cadastro
     @projeto = Projeto.find params[:id]
-    if((current_usuario.role == "admin") || !(@projeto.admins_ids.include? current_usuario.id) )
-      redirect_to :back, notice: "Você não está autorizado a executar essa operação"
-    else
+    if((current_usuario.role == "admin") || (@projeto.admins_ids.include? current_usuario.id) )
       @projeto.campos.build if @projeto.campos.blank?
+    else
+      redirect_to :back, notice: "Você não está autorizado a executar essa operação"
     end
   end
 
@@ -209,7 +212,8 @@ class ProjetosController < ApplicationController
     def projetos_params
       params.require(:projeto).permit(:ativo, :data_de_inicio, :descricao, :nome, :super_projeto_id,
         :tags_obrigatorio, :pai_obrigatorio,
-        workons_attributes: [:id, :usuario_id,:permissao_id, :_destroy, {:coordenacoes => []}],
+        workons_attributes: [:id, :usuario_id, :permissao_id, :_destroy, :mostrar_ausencia, :data_inicio,
+          {:coordenacoes => []}],
         sub_projetos: [:id, :filho],
         campos_attributes: [:id, :categoria, :nome, :tipo, :formato, :_destroy]
       )

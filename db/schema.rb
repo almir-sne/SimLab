@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140228175422) do
+ActiveRecord::Schema.define(version: 20140310181432) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -323,10 +323,12 @@ ActiveRecord::Schema.define(version: 20140228175422) do
   create_table "workons", force: true do |t|
     t.integer  "projeto_id"
     t.integer  "usuario_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "permissao_id"
     t.boolean  "ativo"
+    t.boolean  "mostrar_ausencia", default: true
+    t.date     "data_inicio",      default: '2014-03-11'
   end
 
 end

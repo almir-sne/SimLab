@@ -4,11 +4,11 @@ class AtividadesController < ApplicationController
   def validacao
     hoje = Date.today
     if current_usuario.role == "admin"
-      @projetos_opts = Projeto.select("nome, id").all(:order => "nome").collect { |p| [p.nome, p.id]  }
-      @usuarios_opts = Usuario.select("nome, id").where(status: true).order(:nome).collect { |u| [u.nome, u.id]  }
+      @projetos_opts = Projeto.ativos.order(:nome).pluck(:nome, :id)
+      @usuarios_opts = Usuario.where(status: true).order(:nome).pluck(:nome, :id)
     else
-      @projetos_opts = current_usuario.projetos_coordenados.collect{ |p| [p.nome, p.id] }
-      @usuarios_opts = current_usuario.equipe_coordenada.collect{ |u| [u.nome, u.id] }
+      @projetos_opts = current_usuario.projetos_coordenados.pluck(:nome, :id)
+      @usuarios_opts = current_usuario.equipe_coordenada.pluck(:nome, :id)
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
 
@@ -51,7 +51,7 @@ class AtividadesController < ApplicationController
       @atividade.aprovacao = params[:aprovacao]
     end
     reg = Registro.new(autor_id: @user.id, atividade_id: @atividade.id)
-    reg.transforma_hash_em_modificacao @atividade.changes
+    reg.atividade_mudanças_em_modificação @atividade.changes
     @atividade.save and reg.save
     respond_to do |format|
       format.js
@@ -89,13 +89,9 @@ class AtividadesController < ApplicationController
     usuario = dia.usuario
     @projetos = usuario.meus_projetos_array
     @atividade = Atividade.new(dia_id: dia.id, data: dia.data, usuario_id: usuario.id)
-    debugger
     @atividade.trello_id = params[:trello_id]
-    debugger
     @atividade.projeto_id = @projetos.first[1]
-    debugger
     @atividade.save
-    debugger
     @equipe = usuario.equipe.collect{|u| [u.nome, u.id]}
     respond_to do |format|
       format.js
@@ -114,6 +110,20 @@ class AtividadesController < ApplicationController
   def update
     @atividade = Atividade.find(params[:id])
     @atividade.assign_attributes atividade_params
+    mudanças = @atividade.changes
+    unless mudanças.blank?
+      registro_atividades = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+      registro_atividades.atividade_mudanças_em_modificação mudanças
+      registro_atividades.save
+    end
+    mudanças = @atividade.pares.map{|par| par.changes}
+    mudanças.each do |mudança|
+      unless mudança.blank?
+        registro_par = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
+        registro_par.par_mudança_em_modificação mudança
+        registro_par.save
+      end
+    end
     @error_message = ""
     if (@atividade.projeto.tags_obrigatorio and @atividade.cartao.tags.blank?)
       @error_message += "O projeto selecionado exige que o cartão tenha tags. "
@@ -121,23 +131,16 @@ class AtividadesController < ApplicationController
     if (@atividade.projeto.pai_obrigatorio and @atividade.cartao.pai.blank?)
       @error_message += "O projeto selecionado exige que o cartão tenha pai. "
     end
-    
-    if @error_message.blank?
-      unless @atividade.changes.blank?
-        reg = Registro.new(autor_id: @atividade.usuario.id, atividade_id: @atividade.id)
-        reg.transforma_hash_em_modificacao @atividade.changes
-        reg.save
+    if @atividade.save
+      respond_to do |format|
+        format.js
       end
-      @atividade.save
-    end
-
-    respond_to do |format|
-      format.js
     end
   end
-end
 
-private
-def atividade_params
-  params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
+  private
+  def atividade_params
+    params.require(:atividade).permit(:projeto_id , :minutos, :trello_id, :observacao, pares_attributes: [:id, :par_id, :minutos, :_destroy])
+  end
+
 end

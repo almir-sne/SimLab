@@ -15,11 +15,11 @@ class AusenciasController < ApplicationController
     @dia      = Dia.find_or_create_by(data: Date.parse(params[:data]), usuario_id: usuario.id)
     @ausencia = Ausencia.find_or_initialize_by(dia_id: @dia.id, projeto_id: params[:projeto_id].try(:to_i))
     @tipo     = params[:tipo]
-    @projetos = usuario.projetos.merge(Projeto.ativo).pluck([:nome, :id])
+    @projetos = usuario.projetos.merge(Projeto.ativos).pluck([:nome, :id])
   end
 
   def create
-    @ausencia = Ausencia.find_or_initialize_by(dia_id: params[:ausencia][:dia_id], 
+    @ausencia = Ausencia.find_or_initialize_by(dia_id: params[:ausencia][:dia_id],
                 projeto_id: params[:ausencia][:projeto_id])
     if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")

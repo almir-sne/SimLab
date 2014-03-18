@@ -23,7 +23,11 @@
       </div>
 
       <div class="tab-pane" id="equipe">
-        <%= render partial: 'projetos/edit/equipe', locals: {f: f} %>
+        <% unless @projeto.ativo? %>
+          <%= render partial: 'projetos/show/equipe', locals: {f: f} %>
+        <% else %>
+          <%= render partial: 'projetos/edit/equipe', locals: {f: f} %>
+        <% end %>
       </div>
 
       <div class="tab-pane" id="meusdados">
