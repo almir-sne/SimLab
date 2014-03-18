@@ -35,6 +35,8 @@ class Ability
       can [:periodos, :listar], Pagamento, :usuario_id => user.id
       can [:destroy, :create, :show, :edit],  Ausencia
       can [:index, :edit, :update, :find_or_create, :dados], Cartao
+      can [:new, :create], Reuniao
+      can [:edit, :update, :destroy], Reuniao, :criador_id => user.id
     end
 
 

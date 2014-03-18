@@ -3,7 +3,12 @@ class ReunioesController < ApplicationController
 
   # GET /reunioes
   def index
-    @reunioes = Reuniao.all
+    if current_user.role == 'admin'
+      @reunioes = Reuniao.all
+    else
+      @reunioes = Reuniao.where criador_id: current_user.id
+    end
+    
   end
 
   # GET /reunioes/1
@@ -13,6 +18,13 @@ class ReunioesController < ApplicationController
   # GET /reunioes/new
   def new
     @reuniao = Reuniao.new
+    if current_user.role == 'admin'
+      @projetos = Projeto.order(:nome)
+    else
+      @projetos = current_user.projetos_coordenados
+    end
+    @projeto = @reuniao.projeto || @projetos.first
+    @usuarios = @projeto.try(:usuarios)
   end
 
   # GET /reunioes/1/edit
@@ -29,9 +41,10 @@ class ReunioesController < ApplicationController
   # POST /reunioes
   def create
     @reuniao = Reuniao.new(reuniao_params)
-
+    @reuniao.criador_id = current_user.id
     if @reuniao.save
-      redirect_to @reuniao, notice: 'Reunião criada com sucesso.'
+      create_participantes(@reuniao, params[:participantes])
+      redirect_to reunioes_path, notice: 'Reunião criada com sucesso.'
     else
       render action: 'new'
     end
@@ -42,7 +55,7 @@ class ReunioesController < ApplicationController
     @reuniao.criador_id = current_user.id
     if @reuniao.update(reuniao_params)
       create_participantes(@reuniao, params[:participantes])
-      redirect_to :back, notice: 'Reunião atualizada com sucesso.'
+      redirect_to reunioes_path, notice: 'Reunião atualizada com sucesso.'
     else
       render action: 'edit'
     end
