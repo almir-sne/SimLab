@@ -3,11 +3,14 @@ class DiasController < ApplicationController
 
   def new
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
-    @dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), @usuario.id)
+    @data = Date.parse(params[:data]) || Date.today.to_s
+    @dia = Dia.find_or_create_by_data_and_usuario_id(@data, @usuario.id)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
-    @data = params[:data] || Date.today.to_s
+    
     @projetos = @usuario.meus_projetos_array
     @boards = @usuario.boards.pluck(:board_id).uniq
+    @reunioes = Reuniao.joins(:participantes).where(participantes: {usuario_id: @usuario.id},
+      inicio: @data.at_beginning_of_day..@data.at_end_of_day)
     respond_to do |format|
       format.js
       format.html
@@ -127,6 +130,8 @@ class DiasController < ApplicationController
     @dias_periodo      = dias_no_periodo(@inicio, @fim)
     @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @reunioes          = Reuniao.joins(:participantes).where(participantes: {usuario_id: @usuario.id},
+      inicio: @inicio..@fim).group_by{|r| r.inicio.to_date}
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -138,7 +143,7 @@ class DiasController < ApplicationController
     @ano = (params[:ano] || Date.today.year).to_i
     @tipo = params[:toggle] || params[:tipo] || 'm'
     case params[:commit]
-     when 'previous_ano'
+    when 'previous_ano'
       @ano = @ano - 1
     when 'next_ano'
       @ano = @ano + 1
@@ -193,13 +198,13 @@ class DiasController < ApplicationController
   
   
   #def convert_date(hash, date_symbol_or_string)
-    #attribute = date_symbol_or_string.to_s
-    #return DateTime.new(
-      #hash[attribute + '(1i)'].to_i,
-      #hash[attribute + '(2i)'].to_i,
-      #hash[attribute + '(3i)'].to_i,
-      #hash[attribute + '(4i)'].to_i,
-      #hash[attribute + '(5i)'].to_i,
-      #0)
+  #attribute = date_symbol_or_string.to_s
+  #return DateTime.new(
+  #hash[attribute + '(1i)'].to_i,
+  #hash[attribute + '(2i)'].to_i,
+  #hash[attribute + '(3i)'].to_i,
+  #hash[attribute + '(4i)'].to_i,
+  #hash[attribute + '(5i)'].to_i,
+  #0)
   #end
 end

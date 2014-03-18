@@ -1,9 +1,3 @@
-function pega_horas_atividade() {
-    var atividadeH = parseInt($("#dia_atividades_attributes_0_horas_4i").val());
-    var atividadeM = parseInt($("#dia_atividades_attributes_0_horas_5i").val());
-    return(atividadeH * 60 + atividadeM);
-}
-
 function toggleAusencia() {
     $("#ausencias").show();
     $("#meses-button").show();
