@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 
 describe Registro do
   it "obtem uma modificação de criação correta" do

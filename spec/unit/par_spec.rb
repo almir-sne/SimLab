@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 
 describe Par do
   pending "add some examples to (or delete) #{__FILE__}"
