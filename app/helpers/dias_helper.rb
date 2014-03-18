@@ -167,7 +167,7 @@ module DiasHelper
 
   def monta_resumo_dia(data,uid)
     usuario = can?(:manage, Dia)? Usuario.find(uid) : current_usuario
-    dia_selecionado = Dia.find_or_create_by_data_and_usuario_id(data, usuario.id)
+    dia_selecionado = Dia.find_or_create_by data: data, usuario_id: usuario.id 
     horas = dia_selecionado.horas_atividades_todas
     entrada = dia_selecionado.entrada_formatada.to_s
     if (entrada == "")

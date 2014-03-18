@@ -1,5 +1,5 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 
-describe CampoDadoController do
+# describe CampoDadoController do
 
-end
+# end

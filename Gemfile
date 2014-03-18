@@ -26,6 +26,7 @@ gem "nested_form"
 gem "mysql2"
 
 group :test, :development do
+  gem 'rspec'
   gem 'selenium-webdriver'
   gem 'rspec-rails'
 	gem 'shoulda-matchers', :require => false
