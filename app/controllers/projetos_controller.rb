@@ -83,7 +83,7 @@ class ProjetosController < ApplicationController
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
         reject{|projeto| projeto == @projeto}.
           map{|filho| [filho.nome, filho.id]}
-    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+    @pais_for_select = Projeto.where(super_projeto_id: nil).
       sort{|a, b| a.nome <=> b.nome}.
         reject{|projeto| projeto == @projeto}.
           map{|proj| [proj.nome, proj.id]}

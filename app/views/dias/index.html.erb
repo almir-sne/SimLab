@@ -35,11 +35,11 @@
                   </ul>
                 </div>
                 <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
-                   class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip" data-placement="top"
-                   title="<%= monta_resumo_dia(dia,@usuario.id) %>">
+                   class="<%= classe_do_dia(dia, @usuario.id, @dias) %> tooltipconfig" data-toggle="tooltip" data-placement="top"
+                   title="<%= @hash_resumo[dia] %>">
                   <div class='panel-scrollable' style='height: 100px'>
                     <%= dia.strftime("%d/%b") %>
-                    <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
+                    <% if !@dias[dia].first.ausencias.blank? %>
                       <br/>
                       Ausência Registrada
                     <% end %>

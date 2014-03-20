@@ -17,23 +17,27 @@ module DiasHelper
     !Atividade.where(aprovacao: false, data: inicio..fim, usuario_id: usuario_id).blank?
   end
 
-  def tem_reprovacao_no_dia?(data, usuario_id)
-    !Atividade.where(aprovacao: false, data: data, usuario_id: usuario_id).blank?
+  def tem_reprovacao_no_dia?(atividades)
+    atividades.each do |a|
+      if a.aprovacao = false
+        return true
+      end  
+    end
+    false
   end
 
   def tem_ausencia?(inicio, fim, usuario_id)
     !Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).blank?
   end
 
-  def classe_do_dia(data, usuario_id)
+  def classe_do_dia(data, usuario_id, hash_dias)
     today = Date.today
     string = "day-link"
-
     if (data == today)
       string = string + " hoje"
-    elsif tem_ausencia_no_dia?(data, usuario_id)
+    elsif !hash_dias[data].first.ausencias.blank?
       string = string + " ausencia"
-    elsif tem_reprovacao_no_dia?(data, usuario_id)
+    elsif tem_reprovacao_no_dia?(hash_dias[data].first.atividades)
       string = string + " reprovacao"
     elsif (data.holiday?)
       string = string + " feriado"
@@ -57,9 +61,9 @@ module DiasHelper
     string
   end
 
-  def tem_ausencia_no_dia?(data, usuario_id)
-    !Ausencia.joins(:dia).where(dia: {data: data, usuario_id: usuario_id}).blank?
-  end
+  #def tem_ausencia_no_dia?(data, usuario_id)
+    #!Ausencia.joins(:dia).where(dia: {data: data, usuario_id: usuario_id}).blank?
+  #end
 
   def periodo_link(inicio, fim, usuario_id, formato, mes = 0)
     if formato == "p"
@@ -160,32 +164,6 @@ module DiasHelper
     end
     #precisa checar as ausencias futuras
     return dias_uteis
-  end
-
-  def monta_resumo_dia(data,uid)
-    usuario = can?(:manage, Dia)? Usuario.find(uid) : current_usuario
-    dia_selecionado = Dia.find_or_create_by_data_and_usuario_id(data, usuario.id)
-    horas = dia_selecionado.horas_atividades_todas
-    entrada = dia_selecionado.entrada_formatada.to_s
-    if (entrada == "")
-      entrada = "Não Informada"
-    end
-    saida = dia_selecionado.saida_formatada.to_s
-    if (saida == "")
-      saida = "Não Informada"
-    end
-    intervalo = dia_selecionado.intervalo
-    if intervalo > 0
-      intervalo = int_to_horas intervalo
-    else
-      intervalo = "Não Informado"
-    end
-    resumo = "Resumo do Dia<br/>"
-    resumo += "Horas Trabalhadas: #{horas} <br/>"
-    resumo += "Entrada: #{entrada} <br/>"
-    resumo += "Saída: #{saida} <br/>"
-    resumo += "Intervalo: #{intervalo} <br/>"
-    return resumo
   end
 
 end

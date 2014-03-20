@@ -32,7 +32,7 @@
         </td>
         <td style="width: 13%;">
           <%= link_to ' ', new_dia_path(usuario_id: @usuario.id, data: dia.data), :class => 'icon-edit nohover'%>
-          <%= link_to '<i class="icon-trash"> </i>'.html_safe, dia_path(dia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"), :class => 'nohover', :title => "Excluir"%>
+          <%= link_to '<i class="icon-trash"> </i>'.html_safe, dia_path(dia.id), method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir"%>
           <% if dia.tem_reprovacao? %>
             <i class="icon-envelope" title="<%= dia.formata_mensagens %>" style="float: right; color:#FF9393"></i>
           <% end %>
