@@ -69,7 +69,10 @@ class ReunioesController < ApplicationController
   
   def usuarios
     projeto = Projeto.find params[:projeto_id]
-    @reuniao = Reuniao.find params[:reuniao_id]
+    @reuniao = Reuniao.find_by id: params[:reuniao_id]
+    if @reuniao.blank?
+      @reuniao = Reuniao.new
+    end
     @usuarios = projeto.usuarios
     respond_to do |format|
       format.js
