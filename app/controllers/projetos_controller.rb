@@ -19,16 +19,9 @@ class ProjetosController < ApplicationController
     if params["tipo"] == "TODOS" || params["tipo"].nil?
       @tipo = "TODOS"
       if current_usuario.role == "admin"
-        @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
-          map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
-      elsif current_usuario.role == "diretor"
-        @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
-          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
-                map{|z| z.id})]}
+        @projetos = Projeto.order(:super_projeto_id).group_by(&:super_projeto_id).except(nil)
       else
-        @projetos = current_usuario.projetos.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
-          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos.
-                map{|z| z.id})]}
+        @projetos = current_usuario.projetos.order(:super_projeto_id).group_by(&:super_projeto_id).except(nil)
       end
     elsif params["tipo"] == "sub_projetos"
       @tipo = "sub_projetos"
