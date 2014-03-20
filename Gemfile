@@ -14,6 +14,7 @@ gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', :platforms => :ruby
 gem 'uglifier'
+gem 'sprockets', '~> 2.10.1'
 
 gem 'jquery-rails'
 
@@ -25,6 +26,7 @@ gem "nested_form"
 gem "mysql2"
 
 group :test, :development do
+  gem 'rspec'
   gem 'selenium-webdriver'
   gem 'rspec-rails'
 	gem 'shoulda-matchers', :require => false

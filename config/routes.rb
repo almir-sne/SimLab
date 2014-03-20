@@ -1,5 +1,11 @@
 SinLab::Application.routes.draw do
 
+  resources :reunioes do
+    collection do
+      post :usuarios
+    end
+  end
+
   resources :decks
 
   resources :cartoes, :except => [:destroy, :create, :new] do

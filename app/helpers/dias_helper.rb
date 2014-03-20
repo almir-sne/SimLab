@@ -119,9 +119,12 @@ module DiasHelper
   def calcula_minutos_trabalhados(aprovados, inicio, fim, usuario_id)
     if aprovados
       return Atividade.joins(:dia).where(aprovacao: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:duracao)/60 +
-        Ausencia.joins(:dia).where(abonada: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:horas)/60
+        Ausencia.joins(:dia).where(abonada: true, dia: {data: inicio..fim, usuario_id: usuario_id}).sum(:horas)/60 +
+        Participante.joins(:reuniao).where(usuario_id: usuario_id, reuniao: {concluida: true, inicio: inicio..fim}).sum(:duracao)/60
     else
-      return Atividade.joins(:dia).where(dia: {usuario_id: usuario_id, data: inicio..fim}).sum(:duracao)/60 + Ausencia.where(:abonada => true).sum(:horas)/60
+      return Atividade.joins(:dia).where(dia: {usuario_id: usuario_id, data: inicio..fim}).sum(:duracao)/60 +
+        Ausencia.where(:abonada => true).sum(:horas)/60 +
+        Participante.joins(:reuniao).where(usuario_id: usuario_id, reuniao: {concluida: true, inicio: inicio..fim}).sum(:duracao)/60
     end
   end
 

@@ -19,7 +19,7 @@ class AusenciasController < ApplicationController
   end
 
   def create
-    @ausencia = Ausencia.find_or_initialize_by(dia_id: params[:ausencia][:dia_id], 
+    @ausencia = Ausencia.find_or_initialize_by(dia_id: params[:ausencia][:dia_id],
                 projeto_id: params[:ausencia][:projeto_id])
     if @ausencia.update_attributes ausencia_params
       flash[:notice] = I18n.t("ausencias.create.success")
