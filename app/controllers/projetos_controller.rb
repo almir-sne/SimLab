@@ -52,18 +52,12 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
-    @filhos_for_select  = Projeto.all.sort{ |projeto|
-      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-        reject{|projeto| projeto == @projeto}.
-          map{|filho| [filho.nome, filho.id]}
-    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
-      sort{|a, b| a.nome <=> b.nome}.
-        reject{|projeto| projeto == @projeto}.
-          map{|proj| [proj.nome, proj.id]}
+    @filhos_for_select  = Projeto.where{super_projeto_id != nil and id != my{params[:id]}.to_i}.pluck(:nome, :id)
+    @pais_for_select = Projeto.where(super_projeto_id: nil).where{id != my{params[:id]}.to_i}.pluck(:nome, :id)
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
+    @usuarios = Usuario.order(nome: :asc).pluck(:nome, :id)
     @hoje = Date.today
-    @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
+    @permissoes = Permissao.order(nome: :desc).pluck(:nome, :id)
   end
 
   def show
