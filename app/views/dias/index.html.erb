@@ -35,11 +35,11 @@
                   </ul>
                 </div>
                 <a href="<%= new_dia_path(:data=> dia, :usuario_id => @usuario.id) %>"
-                   class="<%= classe_do_dia(dia, @usuario.id) %> tooltipconfig" data-toggle="tooltip" data-placement="top"
-                   title="<%= monta_resumo_dia(dia,@usuario.id) %>">
+                   class="<%= classe_do_dia(dia, @usuario.id, @dias) %> tooltipconfig" data-toggle="tooltip" data-placement="top"
+                   title="<%= @hash_resumo[dia] %>">
                   <div class='panel-scrollable' style='height: 100px'>
                     <%= dia.strftime("%d/%b") %>
-                    <% if tem_ausencia_no_dia?(dia, @usuario.id) %>
+                    <% if !@dias[dia].first.ausencias.blank? %>
                       <br/>
                       Ausência Registrada
                     <% end %>
@@ -48,8 +48,15 @@
                         <% atividade.cartao.nil? ? (cartao_trello_id = "") : (cartao_trello_id = atividade.cartao.trello_id) %>
                         <input type="hidden" class="card-placeholder card-abrev" id="<%= cartao_trello_id %>"
                                pid="<%= atividade.projeto_id %>" value="<%= atividade.minutos %>"></input>
-                             <% end %>
-                           <% end %>
+
+                      <% end %>
+                    <% end %>
+                    <% unless @reunioes[dia].blank? %>
+                      <% @reunioes[dia].each do |r| %>
+                        <br/>
+                        <%= "Reunião: #{r.projeto.nome} - #{r.inicio.strftime("%H:%M")}" %>
+                      <% end %>
+                    <% end %>
                   </div>
                 </a>
               </td>

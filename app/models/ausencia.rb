@@ -11,6 +11,7 @@ class Ausencia < ActiveRecord::Base
       where(['aprovacao = ?', value])
     end
   }
+  scope :por_periodo, lambda {|inicio, fim, usuario| joins(:dia).where(dia: {data: [inicio,fim], usuario_id: usuario}).order('dias.data ASC')}
 
   has_one :usuario, :through => :dia
   belongs_to :dia
@@ -19,9 +20,9 @@ class Ausencia < ActiveRecord::Base
   belongs_to :avaliador, :class_name => "Usuario"
   has_one    :anexo, :dependent => :destroy
 
-  def self.por_periodo(inicio, fim, usuario_id)
-    Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')
-  end
+  #def self.por_periodo(inicio, fim, usuario_id)
+    #Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')
+  #end
 
   # What is the shebang variable?
   def horas=(val)

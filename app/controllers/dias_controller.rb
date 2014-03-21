@@ -3,11 +3,14 @@ class DiasController < ApplicationController
 
   def new
     @usuario = can?(:manage, Dia)? Usuario.find(params[:usuario_id]) : current_user
-    @dia = Dia.find_or_create_by_data_and_usuario_id(Date.parse(params[:data]), @usuario.id)
+    @data = Date.parse(params[:data]) || Date.today.to_s
+    @dia = Dia.find_or_create_by_data_and_usuario_id(@data, @usuario.id)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
-    @data = params[:data] || Date.today.to_s
+    
     @projetos = @usuario.meus_projetos_array
     @boards = @usuario.boards.pluck(:board_id).uniq
+    @reunioes = Reuniao.joins(:participantes).where(participantes: {usuario_id: @usuario.id},
+      inicio: @data.at_beginning_of_day..@data.at_end_of_day)
     respond_to do |format|
       format.js
       format.html
@@ -64,7 +67,6 @@ class DiasController < ApplicationController
       @inicio = Date.today.at_beginning_of_month
       @fim = Date.today.at_end_of_month
     end
-
     case params[:toggle]
     when 's'
       @tipo = 's'
@@ -80,7 +82,6 @@ class DiasController < ApplicationController
       @fim = @inicio.at_end_of_month
       @inicio = @inicio.at_beginning_of_month
     end
-
     case params[:commit]
     when 'previous_mes'
       @tipo = 'm'
@@ -119,14 +120,16 @@ class DiasController < ApplicationController
       @fim = periodo.last
       @inicio = periodo.first
     end
-
     if can? :manage, :usuario
       @usuarios = Usuario.por_status
     end
     @projetos          = @usuario.meus_projetos_array
     @dias_periodo      = dias_no_periodo(@inicio, @fim)
-    @dias              = Dia.por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
+    @dias              = Dia.includes(:ausencias).includes(:atividades).por_periodo(@inicio, @fim, @usuario.id).order(:data).group_by(&:data)
     @ausencias         = Ausencia.por_periodo(@inicio, @fim, @usuario.id)
+    @hash_resumo       = monta_resumo_dia(@inicio, @fim, @usuario)
+    @reunioes          = Reuniao.joins(:participantes).where(participantes: {usuario_id: @usuario.id},
+      inicio: @inicio..@fim).group_by{|r| r.inicio.to_date}
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -138,7 +141,7 @@ class DiasController < ApplicationController
     @ano = (params[:ano] || Date.today.year).to_i
     @tipo = params[:toggle] || params[:tipo] || 'm'
     case params[:commit]
-     when 'previous_ano'
+    when 'previous_ano'
       @ano = @ano - 1
     when 'next_ano'
       @ano = @ano + 1
@@ -187,19 +190,37 @@ class DiasController < ApplicationController
   
   def convert_date(data, hora_string)
     horario = hora_string.split(':')
-    banana = DateTime.new(data.year, data.month, data.day, horario[0].to_i, horario[1].to_i)
-    return banana
+    hora_date = DateTime.new(data.year, data.month, data.day, horario[0].to_i, horario[1].to_i)
+    return hora_date
   end  
   
+  def monta_resumo_dia(inicio, fim, usuario)
+    dias = Dia.where(data: [inicio, fim], usuario_id: usuario)
+    hash = Hash.new
+    dias.each do |dia_selecionado| 
+      horas = dia_selecionado.horas_atividades_todas
+      entrada = dia_selecionado.entrada_formatada.to_s
+      if (entrada == "")
+        entrada = "Não Informada"
+      end
+      saida = dia_selecionado.saida_formatada.to_s
+      if (saida == "")
+        saida = "Não Informada"
+      end
+      intervalo = dia_selecionado.intervalo
+      if intervalo > 0
+        intervalo = int_to_horas intervalo
+      else
+        intervalo = "Não Informado"
+      end
+      resumo = "Resumo do Dia<br/>"
+      resumo += "Horas Trabalhadas: #{horas} <br/>"
+      resumo += "Entrada: #{entrada} <br/>"
+      resumo += "Saída: #{saida} <br/>"
+      resumo += "Intervalo: #{intervalo} <br/>"
+      hash[dia_selecionado.data] = resumo
+    end
+    return hash;
+  end
   
-  #def convert_date(hash, date_symbol_or_string)
-    #attribute = date_symbol_or_string.to_s
-    #return DateTime.new(
-      #hash[attribute + '(1i)'].to_i,
-      #hash[attribute + '(2i)'].to_i,
-      #hash[attribute + '(3i)'].to_i,
-      #hash[attribute + '(4i)'].to_i,
-      #hash[attribute + '(5i)'].to_i,
-      #0)
-  #end
 end

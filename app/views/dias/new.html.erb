@@ -10,8 +10,31 @@
       <center>Arraste cartões do Trello aqui.</center>
     </div>
     <div class="panel-scrollable" id="atividade-panel">
+
       <% @dia.atividades.each do |atividade| %>
         <%= render partial: '/atividades/form', locals: {atividade: atividade, equipe: @equipe, projetos: @projetos} %>
+      <% end %>
+      <% unless @reunioes.blank? %>
+        <h4 style="padding: 5px"> Reuniões </h4>
+        <div class="grey-form">
+          <% @reunioes.each do |r| %>
+            <% duracao = (r.participantes.find_by usuario_id: @usuario.id).duracao %>
+            <% if r.concluida %>
+              <%= hidden_field_tag :duracao_reuniao, duracao/60, :class => "reuniao" %>
+            <% end %>
+            <div class="row" style="padding: 5px 10px">
+              <div class="col-md-7">
+                <%= "Horário: #{r.inicio.strftime("%H:%M")}" %> <br/>
+                <%= "Projeto: #{r.projeto.nome}" %> <br/>
+                <%= "Criador: #{r.criador.nome}" %>
+              </div>
+              <div class="col-md-5">
+                <%= "Situação: #{r.concluida ? "Concluída": "Pendente"}" %> <br/>
+                <%= "Horas computadas: #{r.concluida ? int_to_horas(duracao) : "--"}" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </div>

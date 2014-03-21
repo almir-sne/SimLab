@@ -26,32 +26,38 @@ class Dia < ActiveRecord::Base
   end
 
   def entrada
-    if self.horarios.nil? or self.horarios.minimum(:entrada).nil?
+    entrada_real = self.horarios.minimum(:entrada)
+    if self.horarios.nil? or entrada_real.nil?
       0.0
     else
-      self.horarios.minimum(:entrada).utc
+      entrada_real.utc
     end
   end
 
   def saida
-    if self.horarios.nil? or self.horarios.maximum(:saida).nil?
+    saida_real = self.horarios.maximum(:saida)
+    if self.horarios.nil? or saida_real.nil?
       0.0
     else
-      self.horarios.maximum(:saida).utc
+      saida_real.utc
     end
   end
 
+  #sim, essa entrada_var é de proósito para não fazer 2 queries no banco
   def entrada_formatada
-    if !entrada.nil? and entrada != 0.0
-      entrada.strftime("%H:%M")
+    entrada_var = self.entrada
+    if !entrada_var.nil? and entrada_var != 0.0
+      entrada_var.strftime("%H:%M")
     else
       ""
     end
   end
-
+  
+  #sim, essa saida_var é de proósito para não fazer 2 queries no banco
   def saida_formatada
-    if !saida.nil? and saida != 0.0
-      saida.strftime("%H:%M")
+    saida_var = self.saida
+    if !saida_var.nil? and saida_var != 0.0
+      saida_var.strftime("%H:%M")
     end
   end
 

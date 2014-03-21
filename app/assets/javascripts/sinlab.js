@@ -1,9 +1,3 @@
-function pega_horas_atividade() {
-    var atividadeH = parseInt($("#dia_atividades_attributes_0_horas_4i").val());
-    var atividadeM = parseInt($("#dia_atividades_attributes_0_horas_5i").val());
-    return(atividadeH * 60 + atividadeM);
-}
-
 function toggleAusencia() {
     $("#ausencias").show();
     $("#meses-button").show();
@@ -52,36 +46,26 @@ function toggleCollapse(obj) {
 
 function hideNavegacao() {
     var nav = $("#navegacao");
-//    nav.animate({width: "0%"});
-    //$("#lista").animate({width: "100%"});
     $("#lista").attr({style: "width: 100%;  float: right;"});
     nav.hide();
     $("#show-navegacao").attr({style: "display: inline;"});
     $("#hide-navegacao").attr({style: "display: none;"});
-//    var pnav = $("#prenavegacao");
-//    pnav.show();
-//    var p2nav = $("#prosnavegacao");
-//    p2nav.hide();
 }
 
 function showNavegacao() {
     var pnav = $("#prenavegacao");
     pnav.hide();
     var nav = $("#navegacao");
-//    nav.animate({width: "15%"});
-    //$("#lista").animate({width: "85%"});
     $("#lista").attr({style: "width: 85%;  float: right;"});
     nav.show();
     $("#show-navegacao").attr({style: "display: none;"});
     $("#hide-navegacao").attr({style: "display: inline;"});
-//    var p2nav = $("#prosnavegacao");
-//    p2nav.show();
 }
 
 // http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').
-            exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+            exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
 }
 
 function mudaUsuario(obj) {
@@ -144,4 +128,16 @@ function checkForm() {
         return "Há mudanças não salvas";
     else
         return null;
-};
+}
+
+function updateUsuarios(selector) {
+    $.ajax({
+        type: "POST",
+        url: "/reunioes/usuarios",
+        data: {projeto_id: selector.value, reuniao_id: $("#reuniao_id").val()}
+    });
+}
+
+function setChecked(checkbox) {
+    $("table td input[type='checkbox']").prop('checked', checkbox.checked)
+}

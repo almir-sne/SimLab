@@ -75,7 +75,10 @@ function updateHorasAtividades(val, max, div) {
 
 function sumSliders() {
     var val = 0;
-    $('#atividade-panel > .edit_atividade > #atividade-form:visible > .slider > .hora_field').each(function(i, e) {
+    $('#atividade-panel > .edit_atividade > #atividade-form > .slider > .hora_field').each(function(i, e) {
+        val += parseInt(e.value);
+    });
+    $('#atividade-panel .reuniao').each(function(i, e) {
         val += parseInt(e.value);
     });
     return val;
