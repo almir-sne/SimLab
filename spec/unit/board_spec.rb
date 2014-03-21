@@ -1,5 +1,7 @@
 require_relative '../spec_helper'
 
 describe Board do
-  pending "add some examples to (or delete) #{__FILE__}"
+	describe "relationships" do
+		it { should belong_to(:projeto) }
+	end
 end

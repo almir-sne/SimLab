@@ -7,8 +7,8 @@ feature "Projetos" do
 		scenario "deveria poder ser criado" do
 			admin_faz_login
 		  visit projetos_path
-		  fill_in "Nome",  :with => "asdf"
-		  fill_in "Descrição", :with => "asdfasd"
+		  fill_in "Nome",  :with => "Odin"
+		  fill_in "Descrição", :with => "King of Argard"
 		  click_button "Salvar"
 		  page.should have_content(I18n.t("projetos.create.success", :model => "Projeto"))
 		  page.should have_content(@projeto_novo[:nome])

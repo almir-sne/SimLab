@@ -3,8 +3,7 @@ require 'atividade'
 require 'cartao'
 
 describe Atividade do
-  # pending "add some examples to (or delete) #{__FILE__}"
-  describe "#minutos" do
+  describe "The minutos method for Activity" do
 		context "initialized without nothing done before" do
 			before do 
 		  	@atividade = Atividade.new
@@ -27,7 +26,7 @@ describe Atividade do
 		end
 	end
 
-	describe "#cor_status" do
+	describe "The cor_status method for Activity" do
 		context "activity judgement is not made" do
 			before do
 				@atividade = Atividade.new
@@ -41,13 +40,21 @@ describe Atividade do
 		context "activity judgement is already made" do
 			let(:atividade)  {Atividade.new(:aprovacao => true)}
 
-			it "has color status" do
+			it "has approval color status" do
 				"green-background".should eq(atividade.cor_status)
+			end
+		end
+
+		context "activity judgement is already made" do
+			let(:atividade)  {Atividade.new(:aprovacao => false)}
+
+			it "has non-approval color status" do
+				"red-background".should eq(atividade.cor_status)
 			end
 		end
 	end
 
-	describe "#trello_id" do
+	describe "The trello_id method for Activity" do
 		context "there is no card" do
 			let(:atividade) {Atividade.new}
 

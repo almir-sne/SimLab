@@ -1,5 +1,7 @@
 require_relative '../spec_helper'
 
 describe Anexo do
-  pending "add some examples to (or delete) #{__FILE__}"
+	it { should belong_to(:usuario) }
+	it { should belong_to(:pagamento) }
+	it { should belong_to(:ausencia) }
 end

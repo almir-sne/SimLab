@@ -23,6 +23,7 @@ class Ausencia < ActiveRecord::Base
     Ausencia.joins(:dia).where(dia: {data: inicio..fim, usuario_id: usuario_id}).order('dias.data ASC')
   end
 
+  # What is the shebang variable?
   def horas=(val)
     shebang = val.split(":")
     write_attribute(:horas, shebang[0].to_i * 3600 + shebang[1].to_i * 60)
