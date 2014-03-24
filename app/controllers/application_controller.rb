@@ -74,5 +74,5 @@ class ApplicationController < ActionController::Base
     split = str.split(":")
     split[0].to_i * 3600 + split[1].to_i * 60
   end
-
+  
 end

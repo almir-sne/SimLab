@@ -79,7 +79,7 @@
 
     <% unless rodada.fechada %>
       <% sua_estimativa = rodada.estimativas.where(usuario_id: current_usuario.id).last %>
-      <%= form_tag estimativas_path do %>
+      <%= form_tag estimativas_path, remote: true do %>
         <div style="padding: 15px" class="row">
           <%= hidden_field_tag :cartao_id, @cartao.id %>
           <%= hidden_field_tag :rodada_id, rodada.id %>
@@ -103,13 +103,13 @@
   <h3> Coordenação </h3>
   <div style="padding: 15px">
     <% unless @cartao.rodada_aberta? %>
-      <%= form_tag nova_rodada_estimativas_path do %>
+      <%= form_tag nova_rodada_estimativas_path, remote: true do %>
         <%= hidden_field_tag :cartao_id, @cartao.id %>
         <%= select_tag :deck_id, options_for_select(@decks.collect{|d| [d.nome, d.id]}), :style => "margin-bottom: 0" %>
         <%= submit_tag "Nova rodada", :class => "btn default-button", :confirm => "Tem certeza?" %>
       <% end %>
     <% else %>
-      <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.id),
+      <%= link_to "Fechar rodada", fechar_rodada_estimativas_path(cartao_id: @cartao.id), remote: true, 
         :class => "btn default-button", :confirm => "Tem certeza?" %>
     <% end %>
     <br/>
@@ -122,3 +122,14 @@
   </div>
 
 </div>
+
+<%= javascript_include_tag ENV['faye_host'] + "/faye/faye.js" %>
+
+<script type="text/javascript">
+  $(function() {
+    var faye = new Faye.Client('<%=  ENV['faye_host'] %>' + '/faye');
+    faye.subscribe('/estimativas', function(data) {
+      eval(data);
+    });
+  });
+</script>

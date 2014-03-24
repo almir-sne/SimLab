@@ -18,13 +18,17 @@ class EstimativasController < ApplicationController
       cartao.id, current_user.id, params[:rodada_id])
     estimativa.planning_card_id = params[:planning_card_id]
     estimativa.save
-    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
+    respond_to do |format|
+      format.js
+    end
   end
   
   def fechar_rodada
     cartao = Cartao.find params[:cartao_id]
     cartao.fechar_rodada(current_user)
-    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
+    respond_to do |format|
+      format.js
+    end
   end
   
   def nova_rodada
@@ -33,7 +37,9 @@ class EstimativasController < ApplicationController
       criador_id: current_user.id, deck_id: params[:deck_id], fechada: false,
       numero: cartao.rodadas.maximum(:numero).to_i + 1).save
     cartao.save
-    redirect_to cartao_estimativas_path(cartao_id: cartao.trello_id)
+    respond_to do |format|
+      format.js
+    end
   end
   
   def concluir

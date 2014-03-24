@@ -12,4 +12,11 @@ module ApplicationHelper
     ("%2d" % string).gsub(" ", "0")
   end
   
+  #  http://railscasts.com/episodes/260-messaging-with-faye?view=asciicast
+  def broadcast(channel, &block)
+    message = {:channel => channel, :data => capture(&block)}
+    uri = URI.parse("http://localhost:9292/faye")
+    Net::HTTP.post_form(uri, :message => message.to_json)
+  end
+  
 end
