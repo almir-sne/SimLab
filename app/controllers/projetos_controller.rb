@@ -114,11 +114,16 @@ class ProjetosController < ApplicationController
 
   def atividades
     @projeto = Projeto.find(params[:id])
+    @usuario = params[:usuario_id].nil? ? nil : Usuario.find(params[:usuario_id])
+    @usuários_select = @projeto.usuarios.map{|user| [user.nome, user.id]}
+    @usuários_select.unshift([@usuario.nome, @usuario.id]) unless(@usuario.nil?)
+    @aprovações = [["aprovada", true], ["reprovada",false], ["não vista", nil]]
+    @aprovações.unshift(@aprovações.select{|i| i[0] == params[:aprovacao]}.flatten)
     inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : Date.parse(params[:inicio])
     fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : Date.parse(params[:fim])
     @lista_atividades = @projeto.atividades.periodo(inicio..fim ).usuario(params[:usuario_id].to_i).
       aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
-    redirect_to(projeto_path(id: params[:id], lista_atv: @lista_atividades) )
+     render "projetos/show/atividades"
   end
 
   # PATCH /projetos/1
