@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140310181432) do
+ActiveRecord::Schema.define(version: 20140314201338) do
 
   create_table "addresses", force: true do |t|
     t.string   "state"
@@ -52,12 +52,6 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.integer  "cartao_id"
   end
 
-  create_table "atividades_tags", id: false, force: true do |t|
-    t.integer "id"
-    t.integer "atividade_id"
-    t.integer "tag_id"
-  end
-
   create_table "ausencias", force: true do |t|
     t.string   "justificativa"
     t.boolean  "abonada"
@@ -75,22 +69,6 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.string   "board_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "campo_dados", force: true do |t|
-    t.integer "campo_id"
-    t.text    "dado"
-    t.integer "usuario_id"
-  end
-
-  create_table "campo_projetos", force: true do |t|
-    t.text     "nome"
-    t.integer  "tipo"
-    t.text     "formato"
-    t.integer  "projeto_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "categoria"
   end
 
   create_table "campos", force: true do |t|
@@ -225,6 +203,14 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "participantes", force: true do |t|
+    t.integer  "reuniao_id"
+    t.integer  "usuario_id"
+    t.integer  "duracao"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "permissoes", force: true do |t|
     t.string   "nome"
     t.datetime "created_at"
@@ -259,6 +245,15 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.integer  "atividade_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+  end
+
+  create_table "reunioes", force: true do |t|
+    t.integer  "projeto_id"
+    t.integer  "criador_id"
+    t.datetime "inicio"
+    t.boolean  "concluida"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rodadas", force: true do |t|
@@ -328,7 +323,7 @@ ActiveRecord::Schema.define(version: 20140310181432) do
     t.integer  "permissao_id"
     t.boolean  "ativo"
     t.boolean  "mostrar_ausencia", default: true
-    t.date     "data_inicio",      default: '2014-03-11'
+    t.date     "data_inicio",      default: '2014-03-12'
   end
 
 end

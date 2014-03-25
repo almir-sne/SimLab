@@ -19,16 +19,9 @@ class ProjetosController < ApplicationController
     if params["tipo"] == "TODOS" || params["tipo"].nil?
       @tipo = "TODOS"
       if current_usuario.role == "admin"
-        @projetos = Projeto.where(:super_projeto_id => nil).order(:nome).
-          map{|superP| [superP, superP.sub_projetos.sort{|a,b| a.nome <=> b.nome}]}
-      elsif current_usuario.role == "diretor"
-        @projetos = current_usuario.projetos_coordenados.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
-          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos_coordenados.
-                map{|z| z.id})]}
+        @projetos = Projeto.order(:super_projeto_id).group_by(&:super_projeto_id).except(nil)
       else
-        @projetos = current_usuario.projetos.map{|proj| proj.super_projeto.nil? ? proj : proj.super_projeto}.uniq.
-          map{|superP| [superP, superP.sub_projetos.where(:id => current_usuario.projetos.
-                map{|z| z.id})]}
+        @projetos = current_usuario.projetos.order(:super_projeto_id).group_by(&:super_projeto_id).except(nil)
       end
     elsif params["tipo"] == "sub_projetos"
       @tipo = "sub_projetos"
@@ -59,18 +52,12 @@ class ProjetosController < ApplicationController
   def edit
     authorize! :read, Projeto
     @projeto = Projeto.find(params[:id])
-    @filhos_for_select  = Projeto.all.sort{ |projeto|
-      @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
-        reject{|projeto| projeto == @projeto}.
-          map{|filho| [filho.nome, filho.id]}
-    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
-      sort{|a, b| a.nome <=> b.nome}.
-        reject{|projeto| projeto == @projeto}.
-          map{|proj| [proj.nome, proj.id]}
+    @filhos_for_select  = Projeto.where{super_projeto_id != nil and id != my{params[:id]}.to_i}.pluck(:nome, :id)
+    @pais_for_select = Projeto.where(super_projeto_id: nil).where{id != my{params[:id]}.to_i}.pluck(:nome, :id)
     @eh_super_projeto = @projeto.super_projeto.blank?
-    @usuarios = Usuario.all.order(nome: :asc).collect {|u| [u.nome, u.id]}
+    @usuarios = Usuario.order(nome: :asc).pluck(:nome, :id)
     @hoje = Date.today
-    @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
+    @permissoes = Permissao.order(nome: :desc).pluck(:nome, :id)
   end
 
   def show
@@ -83,7 +70,7 @@ class ProjetosController < ApplicationController
       @projeto.sub_projetos.include?(projeto) ? -1 : 1}.
         reject{|projeto| projeto == @projeto}.
           map{|filho| [filho.nome, filho.id]}
-    @pais_for_select = Projeto.find_all_by_super_projeto_id(nil).
+    @pais_for_select = Projeto.where(super_projeto_id: nil).
       sort{|a, b| a.nome <=> b.nome}.
         reject{|projeto| projeto == @projeto}.
           map{|proj| [proj.nome, proj.id]}

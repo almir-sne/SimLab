@@ -1,5 +1,5 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 
-describe CampoProjetoController do
+# describe CampoProjetoController do
 
-end
+# end

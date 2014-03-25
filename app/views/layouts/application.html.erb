@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= t("simlab.titulo") %></title>
-    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= stylesheet_link_tag    "application", :media => "all"%>
 
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "bootstrap.min" %>
@@ -87,6 +87,8 @@
               <% else %>
                 <li><a href="<%= periodos_pagamentos_path %>">Meus Pagamentos</a></li>
               <% end %>
+              <li class="navbar-section">Administraçao</li>
+              <li> <%= link_to "Reuniões", reunioes_path %> </li>
             </ul>
           </li>
           <li class="dropdown">

@@ -20,7 +20,7 @@
         <%= ausencia.mensagem %>
       </td>
       <td>
-        <%= ausencia.projeto.nome%>
+        <%= ausencia.projeto.nome %>
       </td>
       <td>
         <%= link_to File.basename(ausencia.anexo.arquivo.url),
@@ -36,7 +36,7 @@
       <td>
         <%= link_to("", new_ausencia_path(tipo: @tipo, data: ausencia.dia.data, usuario_id: ausencia.dia[:usuario_id], projeto_id: ausencia[:projeto_id]), :class => 'icon-edit nohover', :style => "margin-right: 10px") %>
         <%= link_to '<i class="icon-trash"> </i>'.html_safe,
-          ausencia_path(ausencia.id), :method => :delete, :confirm => t("prompt.exclusao.confirmacao"),
+          ausencia_path(ausencia.id), method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")},
           :class => 'nohover', :title => "Excluir"%>
       </td>
     </tr>

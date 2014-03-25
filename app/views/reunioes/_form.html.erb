@@ -1,0 +1,39 @@
+<%= form_for(@reuniao) do |f| %>
+  <%= hidden_field_tag :reuniao_id, @reuniao.id %>
+  <% if @reuniao.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@reuniao.errors.count, "error") %> prohibited this reuniao from being saved:</h2>
+
+      <ul>
+        <% @reuniao.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row" style="margin: 25px">
+    <div class="col-md-6">
+      <div class="field">
+        <%= f.label :projeto_id %><br>
+        <%= f.collection_select :projeto_id, @projetos, :id, :nome, {}, {onchange: 'updateUsuarios(this)'} %>
+      </div>
+      <div class="field">
+        <%= f.label :inicio %><br>
+        <%= f.datetime_select :inicio %>
+      </div>
+      <div class="field">
+        <%= f.label :concluida, "Concluída?" %><br>
+        <%= f.check_box :concluida %>
+      </div>
+    </div>
+    <div class="col-md-5" id="usuarios-list">
+      <%= render partial: 'usuarios', locals: {:usuarios => @usuarios, :reuniao => @reuniao} %>
+    </div>
+  </div>
+
+  <div id="lower-bar" class="navbar-fixed-bottom toolbar">
+    <%= f.submit :class => "btn default-button" %>
+    <%= link_to 'Voltar', reunioes_path, :class =>  "btn default-button" %>
+  </div>
+<% end %>

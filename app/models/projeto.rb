@@ -23,7 +23,7 @@ class Projeto < ActiveRecord::Base
   scope :ativos, -> {where(ativo: true)}
   scope :inativos, -> {where(ativo: false)}
   scope :filhos, -> {where("super_projeto_id is not null")}
-  
+
   def horas_totais
     if sub_projetos.blank?
       (atividades.where(:aprovacao => true).sum(:duracao)/3600).to_i

@@ -1,0 +1,26 @@
+<% if usuarios %>
+  <table style="width: 100%">
+    <tr>
+      <th> <input type="checkbox" onchange="setChecked(this)"> </th>
+      <th> Nome </th>
+      <th> Horas</th>
+    </tr>
+
+    <% usuarios.each do |usuario| %>
+      <% reg = @reuniao.participantes.find_by usuario_id: usuario.id %>
+      <tr>
+        <td style="width: 10%"> <%= check_box_tag "participantes[#{usuario.id}][check]", true, !reg.nil? %> </td>
+        <td style="width: 70%"> <%= usuario.nome  %> </td>
+        <td style="width: 20%"> <%= text_field_tag "participantes[#{usuario.id}][horas]",
+            int_to_horas(reg.try(:duracao) || 3600) %>  </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br/>
+  <br/>
+  <br/>
+
+<% else %>
+  Projeto selecionado não tem usuarios cadastrados.
+<% end %>

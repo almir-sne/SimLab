@@ -13,32 +13,33 @@
     <div class="col-md-4"><h5> Descrição</h5></div>
   </div>
   <div class="accordion" id="accordion2">
-    <%@projetos.each do |super_e_subs| %>
+    <%@projetos.each do |super_projeto, projetos| %>
+      <% super_projeto = Projeto.find(super_projeto) %>
       <div class="accordion-group">
         <div class="accordion-heading">
           <div class="row projetos-header">
             <div class="col-md-4">
-              <a data-toggle="collapse" onclick="toggleCollapse(this)" class="nohover" style="padding-left: 10px" data-parent="#accordion2" href="#collapse<%=super_e_subs[0].nome.tr(' ','_')%>">
+              <a data-toggle="collapse" onclick="toggleCollapse(this)" class="nohover" style="padding-left: 10px" data-parent="#accordion2" href="#collapse<%=super_projeto.nome.tr(' ','_')%>">
                 <i class="icon-chevron-sign-right"></i>
               </a>
-              <%= link_to super_e_subs[0].nome, projeto_path(super_e_subs[0])%>
+              <%= link_to super_projeto.nome, projeto_path(super_projeto)%>
             </div>
-            <div class="col-md-1"><%=super_e_subs[0].data_de_inicio%></div>
-            <div class="col-md-1"><%=super_e_subs[0].horas_totais%></div>
-            <div class="col-md-1"><%=super_e_subs[0].valor%></div>
-            <div class="col-md-4"><%=super_e_subs[0].descricao%></div>
+            <div class="col-md-1"><%=super_projeto.data_de_inicio%></div>
+            <div class="col-md-1"><%=super_projeto.horas_totais%></div>
+            <div class="col-md-1"><%=super_projeto.valor%></div>
+            <div class="col-md-4"><%=super_projeto.descricao%></div>
             <div class="col-md-1">
-              <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(super_e_subs[0].id),
+              <%= link_to '<i class="icon-trash icon-2x"> </i>'.html_safe, projeto_path(super_projeto.id),
               method: :delete, data: {confirm: t("prompt.exclusao.confirmacao")}, class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px"%>
-              <% if (can? :read, super_e_subs[0]) %>
-                <%= link_to '', edit_projeto_path(super_e_subs[0]), :class => 'icon-edit icon-2x nohover'%>
+              <% if (can? :read, super_projeto) %>
+                <%= link_to '', edit_projeto_path(super_projeto), :class => 'icon-edit icon-2x nohover'%>
               <% end %>
-              
+
             </div>
           </div>
         </div>
-        <div id="collapse<%=super_e_subs[0].nome.tr(' ','_')%>" class="accordion-body collapse">
-          <%super_e_subs[1].each do |sub|%>
+        <div id="collapse<%=super_projeto.nome.tr(' ','_')%>" class="accordion-body collapse">
+          <%projetos.each do |sub|%>
             <div class="accordion-inner" style="padding: 0px; padding-top: 5px">
               <div class="row projetos-body">
                 <div class="col-md-4" style="padding-left: 25px;"><%= link_to sub.nome, projeto_path(sub)%></div>
@@ -52,7 +53,7 @@
                     class: 'nohover', title: "Excluir", style: "float: right; padding-right: 10px" %>
                   <% if (can? :read, sub) %>
                     <%= link_to '', edit_projeto_path(sub), :class => 'icon-edit icon-2x nohover'%>
-                  <% end %> 
+                  <% end %>
                 </div>
               </div>
             </div>
