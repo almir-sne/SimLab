@@ -17,7 +17,7 @@
         <td><%= int_to_horas dia.intervalo %></td>
         <td style="width: 60%; border: none">
           <% dia.atividades.each do |atividade| %>
-            <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.cor_status %>">
+            <div id="<%= 'atividade' + atividade.id.to_s %>" class="<%= atividade.reload.cor_status %>">
               Observação: <br/>
               <%=  atividade.observacao%>
               <br />

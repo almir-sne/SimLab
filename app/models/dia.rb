@@ -70,12 +70,7 @@ class Dia < ActiveRecord::Base
   end
 
   def horas_atividades_formato
-    total_minutos_atividade = 0
-    self.atividades.each do |atividade|
-      if atividade.aprovacao
-        total_minutos_atividade = total_minutos_atividade + (atividade.minutos.nil? ? 0 : (atividade.minutos))
-      end
-    end
+    total_minutos_atividade = atividades.where(aprovacao: true).sum(:duracao) / 60
     hh, mm = (total_minutos_atividade).divmod(60)
     ("%02d"%hh).to_s+":"+("%02d"%mm.to_i).to_s
   end

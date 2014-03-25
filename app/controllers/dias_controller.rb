@@ -1,4 +1,5 @@
 class DiasController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_usuario!
 
   def new
@@ -181,7 +182,7 @@ class DiasController < ApplicationController
 
   def dia_params
     params.require(:dia).permit(:data, :usuario_id, :cartao,
-      atividades_attributes:[:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy,
+      atividades_attributes: [:id, :projeto_id, :horas, :trello_id, :observacao, :_destroy,
         pares_attributes: [:id, :par_id, :_destroy, :horas],
         mensagem: [:conteudo, :atividade_id, :autor_id]
       ],
@@ -195,7 +196,7 @@ class DiasController < ApplicationController
   end  
   
   def monta_resumo_dia(inicio, fim, usuario)
-    dias = Dia.where(data: [inicio, fim], usuario_id: usuario)
+    dias = Dia.where(data: inicio..fim, usuario_id: usuario)
     hash = Hash.new
     dias.each do |dia_selecionado| 
       horas = dia_selecionado.horas_atividades_todas
