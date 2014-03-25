@@ -1,89 +1,104 @@
-<%= form_tag filtra_atividades_projetos_path do %>
-  <div class="container">
-    <div class="row">
-      <%= hidden_field_tag :id, @projeto.id %>
+<div class="blue-text" style="margin-left: 30px">
+  Dados do <%= @projeto.nome %>
+</div>
+<div class="blue-line">  </div>
 
-      <div class="col-md-3">
-        <%= text_field_tag "inicio", Date.today.strftime("%d/%m/%Y"), id: "dataInicio", style: "width:100px", class: 'menu_select'%>
-        a <%= text_field_tag "fim", Date.today.strftime("%d/%m/%Y"), id: "dataFim", style: "width:100px"%>
-      </div>
+<ul class="nav nav-tabs" style="margin-right: 10px;">
+  <li><%= link_to "Ausências", projeto_path(@projeto) %></li>
+  <li><%= link_to "Dados do Projeto", projeto_path(@projeto, tab: "dado-projeto") %></li>
+  <li><%= link_to "Relacionamento de Projetos", projeto_path(@projeto, tab: "relacao")%></li>
+  <li><%= link_to "Equipe", projeto_path(@projeto, tab: "equipe")%></li>
+  <li><%= link_to "Meus Dados",projeto_path(@projeto, tab: "dado-pessoa")%></li>
+  <li class="active"><a>Atividades</a></li>
+</ul>
 
-      <div class="col-md-3">
-        <%= select_tag(:usuario_id, options_for_select(@usuários_select), {:class => 'menu_select'}) %>
-      </div>
+<div class="tab-content">
+  <%= form_tag filtra_atividades_projetos_path do %>
+    <div class="container">
+      <div class="row">
+        <%= hidden_field_tag :id, @projeto.id %>
 
-      <div class="col-md-3">
-        <%= select_tag(:aprovacao, options_for_select(@aprovações), {:class => 'menu_select'}) %>
-      </div>
+        <div class="col-md-3">
+          <%= text_field_tag "inicio", @inicio.strftime("%d/%m/%Y"), id: "dataInicio", style: "width:100px", class: 'menu_select'%>
+          a <%= text_field_tag "fim", @fim.strftime("%d/%m/%Y"), id: "dataFim", style: "width:100px"%>
+        </div>
 
-      <div class="col-md-3">
-       <%= submit_tag('Filtra', {:class => 'btn default-button'})%>
+        <div class="col-md-3">
+          <%= select_tag(:usuario_id, options_for_select(@usuários_select), {:class => 'menu_select'}) %>
+        </div>
+
+        <div class="col-md-3">
+          <%= select_tag(:aprovacao, options_for_select(@aprovações), {:class => 'menu_select'}) %>
+        </div>
+
+        <div class="col-md-3">
+         <%= submit_tag('Filtra', {:class => 'btn default-button'})%>
+        </div>
       </div>
     </div>
-  </div>
-<%end%>
+  <%end%>
 
-<div id="lista">
-  <table id="data-table">
-    <thead>
-      <tr>
-        <th> Data               </th>
-        <th> Usuário            </th>
-        <th> Duração            </th>
-        <th> Detalhes           </th>
-        <th> Possui cartão pai? </th>
-        <th> Parceiro(s)        </th>
-        <th> Status             </th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @lista_atividades.group_by{|atividade| atividade.dia}.each do |dia, atividades| %>
-        <% atividades.each do |atividade| %>
-          <tr>
-            <td><%= dia.data.strftime("%d/%m/%Y") %></td>
-            <td style="width: 150px;">
-              <%= link_to dia.usuario.nome, new_dia_path(data: dia.data, usuario_id: dia.usuario.id),
-                target:"_blank", style:"text-decoration: underline" %>
-              <p> E: <%= dia.entrada_formatada %> S: <%= dia.saida_formatada %></p>
-              <p> <%= int_to_horas dia.horas %> horas </p>
-              <p> <%= dia.horas_atividades_todas %> horas </p>
-            </td>
-            <td><%= int_to_horas atividade.duracao %></td>
-            <td>
-              <%= atividade.observacao %>
-              <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-default") if atividade.cartao%>
-            </td>
-            <td>
-              <% if atividade.try(:cartao).try(:pai) %>
-                <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-father")%>
-              <% else %>
-                NÃO
-              <% end %>
-            </td>
-            <td>
-              <% atividade.pares.each do |parceiro| %>
-                <p>
-                  <%= parceiro.par.nome %>
-                  <%= int_to_horas(parceiro.duracao) %>
-                </p>
-              <% end %>
-            </td>
-            <td style="width: 150px;">
-              <% if atividade.aprovacao %>
-                Aprovada
-              <% elsif atividade.aprovacao.nil? %>
-                Não Vista
-              <% else %>
-                Reprovada
-              <% end %>
-            </td>
-          </tr>
+  <div id="lista">
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th> Data               </th>
+          <th> Usuário            </th>
+          <th> Duração            </th>
+          <th> Detalhes           </th>
+          <th> Possui cartão pai? </th>
+          <th> Parceiro(s)        </th>
+          <th> Status             </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @lista_atividades.group_by{|atividade| atividade.dia}.each do |dia, atividades| %>
+          <% atividades.each do |atividade| %>
+            <tr>
+              <td><%= dia.data.strftime("%d/%m/%Y") %></td>
+              <td style="width: 150px;">
+                <%= link_to dia.usuario.nome, new_dia_path(data: dia.data, usuario_id: dia.usuario.id),
+                  target:"_blank", style:"text-decoration: underline" %>
+                <p> E: <%= dia.entrada_formatada %> S: <%= dia.saida_formatada %></p>
+                <p> <%= int_to_horas dia.horas %> horas </p>
+                <p> <%= dia.horas_atividades_todas %> horas </p>
+              </td>
+              <td><%= int_to_horas atividade.duracao %></td>
+              <td>
+                <%= atividade.observacao %>
+                <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-default") if atividade.cartao%>
+              </td>
+              <td>
+                <% if atividade.try(:cartao).try(:pai) %>
+                  <%= hidden_field_tag(atividade.trello_id, "", :class => "card-placeholder card-father")%>
+                <% else %>
+                  NÃO
+                <% end %>
+              </td>
+              <td>
+                <% atividade.pares.each do |parceiro| %>
+                  <p>
+                    <%= parceiro.par.nome %>
+                    <%= int_to_horas(parceiro.duracao) %>
+                  </p>
+                <% end %>
+              </td>
+              <td style="width: 150px;">
+                <% if atividade.aprovacao %>
+                  Aprovada
+                <% elsif atividade.aprovacao.nil? %>
+                  Não Vista
+                <% else %>
+                  Reprovada
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
-
 
 <script>
 $('#data-table').dataTable({

@@ -82,6 +82,7 @@ class ProjetosController < ApplicationController
     @atividades = Atividade.joins(:dia).where(dia: {data: @inicio..@fim}, projeto_id: @projeto.id).
       group_by{|x| x.dia.data}
     @permissoes = Permissao.order(nome: :desc).collect{|p| [p.nome, p.id]}
+    @tab = params[:tab]
   end
 
   # POST /projetos
@@ -194,9 +195,9 @@ class ProjetosController < ApplicationController
     @aprovações = [["aprovada", "true"], ["reprovada","false"], ["não vista", "nil"]]
     @aprovações.unshift(@aprovações.select{|i| i[1] == session[:aprovacao]}.flatten)
     aprovacao = to_boolean session[:aprovacao]
-    inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:inicio]).nil? ? Date.today.beginning_of_month : Date.parse(session[:inicio])
-    fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:fim]).nil? ? Date.today.end_of_month : Date.parse(session[:fim])
-    @lista_atividades = @projeto.atividades.periodo(inicio..fim ).usuario(@usuario.id).aprovacao(aprovacao).limit(100)
+    @inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:inicio]).nil? ? Date.today.beginning_of_month : Date.parse(session[:inicio])
+    @fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:fim]).nil? ? Date.today.end_of_month : Date.parse(session[:fim])
+    @lista_atividades = @projeto.atividades.periodo(@inicio..@fim ).usuario(@usuario.id).aprovacao(aprovacao).limit(100)
      render "projetos/show/atividades"
   end
 

@@ -6,32 +6,33 @@
 <div class="div_edit" style="margin: 10px;">
   <%= nested_form_for(@projeto, :validate => true, :html => {"data-type" => :json}) do |f| %>
     <ul class="nav nav-tabs" style="margin-right: 10px;">
-      <li class="active"><a href="#ausencias" data-toggle="tab">Ausências</a></li>
-      <li><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
-      <li><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
-      <li><a href="#equipe" data-toggle="tab">Equipe</a></li>
-      <li><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
+      <li class=<%= 'active' if @tab.nil?%> ><a href="#ausencias" data-toggle="tab">Ausências</a></li>
+      <li class=<%= 'active' if @tab == "dado-projeto"%> ><a href="#dadosproj" data-toggle="tab">Dados do Projeto</a></li>
+      <li class=<%= 'active' if @tab == "relacao"%> ><a href="#relproj" data-toggle="tab">Relacionamento de Projetos</a></li>
+      <li class=<%= 'active' if @tab == "equipe"%> ><a href="#equipe" data-toggle="tab">Equipe</a></li>
+      <li class=<%= 'active' if @tab == "dado-pessoa"%> ><a href="#meusdados" data-toggle="tab">Meus Dados</a></li>
+      <li><%= link_to "Atividades", atividades_projetos_path(id: @projeto.id) %></li>
     </ul>
 
     <div class="tab-content">
 
-      <div class="tab-pane active" id="ausencias">
+      <div class="tab-pane <%= 'active' if @tab.nil?%> " id="ausencias">
         <%= render partial: 'projetos/show/ausencias' %>
       </div>
 
-      <div class="tab-pane" id="dadosproj">
+      <div class="tab-pane <%= 'active' if @tab == "dado-projeto"%> " id="dadosproj">
         <%= render partial: 'projetos/show/dados_projeto', locals: {f: f} %>
       </div>
 
-      <div class="tab-pane" id="relproj">
+      <div class="tab-pane <%= 'active' if @tab == "relacao"%> " id="relproj">
         <%= render partial: 'projetos/show/relacionamento_projeto', locals: {f: f} %>
       </div>
 
-      <div class="tab-pane" id="equipe">
+      <div class="tab-pane <%= 'active' if @tab == "equipe"%> " id="equipe">
         <%= render partial: 'projetos/show/equipe', locals: {f: f} %>
       </div>
 
-      <div class="tab-pane" id="meusdados">
+      <div class="tab-pane <%= 'active' if @tab == "dado-pessoa"%> " id="meusdados">
         <%= render partial: 'projetos/show/meus_dados', locals: {f: f} %>
       </div>
     </div>
