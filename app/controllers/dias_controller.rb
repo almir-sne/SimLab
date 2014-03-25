@@ -7,7 +7,7 @@ class DiasController < ApplicationController
     @data = Date.parse(params[:data]) || Date.today.to_s
     @dia = Dia.find_or_create_by_data_and_usuario_id(@data, @usuario.id)
     @equipe = @usuario.equipe.collect{|u| [u.nome, u.id]}
-    
+
     @projetos = @usuario.meus_projetos_array
     @boards = @usuario.boards.pluck(:board_id).uniq
     @reunioes = Reuniao.joins(:participantes).where(participantes: {usuario_id: @usuario.id},
@@ -19,7 +19,7 @@ class DiasController < ApplicationController
   end
 
   def update
-    if params[:dia_id].blank? 
+    if params[:dia_id].blank?
       @dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
     else
       @dia = Dia.find(params[:dia_id])
@@ -188,17 +188,17 @@ class DiasController < ApplicationController
       ],
       horarios_attributes: [:id, :entrada, :saida, :_destroy])
   end
-  
+
   def convert_date(data, hora_string)
     horario = hora_string.split(':')
     hora_date = DateTime.new(data.year, data.month, data.day, horario[0].to_i, horario[1].to_i)
     return hora_date
-  end  
-  
+  end
+
   def monta_resumo_dia(inicio, fim, usuario)
     dias = Dia.where(data: inicio..fim, usuario_id: usuario)
     hash = Hash.new
-    dias.each do |dia_selecionado| 
+    dias.each do |dia_selecionado|
       horas = dia_selecionado.horas_atividades_todas
       entrada = dia_selecionado.entrada_formatada.to_s
       if (entrada == "")
@@ -223,5 +223,5 @@ class DiasController < ApplicationController
     end
     return hash;
   end
-  
+
 end
