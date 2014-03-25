@@ -37,7 +37,7 @@ class Usuario < ActiveRecord::Base
   end
    
   def projetos_coordenados
-    Projeto.joins(:workons).where(workons: {usuario_id: id, permissao_id: Permissao.find_by(nome: ['admin', 'coordenador'])})
+    Projeto.joins(:workons).where(workons: {usuario_id: id, permissao_id: Permissao.where(nome: ['admin', 'coordenador'])})
   end
 
   def equipe_coordenada

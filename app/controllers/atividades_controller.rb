@@ -7,8 +7,8 @@ class AtividadesController < ApplicationController
       @projetos_opts = Projeto.ativos.order(:nome).pluck(:nome, :id)
       @usuarios_opts = Usuario.where(status: true).order(:nome).pluck(:nome, :id)
     else
-      @projetos_opts = current_usuario.projetos_coordenados.pluck(:nome, :id)
-      @usuarios_opts = current_usuario.equipe_coordenada.pluck(:nome, :id)
+      @projetos_opts = current_usuario.projetos_coordenados.order(:nome).pluck(:nome, :id)
+      @usuarios_opts = current_usuario.equipe_coordenada.order(:nome).pluck(:nome, :id)
     end
     @aprovacoes_opts  = [["Aprovadas", 'true'],["Reprovadas", 'false'],["Não Vistas", 'nil']]
 
