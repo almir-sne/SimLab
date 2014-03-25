@@ -99,20 +99,6 @@ class ProjetosController < ApplicationController
     end
   end
 
-  def atividades
-    @projeto = Projeto.find(params[:id])
-    @usuario = params[:usuario_id].nil? ? nil : Usuario.find(params[:usuario_id])
-    @usuários_select = @projeto.usuarios.map{|user| [user.nome, user.id]}
-    @usuários_select.unshift([@usuario.nome, @usuario.id]) unless(@usuario.nil?)
-    @aprovações = [["aprovada", true], ["reprovada",false], ["não vista", nil]]
-    @aprovações.unshift(@aprovações.select{|i| i[0] == params[:aprovacao]}.flatten)
-    inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:inicio]).nil? ? nil : Date.parse(params[:inicio])
-    fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ params[:fim]).nil? ? nil : Date.parse(params[:fim])
-    @lista_atividades = @projeto.atividades.periodo(inicio..fim ).usuario(params[:usuario_id].to_i).
-      aprovacao(params[:aprovacao].to_i).limit(100).pluck(:id)
-     render "projetos/show/atividades"
-  end
-
   # PATCH /projetos/1
   # PATCH /projetos/1.json
   def update
@@ -198,6 +184,29 @@ class ProjetosController < ApplicationController
     else
       redirect_to :back, notice: "Você não está autorizado a executar essa operação"
     end
+  end
+
+  def atividades
+    @projeto = Projeto.find(session[:id])
+    @usuario = session[:usuario_id].nil? ? 0 : Usuario.find(session[:usuario_id])
+    @usuários_select = @projeto.usuarios.map{|user| [user.nome, user.id]}
+    @usuários_select.unshift([@usuario.nome, @usuario.id]) unless(session[:usuario_id].nil?)
+    @aprovações = [["aprovada", "true"], ["reprovada","false"], ["não vista", "nil"]]
+    @aprovações.unshift(@aprovações.select{|i| i[1] == session[:aprovacao]}.flatten)
+    aprovacao = to_boolean session[:aprovacao]
+    inicio = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:inicio]).nil? ? Date.today.beginning_of_month : Date.parse(session[:inicio])
+    fim = (/^\d\d?\/\d\d?\/\d{2}\d{2}?$/ =~ session[:fim]).nil? ? Date.today.end_of_month : Date.parse(session[:fim])
+    @lista_atividades = @projeto.atividades.periodo(inicio..fim ).usuario(@usuario.id).aprovacao(aprovacao).limit(100)
+     render "projetos/show/atividades"
+  end
+
+  def filtra_atividades
+    session[:usuario_id] = params[:usuario_id]
+    session[:id] = params[:id]
+    session[:aprovacao] = params[:aprovacao]
+    session[:fim] = params[:fim]
+    session[:inicio] = params[:inicio]
+    redirect_to atividades_projetos_path
   end
 
   private

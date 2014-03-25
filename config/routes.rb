@@ -77,6 +77,7 @@ SinLab::Application.routes.draw do
       get ':id/campos_cadastro' => "projetos#campos_cadastro"
       post :coordenadorform
       get  :atividades
+      post :filtra_atividades
     end
   end
 

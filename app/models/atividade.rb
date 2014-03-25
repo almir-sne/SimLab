@@ -7,7 +7,7 @@ class Atividade < ActiveRecord::Base
   scope :usuario, lambda { |value| where(['usuario_id = ?', value]) if value > 0 }
   scope :cartoes_tagados, lambda { |value| joins(:cartao).merge(Cartao.tags value) if value > 0}
   scope :cartoes_filhos, lambda { |value| joins(:cartao).merge(Cartao.filhos value)}
-  scope :aprovacao, lambda {|value| where(aprovacao: value) unless value.blank?}
+  scope :aprovacao, lambda {|value| where(aprovacao: value)}
 
   belongs_to :cartao
   belongs_to :dia
