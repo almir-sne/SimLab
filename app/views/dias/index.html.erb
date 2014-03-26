@@ -39,7 +39,7 @@
                    title="<%= @hash_resumo[dia] %>">
                   <div class='panel-scrollable' style='height: 100px'>
                     <%= dia.strftime("%d/%b") %>
-                    <% if !@dias[dia].first.ausencias.blank? %>
+                    <% if !@dias[dia].blank? and !@dias[dia].first.ausencias.blank? %>
                       <br/>
                       Ausência Registrada
                     <% end %>

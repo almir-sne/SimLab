@@ -35,14 +35,14 @@ module DiasHelper
     string = "day-link"
     if (data == today)
       string = string + " hoje"
-    elsif !hash_dias[data].first.ausencias.blank?
-      string = string + " ausencia"
-    elsif tem_reprovacao_no_dia?(hash_dias[data].first.atividades)
-      string = string + " reprovacao"
     elsif (data.holiday?)
       string = string + " feriado"
     elsif (data.saturday? or data.sunday?)
       string = string + " fimdesemana"
+    elsif !hash_dias[data].blank? and !hash_dias[data].first.ausencias.blank?
+      string = string + " ausencia"
+    elsif !hash_dias[data].blank? and tem_reprovacao_no_dia?(hash_dias[data].first.atividades)
+      string = string + " reprovacao"
     else
       string = string + " diautil"
     end
