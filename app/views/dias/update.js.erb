@@ -1,2 +1,4 @@
 var form = $("<%= "#edit_dia_#{@dia.id}" %>");
 formSaved(form);
+$("#horarios-nested-form").html("<%= escape_javascript(render partial: 'horarios_form',
+  locals: {dia: @dia, data: @data, usuario: @usuario}).html_safe %>");

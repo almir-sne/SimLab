@@ -19,8 +19,10 @@ class DiasController < ApplicationController
   end
 
   def update
+    @data = Date.parse(params[:data])
+    @usuario = Usuario.find params[:usuario_id]
     if params[:dia_id].blank?
-      @dia = Dia.new(data: Date.parse(params[:data]), usuario_id: params[:usuario_id])
+      @dia = Dia.new(data: @data, usuario_id: @usuario.id)
     else
       @dia = Dia.find(params[:dia_id])
     end

@@ -1,9 +1,10 @@
 <div class="row" style="padding: 20px">
   <div class="col-md-2">
     <div class="panel-scrollable" id="horarios-panel">
-      <%= render partial: 'horariosForm', locals: {dia: @dia, data: @data, usuario: @usuario} %>
-      <%= render partial: "/shared/form_status" %>
-      <%= render partial: 'horariosStatus' %>
+      <div id="horarios-nested-form">
+        <%= render partial: 'horarios_form', locals: {dia: @dia, data: @data, usuario: @usuario} %>
+      </div>
+      <%= render partial: 'horarios_status' %>
     </div>
   </div>
   <div class="col-md-5">

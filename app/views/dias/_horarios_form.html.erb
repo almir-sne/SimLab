@@ -7,11 +7,11 @@
 
     <%= horario_form.label :entrada %>
     <%= horario_form.text_field :entrada, style: 'width: 55px;', class: 'timepicker horario_picker entrada_horario',
-        onfocus: "createTimePicker(this)", onchange: "recalculaHoras(); formChanged(this.form)",
+        onchange: "recalculaHoras(); formChanged(this.form)",
         value: horario_form.object.entrada.strftime('%H:%M') %> <br/>
     <%= horario_form.label :saida %>
     <%= horario_form.text_field :saida, style: 'width: 55px;', class: 'timepicker horario_picker saida_horario',
-        onfocus: "createTimePicker(this)", onchange: "recalculaHoras(); formChanged(this.form)",
+       onchange: "recalculaHoras(); formChanged(this.form)",
         value: horario_form.object.saida.strftime('%H:%M') %>
     <div>
       <%= horario_form.link_to_remove '<i class="icon-trash icon-2x"> </i>'.html_safe,  
@@ -27,4 +27,5 @@
 
   <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover"
           value="Salvar" onclick="return validateSliders();"></button>
+  <%= render partial: "/shared/form_status" %>
 <% end %>

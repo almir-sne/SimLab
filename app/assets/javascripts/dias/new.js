@@ -1,19 +1,17 @@
 recalculaHoras();
 
 $(document).on('nested:fieldAdded', function(event) {
-    formChanged(event.field.closest("form"));
+    var form = event.field.closest("form");
+    formChanged(form);
     createSlider(event.field.find('.slider'));
+    $(".timepicker").timepicker({
+        showPeriodLabels: false
+    });
 });
 
 $(document).on('nested:fieldRemoved', function(event) {
     formChanged(event.field.closest("form"));
 });
-
-function createTimePicker(obj) {
-    $(obj).timepicker({
-        showPeriodLabels: false
-    });
-}
 
 $('.timepicker').timepicker({
     showPeriodLabels: false
