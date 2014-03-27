@@ -27,21 +27,4 @@
 
   <button type="submit" title="Salvar" class="icon-save icon-2x blank-button nohover"
           value="Salvar" onclick="return validateSliders();"></button>
-  <%= render partial: "/shared/form_status" %>
-  
-  Intervalo:
-  <div id="dia_intervalo">
-    <%= int_to_horas(@dia.intervalo) %> horas
-  </div>
-  <br/>
-  Total de horas:
-  <div id="horas_do_dia">
-    <%= @dia.formata_horas  %> horas
-  </div>
-  <br/>
-  Horas em atividades:
-  <div id="horas_atividades">
-    <%= @dia.horas_atividades_todas  %> horas
-  </div>
-
 <% end %>
