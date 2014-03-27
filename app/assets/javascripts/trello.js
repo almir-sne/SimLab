@@ -90,18 +90,64 @@ function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var target = $("#input-pai");
-    var pai = $("#card-list #" + data).clone();
+    var card = $("#card-list #" + data);
+    var container = $("#card-div-blueprint").clone();
     $("#cartao_pai_trello_id").val(data);
     target.empty();
-    pai.appendTo(target);
+    card.attr({
+        style: "width: 90%"
+    });
+    container.appendTo(target);
+    container.attr({
+        id: "card-div-" + data,
+        style: "display: block"
+    });
+    container.prepend(card);
+    container.find('input').attr({
+        name: "cartao[pai_trello_id]",
+        id: "cartao_pai_trello_id",
+        value: data
+    });
+    container.find('button').attr({
+        onclick: "removePai(this)"
+    });
 }
 
-function removePai() {
+function dropFilho(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    var target = $("#input-filhos");
+    var card = $("#card-list #" + data);
+    var container = $("#card-div-blueprint").clone();
+    card.attr({
+        style: "width: 90%"
+    });
+    container.appendTo(target);
+    container.attr({
+        id: "card-div-" + data,
+        style: "display: block"
+    });
+    container.prepend(card);
+    container.find('input').val(data)
+}
+
+function removePai(obj) {
     var father_id = $("#cartao_pai_trello_id").val();
     var card_url = $(".cardnaohover")[0].href;
+    var parent = $(obj.parentElement);
     removeFromChecklist(card_url, father_id);
     $("#cartao_pai_trello_id").val("");
-    $("#input-pai").empty();
+    $("#card-list").prepend(parent.find(".card"));
+    parent.remove();
+}
+
+function removeCard(obj) {
+    var father_id = $("#cartao_pai_trello_id").val();
+    var parent = $(obj.parentElement);
+    var card_url = parent.find('a').href();
+    removeFromChecklist(card_url, father_id);
+    $("#card-list").prepend(parent.find(".card"));
+    parent.remove();
 }
 
 function dragCard(ev) {
@@ -171,7 +217,6 @@ function loadCard(input, card) {
         link.attr({
             id: card.id,
             draggable: true,
-            style: "width: 100%",
             ondragstart: "dragCard(event)",
             class: "card filter " + card.idBoard
         }).text(card.name);

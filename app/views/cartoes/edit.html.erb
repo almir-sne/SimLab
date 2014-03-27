@@ -24,23 +24,42 @@
           <%= f.label :tags_string, "Tags" %> 
           <%= f.text_field :tags_string, style: "width: 90%" %>
         </div>
+        <div class="trello-dropover" style="margin-left: 20px" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
+          <center> Arraste o cartão pai aqui. </center> 
+        </div>
+        <div id="input-pai" style="padding: 20px">
+          <% if @cartao.pai_trello_id %>
+            <div id="card-div-<%= @cartao.pai_trello_id  %>">
+              <%= hidden_field_tag @cartao.pai_trello_id, "", :class => "card-placeholder card-form" %>
+              <button type="button" class="blank-button" title="Remover cartão" onclick="removePai(this)" style="float: right">
+                <i class="icon-trash"> </i>
+              </button>
 
-        <div class="row">
-          <div class="col-md-8 trello-dropover" style="margin-left: 20px" id="dropover-pai" ondrop="dropPai(event);" ondragover="allowDrop(event)">
-            &nbsp;Arraste o cartão pai aqui.
-          </div>
-          <div class="col-md-3">
-            <button type="button"class="blank-button" onclick="removePai()" title="Remover cartão pai">
-              <i class="icon-trash icon-2x"> </i>
-            </button>
-          </div>
+            </div>
+          <% end %>
+        </div>
+        <%= f.hidden_field :pai_trello_id %>
+        <div class="trello-dropover" style="margin-left: 20px" id="dropover-filho" ondrop="dropFilho(event);" ondragover="allowDrop(event)">
+          <center> Arraste cartões filhos aqui. </center>
+        </div>
+        <div id="input-filhos" style="padding: 20px">
+          <% @cartao.filhos.each do |filho| %>
+            <div id="card-div-<%= filho.trello_id  %>">
+              <%= hidden_field_tag filho.trello_id, "", :class => "card-placeholder card-form" %>
+              <button type="button" class="blank-button" title="Remover cartão" onclick="removeCard(this)" style="float: right">
+                <i class="icon-trash"> </i>
+              </button>
+              <%= hidden_field_tag 'cartao[filhos_array][]', filho.trello_id %>
+            </div>
+          <% end %>
         </div>
 
-        <%= f.hidden_field :pai_trello_id %>
-        <div id="input-pai">
-          <% if @cartao.pai_trello_id %>
-            <%= hidden_field_tag @cartao.pai_trello_id, "", :class => "card-placeholder card-form" %>
-          <% end %>
+        <div id="card-div-blueprint" style="display: none">
+          <button type="button" class="blank-button" onclick="removeCard(this)"
+                  title="Remover cartão" style="float: right">
+            <i class="icon-trash"> </i>
+          </button>
+          <%= hidden_field_tag 'cartao[filhos_array][]' %>
         </div>
 
         <div id="lower-bar" class="navbar-fixed-bottom toolbar">

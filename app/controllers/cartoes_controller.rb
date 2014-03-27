@@ -81,7 +81,7 @@ class CartoesController < ApplicationController
 
   private
   def cartao_params
-    params.require(:cartao).permit(:tags_string, :pai_trello_id)
+    params.require(:cartao).permit(:tags_string, :pai_trello_id, {:filhos_array => []})
   end
 
   def selects

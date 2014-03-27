@@ -56,6 +56,14 @@ class Cartao < ActiveRecord::Base
   def tags_string=(val)
     self.tags = val.strip.split(",").collect{|t| Tag.find_or_create_by(nome: t.strip)}
   end
+  
+  def filhos_array=(val)
+    f = []
+    val.each do |v|
+      f << (Cartao.find_or_create_by trello_id: v) unless v.blank?
+    end
+    self.filhos = f
+  end
 
   def datas
     datas = self.atividades.order :data
