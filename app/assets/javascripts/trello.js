@@ -363,28 +363,33 @@ function getToken() {
     $("input[name='token']").val(Trello.token);
 }
 
-function updateTrelloData(card_id, mergeTags, showAlert) {
-    var regex_tags = /[\[][^\[\]]*[\]]/g;
-    var tags = null;
-    Trello.get("/cards/" + card_id, function(card) {
-        tags = card.name.match(regex_tags);
-        $.ajax({
-            url: '/cartoes/dados.json',
-            type: "GET",
-            dataType: "json",
-            data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
-            success: function(data) {
-                if (data != "erro") {
-                    if (data.pai)
-                        updateTrelloData(data.pai, true, false);
-                    putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
-                        horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
+function updateTrelloData(card_id, mergeTags, showAlert, recursionLevel) {
+    if (recursionLevel < 2) {
+        var regex_tags = /[\[][^\[\]]*[\]]/g;
+        var tags = null;
+        Trello.get("/cards/" + card_id, function(card) {
+            tags = card.name.match(regex_tags);
+            $.ajax({
+                url: '/cartoes/dados.json',
+                type: "GET",
+                dataType: "json",
+                data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
+                success: function(data) {
+                    if (data != "erro") {
+                        if (data.pai)
+                            updateTrelloData(data.pai, true, false, recursionLevel + 1);
+                        $(data.filhos).each(function(i, e) {
+                            updateTrelloData(e, true, false, recursionLevel + 1);
+                        });
+                        putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
+                            horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
+                    }
+                    else
+                        alert("Erro durante atualização do cartão no Trello");
                 }
-                else
-                    alert("Erro durante atualização do cartão no Trello");
-            }
+            });
         });
-    });
+    }
 }
 
 function updateFatherChecklist(filhos_list, father) {
@@ -518,7 +523,7 @@ function selectPais() {
             cartoes_pais_opcoes[i].setAttribute("value", cartoes_pais[i]);
             cartoes_pais_opcoes[i].innerHTML = card.name;
             select.appendChild(cartoes_pais_opcoes[i]);
-        })
+        });
     }
 
     document.getElementById("cartao_pai_select").appendChild(select);
