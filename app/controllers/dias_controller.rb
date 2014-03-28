@@ -77,9 +77,12 @@ class DiasController < ApplicationController
       @inicio = @inicio.at_beginning_of_week(:sunday)
     when 'p'
       @tipo = 'p'
-      periodo = @usuario.contrato_vigente_em(@inicio).periodo_vigente(@inicio)
-      @fim = periodo.last
-      @inicio = periodo.first
+      contrato = @usuario.contrato_vigente_em(@inicio)
+      unless contrato.blank?
+        periodo = contrato.periodo_vigente(@inicio) 
+        @fim = periodo.last
+        @inicio = periodo.first
+      end
     when 'm'
       @tipo = 'm'
       @fim = @inicio.at_end_of_month
@@ -154,17 +157,21 @@ class DiasController < ApplicationController
     elsif @tipo == 's'
       data_inicial = (@today - 1.month).sunday
       contrato = @usuario.contratos.where('extract(year from inicio) <= ? or extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
-      @intervalo = Array.new
-      fim_do_ano = @today.at_end_of_year
-      fim_do_contrato = contrato.fim
-      while data_inicial < fim_do_ano and data_inicial < fim_do_contrato do
-        @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
-        data_inicial = data_inicial + 1.week
+      if contrato.blank?
+        flash.now[:notice] = I18n.t("dias.periodos.inexistente")
+      else
+        @intervalo = Array.new
+        fim_do_ano = @today.at_end_of_year
+        fim_do_contrato = contrato.fim
+        while data_inicial < fim_do_ano and data_inicial < fim_do_contrato do
+          @intervalo << {inicio: data_inicial.beginning_of_week(:sunday), fim: data_inicial.end_of_week(:sunday)}
+          data_inicial = data_inicial + 1.week
+        end
       end
     elsif @tipo == 'p'
       contrato = @usuario.contratos.where('extract(year from inicio) <= ? and extract(year from fim) >= ?', @ano, @ano).order(:inicio).last
       if contrato.blank?
-        @intervalo = @usuario.contrato_atual.periodos_por_ano
+        #        @intervalo = @usuario.contrato_atual.periodos_por_ano
         flash.now[:notice] = I18n.t("dias.periodos.inexistente")
       else
         if params[:inicio].blank? and params[:fim].blank?
