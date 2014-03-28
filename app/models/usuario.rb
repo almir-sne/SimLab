@@ -45,7 +45,7 @@ class Usuario < ActiveRecord::Base
   end
 
   def horario_data(data)
-    contrato_vigente_em(data).hora_mes
+    contrato_vigente_em(data).try(:hora_mes)
   end
 
   def contrato_vigente_em(data)
