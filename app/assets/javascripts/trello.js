@@ -90,18 +90,64 @@ function dropPai(event) {
     event.preventDefault();
     var data = event.dataTransfer.getData("Text");
     var target = $("#input-pai");
-    var pai = $("#card-list #" + data).clone();
+    var card = $("#card-list #" + data);
+    var container = $("#card-div-blueprint").clone();
     $("#cartao_pai_trello_id").val(data);
     target.empty();
-    pai.appendTo(target);
+    card.attr({
+        style: "width: 90%"
+    });
+    container.appendTo(target);
+    container.attr({
+        id: "card-div-" + data,
+        style: "display: block"
+    });
+    container.prepend(card);
+    container.find('input').attr({
+        name: "cartao[pai_trello_id]",
+        id: "cartao_pai_trello_id",
+        value: data
+    });
+    container.find('button').attr({
+        onclick: "removePai(this)"
+    });
 }
 
-function removePai() {
+function dropFilho(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    var target = $("#input-filhos");
+    var card = $("#card-list #" + data);
+    var container = $("#card-div-blueprint").clone();
+    card.attr({
+        style: "width: 90%"
+    });
+    container.appendTo(target);
+    container.attr({
+        id: "card-div-" + data,
+        style: "display: block"
+    });
+    container.prepend(card);
+    container.find('input').val(data)
+}
+
+function removePai(obj) {
     var father_id = $("#cartao_pai_trello_id").val();
     var card_url = $(".cardnaohover")[0].href;
+    var parent = $(obj.parentElement);
     removeFromChecklist(card_url, father_id);
     $("#cartao_pai_trello_id").val("");
-    $("#input-pai").empty();
+    $("#card-list").prepend(parent.find(".card"));
+    parent.remove();
+}
+
+function removeCard(obj) {
+    var father_id = $("#cartao_pai_trello_id").val();
+    var parent = $(obj.parentElement);
+    var card_url = parent.find('a').href();
+    removeFromChecklist(card_url, father_id);
+    $("#card-list").prepend(parent.find(".card"));
+    parent.remove();
 }
 
 function dragCard(ev) {
@@ -171,7 +217,6 @@ function loadCard(input, card) {
         link.attr({
             id: card.id,
             draggable: true,
-            style: "width: 100%",
             ondragstart: "dragCard(event)",
             class: "card filter " + card.idBoard
         }).text(card.name);
@@ -318,28 +363,33 @@ function getToken() {
     $("input[name='token']").val(Trello.token);
 }
 
-function updateTrelloData(card_id, mergeTags, showAlert) {
-    var regex_tags = /[\[][^\[\]]*[\]]/g;
-    var tags = null;
-    Trello.get("/cards/" + card_id, function(card) {
-        tags = card.name.match(regex_tags);
-        $.ajax({
-            url: '/cartoes/dados.json',
-            type: "GET",
-            dataType: "json",
-            data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
-            success: function(data) {
-                if (data != "erro") {
-                    if (data.pai)
-                        updateTrelloData(data.pai, true, false);
-                    putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
-                        horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
+function updateTrelloData(card_id, mergeTags, showAlert, recursionLevel) {
+    if (recursionLevel < 2) {
+        var regex_tags = /[\[][^\[\]]*[\]]/g;
+        var tags = null;
+        Trello.get("/cards/" + card_id, function(card) {
+            tags = card.name.match(regex_tags);
+            $.ajax({
+                url: '/cartoes/dados.json',
+                type: "GET",
+                dataType: "json",
+                data: {trello_id: card.id, tags: tags, merge_tags: mergeTags},
+                success: function(data) {
+                    if (data != "erro") {
+                        if (data.pai)
+                            updateTrelloData(data.pai, true, false, recursionLevel + 1);
+                        $(data.filhos).each(function(i, e) {
+                            updateTrelloData(e, true, false, recursionLevel + 1);
+                        });
+                        putOnTrello(card, {estimativa: data.estimativa, horas_filhos: data.horas_filhos,
+                            horas: data.horas, tags: data.tags, filhos: data.filhos, showAlert: showAlert});
+                    }
+                    else
+                        alert("Erro durante atualização do cartão no Trello");
                 }
-                else
-                    alert("Erro durante atualização do cartão no Trello");
-            }
+            });
         });
-    });
+    }
 }
 
 function updateFatherChecklist(filhos_list, father) {
@@ -360,7 +410,8 @@ function updateFatherChecklist(filhos_list, father) {
 }
 
 function updateChecklist(list, elements) {
-    $(elements).each(function(i, e) {
+    var e = elements.pop();
+    if (e) {
         Trello.get("/cards/" + e, function(card) {
             var exists = false;
             $(list.checkItems).each(function(i, link) {
@@ -368,9 +419,13 @@ function updateChecklist(list, elements) {
                     exists = true;
             });
             if (!exists)
-                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl});
+                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl}, function() {
+                    updateChecklist(list, elements);
+                });
+            else
+                updateChecklist(list, elements);
         });
-    });
+    }
 }
 
 function removeFromChecklist(card_url, father_id) {
@@ -473,7 +528,7 @@ function selectPais() {
             cartoes_pais_opcoes[i].setAttribute("value", cartoes_pais[i]);
             cartoes_pais_opcoes[i].innerHTML = card.name;
             select.appendChild(cartoes_pais_opcoes[i]);
-        })
+        });
     }
 
     document.getElementById("cartao_pai_select").appendChild(select);
