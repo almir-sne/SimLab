@@ -410,7 +410,8 @@ function updateFatherChecklist(filhos_list, father) {
 }
 
 function updateChecklist(list, elements) {
-    $(elements).each(function(i, e) {
+    var e = elements.pop();
+    if (e) {
         Trello.get("/cards/" + e, function(card) {
             var exists = false;
             $(list.checkItems).each(function(i, link) {
@@ -418,9 +419,13 @@ function updateChecklist(list, elements) {
                     exists = true;
             });
             if (!exists)
-                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl});
+                Trello.post("/checklists/" + list.id + "/checkItems", {name: card.shortUrl}, function() {
+                    updateChecklist(list, elements);
+                });
+            else
+                updateChecklist(list, elements);
         });
-    });
+    }
 }
 
 function removeFromChecklist(card_url, father_id) {
