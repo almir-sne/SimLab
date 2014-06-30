@@ -1,3 +1,6 @@
+# encoding: utf-8
+#!/bin/env ruby
+
 # Be sure to restart your server when you modify this file.
 
 # Add new inflection rules using the following format
@@ -14,12 +17,12 @@
 #   inflect.acronym 'RESTful'
 # end
 
+
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.clear
    
   inflect.plural(/$/, 's')
   inflect.plural(/(s)$/i, '\1')
-  inflect.plural(/^(paí)s$/i, '\1ses')
   inflect.plural(/(z|r)$/i, '\1es')
   inflect.plural(/al$/i, 'ais')
   inflect.plural(/el$/i, 'eis')

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class DiasController < ApplicationController
   include ApplicationHelper
   before_action :authenticate_usuario!
